@@ -78,8 +78,8 @@ public class Tower {
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
-            // attack AFTER run (in case something gets upgraded)
-            rc.attack(null); // splash
+            //attack AFTER run (in case something gets upgraded)
+            if (rc.canAttack(null)) rc.attack(null); //splash
             MapLocation bestEnemyLoc = new MapLocation(-1, -1);
             int bestEnemyHp = 1000000;
             UnitType bestEnemyType = UnitType.MOPPER;
