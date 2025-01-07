@@ -107,7 +107,7 @@ public class RobotPlayer {
      * Run a single turn for towers.
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
      */
-    public static void runTower(RobotController rc) throws GameActionException{
+    public static void runTower(RobotController rc) throws Exception {
         // Pick a direction to build in.
         Direction dir = directions[rng.nextInt(directions.length)];
         MapLocation nextLoc = rc.getLocation().add(dir);
@@ -134,6 +134,7 @@ public class RobotPlayer {
         }
 
         // TODO: can we attack other bots?
+        // new Exception();
     }
 
 

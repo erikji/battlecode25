@@ -65,6 +65,8 @@ public class Motion {
     //2: rot
 
     protected static MapLocation mapCenter;
+    protected static MapLocation currLoc;
+
     protected static Direction lastDir = Direction.CENTER;
     protected static Direction optimalDir = Direction.CENTER;
     protected static int rotation = NONE;
