@@ -41,37 +41,48 @@ public class Tower {
         // general common code for all towers
         // spawning
         // Note that we r going to have >50% moppers since they r cheaper
-        switch (spawnedRobots % 3) {
-            case 0:
-                for (MapLocation loc : spawnLocs) {
-                    if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                        G.rc.buildRobot(UnitType.SOLDIER, loc);
-                        spawnedRobots++;
-                        spawnedSoldiers++;
-                        break;
-                    }
+        if (spawnedRobots < 3) {
+            for (MapLocation loc : spawnLocs) {
+                if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                    G.rc.buildRobot(UnitType.SOLDIER, loc);
+                    spawnedRobots++;
+                    spawnedSoldiers++;
+                    break;
                 }
-                break;
-            case 1:
-                for (MapLocation loc : spawnLocs) {
-                    if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
-                        G.rc.buildRobot(UnitType.SPLASHER, loc);
-                        spawnedRobots++;
-                        spawnedSplashers++;
-                        break;
+            }
+        } else {
+            switch (spawnedRobots % 3) {
+                case 0:
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            G.rc.buildRobot(UnitType.SOLDIER, loc);
+                            spawnedRobots++;
+                            spawnedSoldiers++;
+                            break;
+                        }
                     }
-                }
-                break;
-            case 2:
-                for (MapLocation loc : spawnLocs) {
-                    if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
-                        G.rc.buildRobot(UnitType.MOPPER, loc);
-                        spawnedRobots++;
-                        spawnedMoppers++;
-                        break;
+                    break;
+                case 1:
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                            G.rc.buildRobot(UnitType.SPLASHER, loc);
+                            spawnedRobots++;
+                            spawnedSplashers++;
+                            break;
+                        }
                     }
-                }
-                break;
+                    break;
+                case 2:
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            G.rc.buildRobot(UnitType.MOPPER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
+                    break;
+            }
         }
         // more specialized here
         switch (G.rc.getType()) {
@@ -143,6 +154,8 @@ public class Tower {
                             bestEnemyHp = r.health;
                             bestEnemyLoc = r.location;
                         }
+                        break;
+                    default:
                         break;
                 }
             }
