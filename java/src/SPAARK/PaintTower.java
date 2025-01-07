@@ -6,10 +6,9 @@ import java.util.*;
 public class PaintTower {
     protected static RobotController rc;
     protected static Random rng;
-    protected static MapLocation currloc;
+    protected static MapLocation loc;
     protected static int level = 0;
     
     public static void run() throws Exception {
-        currloc = rc.getLocation();
     }
 }
