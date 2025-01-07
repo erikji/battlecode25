@@ -4,6 +4,7 @@ import battlecode.common.*;
 import java.util.*;
 
 public class POI {
+    public static Team opponentTeam = Team.NEUTRAL;
     protected static RobotController rc;
     protected static StringBuilder indicatorString;
 

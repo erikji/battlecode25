@@ -43,7 +43,7 @@ public class Soldier {
                 }
                 else {
                     // System.out.println("Target = (" + target.x + ", " + target.y + ")");
-            
+                    
                     Motion.bugnavAround(target, 1, 25);
                     Motion.updateInfo();
 
