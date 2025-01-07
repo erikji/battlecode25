@@ -4,86 +4,68 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Soldier {
-    public static RobotController rc;
-    public static Random rng;
-    public static MapLocation currLoc;
-    public static boolean[][] resourcePattern;
-    public static boolean[][][] towerPatterns;
-
-    static UnitType ruinBuildType = null;
+    //modes
+    public static MapLocation ruinLocation = null;
+    public static final int EXPLORE = 0;
+    public static final int RUIN_BUILD = 1;
+    public static final int ATTACK = 2;
+    public static int mode = EXPLORE;
 
     public static void run() throws Exception {
-        if (rc.getRoundNum() < 1000) {
+        if (mode == EXPLORE) {
+            G.indicatorString.append("EXPLORE ");
             Motion.spreadRandomly();
-        }
-        else {
-            // Find nearby ruin
-            MapLocation target = null;
-            if (target == null) {
-                Motion.spreadRandomly();
-                Motion.updateInfo();
-
-                MapLocation[] ruins = rc.senseNearbyRuins(-1);
-                Arrays.sort(ruins, new Comparator<MapLocation>() {
-                    public int compare(MapLocation a, MapLocation b) {
-                        return a.distanceSquaredTo(rc.getLocation()) - b.distanceSquaredTo(rc.getLocation());
-                    };
-                });
-                for (MapLocation m : rc.senseNearbyRuins(-1)) {
-                    // ADD CODE TO CHECK IF NOT SENT YET
-                    target = m;
-                    break;
-                }
+            MapInfo me = G.rc.senseMapInfo(Motion.currLoc);
+            if (me.getPaint() != PaintType.ALLY_PRIMARY && me.getPaint() != PaintType.ALLY_SECONDARY && G.rc.canAttack(Motion.currLoc)) {
+                G.rc.attack(Motion.currLoc); //also add logic to paint in special resource pattern
             }
-            
-            if (target != null) {
-                if (rc.getLocation().distanceSquaredTo(target) > 25) {
-                    Motion.bugnavTowards(target);
-                    Motion.updateInfo();
+            MapLocation[] locs = G.rc.senseNearbyRuins(-1);
+            for (MapLocation loc : locs) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    continue;
                 }
-                else {
-                    // System.out.println("Target = (" + target.x + ", " + target.y + ")");
-            
-                    Motion.bugnavAround(target, 1, 25);
-                    Motion.updateInfo();
-
-                    if (rng.nextInt(100) > 50) {
-                        for (int i = 0; i < 3; i++) {
-                            if (rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
-                                // System.out.println(rc.getID() + " marked paint tower pattern");
-                                rc.markTowerPattern(Tower.paintLevels[i], target);
-                                ruinBuildType = Tower.paintLevels[i];
+                ruinLocation = loc;
+                mode = RUIN_BUILD;
+                break;
+            }
+        }
+        if (mode == RUIN_BUILD) {
+            G.indicatorString.append("RUIN_BUILD ");
+            G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 0, 0);
+            if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
+                mode = EXPLORE;
+                ruinLocation = null;
+            } else {
+                PaintType mark = G.rc.senseMapInfo(ruinLocation.add(ruinLocation.directionTo(Motion.currLoc))).getMark();
+                if (!mark.isAlly()) {
+                    if (G.rng.nextBoolean()) {
+                        if (G.rc.canMarkTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation)) {
+                            G.rc.markTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation);
+                        }
+                    } else {
+                        if (G.rc.canMarkTowerPattern(UnitType.LEVEL_ONE_MONEY_TOWER, ruinLocation)) {
+                            G.rc.markTowerPattern(UnitType.LEVEL_ONE_MONEY_TOWER, ruinLocation);
+                        }
+                    }
+                }
+                MapInfo[] infos = G.rc.senseNearbyMapInfos();
+                for (MapInfo info : infos) {
+                    if (info.getMark() != PaintType.EMPTY && info.getPaint() != info.getMark() && G.rc.canAttack(G.rc.getLocation())) {
+                        G.rc.attack(info.getMapLocation(), info.getMark().isSecondary());
+                        for (UnitType ruinType : G.towerTypes) {
+                            if (G.rc.canCompleteTowerPattern(ruinType, ruinLocation)) {
+                                G.rc.completeTowerPattern(ruinType, ruinLocation);
+                                // probably also transmit some information
+                                mode = EXPLORE;
+                                ruinLocation = null;
                                 break;
                             }
                         }
-                    }
-                    else {
-                        for (int i = 0; i < 3; i++) {
-                            if (rc.canMarkTowerPattern(Tower.moneyLevels[i], target)) {
-                                // System.out.println(rc.getID() + " marked money tower pattern");
-                                rc.markTowerPattern(Tower.moneyLevels[i], target);
-                                // System.out.println(rc.senseMapInfo(rc.getLocation()).getMark() + " AFTERARDS IS THE MARK TYPE");
-                                ruinBuildType = Tower.moneyLevels[i];
-                                break;
-                            }
-                        }
-                    }
-
-                    if (rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.ALLY_PRIMARY)) {
-                        boolean type = rc.senseMapInfo(rc.getLocation()).getMark().isSecondary();
-                        if (rc.canAttack(rc.getLocation())) {
-                            // System.out.println("painting");
-                            rc.attack(rc.getLocation(), type);
-                        }
-                    }
-
-
-                    if (ruinBuildType != null &&  rc.canCompleteTowerPattern(ruinBuildType, target)) {
-                        System.out.println(rc.getID() + " completed tower pattern");
-                        rc.canCompleteTowerPattern(ruinBuildType, target);
-                        rc.buildRobot(ruinBuildType, target);
+                        break;
                     }
                 }
+                if (ruinLocation != null)
+                    Motion.bugnavAround(ruinLocation, 1, 2);
             }
         }
     }

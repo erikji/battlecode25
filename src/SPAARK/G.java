@@ -8,6 +8,11 @@ import java.util.*;
 public class G {
     public static RobotController rc;
     public static Random rng;
+    public static UnitType[] towerTypes = new UnitType[]{
+        UnitType.LEVEL_ONE_DEFENSE_TOWER,
+        UnitType.LEVEL_ONE_PAINT_TOWER,
+        UnitType.LEVEL_ONE_MONEY_TOWER
+    };
 
     public static StringBuilder indicatorString;
 }
