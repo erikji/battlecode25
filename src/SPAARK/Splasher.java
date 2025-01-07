@@ -13,7 +13,7 @@ public class Splasher {
     public static void run() throws Exception {
 
         // Find nearby ruin
-        MapLocation target = null;
+        MapLocation target = Tower.towerMap.containsKey(rc.getID()) ? Tower.towerMap.get(rc.getID()) : null;
         if (target == null) {
             Motion.spreadRandomly();
             Motion.updateInfo();
@@ -25,11 +25,11 @@ public class Splasher {
                 };
             });
             for (MapLocation m : rc.senseNearbyRuins(-1)) {
-                if (!Tower.towerLocs.toString().contains(m.x + "" + m.y + "|")) {
-                    Tower.towerLocs.append(m.x + "" + m.y + "|");
-                    target = m;
-                    break;
-                }
+                if (Tower.towerSet.contains(m)) continue;
+                System.out.println("SENDING SPLASH TO " + m.x + " " + m.y);
+                Tower.towerSet.add(m);
+                Tower.towerMap.put(rc.getID(), m);
+                break;
             }
         }
          
