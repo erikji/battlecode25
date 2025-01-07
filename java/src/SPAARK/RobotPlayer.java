@@ -11,6 +11,7 @@ public class RobotPlayer {
             rng = new Random(rc.getID() + 2025);
             Motion.rc = rc;
             Motion.rng = rng;
+            Motion.mapCenter = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
             Micro.rc = rc;
             Micro.rng = rng;
             switch (rc.getType()) {
