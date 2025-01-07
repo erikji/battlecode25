@@ -54,10 +54,10 @@ public class Motion {
     protected static RobotInfo[] friendlyRobots;
 
     //symmetry detection
-    protected static long[] nowall = new long[64];
-    protected static long[] wall = new long[64];
-    protected static long[] ruin = new long[64];
-    protected static long[] noruin = new long[64];
+    protected static long[] nowall = new long[60];
+    protected static long[] wall = new long[60];
+    protected static long[] ruin = new long[60];
+    protected static long[] noruin = new long[60];
     protected static boolean[] symmetry = new boolean[]{false, false, false};
     //0: horz
     //1: vert
