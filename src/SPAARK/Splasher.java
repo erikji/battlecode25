@@ -9,16 +9,36 @@ public class Splasher {
     public static MapLocation currLoc;
     
     public static void run() throws Exception {
-        Motion.currLoc = currLoc = rc.getLocation();
+        Motion.currLoc = rc.getLocation();
 
-        if (rc.senseMapInfo(currLoc).getMark().equals(PaintType.EMPTY)) {
-            System.out.println("marked");
-            if (rc.canAttack(currLoc)) {
-                System.out.println("splasher adding paint");
-                rc.attack(currLoc);
+        // Find nearby ruin
+        MapLocation target = null;
+        while (target == null) {
+            for (MapLocation m : rc.senseNearbyRuins(-1)) {
+               target = m;
+               break; 
             }
+            Motion.spreadRandomly();
+            Clock.yield();
         }
 
+        // System.out.println("Found ruin");
+        while (Motion.currLoc.distanceSquaredTo(target) > 25) {
+            Motion.bugnavTowards(target);
+            Motion.updateInfo();
+            Clock.yield();
+        }
+
+        // System.out.println("in range of ruin");
+
+        Motion.bugnavAround(target, 0, 25);
+        Motion.updateInfo();
+        if (!rc.senseMapInfo(Motion.currLoc).getMark().equals(PaintType.EMPTY)) {
+            if (rc.canAttack(Motion.currLoc)) {
+                System.out.println("painting");
+                rc.attack(Motion.currLoc);
+            }
+        }
         for (int i = 0; i < 3; i++) {
             if (rc.canMarkTowerPattern(Tower.paintLevels[i], Motion.currLoc)) {
                 System.out.println(rc.getID() + " marked paint tower pattern");
@@ -31,7 +51,6 @@ public class Splasher {
             System.out.println(rc.getID() + " completed tower pattern");
             rc.completeResourcePattern(Motion.currLoc);
         }
-        Motion.moveRandomly();
         Clock.yield();
     }
 }
