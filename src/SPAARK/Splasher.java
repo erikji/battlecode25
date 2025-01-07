@@ -9,45 +9,69 @@ public class Splasher {
     public static MapLocation currLoc;
     public static boolean[][] resourcePattern;
     public static boolean[][][] towerPatterns;
-    
+
     public static void run() throws Exception {
-        Motion.currLoc = rc.getLocation();
 
         // Find nearby ruin
         MapLocation target = null;
-        while (target == null) {
-            for (MapLocation m : rc.senseNearbyRuins(-1)) {
-               target = m;
-               break; 
-            }
+        if (target == null) {
             Motion.spreadRandomly();
-        }
 
-        // System.out.println("Found ruin");
-        while (Motion.currLoc.distanceSquaredTo(target) > 25) {
-            Motion.bugnavTowards(target);
-        }
-
-        // System.out.println("in range of ruin");
-
-        Motion.bugnavAround(target, 0, 25);
-        if (!rc.senseMapInfo(Motion.currLoc).getMark().equals(PaintType.EMPTY)) {
-            if (rc.canAttack(Motion.currLoc)) {
-                System.out.println("painting");
-                rc.attack(Motion.currLoc);
-            }
-        }
-        for (int i = 0; i < 3; i++) {
-            if (rc.canMarkTowerPattern(Tower.paintLevels[i], Motion.currLoc)) {
-                System.out.println(rc.getID() + " marked paint tower pattern");
-                rc.markTowerPattern(Tower.paintLevels[i], Motion.currLoc);
+            MapLocation[] ruins = rc.senseNearbyRuins(-1);
+            Arrays.sort(ruins, new Comparator<MapLocation>() {
+                public int compare(MapLocation a, MapLocation b) {
+                    return a.distanceSquaredTo(rc.getLocation()) - b.distanceSquaredTo(rc.getLocation());
+                };
+            });
+            for (MapLocation m : rc.senseNearbyRuins(-1)) {
+                // ADD CODE TO CHECK IF NOT SENT YET
+                target = m;
                 break;
             }
         }
+         
+        if (target != null) {
+            if (rc.getLocation().distanceSquaredTo(target) > 25) {
+                Motion.bugnavTowards(target);
+            }
+            else {
+                // System.out.println("Target = (" + target.x + ", " + target.y + ")");
         
-        if (rc.canCompleteResourcePattern(Motion.currLoc)) {        
-            System.out.println(rc.getID() + " completed tower pattern");
-            rc.completeResourcePattern(Motion.currLoc);
+                Motion.bugnavAround(target, 1, 25);
+
+                if (rng.nextInt(100) > 50) {
+                    for (int i = 0; i < 3; i++) {
+                        if (rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
+                            System.out.println(rc.getID() + " marked paint tower pattern");
+                            rc.markTowerPattern(Tower.paintLevels[i], target);
+                            break;
+                        }
+                    }
+                }
+                else {
+                    for (int i = 0; i < 3; i++) {
+                        if (rc.canMarkTowerPattern(Tower.moneyLevels[i], target)) {
+                            System.out.println(rc.getID() + " marked money tower pattern");
+                            rc.markTowerPattern(Tower.moneyLevels[i], target);
+                            System.out.println(rc.senseMapInfo(rc.getLocation()).getMark() + " AFTERARDS IS THE MARK TYPE");
+
+                            break;
+                        }
+                    }
+                }
+
+                if (rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.ALLY_PRIMARY)) {
+                    if (rc.canAttack(rc.getLocation())) {
+                        System.out.println("painting");
+                        rc.attack(rc.getLocation());
+                    }
+                }
+
+                if (rc.canCompleteResourcePattern(target)) {
+                    System.out.println(rc.getID() + " completed tower pattern");
+                    rc.completeResourcePattern(target);
+                }
+            }
         }
     }
 }

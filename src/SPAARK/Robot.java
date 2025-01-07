@@ -18,17 +18,10 @@ public class Robot {
             Motion.indicatorString = indicatorString;
             Motion.updateInfo();
             switch (rc.getType()) {
-                case MOPPER:
-                    Mopper.run();
-                    break;
-                case SOLDIER:
-                    Soldier.run();
-                    break;
-                case SPLASHER:
-                    Splasher.run();
-                    break;
-                default:
-                    throw new Exception("Challenge Complete! How Did We Get Here?");
+                case MOPPER -> Mopper.run();
+                case SOLDIER -> Soldier.run();
+                case SPLASHER -> Splasher.run();
+                default -> throw new Exception("Challenge Complete! How Did We Get Here?");
             }
             indicatorString.append("SYM="+(Motion.symmetry[0]?"0":"1")+(Motion.symmetry[1]?"0":"1")+(Motion.symmetry[2]?"0 ":"1 "));
             rc.setIndicatorString(indicatorString.toString());

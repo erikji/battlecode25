@@ -30,6 +30,7 @@ public class Tower {
             Motion.currLoc.add(Direction.WEST).add(Direction.WEST),
             Motion.currLoc.add(Direction.NORTHWEST)
         };
+
         Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
             public int compare(MapLocation a, MapLocation b) {
                 return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
