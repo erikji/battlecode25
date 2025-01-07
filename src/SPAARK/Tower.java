@@ -41,6 +41,16 @@ public class Tower {
             switch (spawnedRobots % 4) {
                 case 0:
                     for (MapLocation loc : spawnLocs) {
+                        if (rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            rc.buildRobot(UnitType.SOLDIER, loc);
+                            spawnedRobots++;
+                            spawnedSoldiers++;
+                            break;
+                        }
+                    }
+                    break;
+                case 1:
+                    for (MapLocation loc : spawnLocs) {
                         if (rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                             rc.buildRobot(UnitType.SPLASHER, loc);
                             spawnedRobots++;
@@ -49,23 +59,13 @@ public class Tower {
                         }
                     }
                     break;
-                case 1:
                 case 2:
+                case 3:
                     for (MapLocation loc : spawnLocs) {
                         if (rc.canBuildRobot(UnitType.MOPPER, loc)) {
                             rc.buildRobot(UnitType.MOPPER, loc);
                             spawnedRobots++;
                             spawnedMoppers++;
-                            break;
-                        }
-                    }
-                    break;
-                case 3:
-                    for (MapLocation loc : spawnLocs) {
-                        if (rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                            rc.buildRobot(UnitType.SOLDIER, loc);
-                            spawnedRobots++;
-                            spawnedSoldiers++;
                             break;
                         }
                     }
@@ -150,8 +150,7 @@ public class Tower {
             } else if (numAttackableRobots > 0 && rc.canAttack(bestEnemyLoc)) {
                 rc.attack(bestEnemyLoc);
             }
-
-            if (rc.canUpgradeTower(Motion.currLoc)) {
+            if (rc.canUpgradeTower(Motion.currLoc) && rc.getRoundNum() > 100) {
                 rc.upgradeTower(Motion.currLoc);
             }
             Clock.yield();
