@@ -47,17 +47,7 @@ public class Motion {
     protected static final int DEFAULT_RETREAT_HP = 999;
 
     protected static RobotInfo[] opponentRobots;
-    protected static RobotInfo[] friendlyRobots;
-
-    //symmetry detection
-    protected static long[] nowall = new long[60];
-    protected static long[] wall = new long[60];
-    protected static long[] ruin = new long[60];
-    protected static long[] noruin = new long[60];
-    protected static boolean[] symmetry = new boolean[]{false, false, false};
-    //0: horz
-    //1: vert
-    //2: rot
+    protected static RobotInfo[] allyRobots;
 
     protected static MapLocation mapCenter;
     protected static MapLocation currLoc;
@@ -186,7 +176,7 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation me = G.rc.getLocation();
             MapLocation target = me;
-            for (RobotInfo r : friendlyRobots) {
+            for (RobotInfo r : allyRobots) {
                 target = target.add(me.directionTo(r.getLocation()).opposite());
             }
             if (target.equals(me)) {
@@ -984,63 +974,6 @@ public class Motion {
     protected static void updateInfo() throws GameActionException {
         currLoc = G.rc.getLocation();
         opponentRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam().opponent());
-        friendlyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
-
-        // bytecode inefficient symmetry detection
-        MapInfo[] infos = G.rc.senseNearbyMapInfos();
-        for (MapInfo info : infos) {
-            MapLocation xy = info.getMapLocation();
-            if (info.isWall()) {
-                wall[xy.y] |= 1L << xy.x;
-                G.rc.setIndicatorDot(xy, 255, 0, 0);
-            }
-            else {
-                nowall[xy.y] |= 1L << xy.x;
-            }
-            if (info.hasRuin()) {
-                ruin[xy.y] |= 1L << xy.x;
-                G.rc.setIndicatorDot(xy, 0, 0, 255);
-            }
-            else {
-                noruin[xy.y] |= 1L << xy.x;
-            }
-        }
-        if (symmetry[0]&&!symmetryValid(0))symmetry[0]=false;
-        if (symmetry[1]&&!symmetryValid(1))symmetry[1]=false;
-        if (symmetry[2]&&!symmetryValid(2))symmetry[2]=false;
-    }
-
-    protected static boolean symmetryValid(int sym) throws GameActionException {
-        //completely untested...
-        int w=G.rc.getMapWidth();
-        int h=G.rc.getMapHeight();
-        switch (sym) {
-            case 0: //horz
-                for (int i = 0; i < h/2; i++) {
-                    if ((nowall[i] ^ nowall[h-i]) != 0) return false;
-                    if ((wall[i] ^ wall[h-i]) != 0) return false;
-                    if ((noruin[i] ^ noruin[h-i]) != 0) return false;
-                    if ((ruin[i] ^ ruin[h-i]) != 0) return false;
-                }
-                return true;
-            case 1: //vert
-                for (int i = 0; i < h; i++) {
-                    if ((Long.reverse(nowall[i]) << (64 - w)) != nowall[i]) return false;
-                    if ((Long.reverse(wall[i]) << (64 - w)) != wall[i]) return false;
-                    if ((Long.reverse(noruin[i]) << (64 - w)) != noruin[i]) return false;
-                    if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i]) return false;
-                }
-                return true;
-            case 2: //rot
-                for (int i = 0; i < h/2; i++) {
-                    if (((Long.reverse(nowall[i]) << (64 - w)) ^ nowall[h-i]) != 0) return false;
-                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h-i]) != 0) return false;
-                    if (((Long.reverse(noruin[i]) << (64 - w)) ^ noruin[h-i]) != 0) return false;
-                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h-i]) != 0) return false;
-                }
-                return true;
-        }
-        System.out.println("invalid symmetry argument");
-        return false;
+        allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
     }
 }
