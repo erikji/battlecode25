@@ -4,11 +4,6 @@ import battlecode.common.*;
 import java.util.*;
 
 public class POI {
-    protected static RobotController rc;
-    protected static StringBuilder indicatorString;
-
-    protected static Random rng;
-
     public static int[] towers = new int[25];
     public static int[] towerIDs = new int[25];
 
@@ -61,7 +56,7 @@ public class POI {
         }
     };
     public static void updateInfo() throws Exception {
-        MapLocation[] nearbyRuins = rc.senseNearbyRuins(-1);
+        MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
 
         for (MapLocation i : nearbyRuins) {
             addTower(-1, intifyTower(2) | intifyLocation(i));
@@ -79,7 +74,7 @@ public class POI {
         }
 
         // bytecode inefficient symmetry detection
-        MapInfo[] infos = rc.senseNearbyMapInfos();
+        MapInfo[] infos = G.rc.senseNearbyMapInfos();
         for (MapInfo info : infos) {
             MapLocation xy = info.getMapLocation();
             if (info.isWall()) wall[xy.y] |= 1L << xy.x;
@@ -103,8 +98,8 @@ public class POI {
 
     protected static boolean symmetryValid(int sym) throws GameActionException {
         //completely untested...
-        int w=rc.getMapWidth();
-        int h=rc.getMapHeight();
+        int w=G.rc.getMapWidth();
+        int h=G.rc.getMapHeight();
         switch (sym) {
             case 0: //horz
                 for (int i = 0; i < h/2; i++) {
@@ -135,11 +130,11 @@ public class POI {
         return false;
     }
     public static void sendMessages() throws Exception {
-        if (Robot.isTower(rc.getType())) {
+        if (Robot.isTower(G.rc.getType())) {
             // we just send all info that the robots dont have
             for (RobotInfo r : Motion.allyRobots) {
                 if (!Robot.isTower(r.getType())) {
-                    while (rc.canSendMessage(r.getLocation(), 0)) {
+                    while (G.rc.canSendMessage(r.getLocation(), 0)) {
                         int message = -1;
                         int messages = 0;
                         if (!robotsThatKnowInformation[25].toString().contains("-" + r.getID() + "-")) {
@@ -160,7 +155,7 @@ public class POI {
                         if (messages == 0) {
                             break;
                         }
-                        rc.sendMessage(r.getLocation(), message);
+                        G.rc.sendMessage(r.getLocation(), message);
                     }
                 }
             }
@@ -174,7 +169,7 @@ public class POI {
             }
             for (RobotInfo r : Motion.allyRobots) {
                 if (Robot.isTower(r.getType())) {
-                    if (rc.canSendMessage(r.getLocation(), 0)) {
+                    if (G.rc.canSendMessage(r.getLocation(), 0)) {
                         if (messages < 2) {
                             for (int i = 0; i < 25; i++) {
                                 if (critical[i] && ((intifyLocation(r.getLocation()) ^ towers[i]) & 0b111111111111) != 0) {
@@ -208,7 +203,7 @@ public class POI {
                             if (criticalSymmetry) {
                                 criticalSymmetry = false;
                             }
-                            rc.sendMessage(r.getLocation(), message);
+                            G.rc.sendMessage(r.getLocation(), message);
                             break;
                         }
                     }
@@ -218,7 +213,7 @@ public class POI {
     };
     public static void readMessages() throws Exception {
         // what hapepns if message is sent in same round?? oof oof oof
-        Message[] messages = rc.readMessages(rc.getRoundNum() - 1);
+        Message[] messages = G.rc.readMessages(G.rc.getRoundNum() - 1);
         for (Message m : messages) {
             addTower(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             if (m.getBytes() >> 16 != 0) {
