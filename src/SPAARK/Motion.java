@@ -1,8 +1,8 @@
 package SPAARK;
 
-import battlecode.common.*;
+import java.util.*;
 
-import java.util.Random;
+import battlecode.common.*;
 
 public class Motion {
     protected static RobotController rc;
@@ -216,7 +216,7 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                rc.setIndicatorLine(me, target, DEFAULT_RETREAT_HP, AWAY, AROUND);
+                rc.setIndicatorLine(me, new MapLocation(Math.max(0, Math.min(rc.getMapWidth() - 1, target.x)), Math.max(0, Math.min(rc.getMapHeight() - 1, target.y))), DEFAULT_RETREAT_HP, AWAY, AROUND);
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
