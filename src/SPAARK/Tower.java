@@ -8,11 +8,15 @@ public class Tower {
     public static int spawnedSplashers = 0;
     public static int spawnedMoppers = 0;
 
+    static UnitType moneyLevels[] = {UnitType.LEVEL_THREE_MONEY_TOWER, UnitType.LEVEL_TWO_MONEY_TOWER, UnitType.LEVEL_ONE_MONEY_TOWER};
+    static UnitType paintLevels[] = {UnitType.LEVEL_THREE_PAINT_TOWER, UnitType.LEVEL_TWO_PAINT_TOWER, UnitType.LEVEL_ONE_PAINT_TOWER};
+
     public static void run(RobotController rc, Random rng) throws Exception {
         DefenseTower.rc = MoneyTower.rc = PaintTower.rc = rc;
         DefenseTower.rng = MoneyTower.rng = PaintTower.rng = rng;
         Motion.currLoc = DefenseTower.currLoc = MoneyTower.currLoc = PaintTower.currLoc = rc.getLocation();
         Motion.updateInfo();
+        
         MapLocation[] spawnLocs = new MapLocation[8];
         for (int i = 0; i < 8; i++) {
             spawnLocs[i] = Motion.currLoc.add(Motion.DIRECTIONS[i]);
@@ -106,6 +110,10 @@ public class Tower {
             }
             if (bestEnemyLoc.x >= 0 && rc.canAttack(bestEnemyLoc)) {
                 rc.attack(bestEnemyLoc);
+            }
+
+            if (rc.canUpgradeTower(Motion.currLoc)) {
+                rc.upgradeTower(Motion.currLoc);
             }
             Clock.yield();
         }
