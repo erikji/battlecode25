@@ -40,12 +40,13 @@ public class POI {
     };
 
     public static void addTower(int source, int data) {
+        // IMPORTANT: make sure to call addTower right after tower is built
         for (int i = 0; i < 25; i++) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
                     robotsThatKnowInformation[i] = new StringBuilder("-" + source + "-");
-                    if (source == -1 || source == i) {
+                    if (source == -1) {
                         critical[i] = true;
                     }
                     else {

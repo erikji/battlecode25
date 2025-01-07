@@ -23,7 +23,10 @@ public class Robot {
                 case SPLASHER -> Splasher.run();
                 default -> throw new Exception("Challenge Complete! How Did We Get Here?");
             }
-            G.indicatorString.append("SYM="+(Motion.symmetry[0]?"0":"1")+(Motion.symmetry[1]?"0":"1")+(Motion.symmetry[2]?"0 ":"1 "));
+            G.indicatorString.append("SYM="+(POI.symmetry[0]?"0":"1")+(POI.symmetry[1]?"0":"1")+(POI.symmetry[2]?"0 ":"1 "));
         }
+    }
+    public static boolean isTower(UnitType t) throws Exception {
+        return t != UnitType.MOPPER && t != UnitType.SOLDIER && t != UnitType.SPLASHER;
     }
 }
