@@ -15,13 +15,30 @@ public class Splasher {
         // TEMPORARILY UNTIL COMMS IS ADDED
         if (rc.getRoundNum() < 300) {
             Motion.spreadRandomly();
-        }
-        else {
-            // Find nearby ruin
+
             MapLocation target = null;
-            if (target == null) {
-                Motion.spreadRandomly();
-                Motion.updateInfo();
+            
+            MapLocation[] ruins = rc.senseNearbyRuins(-1);
+            Arrays.sort(ruins, new Comparator<MapLocation>() {
+                public int compare(MapLocation a, MapLocation b) {
+                    return a.distanceSquaredTo(rc.getLocation()) - b.distanceSquaredTo(rc.getLocation());
+                };
+            });
+            for (MapLocation m : rc.senseNearbyRuins(-1)) {
+                // ADD CODE TO CHECK IF NOT SENT YET
+                target = m;
+                break;
+            }
+        }
+         
+        if (target != null) {
+            if (rc.getLocation().distanceSquaredTo(target) > 25) {
+                Motion.bugnavTowards(target);
+            }
+            else {
+                // System.out.println("Target = (" + target.x + ", " + target.y + ")");
+        
+                Motion.bugnavAround(target, 1, 25);
 
                 MapLocation[] ruins = rc.senseNearbyRuins(-1);
                 Arrays.sort(ruins, new Comparator<MapLocation>() {
