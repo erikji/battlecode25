@@ -19,12 +19,16 @@ public class Tower {
         Motion.updateInfo();
         MapLocation[] spawnLocs = new MapLocation[] {
             Motion.currLoc.add(Direction.NORTH),
+            Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTHEAST),
             Motion.currLoc.add(Direction.EAST),
+            Motion.currLoc.add(Direction.EAST).add(Direction.EAST),
             Motion.currLoc.add(Direction.SOUTHEAST),
             Motion.currLoc.add(Direction.SOUTH),
+            Motion.currLoc.add(Direction.SOUTH).add(Direction.SOUTH),
             Motion.currLoc.add(Direction.SOUTHWEST),
             Motion.currLoc.add(Direction.WEST),
+            Motion.currLoc.add(Direction.WEST).add(Direction.WEST),
             Motion.currLoc.add(Direction.NORTHWEST)
         };
         Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
@@ -41,6 +45,16 @@ public class Tower {
             switch (spawnedRobots % 4) {
                 case 0:
                     for (MapLocation loc : spawnLocs) {
+                        if (rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            rc.buildRobot(UnitType.SOLDIER, loc);
+                            spawnedRobots++;
+                            spawnedSoldiers++;
+                            break;
+                        }
+                    }
+                    break;
+                case 1:
+                    for (MapLocation loc : spawnLocs) {
                         if (rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                             rc.buildRobot(UnitType.SPLASHER, loc);
                             spawnedRobots++;
@@ -49,23 +63,13 @@ public class Tower {
                         }
                     }
                     break;
-                case 1:
                 case 2:
+                case 3:
                     for (MapLocation loc : spawnLocs) {
                         if (rc.canBuildRobot(UnitType.MOPPER, loc)) {
                             rc.buildRobot(UnitType.MOPPER, loc);
                             spawnedRobots++;
                             spawnedMoppers++;
-                            break;
-                        }
-                    }
-                    break;
-                case 3:
-                    for (MapLocation loc : spawnLocs) {
-                        if (rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                            rc.buildRobot(UnitType.SOLDIER, loc);
-                            spawnedRobots++;
-                            spawnedSoldiers++;
                             break;
                         }
                     }
@@ -150,8 +154,7 @@ public class Tower {
             } else if (numAttackableRobots > 0 && rc.canAttack(bestEnemyLoc)) {
                 rc.attack(bestEnemyLoc);
             }
-
-            if (rc.canUpgradeTower(Motion.currLoc)) {
+            if (rc.canUpgradeTower(Motion.currLoc) && rc.getRoundNum() > 100) {
                 rc.upgradeTower(Motion.currLoc);
             }
             Clock.yield();
