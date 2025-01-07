@@ -71,9 +71,6 @@ public class Splasher {
                         rc.attack(rc.getLocation());
                     }
                 }
-                else {
-                    System.out.println(rc.senseMapInfo(rc.getLocation()).getMark() + " IS THE MARK TYPE");
-                }
 
                 if (rc.canCompleteResourcePattern(target)) {
                     System.out.println(rc.getID() + " completed tower pattern");
