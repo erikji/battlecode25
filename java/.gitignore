@@ -1,3 +1,8 @@
+###### BUH ######
+
+client/
+build/
+
 ###### GRADLE ######
 
 .gradle
