@@ -25,6 +25,7 @@ public class Mopper {
                         rc.attack(info.getMapLocation());
                     }
                     Motion.bugnavAround(info.getMapLocation(), 0, 2);
+                    break;
                 }
             }
         }
@@ -35,7 +36,9 @@ public class Mopper {
     }
 
     /** Move this out later!!! */
-    //return true if swing was successful, else false
+    /**
+     * Attempt mop swing with some microstrategy. Returns if a swing was executed.
+     */
     public static boolean trySwing() throws Exception {
         // spaghetti copy paste
         int up = 0, down = 0, left = 0, right = 0;
@@ -43,49 +46,49 @@ public class Mopper {
         if (rc.onTheMap(currLoc.add(Direction.NORTH))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTH));
             if (r != null && r.team == POI.opponentTeam)
-                up++;
+                up += r.paintAmount;
         }
         if (rc.onTheMap(currLoc.add(Direction.NORTHEAST))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
-                up++;
-                right++;
+                up += r.paintAmount;
+                right += r.paintAmount;
             }
         }
         if (rc.onTheMap(currLoc.add(Direction.EAST))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.EAST));
             if (r != null && r.team == POI.opponentTeam)
-                right++;
+                right += r.paintAmount;
         }
         if (rc.onTheMap(currLoc.add(Direction.SOUTHEAST))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
-                down++;
-                right++;
+                down += r.paintAmount;
+                right += r.paintAmount;
             }
         }
         if (rc.onTheMap(currLoc.add(Direction.SOUTH))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTH));
             if (r != null && r.team == POI.opponentTeam)
-                down++;
+                down += r.paintAmount;
         }
         if (rc.onTheMap(currLoc.add(Direction.SOUTHWEST))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
-                down++;
-                left++;
+                down += r.paintAmount;
+                left += r.paintAmount;
             }
         }
         if (rc.onTheMap(currLoc.add(Direction.WEST))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.WEST));
             if (r != null && r.team == POI.opponentTeam)
-                left++;
+                left += r.paintAmount;
         }
         if (rc.onTheMap(currLoc.add(Direction.NORTHWEST))) {
             r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
-                up++;
-                left++;
+                up += r.paintAmount;
+                left += r.paintAmount;
             }
         }
         // SPAGHETITIITIUUITHREIHSIHDFSDF
