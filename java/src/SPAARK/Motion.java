@@ -53,14 +53,19 @@ public class Motion {
     protected static RobotInfo[] opponentRobots;
     protected static RobotInfo[] friendlyRobots;
 
-    protected static long[] passable = new long[64];
+    //symmetry detection
+    protected static long[] nowall = new long[64];
     protected static long[] wall = new long[64];
-
+    protected static long[] ruin = new long[64];
+    protected static long[] noruin = new long[64];
     protected static boolean[] symmetry = new boolean[]{false, false, false};
     //0: horz
     //1: vert
     //2: rot
+
     protected static MapLocation mapCenter;
+    protected static MapLocation currLoc;
+
     protected static Direction lastDir = Direction.CENTER;
     protected static Direction optimalDir = Direction.CENTER;
     protected static int rotation = NONE;
@@ -989,7 +994,9 @@ public class Motion {
         for (MapInfo info : infos) {
             MapLocation xy = info.getMapLocation();
             if (info.isWall()) wall[xy.y] |= 1L << xy.x;
-            else passable[xy.y] |= 1L << xy.x;
+            else nowall[xy.y] |= 1L << xy.x;
+            if (info.hasRuin()) ruin[xy.y] |= 1L << xy.x;
+            else noruin[xy.y] |= 1L << xy.x;
         }
         if (symmetry[0]&&!symmetryValid(0))symmetry[0]=false;
         if (symmetry[1]&&!symmetryValid(1))symmetry[1]=false;
@@ -1003,20 +1010,26 @@ public class Motion {
         switch (sym) {
             case 0: //horz
                 for (int i = 0; i < h/2; i++) {
-                    if ((passable[i] ^ passable[h-i]) != 0) return false;
+                    if ((nowall[i] ^ nowall[h-i]) != 0) return false;
                     if ((wall[i] ^ wall[h-i]) != 0) return false;
+                    if ((noruin[i] ^ noruin[h-i]) != 0) return false;
+                    if ((ruin[i] ^ ruin[h-i]) != 0) return false;
                 }
                 return true;
             case 1: //vert
                 for (int i = 0; i < h; i++) {
-                    if ((Long.reverse(passable[i]) << (64 - w)) != passable[i]) return false;
+                    if ((Long.reverse(nowall[i]) << (64 - w)) != nowall[i]) return false;
                     if ((Long.reverse(wall[i]) << (64 - w)) != wall[i]) return false;
+                    if ((Long.reverse(noruin[i]) << (64 - w)) != noruin[i]) return false;
+                    if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i]) return false;
                 }
                 return true;
             case 2: //rot
                 for (int i = 0; i < h/2; i++) {
-                    if (((Long.reverse(passable[i]) << (64 - w)) ^ passable[h-i]) != 0) return false;
+                    if (((Long.reverse(nowall[i]) << (64 - w)) ^ nowall[h-i]) != 0) return false;
                     if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h-i]) != 0) return false;
+                    if (((Long.reverse(noruin[i]) << (64 - w)) ^ noruin[h-i]) != 0) return false;
+                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h-i]) != 0) return false;
                 }
                 return true;
         }

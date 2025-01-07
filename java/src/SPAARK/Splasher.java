@@ -9,6 +9,6 @@ public class Splasher {
     protected static MapLocation currloc;
     
     public static void run() throws Exception {
-        currloc = rc.getLocation();
+        Motion.currLoc = currloc = rc.getLocation();
     }
 }

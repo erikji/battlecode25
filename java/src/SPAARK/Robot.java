@@ -21,6 +21,7 @@ public class Robot {
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
+            Clock.yield();
         }
     }
 }

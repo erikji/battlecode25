@@ -9,7 +9,7 @@ public class Mopper {
     protected static MapLocation currloc;
 
     public static void run() throws Exception {
-        currloc = rc.getLocation();
+        Motion.currLoc = currloc = rc.getLocation();
     }
 
     /**Move this out later!!! */
