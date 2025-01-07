@@ -37,6 +37,33 @@ public class Tower {
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
+            //attack AFTER run (in case something gets upgraded)
+            rc.attack(null); //splash
+            MapLocation bestEnemyLoc = new MapLocation(-1, -1);
+            int bestEnemyHp = 1000000;
+            UnitType bestEnemyType = UnitType.MOPPER;
+            //priority: soldier, splasher, mopper
+            for (RobotInfo r : rc.senseNearbyRobots()) {
+                if (bestEnemyType == UnitType.MOPPER && (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || r.health < bestEnemyHp)) {
+                    bestEnemyHp = r.health;
+                    bestEnemyLoc = r.location;
+                    bestEnemyType = r.type;
+                }
+                if (bestEnemyType == UnitType.SPLASHER && (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health < bestEnemyHp))) {
+                    bestEnemyHp = r.health;
+                    bestEnemyLoc = r.location;
+                    bestEnemyType = r.type;
+                }
+                if (bestEnemyType == UnitType.SOLDIER && (r.type == UnitType.SOLDIER && r.health < bestEnemyHp)) {
+                    bestEnemyHp = r.health;
+                    bestEnemyLoc = r.location;
+                    bestEnemyType = r.type;
+                }
+            }
+            if (bestEnemyLoc.x >= 0 && rc.canAttack(bestEnemyLoc)) {
+                rc.attack(bestEnemyLoc);
+            }
+            Clock.yield();
         }
     }
 }
