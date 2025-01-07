@@ -5,11 +5,6 @@ import java.util.Random;
 import battlecode.common.*;
 
 public class Micro {
-    protected static RobotController rc;
-    protected static StringBuilder indicatorString;
-
-    protected static Random rng;
-
     protected static final Direction[] DIRECTIONS = {
         Direction.SOUTHWEST,
         Direction.SOUTH,

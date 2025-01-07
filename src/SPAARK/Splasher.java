@@ -4,12 +4,9 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Splasher {
-    public static RobotController rc;
-    public static Random rng;
-
     public static void run() throws Exception {
 
-        if (rc.getRoundNum() < 1000) {
+        if (G.rc.getRoundNum() < 1000) {
             Motion.spreadRandomly();
         }
         else {
@@ -19,13 +16,13 @@ public class Splasher {
                 Motion.spreadRandomly();
                 Motion.updateInfo();
 
-                MapLocation[] ruins = rc.senseNearbyRuins(-1);
+                MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
                 Arrays.sort(ruins, new Comparator<MapLocation>() {
                     public int compare(MapLocation a, MapLocation b) {
-                        return a.distanceSquaredTo(rc.getLocation()) - b.distanceSquaredTo(rc.getLocation());
+                        return a.distanceSquaredTo(G.rc.getLocation()) - b.distanceSquaredTo(G.rc.getLocation());
                     };
                 });
-                for (MapLocation m : rc.senseNearbyRuins(-1)) {
+                for (MapLocation m : G.rc.senseNearbyRuins(-1)) {
                     // ADD CODE TO CHECK IF NOT SENT YET
                     target = m;
                     break;
@@ -33,7 +30,7 @@ public class Splasher {
             }
             
             if (target != null) {
-                if (rc.getLocation().distanceSquaredTo(target) > 25) {
+                if (G.rc.getLocation().distanceSquaredTo(target) > 25) {
                     Motion.bugnavTowards(target);
                     Motion.updateInfo();
                 }
@@ -43,42 +40,42 @@ public class Splasher {
                     Motion.bugnavAround(target, 1, 25);
                     Motion.updateInfo();
 
-                    if (rc.canMarkTowerPattern(Tower.paintLevels[2], target)) {
-                        System.out.println(rc.getID() + " marked paint tower pattern");
-                        rc.markTowerPattern(Tower.paintLevels[2], target);
+                    if (G.rc.canMarkTowerPattern(Tower.paintLevels[2], target)) {
+                        System.out.println(G.rc.getID() + " marked paint tower pattern");
+                        G.rc.markTowerPattern(Tower.paintLevels[2], target);
                     }
 
-                    // if (rng.nextInt(100) > 50) {
+                    // if (G.rng.nextInt(100) > 50) {
                     //     for (int i = 0; i < 3; i++) {
-                    //         if (rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
-                    //             System.out.println(rc.getID() + " marked paint tower pattern");
-                    //             rc.markTowerPattern(Tower.paintLevels[i], target);
+                    //         if (G.rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
+                    //             System.out.println(G.rc.getID() + " marked paint tower pattern");
+                    //             G.rc.markTowerPattern(Tower.paintLevels[i], target);
                     //             break;
                     //         }
                     //     }
                     // }
                     // else {
                     //     for (int i = 0; i < 3; i++) {
-                    //         if (rc.canMarkTowerPattern(Tower.moneyLevels[i], target)) {
-                    //             System.out.println(rc.getID() + " marked money tower pattern");
-                    //             rc.markTowerPattern(Tower.moneyLevels[i], target);
-                    //             System.out.println(rc.senseMapInfo(rc.getLocation()).getMark() + " AFTERARDS IS THE MARK TYPE");
+                    //         if (G.rc.canMarkTowerPattern(Tower.moneyLevels[i], target)) {
+                    //             System.out.println(G.rc.getID() + " marked money tower pattern");
+                    //             G.rc.markTowerPattern(Tower.moneyLevels[i], target);
+                    //             System.out.println(G.rc.senseMapInfo(G.rc.getLocation()).getMark() + " AFTERARDS IS THE MARK TYPE");
 
                     //             break;
                     //         }
                     //     }
                     // }
 
-                    if (rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.ALLY_PRIMARY)) {
-                        if (rc.canAttack(rc.getLocation())) {
+                    if (G.rc.senseMapInfo(G.rc.getLocation()).getMark().equals(PaintType.ALLY_PRIMARY)) {
+                        if (G.rc.canAttack(G.rc.getLocation())) {
                             System.out.println("painting");
-                            rc.attack(rc.getLocation());
+                            G.rc.attack(G.rc.getLocation());
                         }
                     }
 
-                    if (rc.canCompleteResourcePattern(target)) {
-                        System.out.println(rc.getID() + " completed tower pattern");
-                        rc.completeResourcePattern(target);
+                    if (G.rc.canCompleteResourcePattern(target)) {
+                        System.out.println(G.rc.getID() + " completed tower pattern");
+                        G.rc.completeResourcePattern(target);
                     }
                 }
             }
