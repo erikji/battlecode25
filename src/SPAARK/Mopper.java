@@ -4,27 +4,21 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Mopper {
-    public static RobotController rc;
-    public static Random rng;
-    public static MapLocation currLoc;
-    public static boolean[][] resourcePattern;
-    public static boolean[][][] towerPatterns;
-
     public static boolean tempReachedCenter = false;
 
     public static void run() throws Exception {
-        Motion.currLoc = currLoc = rc.getLocation();
+        Motion.currLoc = G.rc.getLocation();
         // idk just make it attack anything it sees
         if (!trySwing()) {
             // no bots attacked, look for paint
-            MapInfo[] mapInfos = rc.senseNearbyMapInfos();
+            MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
             MapInfo best = null;
             for (MapInfo info : mapInfos) {
-                if (((info.getPaint() == PaintType.ENEMY_PRIMARY || info.getPaint() == PaintType.ENEMY_SECONDARY) && (best == null || (rc.canSenseRobotAtLocation(info.getMapLocation()) && rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam)))) {
+                if (((info.getPaint() == PaintType.ENEMY_PRIMARY || info.getPaint() == PaintType.ENEMY_SECONDARY) && (best == null || (G.rc.canSenseRobotAtLocation(info.getMapLocation()) && G.rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam)))) {
                     //if we didn't mop swing, prioritize unpainting squares under opponents
-                    int distSq = info.getMapLocation().distanceSquaredTo(currLoc);
-                    if (distSq <= 2 && rc.isActionReady() && rc.canAttack(info.getMapLocation())) {
-                        rc.attack(info.getMapLocation());
+                    int distSq = info.getMapLocation().distanceSquaredTo(Motion.currLoc);
+                    if (distSq <= 2 && G.rc.isActionReady() && G.rc.canAttack(info.getMapLocation())) {
+                        G.rc.attack(info.getMapLocation());
                     }
                     Motion.bugnavAround(info.getMapLocation(), 0, 2);
                     break;
@@ -32,7 +26,7 @@ public class Mopper {
             }
         }
         // move i guess?
-        if (currLoc.distanceSquaredTo(Motion.mapCenter) < 8) tempReachedCenter = true;
+        if (Motion.currLoc.distanceSquaredTo(Motion.mapCenter) < 8) tempReachedCenter = true;
         if (tempReachedCenter) Motion.bugnavTowards(Motion.mapCenter);
         else Motion.spreadRandomly();
     }
@@ -45,49 +39,49 @@ public class Mopper {
         // spaghetti copy paste
         int up = 0, down = 0, left = 0, right = 0;
         RobotInfo r;
-        if (rc.onTheMap(currLoc.add(Direction.NORTH))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTH));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.NORTH))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.NORTH));
             if (r != null && r.team == POI.opponentTeam)
                 up += r.paintAmount;
         }
-        if (rc.onTheMap(currLoc.add(Direction.NORTHEAST))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHEAST));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.NORTHEAST))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.NORTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
                 up += r.paintAmount;
                 right += r.paintAmount;
             }
         }
-        if (rc.onTheMap(currLoc.add(Direction.EAST))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.EAST));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.EAST))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.EAST));
             if (r != null && r.team == POI.opponentTeam)
                 right += r.paintAmount;
         }
-        if (rc.onTheMap(currLoc.add(Direction.SOUTHEAST))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHEAST));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.SOUTHEAST))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.SOUTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
                 down += r.paintAmount;
                 right += r.paintAmount;
             }
         }
-        if (rc.onTheMap(currLoc.add(Direction.SOUTH))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTH));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.SOUTH))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.SOUTH));
             if (r != null && r.team == POI.opponentTeam)
                 down += r.paintAmount;
         }
-        if (rc.onTheMap(currLoc.add(Direction.SOUTHWEST))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHWEST));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.SOUTHWEST))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.SOUTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
                 down += r.paintAmount;
                 left += r.paintAmount;
             }
         }
-        if (rc.onTheMap(currLoc.add(Direction.WEST))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.WEST));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.WEST))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.WEST));
             if (r != null && r.team == POI.opponentTeam)
                 left += r.paintAmount;
         }
-        if (rc.onTheMap(currLoc.add(Direction.NORTHWEST))) {
-            r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHWEST));
+        if (G.rc.onTheMap(Motion.currLoc.add(Direction.NORTHWEST))) {
+            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.NORTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
                 up += r.paintAmount;
                 left += r.paintAmount;
@@ -99,26 +93,26 @@ public class Mopper {
         if (left > right) {
             if (up > left) {
                 if (down > up)
-                    rc.mopSwing(Direction.SOUTH);
+                    G.rc.mopSwing(Direction.SOUTH);
                 else
-                    rc.mopSwing(Direction.NORTH);
+                    G.rc.mopSwing(Direction.NORTH);
             } else {
                 if (down > left)
-                    rc.mopSwing(Direction.SOUTH);
+                    G.rc.mopSwing(Direction.SOUTH);
                 else
-                    rc.mopSwing(Direction.WEST);
+                    G.rc.mopSwing(Direction.WEST);
             }
         } else {
             if (up > right) {
                 if (down > up)
-                    rc.mopSwing(Direction.SOUTH);
+                    G.rc.mopSwing(Direction.SOUTH);
                 else
-                    rc.mopSwing(Direction.NORTH);
+                    G.rc.mopSwing(Direction.NORTH);
             } else {
                 if (down > right)
-                    rc.mopSwing(Direction.SOUTH);
+                    G.rc.mopSwing(Direction.SOUTH);
                 else
-                    rc.mopSwing(Direction.EAST);
+                    G.rc.mopSwing(Direction.EAST);
             }
         }
         return true;
