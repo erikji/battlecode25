@@ -58,16 +58,21 @@ public class Splasher {
                         if (rc.canMarkTowerPattern(Tower.moneyLevels[i], target)) {
                             System.out.println(rc.getID() + " marked money tower pattern");
                             rc.markTowerPattern(Tower.moneyLevels[i], target);
+                            System.out.println(rc.senseMapInfo(rc.getLocation()).getMark() + " AFTERARDS IS THE MARK TYPE");
+
                             break;
                         }
                     }
                 }
 
-                if (!rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.EMPTY)) {
+                if (rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.ALLY_PRIMARY)) {
                     if (rc.canAttack(rc.getLocation())) {
                         System.out.println("painting");
                         rc.attack(rc.getLocation());
                     }
+                }
+                else {
+                    System.out.println(rc.senseMapInfo(rc.getLocation()).getMark() + " IS THE MARK TYPE");
                 }
 
                 if (rc.canCompleteResourcePattern(target)) {
