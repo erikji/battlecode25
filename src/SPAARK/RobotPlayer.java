@@ -19,7 +19,6 @@ public class RobotPlayer {
             switch (rc.getType()) {
                 case MOPPER:
                 case SOLDIER:
-                    Soldier.run();
                 case SPLASHER:
                     Robot.run(rc, rng);
                     break;
