@@ -9,7 +9,7 @@ public class Splasher {
     public static MapLocation currLoc;
     public static boolean[][] resourcePattern;
     public static boolean[][][] towerPatterns;
-    
+
     public static void run() throws Exception {
         Motion.currLoc = rc.getLocation();
 
@@ -17,18 +17,20 @@ public class Splasher {
         MapLocation target = null;
         while (target == null) {
             for (MapLocation m : rc.senseNearbyRuins(-1)) {
-               target = m;
-               break; 
+                if (!Tower.towerLocs.toString().contains(m.x + "" + m.y + "|")) {
+                    Tower.towerLocs.append(m.x + "" + m.y + "|");
+                    target = m;
+                    break;
+                }
             }
             Motion.spreadRandomly();
-            Clock.yield();
+            Motion.updateInfo();
         }
 
         // System.out.println("Found ruin");
         while (Motion.currLoc.distanceSquaredTo(target) > 25) {
             Motion.bugnavTowards(target);
             Motion.updateInfo();
-            Clock.yield();
         }
 
         // System.out.println("in range of ruin");
@@ -42,17 +44,16 @@ public class Splasher {
             }
         }
         for (int i = 0; i < 3; i++) {
-            if (rc.canMarkTowerPattern(Tower.paintLevels[i], Motion.currLoc)) {
+            if (rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
                 System.out.println(rc.getID() + " marked paint tower pattern");
-                rc.markTowerPattern(Tower.paintLevels[i], Motion.currLoc);
+                rc.markTowerPattern(Tower.paintLevels[i], target);
                 break;
             }
         }
-        
-        if (rc.canCompleteResourcePattern(Motion.currLoc)) {        
+
+        if (rc.canCompleteResourcePattern(target)) {
             System.out.println(rc.getID() + " completed tower pattern");
-            rc.completeResourcePattern(Motion.currLoc);
+            rc.completeResourcePattern(target);
         }
-        Clock.yield();
     }
 }

@@ -9,6 +9,8 @@ public class Tower {
     public static int spawnedMoppers = 0;
     public static int spawnedRobots = 0;
 
+    static StringBuilder towerLocs = new StringBuilder();
+
     static UnitType moneyLevels[] = {UnitType.LEVEL_THREE_MONEY_TOWER, UnitType.LEVEL_TWO_MONEY_TOWER, UnitType.LEVEL_ONE_MONEY_TOWER};
     static UnitType paintLevels[] = {UnitType.LEVEL_THREE_PAINT_TOWER, UnitType.LEVEL_TWO_PAINT_TOWER, UnitType.LEVEL_ONE_PAINT_TOWER};
 

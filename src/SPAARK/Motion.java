@@ -216,7 +216,7 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                rc.setIndicatorLine(me, target, DEFAULT_RETREAT_HP, AWAY, AROUND);
+                // rc.setIndicatorLine(me, target, DEFAULT_RETREAT_HP, AWAY, AROUND);
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
