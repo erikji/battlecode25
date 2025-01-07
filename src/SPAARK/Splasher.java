@@ -34,26 +34,41 @@ public class Splasher {
         }
 
         // System.out.println("in range of ruin");
+        
+        while (true) {
+            Motion.bugnavAround(target, 1, 25);
+            Motion.updateInfo();
 
-        Motion.bugnavAround(target, 0, 25);
-        Motion.updateInfo();
-        if (!rc.senseMapInfo(Motion.currLoc).getMark().equals(PaintType.EMPTY)) {
-            if (rc.canAttack(Motion.currLoc)) {
-                System.out.println("painting");
-                rc.attack(Motion.currLoc);
+            if (rng.nextInt(100) > 50) {
+                for (int i = 0; i < 3; i++) {
+                    if (rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
+                        System.out.println(rc.getID() + " marked paint tower pattern");
+                        rc.markTowerPattern(Tower.paintLevels[i], target);
+                        break;
+                    }
+                }
             }
-        }
-        for (int i = 0; i < 3; i++) {
-            if (rc.canMarkTowerPattern(Tower.paintLevels[i], target)) {
-                System.out.println(rc.getID() + " marked paint tower pattern");
-                rc.markTowerPattern(Tower.paintLevels[i], target);
+            else {
+                for (int i = 0; i < 3; i++) {
+                    if (rc.canMarkTowerPattern(Tower.moneyLevels[i], target)) {
+                        System.out.println(rc.getID() + " marked money tower pattern");
+                        rc.markTowerPattern(Tower.moneyLevels[i], target);
+                        break;
+                    }
+                }
+            }
+            if (!rc.senseMapInfo(Motion.currLoc).getMark().equals(PaintType.EMPTY)) {
+                if (rc.canAttack(Motion.currLoc)) {
+                    System.out.println("painting");
+                    rc.attack(Motion.currLoc);
+                }
+            }
+
+            if (rc.canCompleteResourcePattern(target)) {
+                System.out.println(rc.getID() + " completed tower pattern");
+                rc.completeResourcePattern(target);
                 break;
             }
-        }
-
-        if (rc.canCompleteResourcePattern(target)) {
-            System.out.println(rc.getID() + " completed tower pattern");
-            rc.completeResourcePattern(target);
         }
     }
 }
