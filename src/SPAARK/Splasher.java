@@ -21,20 +21,16 @@ public class Splasher {
                break; 
             }
             Motion.spreadRandomly();
-            Clock.yield();
         }
 
         // System.out.println("Found ruin");
         while (Motion.currLoc.distanceSquaredTo(target) > 25) {
             Motion.bugnavTowards(target);
-            Motion.updateInfo();
-            Clock.yield();
         }
 
         // System.out.println("in range of ruin");
 
         Motion.bugnavAround(target, 0, 25);
-        Motion.updateInfo();
         if (!rc.senseMapInfo(Motion.currLoc).getMark().equals(PaintType.EMPTY)) {
             if (rc.canAttack(Motion.currLoc)) {
                 System.out.println("painting");
@@ -53,6 +49,5 @@ public class Splasher {
             System.out.println(rc.getID() + " completed tower pattern");
             rc.completeResourcePattern(Motion.currLoc);
         }
-        Clock.yield();
     }
 }

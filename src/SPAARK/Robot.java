@@ -30,6 +30,8 @@ public class Robot {
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
+            indicatorString.append("SYM="+(Motion.symmetry[0]?"0":"1")+(Motion.symmetry[1]?"0":"1")+(Motion.symmetry[2]?"0 ":"1 "));
+            rc.setIndicatorString(indicatorString.toString());
             Clock.yield();
         }
     }

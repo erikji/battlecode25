@@ -16,7 +16,6 @@ public class Tower {
         DefenseTower.rc = MoneyTower.rc = PaintTower.rc = rc;
         DefenseTower.rng = MoneyTower.rng = PaintTower.rng = rng;
         Motion.currLoc = DefenseTower.currLoc = MoneyTower.currLoc = PaintTower.currLoc = rc.getLocation();
-        Motion.updateInfo();
         MapLocation[] spawnLocs = new MapLocation[] {
             Motion.currLoc.add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
@@ -39,10 +38,11 @@ public class Tower {
         while (true) {
             StringBuilder indicatorString = new StringBuilder();
             Motion.indicatorString = indicatorString;
+            Motion.updateInfo();
             // general common code for all towers
             // spawning
             // Note that we r going to have >50% moppers since they r cheaper
-            switch (spawnedRobots % 4) {
+            switch (spawnedRobots % 3) {
                 case 0:
                     for (MapLocation loc : spawnLocs) {
                         if (rc.canBuildRobot(UnitType.SOLDIER, loc)) {
@@ -64,7 +64,6 @@ public class Tower {
                     }
                     break;
                 case 2:
-                case 3:
                     for (MapLocation loc : spawnLocs) {
                         if (rc.canBuildRobot(UnitType.MOPPER, loc)) {
                             rc.buildRobot(UnitType.MOPPER, loc);
@@ -157,6 +156,7 @@ public class Tower {
             if (rc.canUpgradeTower(Motion.currLoc) && rc.getRoundNum() > 100) {
                 rc.upgradeTower(Motion.currLoc);
             }
+            rc.setIndicatorString(indicatorString.toString());
             Clock.yield();
         }
     }

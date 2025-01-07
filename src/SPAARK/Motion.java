@@ -993,10 +993,20 @@ public class Motion {
         MapInfo[] infos = rc.senseNearbyMapInfos();
         for (MapInfo info : infos) {
             MapLocation xy = info.getMapLocation();
-            if (info.isWall()) wall[xy.y] |= 1L << xy.x;
-            else nowall[xy.y] |= 1L << xy.x;
-            if (info.hasRuin()) ruin[xy.y] |= 1L << xy.x;
-            else noruin[xy.y] |= 1L << xy.x;
+            if (info.isWall()) {
+                wall[xy.y] |= 1L << xy.x;
+                rc.setIndicatorDot(xy, 255, 0, 0);
+            }
+            else {
+                nowall[xy.y] |= 1L << xy.x;
+            }
+            if (info.hasRuin()) {
+                ruin[xy.y] |= 1L << xy.x;
+                rc.setIndicatorDot(xy, 0, 0, 255);
+            }
+            else {
+                noruin[xy.y] |= 1L << xy.x;
+            }
         }
         if (symmetry[0]&&!symmetryValid(0))symmetry[0]=false;
         if (symmetry[1]&&!symmetryValid(1))symmetry[1]=false;
