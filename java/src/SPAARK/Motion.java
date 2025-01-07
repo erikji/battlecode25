@@ -3,6 +3,7 @@ package SPAARK;
 import battlecode.common.*;
 
 import java.util.Random;
+import java.lang.*;
 
 public class Motion {
     protected static RobotController rc;
@@ -54,11 +55,15 @@ public class Motion {
     protected static RobotInfo[] friendlyRobots;
 
     protected static long[] passable = new long[64];
-    protected static long[] occupied = new long[64];
+    protected static long[] wall = new long[64];
+    
+    protected static boolean[] symmetry = new boolean[]{false, false, false};
+    //0: horz
+    //1: vert
+    //2: rot
+    protected static MapLocation mapCenter;
+    protected static MapLocation currLoc
 
-    protected static int symmetry = 0;
-    protected static MapLocation mapCenter = new MapLocation(-1, -1);
-    protected static MapLocation currLoc = new MapLocation(-1, -1);
     protected static Direction lastDir = Direction.CENTER;
     protected static Direction optimalDir = Direction.CENTER;
     protected static int rotation = NONE;
@@ -587,6 +592,36 @@ public class Motion {
         while (step < MAX_PATH_LENGTH && Clock.getBytecodesLeft() > 5000) {
             stepOffset = step * (height + 2);
             switch (height) {
+                case 20:
+                MotionCodeGen.bfs20();
+                break;
+                case 21:
+                MotionCodeGen.bfs21();
+                break;
+                case 22:
+                MotionCodeGen.bfs22();
+                break;
+                case 23:
+                MotionCodeGen.bfs23();
+                break;
+                case 24:
+                MotionCodeGen.bfs24();
+                break;
+                case 25:
+                MotionCodeGen.bfs25();
+                break;
+                case 26:
+                MotionCodeGen.bfs26();
+                break;
+                case 27:
+                MotionCodeGen.bfs27();
+                break;
+                case 28:
+                MotionCodeGen.bfs28();
+                break;
+                case 29:
+                MotionCodeGen.bfs29();
+                break;
                 case 30:
                 MotionCodeGen.bfs30();
                 break;
@@ -951,5 +986,44 @@ public class Motion {
     protected static void updateInfo() throws GameActionException {
         opponentRobots = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
         friendlyRobots = rc.senseNearbyRobots(-1, rc.getTeam());
+
+        // bytecode inefficient symmetry detection
+        MapInfo[] infos = rc.senseNearbyMapInfos();
+        for (MapInfo info : infos) {
+            MapLocation xy = info.getMapLocation();
+            if (info.isWall()) wall[xy.y] |= 1L << xy.x;
+            else passable[xy.y] |= 1L << xy.x;
+        }
+        if (symmetry[0]&&!symmetryValid(0))symmetry[0]=false;
+        if (symmetry[1]&&!symmetryValid(1))symmetry[1]=false;
+        if (symmetry[2]&&!symmetryValid(2))symmetry[2]=false;
+    }
+
+    protected static boolean symmetryValid(int sym) throws GameActionException {
+        //completely untested...
+        int w=rc.getMapWidth();
+        int h=rc.getMapHeight();
+        switch (sym) {
+            case 0: //horz
+                for (int i = 0; i < h/2; i++) {
+                    if ((passable[i] ^ passable[h-i]) != 0) return false;
+                    if ((wall[i] ^ wall[h-i]) != 0) return false;
+                }
+                return true;
+            case 1: //vert
+                for (int i = 0; i < h; i++) {
+                    if ((Long.reverse(passable[i]) << (64 - w)) != passable[i]) return false;
+                    if ((Long.reverse(wall[i]) << (64 - w)) != wall[i]) return false;
+                }
+                return true;
+            case 2: //rot
+                for (int i = 0; i < h/2; i++) {
+                    if (((Long.reverse(passable[i]) << (64 - w)) ^ passable[h-i]) != 0) return false;
+                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h-i]) != 0) return false;
+                }
+                return true;
+        }
+        System.out.println("invalid symmetry argument");
+        return false;
     }
 }
