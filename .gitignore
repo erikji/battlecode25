@@ -1,4 +1,6 @@
 *.DS_Store
+Battlecode Client*
+__pycache__
 
 ###### BATTLECODE ######
 
