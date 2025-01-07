@@ -15,6 +15,15 @@ public class Splasher {
         // Find nearby ruin
         MapLocation target = null;
         if (target == null) {
+            Motion.spreadRandomly();
+            Motion.updateInfo();
+
+            MapLocation[] ruins = rc.senseNearbyRuins(-1);
+            Arrays.sort(ruins, new Comparator<MapLocation>() {
+                public int compare(MapLocation a, MapLocation b) {
+                    return a.distanceSquaredTo(rc.getLocation()) - b.distanceSquaredTo(rc.getLocation());
+                };
+            });
             for (MapLocation m : rc.senseNearbyRuins(-1)) {
                 if (!Tower.towerLocs.toString().contains(m.x + "" + m.y + "|")) {
                     Tower.towerLocs.append(m.x + "" + m.y + "|");
@@ -22,8 +31,6 @@ public class Splasher {
                     break;
                 }
             }
-            Motion.spreadRandomly();
-            Motion.updateInfo();
         }
          
         if (target != null) {
@@ -32,17 +39,10 @@ public class Splasher {
                 Motion.updateInfo();
             }
             else {
-                System.out.println("in range of ruin with dist: " + rc.getLocation().distanceSquaredTo(target));
+                // System.out.println("Target = (" + target.x + ", " + target.y + ")");
         
                 Motion.bugnavAround(target, 1, 25);
                 Motion.updateInfo();
-
-                if (!rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.EMPTY)) {
-                    if (rc.canAttack(rc.getLocation())) {
-                        System.out.println("painting");
-                        rc.attack(rc.getLocation());
-                    }
-                }
 
                 if (rng.nextInt(100) > 50) {
                     for (int i = 0; i < 3; i++) {
@@ -60,6 +60,13 @@ public class Splasher {
                             rc.markTowerPattern(Tower.moneyLevels[i], target);
                             break;
                         }
+                    }
+                }
+
+                if (!rc.senseMapInfo(rc.getLocation()).getMark().equals(PaintType.EMPTY)) {
+                    if (rc.canAttack(rc.getLocation())) {
+                        System.out.println("painting");
+                        rc.attack(rc.getLocation());
                     }
                 }
 
