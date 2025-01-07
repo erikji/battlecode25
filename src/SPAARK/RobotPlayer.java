@@ -13,6 +13,9 @@ public class RobotPlayer {
             Micro.rc = rc;
             Micro.rng = rng;
             POI.opponentTeam = rc.getTeam().opponent();
+            Soldier.rc = rc;
+            Soldier.rng = rng;
+            Motion.currLoc = rc.getLocation();
             switch (rc.getType()) {
                 case MOPPER:
                 case SOLDIER:

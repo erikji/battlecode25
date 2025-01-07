@@ -7,35 +7,73 @@ public class Tower {
     public static int spawnedSoldiers = 0;
     public static int spawnedSplashers = 0;
     public static int spawnedMoppers = 0;
+    public static int spawnedRobots = 0;
+
+    static UnitType moneyLevels[] = {UnitType.LEVEL_THREE_MONEY_TOWER, UnitType.LEVEL_TWO_MONEY_TOWER, UnitType.LEVEL_ONE_MONEY_TOWER};
+    static UnitType paintLevels[] = {UnitType.LEVEL_THREE_PAINT_TOWER, UnitType.LEVEL_TWO_PAINT_TOWER, UnitType.LEVEL_ONE_PAINT_TOWER};
 
     public static void run(RobotController rc, Random rng) throws Exception {
         DefenseTower.rc = MoneyTower.rc = PaintTower.rc = rc;
         DefenseTower.rng = MoneyTower.rng = PaintTower.rng = rng;
         Motion.currLoc = DefenseTower.currLoc = MoneyTower.currLoc = PaintTower.currLoc = rc.getLocation();
         Motion.updateInfo();
-        MapLocation[] spawnLocs = new MapLocation[8];
-        for (int i = 0; i < 8; i++) {
-            spawnLocs[i] = Motion.currLoc.add(Motion.DIRECTIONS[i]);
-        }
+        MapLocation[] spawnLocs = new MapLocation[] {
+            Motion.currLoc.add(Direction.NORTH),
+            Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
+            Motion.currLoc.add(Direction.NORTHEAST),
+            Motion.currLoc.add(Direction.EAST),
+            Motion.currLoc.add(Direction.EAST).add(Direction.EAST),
+            Motion.currLoc.add(Direction.SOUTHEAST),
+            Motion.currLoc.add(Direction.SOUTH),
+            Motion.currLoc.add(Direction.SOUTH).add(Direction.SOUTH),
+            Motion.currLoc.add(Direction.SOUTHWEST),
+            Motion.currLoc.add(Direction.WEST),
+            Motion.currLoc.add(Direction.WEST).add(Direction.WEST),
+            Motion.currLoc.add(Direction.NORTHWEST)
+        };
         Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
             public int compare(MapLocation a, MapLocation b) {
                 return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
             };
         });
         while (true) {
-            // general common code for all towers
-            // spawning
             StringBuilder indicatorString = new StringBuilder();
             Motion.indicatorString = indicatorString;
-            UnitType spawnType = UnitType.MOPPER;
-            if (spawnedSplashers < spawnedMoppers * 2) {
-                spawnType = UnitType.SPLASHER;
-            }
-            for (int i = 0; i < 8; i++) {
-                if (rc.canBuildRobot(spawnType, spawnLocs[i])) {
-                    rc.buildRobot(spawnType, spawnLocs[i]);
+            // general common code for all towers
+            // spawning
+            // Note that we r going to have >50% moppers since they r cheaper
+            switch (spawnedRobots % 4) {
+                case 0:
+                    for (MapLocation loc : spawnLocs) {
+                        if (rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            rc.buildRobot(UnitType.SOLDIER, loc);
+                            spawnedRobots++;
+                            spawnedSoldiers++;
+                            break;
+                        }
+                    }
                     break;
-                }
+                case 1:
+                    for (MapLocation loc : spawnLocs) {
+                        if (rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                            rc.buildRobot(UnitType.SPLASHER, loc);
+                            spawnedRobots++;
+                            spawnedSplashers++;
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                case 3:
+                    for (MapLocation loc : spawnLocs) {
+                        if (rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            rc.buildRobot(UnitType.MOPPER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
+                    break;
             }
             // more specialized here
             switch (rc.getType()) {
@@ -78,34 +116,46 @@ public class Tower {
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
-            // attack AFTER run (in case something gets upgraded)
-            if (rc.canAttack(null))
-                rc.attack(null); // splash
-            MapLocation bestEnemyLoc = new MapLocation(-1, -1);
+            // attack AFTER run (in case we get an upgrade)
+            MapLocation bestEnemyLoc = null;
             int bestEnemyHp = 1000000;
             UnitType bestEnemyType = UnitType.MOPPER;
             // priority: soldier, splasher, mopper
-            for (RobotInfo r : rc.senseNearbyRobots()) {
-                if (bestEnemyType == UnitType.MOPPER
-                        && (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || r.health < bestEnemyHp)) {
-                    bestEnemyHp = r.health;
-                    bestEnemyLoc = r.location;
-                    bestEnemyType = r.type;
-                }
-                if (bestEnemyType == UnitType.SPLASHER
-                        && (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health < bestEnemyHp))) {
-                    bestEnemyHp = r.health;
-                    bestEnemyLoc = r.location;
-                    bestEnemyType = r.type;
-                }
-                if (bestEnemyType == UnitType.SOLDIER && (r.type == UnitType.SOLDIER && r.health < bestEnemyHp)) {
-                    bestEnemyHp = r.health;
-                    bestEnemyLoc = r.location;
-                    bestEnemyType = r.type;
+            int numAttackableRobots = 0;
+            for (RobotInfo r : Motion.opponentRobots) {
+                if (rc.canAttack(r.location)) {
+                    numAttackableRobots++;
+                    switch (bestEnemyType) {
+                        case UnitType.MOPPER:
+                            if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || r.health < bestEnemyHp) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                                bestEnemyType = r.type;
+                            }
+                            break;
+                        case UnitType.SPLASHER:
+                            if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health < bestEnemyHp)) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                                bestEnemyType = r.type;
+                            }
+                            break;
+                        case UnitType.SOLDIER:
+                            if (r.type == UnitType.SOLDIER && r.health < bestEnemyHp) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                            }
+                            break;
+                    }
                 }
             }
-            if (bestEnemyLoc.x >= 0 && rc.canAttack(bestEnemyLoc)) {
+            if (numAttackableRobots > 2 && rc.canAttack(null)) {
+                rc.attack(null);
+            } else if (numAttackableRobots > 0 && rc.canAttack(bestEnemyLoc)) {
                 rc.attack(bestEnemyLoc);
+            }
+            if (rc.canUpgradeTower(Motion.currLoc) && rc.getRoundNum() > 100) {
+                rc.upgradeTower(Motion.currLoc);
             }
             Clock.yield();
         }
