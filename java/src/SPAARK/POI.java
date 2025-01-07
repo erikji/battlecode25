@@ -1,9 +1,10 @@
 package SPAARK;
 
 import battlecode.common.*;
-import java.util.*;
 
 public class POI {
+    static Team opponentTeam = Team.NEUTRAL;
+
     MapLocation[] allyTowers = new MapLocation[25];
     MapLocation[] oppTowers = new MapLocation[25];
     MapLocation[] ruins = new MapLocation[25];

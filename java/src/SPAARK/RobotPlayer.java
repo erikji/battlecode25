@@ -12,6 +12,7 @@ public class RobotPlayer {
             Motion.mapCenter = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
             Micro.rc = rc;
             Micro.rng = rng;
+            POI.opponentTeam = rc.getTeam().opponent();
             switch (rc.getType()) {
                 case MOPPER:
                 case SOLDIER:

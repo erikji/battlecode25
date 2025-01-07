@@ -6,9 +6,9 @@ import java.util.*;
 public class Soldier {
     public static RobotController rc;
     public static Random rng;
-    public static MapLocation currloc;
+    public static MapLocation currLoc;
     
     public static void run() throws Exception {
-        Motion.currLoc = currloc = rc.getLocation();
+        Motion.currLoc = currLoc = rc.getLocation();
     }
 }

@@ -8,6 +8,7 @@ public class Robot {
         Mopper.rc = Soldier.rc = Splasher.rc = rc;
         Mopper.rng = Soldier.rng = Splasher.rng = rng;
         while (true) {
+            Motion.updateInfo();
             switch (rc.getType()) {
                 case MOPPER:
                     Mopper.run();

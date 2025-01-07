@@ -3,9 +3,6 @@ package SPAARK;
 import battlecode.common.*;
 import java.util.*;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 public class Tower {
     public static int spawnedSoldiers = 0;
     public static int spawnedSplashers = 0;
@@ -14,7 +11,8 @@ public class Tower {
     public static void run(RobotController rc, Random rng) throws Exception {
         DefenseTower.rc = MoneyTower.rc = PaintTower.rc = rc;
         DefenseTower.rng = MoneyTower.rng = PaintTower.rng = rng;
-        Motion.currLoc = DefenseTower.loc = MoneyTower.loc = PaintTower.loc = rc.getLocation();
+        Motion.currLoc = DefenseTower.currLoc = MoneyTower.currLoc = PaintTower.currLoc = rc.getLocation();
+        Motion.updateInfo();
         MapLocation[] spawnLocs = new MapLocation[8];
         for (int i = 0; i < 8; i++) {
             spawnLocs[i] = Motion.currLoc.add(Motion.DIRECTIONS[i]);
@@ -78,8 +76,9 @@ public class Tower {
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
-            //attack AFTER run (in case something gets upgraded)
-            if (rc.canAttack(null)) rc.attack(null); //splash
+            // attack AFTER run (in case something gets upgraded)
+            if (rc.canAttack(null))
+                rc.attack(null); // splash
             MapLocation bestEnemyLoc = new MapLocation(-1, -1);
             int bestEnemyHp = 1000000;
             UnitType bestEnemyType = UnitType.MOPPER;
