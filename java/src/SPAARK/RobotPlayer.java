@@ -4,11 +4,9 @@ import battlecode.common.*;
 import java.util.*;
 
 public class RobotPlayer {
-    protected static Random rng;
-
     public static void run(RobotController rc) throws Exception {
         try {
-            rng = new Random(rc.getID() + 2025);
+            Random rng = new Random(rc.getID() + 2025);
             Motion.rc = rc;
             Motion.rng = rng;
             Motion.mapCenter = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);

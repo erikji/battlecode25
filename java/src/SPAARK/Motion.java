@@ -3,7 +3,6 @@ package SPAARK;
 import battlecode.common.*;
 
 import java.util.Random;
-import java.lang.*;
 
 public class Motion {
     protected static RobotController rc;
