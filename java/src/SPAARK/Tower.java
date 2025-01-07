@@ -10,6 +10,7 @@ public class Tower {
     public static int spawnedSoldiers = 0;
     public static int spawnedSplashers = 0;
     public static int spawnedMoppers = 0;
+    public static int level = 0;
     public static void run(RobotController rc, Random rng) throws Exception {
         Motion.currLoc = rc.getLocation();
         MapLocation[] spawnLocs = new MapLocation[8];
@@ -34,25 +35,46 @@ public class Tower {
             }
             switch (rc.getType()) {
                 case LEVEL_ONE_DEFENSE_TOWER:
+                    level = 1;
+                    DefenseTower.run(rc, rng);
+                    break;
                 case LEVEL_TWO_DEFENSE_TOWER:
+                    level = 2;
+                    DefenseTower.run(rc, rng);
+                    break;
                 case LEVEL_THREE_DEFENSE_TOWER:
+                    level = 3;
                     DefenseTower.run(rc, rng);
                     break;
                 case LEVEL_ONE_MONEY_TOWER:
+                    level = 1;
+                    MoneyTower.run(rc, rng);
+                    break;
                 case LEVEL_TWO_MONEY_TOWER:
+                    level = 2;
+                    MoneyTower.run(rc, rng);
+                    break;
                 case LEVEL_THREE_MONEY_TOWER:
+                    level = 3;
                     MoneyTower.run(rc, rng);
                     break;
                 case LEVEL_ONE_PAINT_TOWER:
+                    level = 1;
+                    PaintTower.run(rc, rng);
+                    break;
                 case LEVEL_TWO_PAINT_TOWER:
+                    level = 2;
+                    PaintTower.run(rc, rng);
+                    break;
                 case LEVEL_THREE_PAINT_TOWER:
+                    level = 3;
                     PaintTower.run(rc, rng);
                     break;
                 default:
                     throw new Exception("Challenge Complete! How Did We Get Here?");
             }
             //attack AFTER run (in case something gets upgraded)
-            rc.attack(null); //splash
+            if (rc.canAttack(null)) rc.attack(null); //splash
             MapLocation bestEnemyLoc = new MapLocation(-1, -1);
             int bestEnemyHp = 1000000;
             UnitType bestEnemyType = UnitType.MOPPER;
