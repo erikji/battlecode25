@@ -3,7 +3,7 @@ package SPAARK;
 import battlecode.common.*;
 
 public class Soldier {
-    public Soldier(RobotController rc) {
+    public static void run(RobotController rc, Random rng) {
         
     }
 }

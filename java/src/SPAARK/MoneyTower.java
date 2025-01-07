@@ -3,7 +3,7 @@ package SPAARK;
 import battlecode.common.*;
 
 public class MoneyTower {
-    public MoneyTower(RobotController rc, int level) {
+    public static void run(RobotController rc, Random rng) {
         
     }
 }

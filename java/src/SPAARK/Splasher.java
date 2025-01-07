@@ -3,7 +3,7 @@ package SPAARK;
 import battlecode.common.*;
 
 public class Splasher {
-    public Splasher(RobotController rc) {
+    public static void run(RobotController rc, Random rng) {
         
     }
 }
