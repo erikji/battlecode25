@@ -27,6 +27,7 @@ public class Mopper {
                         rc.attack(info.getMapLocation());
                     }
                     Motion.bugnavAround(info.getMapLocation(), 0, 2);
+                    break;
                 }
             }
         }
