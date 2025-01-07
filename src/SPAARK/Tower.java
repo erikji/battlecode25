@@ -25,6 +25,8 @@ public class Tower {
         while (true) {
             // general common code for all towers
             // spawning
+            StringBuilder indicatorString = new StringBuilder();
+            Motion.indicatorString = indicatorString;
             UnitType spawnType = UnitType.MOPPER;
             if (spawnedSplashers < spawnedMoppers * 2) {
                 spawnType = UnitType.SPLASHER;

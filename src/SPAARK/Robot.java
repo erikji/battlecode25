@@ -8,6 +8,8 @@ public class Robot {
         Mopper.rc = Soldier.rc = Splasher.rc = rc;
         Mopper.rng = Soldier.rng = Splasher.rng = rng;
         while (true) {
+            StringBuilder indicatorString = new StringBuilder();
+            Motion.indicatorString = indicatorString;
             Motion.updateInfo();
             switch (rc.getType()) {
                 case MOPPER:

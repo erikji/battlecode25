@@ -13,27 +13,18 @@ public class Mopper {
     public static void run() throws Exception {
         Motion.currLoc = currLoc = rc.getLocation();
         // idk just make it attack anything it sees
-        RobotInfo best = null;
-        if (rc.isActionReady()) {
-            RobotInfo[] robots = rc.senseNearbyRobots(-1, POI.opponentTeam);
-            for (RobotInfo r : robots) {
-                if (r.location.distanceSquaredTo(currLoc) <= 2 && (best == null || r.health < best.health)) {
-                    best = r;
-                }
-            }
-        }
-        if (best != null && rc.canAttack(best.location)) {
-            rc.attack(best.location);
-        } else {
+        if (!trySwing()) {
             // no bots attacked, look for paint
             MapInfo[] mapInfos = rc.senseNearbyMapInfos();
-            for (MapInfo map : mapInfos) {
-                if ((map.getPaint() == PaintType.ENEMY_PRIMARY || map.getPaint() == PaintType.ENEMY_SECONDARY)) {
-                    int distSq = map.getMapLocation().distanceSquaredTo(currLoc);
-                    if (distSq <= 2 && rc.isActionReady() && rc.canAttack(map.getMapLocation())) {
-                        rc.attack(map.getMapLocation());
+            MapInfo best = null;
+            for (MapInfo info : mapInfos) {
+                if (((info.getPaint() == PaintType.ENEMY_PRIMARY || info.getPaint() == PaintType.ENEMY_SECONDARY) && (best == null || (rc.canSenseRobotAtLocation(info.getMapLocation()) && rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam)))) {
+                    //if we didn't mop swing, prioritize unpainting squares under opponents
+                    int distSq = info.getMapLocation().distanceSquaredTo(currLoc);
+                    if (distSq <= 2 && rc.isActionReady() && rc.canAttack(info.getMapLocation())) {
+                        rc.attack(info.getMapLocation());
                     }
-                    Motion.bugnavAround(map.getMapLocation(), 0, 2);
+                    Motion.bugnavAround(info.getMapLocation(), 0, 2);
                 }
             }
         }
@@ -44,45 +35,62 @@ public class Mopper {
     }
 
     /** Move this out later!!! */
-    public static void mopSwingMicroSpaghetti() throws Exception {
+    //return true if swing was successful, else false
+    public static boolean trySwing() throws Exception {
         // spaghetti copy paste
         int up = 0, down = 0, left = 0, right = 0;
-        RobotInfo r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTH));
-        if (r != null && r.team == POI.opponentTeam)
-            up++;
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHEAST));
-        if (r != null && r.team == POI.opponentTeam) {
-            up++;
-            right++;
+        RobotInfo r;
+        if (rc.onTheMap(currLoc.add(Direction.NORTH))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTH));
+            if (r != null && r.team == POI.opponentTeam)
+                up++;
         }
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.EAST));
-        if (r != null && r.team == POI.opponentTeam)
-            right++;
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHEAST));
-        if (r != null && r.team == POI.opponentTeam) {
-            down++;
-            right++;
+        if (rc.onTheMap(currLoc.add(Direction.NORTHEAST))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHEAST));
+            if (r != null && r.team == POI.opponentTeam) {
+                up++;
+                right++;
+            }
         }
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTH));
-        if (r != null && r.team == POI.opponentTeam)
-            down++;
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHWEST));
-        if (r != null && r.team == POI.opponentTeam) {
-            down++;
-            left++;
+        if (rc.onTheMap(currLoc.add(Direction.EAST))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.EAST));
+            if (r != null && r.team == POI.opponentTeam)
+                right++;
         }
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.WEST));
-        if (r != null && r.team == POI.opponentTeam)
-            left++;
-        r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHWEST));
-        if (r != null && r.team == POI.opponentTeam) {
-            up++;
-            left++;
+        if (rc.onTheMap(currLoc.add(Direction.SOUTHEAST))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHEAST));
+            if (r != null && r.team == POI.opponentTeam) {
+                down++;
+                right++;
+            }
+        }
+        if (rc.onTheMap(currLoc.add(Direction.SOUTH))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTH));
+            if (r != null && r.team == POI.opponentTeam)
+                down++;
+        }
+        if (rc.onTheMap(currLoc.add(Direction.SOUTHWEST))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.SOUTHWEST));
+            if (r != null && r.team == POI.opponentTeam) {
+                down++;
+                left++;
+            }
+        }
+        if (rc.onTheMap(currLoc.add(Direction.WEST))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.WEST));
+            if (r != null && r.team == POI.opponentTeam)
+                left++;
+        }
+        if (rc.onTheMap(currLoc.add(Direction.NORTHWEST))) {
+            r = rc.senseRobotAtLocation(currLoc.add(Direction.NORTHWEST));
+            if (r != null && r.team == POI.opponentTeam) {
+                up++;
+                left++;
+            }
         }
         // SPAGHETITIITIUUITHREIHSIHDFSDF
         // good code not needed
-        if (left == 0 && right == 0 && up == 0 && down == 0)
-            return;
+        if (left + right + up + down == 0) return false;
         if (left > right) {
             if (up > left) {
                 if (down > up)
@@ -108,5 +116,6 @@ public class Mopper {
                     rc.mopSwing(Direction.EAST);
             }
         }
+        return true;
     }
 }
