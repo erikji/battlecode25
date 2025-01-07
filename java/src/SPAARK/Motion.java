@@ -56,13 +56,13 @@ public class Motion {
 
     protected static long[] passable = new long[64];
     protected static long[] wall = new long[64];
-    
+
     protected static boolean[] symmetry = new boolean[]{false, false, false};
     //0: horz
     //1: vert
     //2: rot
     protected static MapLocation mapCenter;
-    protected static MapLocation currLoc
+    protected static MapLocation currLoc;
 
     protected static Direction lastDir = Direction.CENTER;
     protected static Direction optimalDir = Direction.CENTER;

@@ -11,7 +11,7 @@ public class Tower {
     public static int spawnedSplashers = 0;
     public static int spawnedMoppers = 0;
     public static void run(RobotController rc, Random rng) throws Exception {
-        Direction dir = Motion.currLoc.directionTo(Motion.mapCenter);
+        Motion.currLoc = rc.getLocation();
         MapLocation[] spawnLocs = new MapLocation[8];
         for (int i = 0; i < 8; i++) {
             spawnLocs[i] = Motion.currLoc.add(Motion.DIRECTIONS[i]);
