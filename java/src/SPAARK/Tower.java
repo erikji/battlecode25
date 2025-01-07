@@ -2,9 +2,35 @@ package SPAARK;
 
 import battlecode.common.*;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class Tower {
+    public static int spawnedSoldiers = 0;
+    public static int spawnedSplashers = 0;
+    public static int spawnedMoppers = 0;
     public static void run(RobotController rc) {
+        Direction dir = Motion.currLoc.directionTo(Motion.mapCenter);
+        MapLocation[] spawnLocs = new MapLocation[8];
+        for (int i = 0; i < 8; i++) {
+            spawnLocs[i] = Motion.currLoc.add(Motion.DIRECTIONS[i]);
+        }
+        Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
+            public int compare(MapLocation a, MapLocation b) {
+                return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
+            };
+        });
         while (true) {
+            UnitType spawnType = UnitType.MOPPER;
+            if (spawnedSplashers < spawnedMoppers * 2) {
+                spawnType = UnitType.SPLASHER;
+            }
+            for (int i = 0; i < 8; i++) {
+                if (rc.canBuildRobot(spawnType, spawnLocs[i])) {
+                    rc.buildRobot(spawnType, spawnLocs[i]);
+                    break;
+                }
+            }
             switch (rc.getType()) {
                 case LEVEL_ONE_DEFENSE_TOWER:
                     DefenseTower.run(rc,1);
