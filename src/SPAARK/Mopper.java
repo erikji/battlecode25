@@ -48,6 +48,7 @@ public class Mopper {
         MapLocation bestEmpty = null;
         MapLocation bestBot = null;
         double bestPaint = -1;
+        MapLocation microDir = G.me;
         for (int i = mapInfos.length; --i >= 0;) {
             MapInfo info = mapInfos[i];
             MapLocation loc = info.getMapLocation();
@@ -56,6 +57,7 @@ public class Mopper {
                 if (!p.isAlly() && p != PaintType.EMPTY) {
                     RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                     if (bot.getType() == UnitType.MOPPER || bot.getType() == UnitType.SOLDIER || bot.getType() == UnitType.SPLASHER) {
+                        microDir.add(G.me.directionTo(loc));
                         double paint = bot.paintAmount / (double) bot.type.paintCapacity;
                         if (paint > bestPaint) {
                             bestPaint = paint;
@@ -64,8 +66,11 @@ public class Mopper {
                     }
                 }
             }
-            if (!p.isAlly() && p != PaintType.EMPTY && (bestEmpty == null ||G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty))) {
-                bestEmpty = info.getMapLocation();
+            if (!p.isAlly() && p != PaintType.EMPTY) {
+                microDir.add(G.me.directionTo(loc));
+                if (bestEmpty == null ||G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
+                    bestEmpty = info.getMapLocation();
+                }
             }
         }
         if (bestBot != null) {
@@ -80,6 +85,8 @@ public class Mopper {
                 G.rc.canAttack(bestEmpty);
                 G.rc.setIndicatorLine(G.me, bestEmpty, 128, 128, 128);
             }
+        } else if (microDir != G.me) {
+            Motion.bugnavTowards(microDir);
         } else {
             Motion.spreadRandomly();
         }
