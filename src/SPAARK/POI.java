@@ -12,16 +12,16 @@ public class POI {
     public static int dMoney = 10;
     public static int normDMoney = 10;
 
-    //symmetry detection
-    protected static long[] nowall = new long[60];
-    protected static long[] wall = new long[60];
-    protected static long[] ruin = new long[60];
-    protected static long[] noruin = new long[60];
-    protected static boolean[] symmetry = new boolean[]{false, false, false};
+    // symmetry detection
+    public static long[] nowall = new long[60];
+    public static long[] wall = new long[60];
+    public static long[] ruin = new long[60];
+    public static long[] noruin = new long[60];
+    public static boolean[] symmetry = new boolean[] { true, true, true };
     public static boolean criticalSymmetry = false;
-    //0: horz
-    //1: vert
-    //2: rot
+    // 0: horz
+    // 1: vert
+    // 2: rot
 
     // stores all tower and ruin data
 
@@ -47,37 +47,41 @@ public class POI {
                     robotsThatKnowInformation[i] = new StringBuilder("-" + source + "-");
                     if (source == -1) {
                         critical[i] = true;
-                    }
-                    else {
+                    } else {
                         critical[i] = false;
                     }
-                }
-                else if (source != -1) {
+                } else if (source != -1) {
                     robotsThatKnowInformation[i].append("-" + source + "-");
                 }
                 break;
             }
         }
     };
+
     public static void removeValidSymmetry(int source, int index) {
         if (symmetry[index]) {
             symmetry[index] = false;
             robotsThatKnowInformation[50] = new StringBuilder("-" + source + "-");
             if (source == -1) {
                 criticalSymmetry = true;
-            }
-            else {
+            } else {
                 criticalSymmetry = false;
             }
-        }
-        else if (source != -1) {
+        } else if (source != -1) {
             robotsThatKnowInformation[50].append("-" + source + "-");
         }
     };
+
+    // bytecode optimize this later
+    // bytecode optimize this later
+    // bytecode optimize this later
+    // bytecode optimize this later
+    // bytecode optimize this later
     public static void updateInfo() throws Exception {
         dMoney = G.rc.getMoney() - lastMoney;
-        //dMoney doesnt change by more than 50 each turn
-        if (dMoney > 0 && Math.abs(dMoney - normDMoney) < 50) normDMoney = dMoney;
+        // dMoney doesnt change by more than 50 each turn
+        if (dMoney > 0 && Math.abs(dMoney - normDMoney) < 50)
+            normDMoney = dMoney;
         lastMoney = G.rc.getMoney();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
 
@@ -102,13 +106,11 @@ public class POI {
             // System.out.println(parseLocation(towers[i]));
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 255);
+                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 255, 0, 255);
+                } else {
+                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 255, 0, 0);
                 }
-                else {
-                    G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
-                }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
 
             }
         }
@@ -117,62 +119,80 @@ public class POI {
         MapInfo[] infos = G.rc.senseNearbyMapInfos();
         for (MapInfo info : infos) {
             MapLocation xy = info.getMapLocation();
-            if (info.isWall()) wall[xy.y] |= 1L << xy.x;
-            else nowall[xy.y] |= 1L << xy.x;
-            if (info.hasRuin()) ruin[xy.y] |= 1L << xy.x;
-            else noruin[xy.y] |= 1L << xy.x;
+            if (info.isWall())
+                wall[xy.y] |= 1L << xy.x;
+            else
+                nowall[xy.y] |= 1L << xy.x;
+            if (info.hasRuin())
+                ruin[xy.y] |= 1L << xy.x;
+            else
+                noruin[xy.y] |= 1L << xy.x;
         }
-        if (symmetry[0]&&!symmetryValid(0)) {
+        if (symmetry[0] && !symmetryValid(0)) {
             removeValidSymmetry(-1, 0);
         }
-        if (symmetry[1]&&!symmetryValid(1)) {
+        if (symmetry[1] && !symmetryValid(1)) {
             removeValidSymmetry(-1, 1);
         }
-        if (symmetry[2]&&!symmetryValid(2)) {
+        if (symmetry[2] && !symmetryValid(2)) {
             removeValidSymmetry(-1, 2);
         }
 
         sendMessages();
     };
-    protected static int getNumChipTowers() throws Exception {
-        //call updateInfo() first
-        //guess that each chip tower is making 15 currency
+
+    public static int getNumChipTowers() throws Exception {
+        // call updateInfo() first
+        // guess that each chip tower is making 15 currency
         return (normDMoney + 14) / 15;
     }
 
-    protected static boolean symmetryValid(int sym) throws GameActionException {
-        //completely untested...
-        int w=G.rc.getMapWidth();
-        int h=G.rc.getMapHeight();
+    public static boolean symmetryValid(int sym) throws GameActionException {
+        // completely untested...
+        int w = G.rc.getMapWidth();
+        int h = G.rc.getMapHeight();
         switch (sym) {
-            case 0: //horz
-                for (int i = 0; i < h/2; i++) {
-                    if ((nowall[i] ^ nowall[h-i]) != 0) return false;
-                    if ((wall[i] ^ wall[h-i]) != 0) return false;
-                    if ((noruin[i] ^ noruin[h-i]) != 0) return false;
-                    if ((ruin[i] ^ ruin[h-i]) != 0) return false;
+            case 0: // horz
+                for (int i = 0; i < h / 2; i++) {
+                    if ((nowall[i] ^ nowall[h - i]) != 0)
+                        return false;
+                    if ((wall[i] ^ wall[h - i]) != 0)
+                        return false;
+                    if ((noruin[i] ^ noruin[h - i]) != 0)
+                        return false;
+                    if ((ruin[i] ^ ruin[h - i]) != 0)
+                        return false;
                 }
                 return true;
-            case 1: //vert
+            case 1: // vert
                 for (int i = 0; i < h; i++) {
-                    if ((Long.reverse(nowall[i]) << (64 - w)) != nowall[i]) return false;
-                    if ((Long.reverse(wall[i]) << (64 - w)) != wall[i]) return false;
-                    if ((Long.reverse(noruin[i]) << (64 - w)) != noruin[i]) return false;
-                    if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i]) return false;
+                    if ((Long.reverse(nowall[i]) << (64 - w)) != nowall[i])
+                        return false;
+                    if ((Long.reverse(wall[i]) << (64 - w)) != wall[i])
+                        return false;
+                    if ((Long.reverse(noruin[i]) << (64 - w)) != noruin[i])
+                        return false;
+                    if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i])
+                        return false;
                 }
                 return true;
-            case 2: //rot
-                for (int i = 0; i < h/2; i++) {
-                    if (((Long.reverse(nowall[i]) << (64 - w)) ^ nowall[h-i]) != 0) return false;
-                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h-i]) != 0) return false;
-                    if (((Long.reverse(noruin[i]) << (64 - w)) ^ noruin[h-i]) != 0) return false;
-                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h-i]) != 0) return false;
+            case 2: // rot
+                for (int i = 0; i < h / 2; i++) {
+                    if (((Long.reverse(nowall[i]) << (64 - w)) ^ nowall[h - i]) != 0)
+                        return false;
+                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i]) != 0)
+                        return false;
+                    if (((Long.reverse(noruin[i]) << (64 - w)) ^ noruin[h - i]) != 0)
+                        return false;
+                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i]) != 0)
+                        return false;
                 }
                 return true;
         }
         System.out.println("invalid symmetry argument");
         return false;
     }
+
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
@@ -206,8 +226,7 @@ public class POI {
                     }
                 }
             }
-        }
-        else {
+        } else {
             int message = -1;
             int messages = 0;
             if (criticalSymmetry) {
@@ -222,7 +241,8 @@ public class POI {
                                 if (towers[i] == -1) {
                                     break;
                                 }
-                                if (critical[i] && ((intifyLocation(r.getLocation()) ^ towers[i]) & 0b111111111111) != 0) {
+                                if (critical[i]
+                                        && ((intifyLocation(r.getLocation()) ^ towers[i]) & 0b111111111111) != 0) {
                                     message = appendToMessage(message, towers[i]);
                                     messages += 1;
                                     critical[i] = false;
@@ -264,6 +284,7 @@ public class POI {
             }
         }
     };
+
     public static void readMessages() throws Exception {
         // what hapepns if message is sent in same round?? oof oof oof
         Message[] messages = G.rc.readMessages(G.rc.getRoundNum() - 1);
@@ -280,8 +301,7 @@ public class POI {
                 if ((n2 >> 2) % 2 == 0) {
                     removeValidSymmetry(m.getSenderID(), 2);
                 }
-            }
-            else {
+            } else {
                 addTower(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             }
             if ((m.getBytes() >> 16) != 0) {
@@ -290,15 +310,16 @@ public class POI {
         }
     };
 
-    protected static MapLocation parseLocation(int n) {
+    public static MapLocation parseLocation(int n) {
         // n -= 1;
         return new MapLocation((n & 0b111111), (n >> 6) & 0b111111);
     }
-    protected static int intifyLocation(MapLocation loc) {
+
+    public static int intifyLocation(MapLocation loc) {
         // return ((loc.y << 6) | loc.x) + 1;
         return ((loc.y << 6) | loc.x);
     }
-    
+
     // team 0 for ally
     // team 1 for opp
     // team 2 for neutral
@@ -306,7 +327,7 @@ public class POI {
     // 1: paint
     // 2: chip
     // 3: defense
-    protected static Team parseTowerTeam(int n) {
+    public static Team parseTowerTeam(int n) {
         int t = n >> 12;
         if (t == 0) {
             return Team.NEUTRAL;
@@ -316,7 +337,8 @@ public class POI {
         }
         return Team.B;
     }
-    protected static UnitType parseTowerType(int n) {
+
+    public static UnitType parseTowerType(int n) {
         int t = n >> 12;
         if (t == 0) {
             return UnitType.LEVEL_TWO_PAINT_TOWER;
@@ -329,26 +351,31 @@ public class POI {
         }
         return UnitType.LEVEL_ONE_DEFENSE_TOWER;
     }
-    protected static int intifyTower(Team team, UnitType type) {
+
+    public static int intifyTower(Team team, UnitType type) {
         if (team == Team.NEUTRAL) {
             return 0;
         }
-        if (type == UnitType.LEVEL_ONE_PAINT_TOWER || type == UnitType.LEVEL_TWO_PAINT_TOWER || type == UnitType.LEVEL_THREE_PAINT_TOWER) {
+        if (type == UnitType.LEVEL_ONE_PAINT_TOWER || type == UnitType.LEVEL_TWO_PAINT_TOWER
+                || type == UnitType.LEVEL_THREE_PAINT_TOWER) {
             return (1 + team.ordinal() * 3) << 12;
         }
-        if (type == UnitType.LEVEL_ONE_MONEY_TOWER || type == UnitType.LEVEL_TWO_MONEY_TOWER || type == UnitType.LEVEL_THREE_MONEY_TOWER) {
+        if (type == UnitType.LEVEL_ONE_MONEY_TOWER || type == UnitType.LEVEL_TWO_MONEY_TOWER
+                || type == UnitType.LEVEL_THREE_MONEY_TOWER) {
             return (2 + team.ordinal() * 3) << 12;
         }
-        if (type == UnitType.LEVEL_ONE_DEFENSE_TOWER || type == UnitType.LEVEL_TWO_DEFENSE_TOWER || type == UnitType.LEVEL_THREE_DEFENSE_TOWER) {
+        if (type == UnitType.LEVEL_ONE_DEFENSE_TOWER || type == UnitType.LEVEL_TWO_DEFENSE_TOWER
+                || type == UnitType.LEVEL_THREE_DEFENSE_TOWER) {
             return (3 + team.ordinal() * 3) << 12;
         }
         return 0;
     }
-    protected static int intifySymmetry() {
+
+    public static int intifySymmetry() {
         return ((symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7) << 12;
     }
-    
-    protected static int appendToMessage(int message, int a) {
+
+    public static int appendToMessage(int message, int a) {
         if (message == -1) {
             return a;
         }
