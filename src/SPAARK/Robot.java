@@ -54,7 +54,7 @@ public class Robot {
             MapLocation loc = POI.parseLocation(POI.towers[best]);
             Motion.bugnavTowards(loc);
             if (G.rc.getLocation().distanceSquaredTo(loc) <= 2) {
-                G.rc.transferPaint(loc, Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(), G.rc.senseRobotAtLocation(loc).getPaintAmount()));
+                G.rc.transferPaint(loc, -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(), G.rc.senseRobotAtLocation(loc).getPaintAmount()));
             }
         }
     }
