@@ -86,7 +86,7 @@ public class Motion {
     }
 
     public static MapLocation getClosestPair(MapLocation[] a, MapLocation[] b) throws GameActionException {
-        /* Get closest MapLocation to me (Euclidean) */
+        /* Get closest pair (Euclidean) */
         MapLocation closest = a[0];
         int distance = b[0].distanceSquaredTo(a[0]);
         for (MapLocation loc : a) {

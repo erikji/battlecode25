@@ -48,9 +48,9 @@ public class Tower {
                 }
             }
         } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
-            switch (spawnedRobots % 4) {
+            switch (spawnedRobots % 5) {
+                //make sure to subtract 2
                 case 0:
-                case 1:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
                             G.rc.buildRobot(UnitType.MOPPER, loc);
@@ -60,12 +60,32 @@ public class Tower {
                         }
                     }
                     break;
-                case 2:
+                case 1:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                             G.rc.buildRobot(UnitType.SPLASHER, loc);
                             spawnedRobots++;
-                            spawnedSplashers++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            G.rc.buildRobot(UnitType.MOPPER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                            G.rc.buildRobot(UnitType.SPLASHER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
                             break;
                         }
                     }

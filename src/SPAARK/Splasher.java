@@ -50,13 +50,13 @@ public class Splasher {
                 MapLocation bestLoc = null;
                 int bestScore = 0;
                 // painting heuristic
-                for (MapLocation d : attackRange) {
-                    MapLocation loc = new MapLocation(G.me.x + d.x, G.me.y + d.y);
+                for (int i = attackRange.length; --i >= 0;) {
+                    MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
                     if (G.rc.canAttack(loc)) {
                         int score = 0;
-                        for (Direction dir : G.ALL_DIRECTIONS) {
+                        for (int dir = 9; --dir >= 0;) {
                             // only care about sqrt(2) distance because bytecode somehow
-                            MapLocation nxt = loc.add(dir);
+                            MapLocation nxt = loc.add(Motion.ALL_DIRECTIONS[dir]);
                             if (G.rc.canSenseLocation(nxt)) {
                                 PaintType paint = G.rc.senseMapInfo(nxt).getPaint();
                                 boolean willPaintEmpty = paint == PaintType.EMPTY;
@@ -76,8 +76,10 @@ public class Splasher {
                             bestLoc = loc;
                             bestScore = score;
                         }
-                        if (Clock.getBytecodesLeft() < 2000)
+                        if (Clock.getBytecodesLeft() < 2000) {
+                            System.out.println(i);
                             break;
+                        }
                     }
                 }
                 if (bestScore > 4 && bestLoc != null) {
