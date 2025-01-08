@@ -102,32 +102,11 @@ public class Mopper {
         }
         // SPAGHETITIITIUUITHREIHSIHDFSDF
         // good code not needed
-        if (left + right + up + down == 0) return false;
-        if (left > right) {
-            if (up > left) {
-                if (down > up)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.NORTH);
-            } else {
-                if (down > left)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.WEST);
-            }
-        } else {
-            if (up > right) {
-                if (down > up)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.NORTH);
-            } else {
-                if (down > right)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.EAST);
-            }
-        }
+        if (left == 3) G.rc.mopSwing(Direction.WEST);
+        else if (right == 3) G.rc.mopSwing(Direction.EAST);
+        else if (up == 3) G.rc.mopSwing(Direction.NORTH);
+        else if (down == 3) G.rc.mopSwing(Direction.SOUTH);
+        else return false;
         return true;
     }
 }

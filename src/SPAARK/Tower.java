@@ -9,8 +9,6 @@ public class Tower {
     protected static int spawnedMoppers = 0;
     protected static int spawnedRobots = 0;
 
-    protected static UnitType moneyLevels[] = {UnitType.LEVEL_THREE_MONEY_TOWER, UnitType.LEVEL_TWO_MONEY_TOWER, UnitType.LEVEL_ONE_MONEY_TOWER};
-    protected static UnitType paintLevels[] = {UnitType.LEVEL_THREE_PAINT_TOWER, UnitType.LEVEL_TWO_PAINT_TOWER, UnitType.LEVEL_ONE_PAINT_TOWER};
     protected static MapLocation[] spawnLocs;
     protected static int level;
 
@@ -39,8 +37,7 @@ public class Tower {
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
-        // Note that we r going to have >50% moppers since they r cheaper
-        if (spawnedRobots < 3) {
+        if (spawnedRobots < 3 && G.rc.getRoundNum() < 100) {
             for (MapLocation loc : spawnLocs) {
                 if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
                     G.rc.buildRobot(UnitType.SOLDIER, loc);
@@ -50,7 +47,7 @@ public class Tower {
                 }
             }
         } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
-            switch (spawnedRobots % 3) {
+            switch (spawnedRobots % 4) {
                 case 0:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
@@ -71,7 +68,7 @@ public class Tower {
                         }
                     }
                     break;
-                case 2:
+                default:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
                             G.rc.buildRobot(UnitType.MOPPER, loc);

@@ -21,12 +21,7 @@ public class Soldier {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
-                    if (G.rc.canAttack(loc)) {
-                        //necessarily an enemy tower
-                        mode = ATTACK;
-                        towerLocation = loc;
-                        break;
-                    } else continue; //necessarily a friendly tower
+                    continue; //tower already there
                 }
                 ruinLocation = loc;
                 mode = BUILD;
@@ -44,7 +39,7 @@ public class Soldier {
                 break;
             case BUILD:
                 G.indicatorString.append("BUILD ");
-                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 0, 0);
+                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
                 if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
                     mode = EXPLORE;
                     ruinLocation = null;
@@ -66,8 +61,9 @@ public class Soldier {
                     }
                     MapInfo[] infos = G.rc.senseNearbyMapInfos();
                     for (MapInfo info : infos) {
-                        if (info.getMark() != PaintType.EMPTY && info.getPaint() != info.getMark() && G.rc.canAttack(G.rc.getLocation())) {
+                        if (info.getMark().isAlly() && info.getPaint() != info.getMark() && G.rc.canAttack(info.getMapLocation())) {
                             G.rc.attack(info.getMapLocation(), info.getMark().isSecondary());
+                            G.rc.setIndicatorLine(Motion.currLoc, info.getMapLocation(), 0, 255, 255);
                             break;
                         }
                     }
@@ -88,16 +84,7 @@ public class Soldier {
             case ATTACK:
                 G.indicatorString.append("ATTACK ");
                 //do some attack micro idk
-                if (!G.rc.canSenseRobotAtLocation(towerLocation)) {
-                    //either tower is dead or we are out of range
-                    mode = EXPLORE;
-                    towerLocation = null;
-                } else {
-                    if (G.rc.canAttack(towerLocation)) {
-                        G.rc.attack(towerLocation);
-                    }
-                    Motion.bugnavAround(towerLocation, 13, 20);
-                }
+                //pretty useless with the range nerf
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
