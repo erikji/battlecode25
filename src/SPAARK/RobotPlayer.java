@@ -24,6 +24,7 @@ public class RobotPlayer {
                 try {
                     G.indicatorString = new StringBuilder();
                     Motion.currLoc = G.rc.getLocation();
+                    POI.updateInfo();
                     switch (G.rc.getType()) {
                         case MOPPER:
                         case SOLDIER:
