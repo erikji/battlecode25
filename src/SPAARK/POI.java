@@ -84,15 +84,15 @@ public class POI {
             else noruin[xy.y] |= 1L << xy.x;
         }
         if (symmetry[0]&&!symmetryValid(0)) {
-            symmetry[0]=false;
+            symmetry[0]=true;
             criticalSymmetry = true;
         }
         if (symmetry[1]&&!symmetryValid(1)) {
-            symmetry[1]=false;
+            symmetry[1]=true;
             criticalSymmetry = true;
         }
         if (symmetry[2]&&!symmetryValid(2)) {
-            symmetry[2]=false;
+            symmetry[2]=true;
             criticalSymmetry = true;
         }
     };

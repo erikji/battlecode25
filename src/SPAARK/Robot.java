@@ -15,16 +15,13 @@ public class Robot {
         };
     }
     public static void run() throws Exception {
-        while (true) {
-            Motion.updateInfo();
-            switch (G.rc.getType()) {
-                case MOPPER -> Mopper.run();
-                case SOLDIER -> Soldier.run();
-                case SPLASHER -> Splasher.run();
-                default -> throw new Exception("Challenge Complete! How Did We Get Here?");
-            }
-            G.indicatorString.append("SYM="+(POI.symmetry[0]?"0":"1")+(POI.symmetry[1]?"0":"1")+(POI.symmetry[2]?"0 ":"1 "));
+        switch (G.rc.getType()) {
+            case MOPPER -> Mopper.run();
+            case SOLDIER -> Soldier.run();
+            case SPLASHER -> Splasher.run();
+            default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
+        G.indicatorString.append("SYM="+(POI.symmetry[0]?"0":"1")+(POI.symmetry[1]?"0":"1")+(POI.symmetry[2]?"0 ":"1 "));
     }
     public static void retreat() throws Exception {
         // retreats to an ally tower

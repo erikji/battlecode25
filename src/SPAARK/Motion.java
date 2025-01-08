@@ -177,7 +177,9 @@ public class Motion {
             MapLocation me = G.rc.getLocation();
             MapLocation target = me;
             for (RobotInfo r : allyRobots) {
-                target = target.add(me.directionTo(r.getLocation()).opposite());
+                if (!G.rc.senseMapInfo(r.getLocation()).hasRuin())
+                    //ignore towers
+                    target = target.add(me.directionTo(r.getLocation()).opposite());
             }
             if (target.equals(me)) {
                 // just keep moving in the same direction as before if there's no robots nearby

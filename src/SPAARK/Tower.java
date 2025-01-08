@@ -17,7 +17,6 @@ public class Tower {
     }
 
     public static void run() throws Exception {
-        Motion.updateInfo();
         MapLocation[] spawnLocs = new MapLocation[] {
             Motion.currLoc.add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
