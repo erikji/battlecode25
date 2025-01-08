@@ -117,6 +117,12 @@ public class Soldier {
         }
     }
 
+    // public static Micro attackMicro = new Micro() {
+    //     public void micro(Direction d, MapLocation dest) throws Exception {
+            
+    //     }
+    // };
+
     public static int predictTowerType(MapLocation m){
         return (m.x^m.y)%6/3+1;
     }

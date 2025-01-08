@@ -147,7 +147,7 @@ public class POI {
         return (normDMoney + 14) / 15;
     }
 
-    public static boolean symmetryValid(int sym) throws GameActionException {
+    public static boolean symmetryValid(int sym) throws Exception {
         // completely untested...
         int w = G.rc.getMapWidth();
         int h = G.rc.getMapHeight();

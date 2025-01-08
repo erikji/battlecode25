@@ -138,10 +138,8 @@ public class Motion {
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
-            if (G.rc.canMove(direction)) {
-                G.rc.move(direction);
+            if (move(direction)) {
                 lastRandomDir = direction;
-                updateInfo();
             }
         }
     }
@@ -176,11 +174,9 @@ public class Motion {
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
                     Direction direction = me.directionTo(target);
-                    if (G.rc.canMove(direction)) {
-                        G.rc.move(direction);
+                    if (move(direction)) {
                         lastRandomSpread = lastRandomSpread.add(direction);
                         lastRandomDir = direction;
-                        updateInfo();
                     } else {
                         moveRandomly();
                     }
@@ -196,11 +192,9 @@ public class Motion {
                     lastDir = Direction.CENTER;
                 }
                 Direction direction = bug2Helper(me, target, TOWARDS, 0, 0);
-                if (G.rc.canMove(direction)) {
-                    G.rc.move(direction);
+                if (move(direction)) {
                     lastRandomSpread = target;
                     lastRandomDir = direction;
-                    updateInfo();
                 }
             }
         }
@@ -971,16 +965,36 @@ public class Motion {
 
     public static Micro defaultMicro = new Micro() {
         public void micro(Direction d, MapLocation dest) throws Exception {
-            Motion.move(d);
+            Direction best = d;
+            int bestScore = Integer.MIN_VALUE;
+            for (int i = 8; --i >= 0; ) {
+                int score = 0;
+                if (G.ALL_DIRECTIONS[i] == d) {
+                    score += 20;
+                } else if (G.ALL_DIRECTIONS[i].rotateLeft() == d || G.ALL_DIRECTIONS[i].rotateRight() == d) {
+                    score += 10;
+                }
+                MapLocation nxt = G.me.add(G.ALL_DIRECTIONS[i]);
+                MapInfo info = G.rc.senseMapInfo(nxt);
+                if (info.getPaint().isEnemy()) score -= 10;
+                else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                if (score > bestScore) {
+                    best = G.ALL_DIRECTIONS[i];
+                    bestScore = score;
+                }
+            }
+            Motion.move(best);
         }
     };
 
-    public static void move(Direction dir) throws Exception {
+    public static boolean move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);
             lastDir = dir;
-            updateInfo();
+            RobotPlayer.updateInfo();
+            return true;
         }
+        return false;
     }
 
     public static boolean canMove(Direction dir) throws Exception {
