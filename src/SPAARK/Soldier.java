@@ -4,9 +4,9 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Soldier {
-    //modes
-    public static MapLocation ruinLocation = null; //BUILD mode
-    public static MapLocation towerLocation = null; //ATTACK mode
+    // modes
+    public static MapLocation ruinLocation = null; // BUILD mode
+    public static MapLocation towerLocation = null; // ATTACK mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int ATTACK = 2;
@@ -21,7 +21,7 @@ public class Soldier {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
-                    continue; //tower already there
+                    continue; // tower already there
                 }
                 ruinLocation = loc;
                 mode = BUILD;
@@ -32,9 +32,10 @@ public class Soldier {
             case EXPLORE:
                 G.indicatorString.append("EXPLORE ");
                 Motion.spreadRandomly();
-                MapInfo me = G.rc.senseMapInfo(Motion.currLoc);
-                if (me.getPaint() != PaintType.ALLY_PRIMARY && me.getPaint() != PaintType.ALLY_SECONDARY && G.rc.canAttack(Motion.currLoc)) {
-                    G.rc.attack(Motion.currLoc); //also add logic to paint in special resource pattern
+                MapInfo me = G.rc.senseMapInfo(G.me);
+                if (me.getPaint() != PaintType.ALLY_PRIMARY && me.getPaint() != PaintType.ALLY_SECONDARY
+                        && G.rc.canAttack(G.me)) {
+                    G.rc.attack(G.me); // also add logic to paint in special resource pattern
                 }
                 break;
             case BUILD:
@@ -44,11 +45,13 @@ public class Soldier {
                     mode = EXPLORE;
                     ruinLocation = null;
                 } else {
-                    PaintType mark = G.rc.senseMapInfo(ruinLocation.add(ruinLocation.directionTo(Motion.currLoc))).getMark();
+                    PaintType mark = G.rc.senseMapInfo(ruinLocation.add(ruinLocation.directionTo(G.me))).getMark();
                     if (!mark.isAlly()) {
-                        // if (POI.getNumChipTowers() * 3 > G.rc.getNumberTowers() - POI.getNumChipTowers()) {
-                        //oof chips don't work
-                        // if (POI.getNumChipTowers() > G.rc.getNumberTowers() - POI.getNumChipTowers()) {
+                        // if (POI.getNumChipTowers() * 3 > G.rc.getNumberTowers() -
+                        // POI.getNumChipTowers()) {
+                        // oof chips don't work
+                        // if (POI.getNumChipTowers() > G.rc.getNumberTowers() - POI.getNumChipTowers())
+                        // {
                         if (G.rng.nextBoolean()) {
                             if (G.rc.canMarkTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation)) {
                                 G.rc.markTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation);
@@ -61,16 +64,18 @@ public class Soldier {
                     }
                     MapInfo[] infos = G.rc.senseNearbyMapInfos();
                     for (MapInfo info : infos) {
-                        if (info.getMark().isAlly() && info.getPaint() != info.getMark() && G.rc.canAttack(info.getMapLocation())) {
+                        if (info.getMark().isAlly() && info.getPaint() != info.getMark()
+                                && G.rc.canAttack(info.getMapLocation())) {
                             G.rc.attack(info.getMapLocation(), info.getMark().isSecondary());
-                            G.rc.setIndicatorLine(Motion.currLoc, info.getMapLocation(), 0, 255, 255);
+                            G.rc.setIndicatorLine(G.me, info.getMapLocation(), 0, 255, 255);
                             break;
                         }
                     }
                     for (UnitType ruinType : G.towerTypes) {
                         if (G.rc.canCompleteTowerPattern(ruinType, ruinLocation) && G.rc.getPaint() > 50) {
                             G.rc.completeTowerPattern(ruinType, ruinLocation);
-                            POI.addTower(-1, POI.intifyTower(G.rc.getTeam(), ruinType) | POI.intifyLocation(ruinLocation));
+                            POI.addTower(-1,
+                                    POI.intifyTower(G.rc.getTeam(), ruinType) | POI.intifyLocation(ruinLocation));
                             mode = EXPLORE;
                             ruinLocation = null;
                             break;
@@ -83,8 +88,8 @@ public class Soldier {
                 break;
             case ATTACK:
                 G.indicatorString.append("ATTACK ");
-                //do some attack micro idk
-                //pretty useless with the range nerf
+                // do some attack micro idk
+                // pretty useless with the range nerf
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");

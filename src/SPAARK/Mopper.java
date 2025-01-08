@@ -18,15 +18,18 @@ public class Mopper {
             case EXPLORE:
                 G.indicatorString.append("EXPLORE ");
                 Motion.spreadRandomly();
-                if (!trySwing()) {
+                if (!mopSwingWithMicro()) {
                     // no bots attacked, look for paint
                     MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
-                    MapInfo best = null;
                     for (MapInfo info : mapInfos) {
-                        if (((info.getPaint() == PaintType.ENEMY_PRIMARY || info.getPaint() == PaintType.ENEMY_SECONDARY) && (best == null || (G.rc.canSenseRobotAtLocation(info.getMapLocation()) && G.rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam)))) {
-                            //if we didn't mop swing, prioritize unpainting squares under opponents
-                            int distSq = info.getMapLocation().distanceSquaredTo(Motion.currLoc);
-                            if (distSq <= 2 && G.rc.isActionReady() && G.rc.canAttack(info.getMapLocation())) {
+                        PaintType p = info.getPaint();
+                        if ((p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY)
+                                && G.rc.canSenseRobotAtLocation(info.getMapLocation())
+                                && G.rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam) {
+                            // if we didn't mop swing, prioritize unpainting squares under opponents
+                            int distSq = info.getMapLocation().distanceSquaredTo(G.me);
+                            if (distSq <= 2 && G.rc.isActionReady() &&
+                                    G.rc.canAttack(info.getMapLocation())) {
                                 G.rc.attack(info.getMapLocation());
                             }
                             Motion.bugnavAround(info.getMapLocation(), 0, 2);
@@ -42,6 +45,24 @@ public class Mopper {
         }
     }
 
+    public static void attackPaintWithMicro() throws Exception {
+        MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
+        MapInfo best = null;
+        float bestPaint = -1;
+        MapLocation microDir = G.rc.getLocation();
+        for (MapInfo info : mapInfos) {
+            MapLocation loc = info.getMapLocation();
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                microDir.add(G.me.directionTo(loc));
+                RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                float paint = r.paintAmount / (float) r.type.paintCapacity;
+                if (paint > bestPaint) {
+
+                }
+            }
+        }
+    }
+
     /** Move this out later!!! */
     /**
      * Attempt mop swing with some microstrategy. Returns if a swing was executed.
@@ -50,56 +71,57 @@ public class Mopper {
         // spaghetti copy paste
         float up = 0, down = 0, left = 0, right = 0;
         RobotInfo r;
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.NORTH))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.NORTH));
+        if (G.rc.onTheMap(G.me.add(Direction.NORTH))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTH));
             if (r != null && r.team == POI.opponentTeam)
                 up += r.paintAmount / (float) r.type.paintCapacity;
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.NORTHEAST))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.NORTHEAST));
+        if (G.rc.onTheMap(G.me.add(Direction.NORTHEAST))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
                 up += r.paintAmount / (float) r.type.paintCapacity;
                 right += r.paintAmount / (float) r.type.paintCapacity;
             }
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.EAST))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.EAST));
+        if (G.rc.onTheMap(G.me.add(Direction.EAST))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.EAST));
             if (r != null && r.team == POI.opponentTeam)
                 right += r.paintAmount / (float) r.type.paintCapacity;
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.SOUTHEAST))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.SOUTHEAST));
+        if (G.rc.onTheMap(G.me.add(Direction.SOUTHEAST))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.SOUTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
                 down += r.paintAmount / (float) r.type.paintCapacity;
                 right += r.paintAmount / (float) r.type.paintCapacity;
             }
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.SOUTH))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.SOUTH));
+        if (G.rc.onTheMap(G.me.add(Direction.SOUTH))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.SOUTH));
             if (r != null && r.team == POI.opponentTeam)
                 down += r.paintAmount / (float) r.type.paintCapacity;
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.SOUTHWEST))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.SOUTHWEST));
+        if (G.rc.onTheMap(G.me.add(Direction.SOUTHWEST))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.SOUTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
                 down += r.paintAmount / (float) r.type.paintCapacity;
                 left += r.paintAmount / (float) r.type.paintCapacity;
             }
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.WEST))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.WEST));
+        if (G.rc.onTheMap(G.me.add(Direction.WEST))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.WEST));
             if (r != null && r.team == POI.opponentTeam)
                 left += r.paintAmount / (float) r.type.paintCapacity;
         }
-        if (G.rc.onTheMap(Motion.currLoc.add(Direction.NORTHWEST))) {
-            r = G.rc.senseRobotAtLocation(Motion.currLoc.add(Direction.NORTHWEST));
+        if (G.rc.onTheMap(G.me.add(Direction.NORTHWEST))) {
+            r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
                 up += r.paintAmount / (float) r.type.paintCapacity;
                 left += r.paintAmount / (float) r.type.paintCapacity;
             }
         }
         // SPAGHETITIITIUUITHREIHSIHDFSDF
-        if (left + right + up + down == 0) return false;
+        if (left + right + up + down == 0)
+            return false;
         if (left > right) {
             if (up > left) {
                 if (down > up)

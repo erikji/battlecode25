@@ -6,36 +6,36 @@ import battlecode.common.*;
 
 public class Motion {
     public static final Direction[] DIRECTIONS = {
-        Direction.SOUTHWEST,
-        Direction.SOUTH,
-        Direction.SOUTHEAST,
-        Direction.WEST,
-        Direction.EAST,
-        Direction.NORTHWEST,
-        Direction.NORTH,
-        Direction.NORTHEAST,
+            Direction.SOUTHWEST,
+            Direction.SOUTH,
+            Direction.SOUTHEAST,
+            Direction.WEST,
+            Direction.EAST,
+            Direction.NORTHWEST,
+            Direction.NORTH,
+            Direction.NORTHEAST,
     };
     public static final Direction[] ALL_DIRECTIONS = {
-        Direction.SOUTHWEST,
-        Direction.SOUTH,
-        Direction.SOUTHEAST,
-        Direction.WEST,
-        Direction.EAST,
-        Direction.NORTHWEST,
-        Direction.NORTH,
-        Direction.NORTHEAST,
-        Direction.CENTER,
+            Direction.SOUTHWEST,
+            Direction.SOUTH,
+            Direction.SOUTHEAST,
+            Direction.WEST,
+            Direction.EAST,
+            Direction.NORTHWEST,
+            Direction.NORTH,
+            Direction.NORTHEAST,
+            Direction.CENTER,
     };
     public static final String[] DIRABBREV = {
-        "C",
-        "W",
-        "NW",
-        "N",
-        "NE",
-        "E",
-        "SE",
-        "S",
-        "SW",
+            "C",
+            "W",
+            "NW",
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
     };
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
@@ -50,7 +50,6 @@ public class Motion {
     public static RobotInfo[] allyRobots;
 
     public static MapLocation mapCenter;
-    public static MapLocation currLoc;
 
     public static Direction lastDir = Direction.CENTER;
     public static Direction optimalDir = Direction.CENTER;
@@ -62,16 +61,17 @@ public class Motion {
 
     // common distance stuff
     public static int getManhattanDistance(MapLocation a, MapLocation b) {
-        return Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
+        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
+
     public static int getChebyshevDistance(MapLocation a, MapLocation b) {
-        return Math.max(Math.abs(a.x-b.x), Math.abs(a.y-b.y));
+        return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
     }
 
     public static MapLocation getClosest(MapLocation[] a) throws GameActionException {
-        /* Get closest MapLocation to this robot (Euclidean) */
         return getClosest(a, G.rc.getLocation());
     }
+
     public static MapLocation getClosest(MapLocation[] a, MapLocation me) throws GameActionException {
         /* Get closest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
@@ -84,6 +84,7 @@ public class Motion {
         }
         return closest;
     }
+
     public static MapLocation getClosestPair(MapLocation[] a, MapLocation[] b) throws GameActionException {
         /* Get closest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
@@ -98,6 +99,7 @@ public class Motion {
         }
         return closest;
     }
+
     public static RobotInfo getClosestRobot(RobotInfo[] a) throws GameActionException {
         MapLocation me = G.rc.getLocation();
         RobotInfo closest = null;
@@ -110,6 +112,7 @@ public class Motion {
         }
         return closest;
     }
+
     public static RobotInfo getClosestRobot(RobotInfo[] a, MapLocation b) throws GameActionException {
         RobotInfo closest = null;
         int distance = 0;
@@ -126,6 +129,7 @@ public class Motion {
         /* Get farthest MapLocation to this robot (Euclidean) */
         return getFarthest(a, G.rc.getLocation());
     }
+
     public static MapLocation getFarthest(MapLocation[] a, MapLocation me) throws GameActionException {
         /* Get farthest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
@@ -151,7 +155,8 @@ public class Motion {
             if (stuck) {
                 return;
             }
-            // move in a random direction but minimize making useless moves back to where you came from
+            // move in a random direction but minimize making useless moves back to where
+            // you came from
             Direction direction = DIRECTIONS[G.rng.nextInt(DIRECTIONS.length)];
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
@@ -163,6 +168,7 @@ public class Motion {
             }
         }
     }
+
     public static void spreadRandomly() throws GameActionException {
         boolean stuck = true;
         for (Direction d : DIRECTIONS) {
@@ -178,7 +184,7 @@ public class Motion {
             MapLocation target = me;
             for (RobotInfo r : allyRobots) {
                 if (!G.rc.senseMapInfo(r.getLocation()).hasRuin())
-                    //ignore towers
+                    // ignore towers
                     target = target.add(me.directionTo(r.getLocation()).opposite());
             }
             if (target.equals(me)) {
@@ -204,7 +210,10 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                G.rc.setIndicatorLine(me, new MapLocation(Math.max(0, Math.min(G.rc.getMapWidth() - 1, target.x)), Math.max(0, Math.min(G.rc.getMapHeight() - 1, target.y))), DEFAULT_RETREAT_HP, AWAY, AROUND);
+                G.rc.setIndicatorLine(me,
+                        new MapLocation(Math.max(0, Math.min(G.rc.getMapWidth() - 1, target.x)),
+                                Math.max(0, Math.min(G.rc.getMapHeight() - 1, target.y))),
+                        DEFAULT_RETREAT_HP, AWAY, AROUND);
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
@@ -218,9 +227,10 @@ public class Motion {
             }
         }
     }
-    
+
     // bugnav helpers
     public static StringBuilder visitedList = new StringBuilder();
+
     public static int[] simulateMovement(MapLocation me, MapLocation dest) throws GameActionException {
         MapLocation clockwiseLoc = G.rc.getLocation();
         Direction clockwiseLastDir = lastDir;
@@ -243,7 +253,8 @@ public class Motion {
                         if (!G.rc.canSenseLocation(loc)) {
                             break search;
                         }
-                        if (clockwiseDir != clockwiseLastDir.opposite() && G.rc.senseMapInfo(loc).isPassable() && G.rc.senseRobotAtLocation(loc) == null) {
+                        if (clockwiseDir != clockwiseLastDir.opposite() && G.rc.senseMapInfo(loc).isPassable()
+                                && G.rc.senseRobotAtLocation(loc) == null) {
                             clockwiseLastDir = clockwiseDir;
                             break;
                         }
@@ -263,7 +274,8 @@ public class Motion {
                         if (!G.rc.canSenseLocation(loc)) {
                             break search;
                         }
-                        if (counterClockwiseDir != counterClockwiseLastDir.opposite() && G.rc.senseMapInfo(loc).isPassable() && G.rc.senseRobotAtLocation(loc) == null) {
+                        if (counterClockwiseDir != counterClockwiseLastDir.opposite()
+                                && G.rc.senseMapInfo(loc).isPassable() && G.rc.senseRobotAtLocation(loc) == null) {
                             counterClockwiseLastDir = counterClockwiseDir;
                             break;
                         }
@@ -282,26 +294,25 @@ public class Motion {
         int clockwiseDist = clockwiseLoc.distanceSquaredTo(dest);
         int counterClockwiseDist = counterClockwiseLoc.distanceSquaredTo(dest);
 
-        return new int[]{clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck};
+        return new int[] { clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck };
     }
-    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared, int maxRadiusSquared) throws GameActionException {
+
+    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared,
+            int maxRadiusSquared) throws GameActionException {
         Direction direction = me.directionTo(dest);
         if (me.equals(dest)) {
             if (mode == AROUND) {
                 direction = Direction.EAST;
-            }
-            else {
+            } else {
                 return Direction.CENTER;
             }
         }
         if (mode == AWAY) {
             direction = direction.opposite();
-        }
-        else if (mode == AROUND) {
+        } else if (mode == AROUND) {
             if (me.distanceSquaredTo(dest) < minRadiusSquared) {
                 direction = direction.opposite();
-            }
-            else if (me.distanceSquaredTo(dest) <= maxRadiusSquared) {
+            } else if (me.distanceSquaredTo(dest) <= maxRadiusSquared) {
                 direction = direction.rotateLeft().rotateLeft();
                 if (circleDirection == COUNTER_CLOCKWISE) {
                     direction = direction.opposite();
@@ -330,8 +341,7 @@ public class Motion {
                 optimalDir = Direction.CENTER;
                 rotation = NONE;
                 visitedList = new StringBuilder();
-            }
-            else {
+            } else {
                 direction = optimalDir;
             }
         }
@@ -340,50 +350,48 @@ public class Motion {
         // G.indicatorString.append("CIRCLE: " + circleDirection);
         // G.indicatorString.append("DIR: " + direction);
         // G.indicatorString.append("OFF: " + G.rc.onTheMap(me.add(direction)));
-        
+
         if (lastDir != direction.opposite()) {
             if (G.rc.canMove(direction)) {
                 // if (!lastBlocked) {
-                //     rotation = NONE;
+                // rotation = NONE;
                 // }
                 // lastBlocked = false;
                 // boolean touchingTheWallBefore = false;
                 // for (Direction d : DIRECTIONS) {
-                //     MapLocation translatedMapLocation = me.add(d);
-                //     if (G.rc.onTheMap(translatedMapLocation)) {
-                //         if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
-                //             touchingTheWallBefore = true;
-                //             break;
-                //         }
-                //     }
+                // MapLocation translatedMapLocation = me.add(d);
+                // if (G.rc.onTheMap(translatedMapLocation)) {
+                // if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
+                // touchingTheWallBefore = true;
+                // break;
+                // }
+                // }
                 // }
                 // if (touchingTheWallBefore) {
-                //     rotation = NONE;
+                // rotation = NONE;
                 // }
                 return direction;
             }
-        }
-        else if (G.rc.canMove(direction)) {
+        } else if (G.rc.canMove(direction)) {
             Direction dir;
             if (rotation == CLOCKWISE) {
                 dir = direction.rotateRight();
-            }
-            else {
+            } else {
                 dir = direction.rotateLeft();
             }
             if (!G.rc.onTheMap(me.add(dir))) {
                 // boolean touchingTheWallBefore = false;
                 // for (Direction d : DIRECTIONS) {
-                //     MapLocation translatedMapLocation = me.add(d);
-                //     if (G.rc.onTheMap(translatedMapLocation)) {
-                //         if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
-                //             touchingTheWallBefore = true;
-                //             break;
-                //         }
-                //     }
+                // MapLocation translatedMapLocation = me.add(d);
+                // if (G.rc.onTheMap(translatedMapLocation)) {
+                // if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
+                // touchingTheWallBefore = true;
+                // break;
+                // }
+                // }
                 // }
                 // if (touchingTheWallBefore) {
-                //     rotation = NONE;
+                // rotation = NONE;
                 // }
                 rotation *= -1;
                 return direction;
@@ -394,8 +402,7 @@ public class Motion {
                 circleDirection *= -1;
                 direction = direction.opposite();
                 G.indicatorString.append("FLIPPED");
-            }
-            else {
+            } else {
                 direction = me.directionTo(dest);
             }
             if (G.rc.canMove(direction)) {
@@ -406,55 +413,47 @@ public class Motion {
         if (optimalDir == Direction.CENTER) {
             optimalDir = direction;
         }
-        
+
         G.indicatorString.append("ROTATION=" + rotation + " ");
         if (rotation == NONE) {
             int[] simulated = simulateMovement(me, dest);
-    
+
             int clockwiseDist = simulated[0];
             int counterClockwiseDist = simulated[2];
             boolean clockwiseStuck = simulated[1] == 1;
             boolean counterClockwiseStuck = simulated[3] == 1;
-            
+
             G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist);
             int tempMode = mode;
             if (mode == AROUND) {
                 if (clockwiseDist < minRadiusSquared) {
                     if (counterClockwiseDist < minRadiusSquared) {
                         tempMode = AWAY;
-                    }
-                    else {
+                    } else {
                         tempMode = AWAY;
                     }
-                }
-                else {
+                } else {
                     if (counterClockwiseDist < minRadiusSquared) {
                         tempMode = AWAY;
-                    }
-                    else {
+                    } else {
                         tempMode = TOWARDS;
                     }
                 }
             }
             if (clockwiseStuck) {
                 rotation = COUNTER_CLOCKWISE;
-            }
-            else if (counterClockwiseStuck) {
+            } else if (counterClockwiseStuck) {
                 rotation = CLOCKWISE;
-            }
-            else if (tempMode == TOWARDS) {
+            } else if (tempMode == TOWARDS) {
                 if (clockwiseDist < counterClockwiseDist) {
                     rotation = CLOCKWISE;
-                }
-                else {
+                } else {
                     rotation = COUNTER_CLOCKWISE;
                 }
-            }
-            else if (tempMode == AWAY) {
+            } else if (tempMode == AWAY) {
                 if (clockwiseDist < counterClockwiseDist) {
                     rotation = COUNTER_CLOCKWISE;
-                }
-                else {
+                } else {
                     rotation = CLOCKWISE;
                 }
             }
@@ -464,18 +463,19 @@ public class Motion {
         for (int i = 8; --i >= 0;) {
             if (rotation == CLOCKWISE) {
                 direction = direction.rotateRight();
-            }
-            else {
+            } else {
                 direction = direction.rotateLeft();
             }
             if (!G.rc.onTheMap(me.add(direction))) {
                 flip = true;
             }
-            // if (G.rc.onTheMap(me.add(direction)) && G.rc.senseMapInfo(me.add(direction)).isPassable() && lastDir != direction.opposite()) {
-            //     if (G.rc.canMove(direction)) {
-            //         return direction;
-            //     }
-            //     return Direction.CENTER;
+            // if (G.rc.onTheMap(me.add(direction)) &&
+            // G.rc.senseMapInfo(me.add(direction)).isPassable() && lastDir !=
+            // direction.opposite()) {
+            // if (G.rc.canMove(direction)) {
+            // return direction;
+            // }
+            // return Direction.CENTER;
             // }
             if (G.rc.canMove(direction) && lastDir != direction.opposite()) {
                 if (flip) {
@@ -495,7 +495,7 @@ public class Motion {
         }
         return Direction.CENTER;
     }
-    
+
     // bugnav
     public static void bugnavTowards(MapLocation dest) throws GameActionException {
         if (G.rc.isMovementReady()) {
@@ -506,6 +506,7 @@ public class Motion {
             Micro.micro(d, dest);
         }
     }
+
     public static void bugnavAway(MapLocation dest) throws GameActionException {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AWAY, 0, 0);
@@ -515,7 +516,9 @@ public class Motion {
             Micro.micro(d, dest);
         }
     }
-    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared) throws GameActionException {
+
+    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared)
+            throws GameActionException {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared, maxRadiusSquared);
             if (d == Direction.CENTER) {
@@ -532,6 +535,7 @@ public class Motion {
     public static long bitmask;
     // public static StringBuilder bfsQueue = new StringBuilder();
     public static final int MAX_PATH_LENGTH = 100;
+
     public static void bfsInit() {
         width = G.rc.getMapWidth();
         height = G.rc.getMapHeight();
@@ -540,12 +544,14 @@ public class Motion {
         bfsDist = new long[(height + 2) * MAX_PATH_LENGTH];
         bitmask = (long1 << width) - 1;
     }
+
     public static int step = 1;
     public static int stepOffset;
     public static int width;
     public static int height;
     public static long long1 = 1;
     public static int recalculationNeeded = MAX_PATH_LENGTH;
+
     public static void updateBfsMap() throws GameActionException {
         MapInfo[] map = G.rc.senseNearbyMapInfos();
         for (MapInfo m : map) {
@@ -565,9 +571,10 @@ public class Motion {
             }
         }
     }
+
     public static void bfs() throws GameActionException {
 
-        if (recalculationNeeded != MAX_PATH_LENGTH && recalculationNeeded < step) { 
+        if (recalculationNeeded != MAX_PATH_LENGTH && recalculationNeeded < step) {
             step = recalculationNeeded;
             for (int i = 1; i <= height; i++) {
                 // bfsDist[i] = 0;
@@ -578,150 +585,156 @@ public class Motion {
             G.indicatorString.append("RECALCULATING;");
         }
         recalculationNeeded = MAX_PATH_LENGTH;
-        
+
         while (step < MAX_PATH_LENGTH && Clock.getBytecodesLeft() > 5000) {
             stepOffset = step * (height + 2);
             switch (height) {
                 case 20:
-                MotionCodeGen.bfs20();
-                break;
+                    MotionCodeGen.bfs20();
+                    break;
                 case 21:
-                MotionCodeGen.bfs21();
-                break;
+                    MotionCodeGen.bfs21();
+                    break;
                 case 22:
-                MotionCodeGen.bfs22();
-                break;
+                    MotionCodeGen.bfs22();
+                    break;
                 case 23:
-                MotionCodeGen.bfs23();
-                break;
+                    MotionCodeGen.bfs23();
+                    break;
                 case 24:
-                MotionCodeGen.bfs24();
-                break;
+                    MotionCodeGen.bfs24();
+                    break;
                 case 25:
-                MotionCodeGen.bfs25();
-                break;
+                    MotionCodeGen.bfs25();
+                    break;
                 case 26:
-                MotionCodeGen.bfs26();
-                break;
+                    MotionCodeGen.bfs26();
+                    break;
                 case 27:
-                MotionCodeGen.bfs27();
-                break;
+                    MotionCodeGen.bfs27();
+                    break;
                 case 28:
-                MotionCodeGen.bfs28();
-                break;
+                    MotionCodeGen.bfs28();
+                    break;
                 case 29:
-                MotionCodeGen.bfs29();
-                break;
+                    MotionCodeGen.bfs29();
+                    break;
                 case 30:
-                MotionCodeGen.bfs30();
-                break;
+                    MotionCodeGen.bfs30();
+                    break;
                 case 31:
-                MotionCodeGen.bfs31();
-                break;
+                    MotionCodeGen.bfs31();
+                    break;
                 case 32:
-                MotionCodeGen.bfs32();
-                break;
+                    MotionCodeGen.bfs32();
+                    break;
                 case 33:
-                MotionCodeGen.bfs33();
-                break;
+                    MotionCodeGen.bfs33();
+                    break;
                 case 34:
-                MotionCodeGen.bfs34();
-                break;
+                    MotionCodeGen.bfs34();
+                    break;
                 case 35:
-                MotionCodeGen.bfs35();
-                break;
+                    MotionCodeGen.bfs35();
+                    break;
                 case 36:
-                MotionCodeGen.bfs36();
-                break;
+                    MotionCodeGen.bfs36();
+                    break;
                 case 37:
-                MotionCodeGen.bfs37();
-                break;
+                    MotionCodeGen.bfs37();
+                    break;
                 case 38:
-                MotionCodeGen.bfs38();
-                break;
+                    MotionCodeGen.bfs38();
+                    break;
                 case 39:
-                MotionCodeGen.bfs39();
-                break;
+                    MotionCodeGen.bfs39();
+                    break;
                 case 40:
-                MotionCodeGen.bfs40();
-                break;
+                    MotionCodeGen.bfs40();
+                    break;
                 case 41:
-                MotionCodeGen.bfs41();
-                break;
+                    MotionCodeGen.bfs41();
+                    break;
                 case 42:
-                MotionCodeGen.bfs42();
-                break;
+                    MotionCodeGen.bfs42();
+                    break;
                 case 43:
-                MotionCodeGen.bfs43();
-                break;
+                    MotionCodeGen.bfs43();
+                    break;
                 case 44:
-                MotionCodeGen.bfs44();
-                break;
+                    MotionCodeGen.bfs44();
+                    break;
                 case 45:
-                MotionCodeGen.bfs45();
-                break;
+                    MotionCodeGen.bfs45();
+                    break;
                 case 46:
-                MotionCodeGen.bfs46();
-                break;
+                    MotionCodeGen.bfs46();
+                    break;
                 case 47:
-                MotionCodeGen.bfs47();
-                break;
+                    MotionCodeGen.bfs47();
+                    break;
                 case 48:
-                MotionCodeGen.bfs48();
-                break;
+                    MotionCodeGen.bfs48();
+                    break;
                 case 49:
-                MotionCodeGen.bfs49();
-                break;
+                    MotionCodeGen.bfs49();
+                    break;
                 case 50:
-                MotionCodeGen.bfs50();
-                break;
+                    MotionCodeGen.bfs50();
+                    break;
                 case 51:
-                MotionCodeGen.bfs51();
-                break;
+                    MotionCodeGen.bfs51();
+                    break;
                 case 52:
-                MotionCodeGen.bfs52();
-                break;
+                    MotionCodeGen.bfs52();
+                    break;
                 case 53:
-                MotionCodeGen.bfs53();
-                break;
+                    MotionCodeGen.bfs53();
+                    break;
                 case 54:
-                MotionCodeGen.bfs54();
-                break;
+                    MotionCodeGen.bfs54();
+                    break;
                 case 55:
-                MotionCodeGen.bfs55();
-                break;
+                    MotionCodeGen.bfs55();
+                    break;
                 case 56:
-                MotionCodeGen.bfs56();
-                break;
+                    MotionCodeGen.bfs56();
+                    break;
                 case 57:
-                MotionCodeGen.bfs57();
-                break;
+                    MotionCodeGen.bfs57();
+                    break;
                 case 58:
-                MotionCodeGen.bfs58();
-                break;
+                    MotionCodeGen.bfs58();
+                    break;
                 case 59:
-                MotionCodeGen.bfs59();
-                break;
+                    MotionCodeGen.bfs59();
+                    break;
                 case 60:
-                MotionCodeGen.bfs60();
-                break;
+                    MotionCodeGen.bfs60();
+                    break;
             }
             // var cod = "";
             // for (var i = 30; i <= 60; i++) {
-            //     cod += "public static void bfs" + i + "() {\n";
-            //     for (var j = 1; j <= i; j++) {
-            //         cod += "Motion.bfsCurr[z] = Motion.bfsCurr[z] | (Motion.bfsCurr[z] >> 1) | (Motion.bfsCurr[z] << 1);\n".replaceAll("z", j);
-            //     }
-            //     for (var j = 1; j <= i; j++) {
-            //         cod += "Motion.bfsDist[Motion.stepOffset + z] = (Motion.bfsCurr[z] | Motion.bfsCurr[y] | Motion.bfsCurr[x]) & (Motion.bitmask ^ Motion.bfsMap[z]);\n".replaceAll("z", j).replaceAll("y", j - 1).replaceAll("x", j + 1);
-            //     }
-            //     for (var j = 1; j <= i; j++) {
-            //         //cod += "Motion.bfsDist[Motion.stepOffset + z] &= Motion.bitmask ^ Motion.bfsMap[z];\n".replaceAll("z", j);
-            //     }
-            //     for (var j = 1; j <= i; j++) {
-            //         cod += "Motion.bfsCurr[z] = Motion.bfsDist[Motion.stepOffset + z];\n".replaceAll("z", j);
-            //     }
-            //     cod += "}\n";
+            // cod += "public static void bfs" + i + "() {\n";
+            // for (var j = 1; j <= i; j++) {
+            // cod += "Motion.bfsCurr[z] = Motion.bfsCurr[z] | (Motion.bfsCurr[z] >> 1) |
+            // (Motion.bfsCurr[z] << 1);\n".replaceAll("z", j);
+            // }
+            // for (var j = 1; j <= i; j++) {
+            // cod += "Motion.bfsDist[Motion.stepOffset + z] = (Motion.bfsCurr[z] |
+            // Motion.bfsCurr[y] | Motion.bfsCurr[x]) & (Motion.bitmask ^
+            // Motion.bfsMap[z]);\n".replaceAll("z", j).replaceAll("y", j -
+            // 1).replaceAll("x", j + 1);
+            // }
+            // for (var j = 1; j <= i; j++) {
+            // //cod += "Motion.bfsDist[Motion.stepOffset + z] &= Motion.bitmask ^
+            // Motion.bfsMap[z];\n".replaceAll("z", j);
+            // }
+            // for (var j = 1; j <= i; j++) {
+            // cod += "Motion.bfsCurr[z] = Motion.bfsDist[Motion.stepOffset +
+            // z];\n".replaceAll("z", j);
+            // }
+            // cod += "}\n";
             // }
             // console.log(cod);
             step += 1;
@@ -729,31 +742,34 @@ public class Motion {
 
         // int b = G.rc.getRoundNum() % width;
         // if (G.rc.getRoundNum() == 201) {
-            // for (int i = 0; i < width; i++) {
-            //     b = i;
-            //     for (int j = 0; j < height; j++) {
-            //         // if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> i) & 1) == 0) {
-            //         if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> b) & 1) == 0) {
-            //             if (((bfsMap[j + 1] >> b) & 1) == 0) {
-            //                 G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
-            //             }
-            //             else {
-            //                 G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
-            //             }
-            //         }
-            //         else {
-            //             if (((bfsMap[j + 1] >> b) & 1) == 0) {
-            //                 G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
-            //             }
-            //             else {
-            //                 G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
-            //             }
-            //         }
-            //     }
-            // }
+        // for (int i = 0; i < width; i++) {
+        // b = i;
+        // for (int j = 0; j < height; j++) {
+        // // if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> i) &
+        // 1) == 0) {
+        // if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> b) & 1)
+        // == 0) {
+        // if (((bfsMap[j + 1] >> b) & 1) == 0) {
+        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
+        // }
+        // else {
+        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
+        // }
+        // }
+        // else {
+        // if (((bfsMap[j + 1] >> b) & 1) == 0) {
+        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
+        // }
+        // else {
+        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
+        // }
+        // }
+        // }
+        // }
         // }
         G.indicatorString.append("STEP=" + step);
     }
+
     public static Direction getBfsDirection(MapLocation dest) throws GameActionException {
         MapLocation me = G.rc.getLocation();
 
@@ -823,7 +839,7 @@ public class Motion {
     }
 
     public static void bfsnav(MapLocation dest) throws GameActionException {
-        G.indicatorString.append(Clock.getBytecodesLeft() + " ");
+        G.indicatorString.append("BFSN: " + Clock.getBytecodesLeft() + " ");
         updateBfsTarget(dest);
 
         if (!G.rc.getLocation().equals(dest) && G.rc.isMovementReady()) {
@@ -832,8 +848,7 @@ public class Motion {
                 d = G.rc.getLocation().directionTo(dest);
             }
             Micro.micro(d, dest);
-        }
-        else {
+        } else {
             // ADD THIS BACK
             // ADD THIS BACK
             // ADD THIS BACK
@@ -950,6 +965,7 @@ public class Motion {
         bfs();
         G.indicatorString.append(Clock.getBytecodesLeft() + " ");
     }
+
     public static void updateBfsTarget(MapLocation dest) throws GameActionException {
         if (!dest.equals(bfsDest)) {
             bfsDest = dest;
@@ -970,17 +986,18 @@ public class Motion {
             updateInfo();
         }
     }
+
     public static boolean canMove(Direction dir) throws GameActionException {
         return G.rc.canMove(dir);
     }
+
     public static void updateInfo() throws GameActionException {
-        currLoc = G.rc.getLocation();
         opponentRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam().opponent());
         allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
         // MapInfo[] infos = G.rc.senseNearbyMapInfos();
         // for (MapInfo info : infos) {
-        //     G.infos[info.getMapLocation().x][info.getMapLocation().y] = info;
+        // G.infos[info.getMapLocation().x][info.getMapLocation().y] = info;
         // }
-        //oh wait it doesn't save bytecode
+        // oh wait it doesn't save bytecode
     }
 }
