@@ -13,11 +13,11 @@ public class POI {
     public static int normDMoney = 10;
 
     //symmetry detection
-    protected static long[] nowall = new long[60];
-    protected static long[] wall = new long[60];
-    protected static long[] ruin = new long[60];
-    protected static long[] noruin = new long[60];
-    protected static boolean[] symmetry = new boolean[]{true, true, true};
+    public static long[] nowall = new long[60];
+    public static long[] wall = new long[60];
+    public static long[] ruin = new long[60];
+    public static long[] noruin = new long[60];
+    public static boolean[] symmetry = new boolean[]{true, true, true};
     public static boolean criticalSymmetry = false;
     //0: horz
     //1: vert
@@ -134,13 +134,13 @@ public class POI {
 
         sendMessages();
     };
-    protected static int getNumChipTowers() throws Exception {
+    public static int getNumChipTowers() throws Exception {
         //call updateInfo() first
         //guess that each chip tower is making 15 currency
         return (normDMoney + 14) / 15;
     }
 
-    protected static boolean symmetryValid(int sym) throws GameActionException {
+    public static boolean symmetryValid(int sym) throws GameActionException {
         //completely untested...
         int w=G.rc.getMapWidth();
         int h=G.rc.getMapHeight();
@@ -290,11 +290,11 @@ public class POI {
         }
     };
 
-    protected static MapLocation parseLocation(int n) {
+    public static MapLocation parseLocation(int n) {
         // n -= 1;
         return new MapLocation((n & 0b111111), (n >> 6) & 0b111111);
     }
-    protected static int intifyLocation(MapLocation loc) {
+    public static int intifyLocation(MapLocation loc) {
         // return ((loc.y << 6) | loc.x) + 1;
         return ((loc.y << 6) | loc.x);
     }
@@ -306,7 +306,7 @@ public class POI {
     // 1: paint
     // 2: chip
     // 3: defense
-    protected static Team parseTowerTeam(int n) {
+    public static Team parseTowerTeam(int n) {
         int t = n >> 12;
         if (t == 0) {
             return Team.NEUTRAL;
@@ -316,7 +316,7 @@ public class POI {
         }
         return Team.B;
     }
-    protected static UnitType parseTowerType(int n) {
+    public static UnitType parseTowerType(int n) {
         int t = n >> 12;
         if (t == 0) {
             return UnitType.LEVEL_TWO_PAINT_TOWER;
@@ -329,7 +329,7 @@ public class POI {
         }
         return UnitType.LEVEL_ONE_DEFENSE_TOWER;
     }
-    protected static int intifyTower(Team team, UnitType type) {
+    public static int intifyTower(Team team, UnitType type) {
         if (team == Team.NEUTRAL) {
             return 0;
         }
@@ -344,11 +344,11 @@ public class POI {
         }
         return 0;
     }
-    protected static int intifySymmetry() {
+    public static int intifySymmetry() {
         return ((symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7) << 12;
     }
     
-    protected static int appendToMessage(int message, int a) {
+    public static int appendToMessage(int message, int a) {
         if (message == -1) {
             return a;
         }

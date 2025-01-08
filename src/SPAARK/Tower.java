@@ -4,13 +4,13 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Tower {
-    protected static int spawnedSoldiers = 0;
-    protected static int spawnedSplashers = 0;
-    protected static int spawnedMoppers = 0;
-    protected static int spawnedRobots = 0;
+    public static int spawnedSoldiers = 0;
+    public static int spawnedSplashers = 0;
+    public static int spawnedMoppers = 0;
+    public static int spawnedRobots = 0;
 
-    protected static MapLocation[] spawnLocs;
-    protected static int level;
+    public static MapLocation[] spawnLocs;
+    public static int level;
 
     public static void init() throws Exception {
         spawnLocs = new MapLocation[] {

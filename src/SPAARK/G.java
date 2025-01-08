@@ -26,7 +26,7 @@ public class G {
         UnitType.LEVEL_THREE_MONEY_TOWER
     };
     
-    protected static final Direction[] DIRECTIONS = {
+    public static final Direction[] DIRECTIONS = {
         Direction.SOUTHWEST,
         Direction.SOUTH,
         Direction.SOUTHEAST,
@@ -37,7 +37,7 @@ public class G {
         Direction.NORTHEAST,
     };
 
-    protected static final Direction[] ALL_DIRECTIONS = {
+    public static final Direction[] ALL_DIRECTIONS = {
         Direction.SOUTHWEST,
         Direction.SOUTH,
         Direction.SOUTHEAST,
