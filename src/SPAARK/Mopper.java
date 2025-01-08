@@ -51,17 +51,15 @@ public class Mopper {
             MapInfo info = mapInfos[i];
             MapLocation loc = info.getMapLocation();
             PaintType p = info.getPaint();
-            if (G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r != null && r.team == POI.opponentTeam) {
                 // go to bots also slap bots with more paint
                 microDir.add(G.me.directionTo(loc));
                 if (G.rc.canAttack(loc) && !p.isAlly()) {
-                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
-                    if (r.team == POI.opponentTeam) {
-                        double paint = r.paintAmount / (double) r.type.paintCapacity;
-                        if (paint > bestPaint) {
-                            bestPaint = paint;
-                            best = info;
-                        }
+                    double paint = r.paintAmount / (double) r.type.paintCapacity;
+                    if (paint > bestPaint) {
+                        bestPaint = paint;
+                        best = info;
                     }
                 }
             }
