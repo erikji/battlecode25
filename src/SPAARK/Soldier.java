@@ -39,7 +39,7 @@ public class Soldier {
                 break;
             case BUILD:
                 G.indicatorString.append("BUILD ");
-                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 0, 0);
+                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
                 if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
                     mode = EXPLORE;
                     ruinLocation = null;
@@ -61,8 +61,9 @@ public class Soldier {
                     }
                     MapInfo[] infos = G.rc.senseNearbyMapInfos();
                     for (MapInfo info : infos) {
-                        if (info.getMark() != PaintType.EMPTY && info.getPaint() != info.getMark() && G.rc.canAttack(info.getMapLocation())) {
+                        if (info.getMark().isAlly() && info.getPaint() != info.getMark() && G.rc.canAttack(info.getMapLocation())) {
                             G.rc.attack(info.getMapLocation(), info.getMark().isSecondary());
+                            G.rc.setIndicatorLine(Motion.currLoc, info.getMapLocation(), 0, 255, 255);
                             break;
                         }
                     }

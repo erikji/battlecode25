@@ -9,12 +9,10 @@ public class Tower {
     public static int spawnedMoppers = 0;
     public static int spawnedRobots = 0;
 
-    public static void init() throws Exception {
-        
-    }
+    public static MapLocation[] spawnLocs;
 
-    public static void run() throws Exception {
-        MapLocation[] spawnLocs = new MapLocation[] {
+    public static void init() throws Exception {
+        spawnLocs = new MapLocation[] {
             Motion.currLoc.add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTHEAST),
@@ -34,10 +32,12 @@ public class Tower {
                 return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
             };
         });
+    }
+
+    public static void run() throws Exception {
         // general common code for all towers
         // spawning
-        // Note that we r going to have >50% moppers since they r cheaper
-        if (spawnedRobots < 3) {
+        if (spawnedRobots < 3 && G.rc.getRoundNum() < 100) {
             for (MapLocation loc : spawnLocs) {
                 if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
                     G.rc.buildRobot(UnitType.SOLDIER, loc);
@@ -47,7 +47,7 @@ public class Tower {
                 }
             }
         } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
-            switch (spawnedRobots % 3) {
+            switch (spawnedRobots % 4) {
                 case 0:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
@@ -68,7 +68,7 @@ public class Tower {
                         }
                     }
                     break;
-                case 2:
+                default:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
                             G.rc.buildRobot(UnitType.MOPPER, loc);
