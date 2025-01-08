@@ -61,29 +61,18 @@ public class Soldier {
                     mode = EXPLORE;
                     ruinLocation = null;
                 } else {
-                    PaintType mark = G.rc.senseMapInfo(ruinLocation.add(ruinLocation.directionTo(G.me))).getMark();
-                    if (!mark.isAlly()) {
-                        // if (POI.getNumChipTowers() * 3 > G.rc.getNumberTowers() -
-                        // POI.getNumChipTowers()) {
-                        // oof chips don't work
-                        // if (POI.getNumChipTowers() > G.rc.getNumberTowers() - POI.getNumChipTowers())
-                        // {
-                        if (G.rng.nextBoolean()) {
-                            if (G.rc.canMarkTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation)) {
-                                G.rc.markTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation);
-                            }
-                        } else {
-                            if (G.rc.canMarkTowerPattern(UnitType.LEVEL_ONE_MONEY_TOWER, ruinLocation)) {
-                                G.rc.markTowerPattern(UnitType.LEVEL_ONE_MONEY_TOWER, ruinLocation);
-                            }
-                        }
-                    }
                     MapInfo[] infos = G.rc.senseNearbyMapInfos();
                     for (MapInfo info : infos) {
-                        if (info.getMark().isAlly() && info.getPaint() == PaintType.EMPTY && G.rc.canAttack(info.getMapLocation()) && info.getMapLocation().isWithinDistanceSquared(ruinLocation, 8)) {
-                            G.rc.attack(info.getMapLocation(), info.getMark().isSecondary());
-                            G.rc.setIndicatorLine(G.me, info.getMapLocation(), 0, 255, 255);
-                            break;
+                        int dx = info.getMapLocation().x - ruinLocation.x + 2;
+                        int dy = info.getMapLocation().y - ruinLocation.y + 2;
+                        if(0 <= dx && dx <= 4 && 0 <= dy && dy <= 4 && !(dx == 2 && dy == 2)){
+                            int towerType = predictTowerType(ruinLocation);
+                            boolean paint = Robot.towerPatterns[towerType][dx][dy];
+                            if((info.getPaint() == PaintType.EMPTY || info.getPaint() == (paint?PaintType.ALLY_PRIMARY:PaintType.ALLY_SECONDARY)) && G.rc.canAttack(info.getMapLocation())) {
+                                G.rc.attack(info.getMapLocation(),paint);
+                                G.rc.setIndicatorLine(G.me, info.getMapLocation(), 0, 255, 255);
+                                break;
+                            }
                         }
                     }
                     for (UnitType ruinType : G.towerTypes) {
@@ -111,5 +100,9 @@ public class Soldier {
                 Robot.retreat();
                 break;
         }
+    }
+
+    public static int predictTowerType(MapLocation m){
+        return (m.x^m.y)%6/3+1;
     }
 }
