@@ -102,10 +102,10 @@ public class POI {
             // System.out.println(parseLocation(towers[i]));
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 255);
+                    // G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 255);
                 }
                 else {
-                    G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
+                    // G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
                 }
             }
             catch (Exception e) {

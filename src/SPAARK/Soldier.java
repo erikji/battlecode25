@@ -4,9 +4,7 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Soldier {
-    //modes
     public static MapLocation ruinLocation = null; //BUILD mode
-    public static MapLocation towerLocation = null; //ATTACK mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int ATTACK = 2;
@@ -61,7 +59,7 @@ public class Soldier {
                     }
                     MapInfo[] infos = G.rc.senseNearbyMapInfos();
                     for (MapInfo info : infos) {
-                        if (info.getMark().isAlly() && info.getPaint() != info.getMark() && G.rc.canAttack(info.getMapLocation())) {
+                        if (info.getMark().isAlly() && info.getPaint() == PaintType.EMPTY && G.rc.canAttack(info.getMapLocation()) && info.getMapLocation().isWithinDistanceSquared(ruinLocation, 8)) {
                             G.rc.attack(info.getMapLocation(), info.getMark().isSecondary());
                             G.rc.setIndicatorLine(Motion.currLoc, info.getMapLocation(), 0, 255, 255);
                             break;
