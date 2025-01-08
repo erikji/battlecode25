@@ -16,17 +16,17 @@ public class Splasher {
         else {
             mode = EXPLORE;
         }
-        if (mode == EXPLORE) {
-            G.indicatorString.append("EXPLORE ");
-            Motion.spreadRandomly();
-            MapInfo me = G.rc.senseMapInfo(Motion.currLoc);
-            if (me.getPaint() != PaintType.ALLY_PRIMARY && me.getPaint() != PaintType.ALLY_SECONDARY && G.rc.canAttack(Motion.currLoc)) {
-                G.rc.attack(Motion.currLoc); //also add logic to paint in special resource pattern
-            }
-        }
-        if (mode == RETREAT) {
-            G.indicatorString.append("RETREAT ");
-            Robot.retreat();
+        switch (mode) {
+            case EXPLORE:
+                G.indicatorString.append("EXPLORE ");
+                Motion.spreadRandomly();
+                MapInfo me = G.rc.senseMapInfo(Motion.currLoc);
+                if (me.getPaint() != PaintType.ALLY_PRIMARY && me.getPaint() != PaintType.ALLY_SECONDARY && G.rc.canAttack(Motion.currLoc)) {
+                    G.rc.attack(Motion.currLoc); //also add logic to paint in special resource pattern
+                }
+            case RETREAT:
+                G.indicatorString.append("RETREAT ");
+                Robot.retreat();
         }
     }
 }

@@ -49,7 +49,7 @@ public class Tower {
                     break;
                 }
             }
-        } else {
+        } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
             switch (spawnedRobots % 3) {
                 case 0:
                     for (MapLocation loc : spawnLocs) {
@@ -124,6 +124,9 @@ public class Tower {
             default:
                 throw new Exception("Challenge Complete! How Did We Get Here?");
         }
+        while (G.rc.canUpgradeTower(Motion.currLoc) && (G.rc.getRoundNum() > 100 || G.rc.getMoney() >= 3000)) {
+            G.rc.upgradeTower(Motion.currLoc);
+        }
         // attack AFTER run (in case we get an upgrade)
         MapLocation bestEnemyLoc = null;
         int bestEnemyHp = 1000000;
@@ -163,9 +166,6 @@ public class Tower {
             G.rc.attack(null);
         } else if (numAttackableRobots > 0 && G.rc.canAttack(bestEnemyLoc)) {
             G.rc.attack(bestEnemyLoc);
-        }
-        if (G.rc.canUpgradeTower(Motion.currLoc) && G.rc.getRoundNum() > 100) {
-            G.rc.upgradeTower(Motion.currLoc);
         }
     }
 }

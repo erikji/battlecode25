@@ -51,7 +51,10 @@ public class Soldier {
                 } else {
                     PaintType mark = G.rc.senseMapInfo(ruinLocation.add(ruinLocation.directionTo(Motion.currLoc))).getMark();
                     if (!mark.isAlly()) {
-                        if (POI.getNumChipTowers() * 3 > G.rc.getNumberTowers() - POI.getNumChipTowers()) {
+                        // if (POI.getNumChipTowers() * 3 > G.rc.getNumberTowers() - POI.getNumChipTowers()) {
+                        //oof chips don't work
+                        // if (POI.getNumChipTowers() > G.rc.getNumberTowers() - POI.getNumChipTowers()) {
+                        if (G.rng.nextBoolean()) {
                             if (G.rc.canMarkTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation)) {
                                 G.rc.markTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER, ruinLocation);
                             }
