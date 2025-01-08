@@ -72,6 +72,11 @@ public class POI {
         }
     };
 
+    // bytecode optimize this later
+    // bytecode optimize this later
+    // bytecode optimize this later
+    // bytecode optimize this later
+    // bytecode optimize this later
     public static void updateInfo() throws Exception {
         dMoney = G.rc.getMoney() - lastMoney;
         // dMoney doesnt change by more than 50 each turn

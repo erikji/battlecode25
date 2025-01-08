@@ -1,7 +1,5 @@
 package SPAARK;
 
-import java.util.*;
-
 import battlecode.common.*;
 
 public class Motion {
@@ -68,87 +66,12 @@ public class Motion {
         return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
     }
 
-    public static MapLocation getClosest(MapLocation[] a) throws GameActionException {
-        return getClosest(a, G.rc.getLocation());
-    }
-
-    public static MapLocation getClosest(MapLocation[] a, MapLocation me) throws GameActionException {
-        /* Get closest MapLocation to me (Euclidean) */
-        MapLocation closest = a[0];
-        int distance = me.distanceSquaredTo(a[0]);
-        for (MapLocation loc : a) {
-            if (me.distanceSquaredTo(loc) < distance) {
-                closest = loc;
-                distance = me.distanceSquaredTo(loc);
-            }
-        }
-        return closest;
-    }
-
-    public static MapLocation getClosestPair(MapLocation[] a, MapLocation[] b) throws GameActionException {
-        /* Get closest MapLocation to me (Euclidean) */
-        MapLocation closest = a[0];
-        int distance = b[0].distanceSquaredTo(a[0]);
-        for (MapLocation loc : a) {
-            for (MapLocation loc2 : b) {
-                if (loc2.distanceSquaredTo(loc) < distance) {
-                    closest = loc;
-                    distance = loc2.distanceSquaredTo(loc);
-                }
-            }
-        }
-        return closest;
-    }
-
-    public static RobotInfo getClosestRobot(RobotInfo[] a) throws GameActionException {
-        MapLocation me = G.rc.getLocation();
-        RobotInfo closest = null;
-        int distance = 0;
-        for (RobotInfo loc : a) {
-            if (closest == null || me.distanceSquaredTo(loc.getLocation()) < distance) {
-                closest = loc;
-                distance = me.distanceSquaredTo(loc.getLocation());
-            }
-        }
-        return closest;
-    }
-
-    public static RobotInfo getClosestRobot(RobotInfo[] a, MapLocation b) throws GameActionException {
-        RobotInfo closest = null;
-        int distance = 0;
-        for (RobotInfo loc : a) {
-            if (closest == null || b.distanceSquaredTo(loc.getLocation()) < distance) {
-                closest = loc;
-                distance = b.distanceSquaredTo(loc.getLocation());
-            }
-        }
-        return closest;
-    }
-
-    public static MapLocation getFarthest(MapLocation[] a) throws GameActionException {
-        /* Get farthest MapLocation to this robot (Euclidean) */
-        return getFarthest(a, G.rc.getLocation());
-    }
-
-    public static MapLocation getFarthest(MapLocation[] a, MapLocation me) throws GameActionException {
-        /* Get farthest MapLocation to me (Euclidean) */
-        MapLocation closest = a[0];
-        int distance = me.distanceSquaredTo(a[0]);
-        for (MapLocation loc : a) {
-            if (me.distanceSquaredTo(loc) > distance) {
-                closest = loc;
-                distance = me.distanceSquaredTo(loc);
-            }
-        }
-        return closest;
-    }
-
     // basic random movement
     public static void moveRandomly() throws GameActionException {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
-            for (Direction d : DIRECTIONS) {
-                if (G.rc.canMove(d)) {
+            for (int i = DIRECTIONS.length; --i >= 0;) {
+                if (G.rc.canMove(DIRECTIONS[i])) {
                     stuck = false;
                 }
             }
@@ -171,8 +94,8 @@ public class Motion {
 
     public static void spreadRandomly() throws GameActionException {
         boolean stuck = true;
-        for (Direction d : DIRECTIONS) {
-            if (canMove(d)) {
+        for (int i = DIRECTIONS.length; --i >= 0;) {
+            if (canMove(DIRECTIONS[i])) {
                 stuck = false;
             }
         }
@@ -182,10 +105,11 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation me = G.rc.getLocation();
             MapLocation target = me;
-            for (RobotInfo r : allyRobots) {
-                if (!G.rc.senseMapInfo(r.getLocation()).hasRuin())
+            for (int i = allyRobots.length; --i >= 0;) {
+                MapLocation loc = allyRobots[i].getLocation();
+                if (!G.rc.senseMapInfo(loc).hasRuin())
                     // ignore towers
-                    target = target.add(me.directionTo(r.getLocation()).opposite());
+                    target = target.add(me.directionTo(loc).opposite());
             }
             if (target.equals(me)) {
                 // just keep moving in the same direction as before if there's no robots nearby
@@ -358,7 +282,7 @@ public class Motion {
                 // }
                 // lastBlocked = false;
                 // boolean touchingTheWallBefore = false;
-                // for (Direction d : DIRECTIONS) {
+                // for (int i = DIRECTIONS.length; --i>=0;) {
                 // MapLocation translatedMapLocation = me.add(d);
                 // if (G.rc.onTheMap(translatedMapLocation)) {
                 // if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
@@ -381,7 +305,7 @@ public class Motion {
             }
             if (!G.rc.onTheMap(me.add(dir))) {
                 // boolean touchingTheWallBefore = false;
-                // for (Direction d : DIRECTIONS) {
+                // for (int i = DIRECTIONS.length; --i>=0;) {
                 // MapLocation translatedMapLocation = me.add(d);
                 // if (G.rc.onTheMap(translatedMapLocation)) {
                 // if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
@@ -554,16 +478,17 @@ public class Motion {
 
     public static void updateBfsMap() throws GameActionException {
         MapInfo[] map = G.rc.senseNearbyMapInfos();
-        for (MapInfo m : map) {
+        for (int i = map.length; --i >= 0;) {
+            MapInfo m = map[i];
             if (m.isWall()) {
                 int loc = m.getMapLocation().y + 1;
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
                     G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
-                    for (int i = step - 1; i >= 0; i--) {
-                        if (((bfsDist[i * (height + 2) + loc] >> subloc) & 1) != 1) {
-                            recalculationNeeded = Math.min(i, recalculationNeeded);
+                    for (int j = step - 1; j >= 0; j--) {
+                        if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
+                            recalculationNeeded = Math.min(j, recalculationNeeded);
                             break;
                         }
                     }
