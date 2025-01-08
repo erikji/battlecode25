@@ -59,6 +59,21 @@ public class POI {
             }
         }
     };
+    public static void removeValidSymmetry(int source, int index) {
+        if (symmetry[index]) {
+            symmetry[index] = false;
+            robotsThatKnowInformation[50] = new StringBuilder("-" + source + "-");
+            if (source == -1) {
+                criticalSymmetry = true;
+            }
+            else {
+                criticalSymmetry = false;
+            }
+        }
+        else if (source != -1) {
+            robotsThatKnowInformation[50].append("-" + source + "-");
+        }
+    };
     public static void updateInfo() throws Exception {
         dMoney = G.rc.getMoney() - lastMoney;
         //dMoney doesnt change by more than 50 each turn
@@ -80,6 +95,12 @@ public class POI {
                 addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
             }
         }
+        for (int i = 0; i < 50; i++) {
+            if (towers[i] == -1) {
+                break;
+            }
+            G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
+        }
 
         // bytecode inefficient symmetry detection
         MapInfo[] infos = G.rc.senseNearbyMapInfos();
@@ -91,16 +112,13 @@ public class POI {
             else noruin[xy.y] |= 1L << xy.x;
         }
         if (symmetry[0]&&!symmetryValid(0)) {
-            symmetry[0]=true;
-            criticalSymmetry = true;
+            removeValidSymmetry(-1, 0);
         }
         if (symmetry[1]&&!symmetryValid(1)) {
-            symmetry[1]=true;
-            criticalSymmetry = true;
+            removeValidSymmetry(-1, 1);
         }
         if (symmetry[2]&&!symmetryValid(2)) {
-            symmetry[2]=true;
-            criticalSymmetry = true;
+            removeValidSymmetry(-1, 2);
         }
     };
     protected static int getNumChipTowers() throws Exception {
@@ -237,7 +255,22 @@ public class POI {
         // what hapepns if message is sent in same round?? oof oof oof
         Message[] messages = G.rc.readMessages(G.rc.getRoundNum() - 1);
         for (Message m : messages) {
-            addTower(m.getSenderID(), m.getBytes() & 0b1111111111111111);
+            int n1 = m.getBytes() & 0b1111111111111111;
+            if ((n1 << 12) >= 7) {
+                int n2 = (n1 << 12) - 7;
+                if (n2 % 2 == 0) {
+                    removeValidSymmetry(m.getSenderID(), 0);
+                }
+                if ((n2 >> 1) % 2 == 0) {
+                    removeValidSymmetry(m.getSenderID(), 1);
+                }
+                if ((n2 >> 2) % 2 == 0) {
+                    removeValidSymmetry(m.getSenderID(), 2);
+                }
+            }
+            else {
+                addTower(m.getSenderID(), m.getBytes() & 0b1111111111111111);
+            }
             if (m.getBytes() >> 16 != 0) {
                 addTower(m.getSenderID(), (m.getBytes() >> 16) & 0b1111111111111111);
             }
@@ -258,18 +291,41 @@ public class POI {
     // 1: paint
     // 2: chip
     // 3: defense
+    protected static Team parseTowerTeam(int n) {
+        int t = n << 12;
+        if (t == 0) {
+            return Team.NEUTRAL;
+        }
+        if (t < 3) {
+            return Team.A;
+        }
+        return Team.B;
+    }
+    protected static UnitType parseTowerType(int n) {
+        int t = n << 12;
+        if (t == 0) {
+            return UnitType.LEVEL_TWO_PAINT_TOWER;
+        }
+        if (t % 3 == 1) {
+            return UnitType.LEVEL_ONE_PAINT_TOWER;
+        }
+        if (t % 3 == 2) {
+            return UnitType.LEVEL_ONE_MONEY_TOWER;
+        }
+        return UnitType.LEVEL_ONE_DEFENSE_TOWER;
+    }
     protected static int intifyTower(Team team, UnitType type) {
         if (team.ordinal() == 0) {
             return 0;
         }
         if (type == UnitType.LEVEL_ONE_PAINT_TOWER || type == UnitType.LEVEL_TWO_PAINT_TOWER || type == UnitType.LEVEL_THREE_PAINT_TOWER) {
-            return 1 + team.ordinal() * 3;
+            return 1 + team.ordinal() * 3 - 3;
         }
         if (type == UnitType.LEVEL_ONE_MONEY_TOWER || type == UnitType.LEVEL_TWO_MONEY_TOWER || type == UnitType.LEVEL_THREE_MONEY_TOWER) {
-            return 2 + team.ordinal() * 3;
+            return 2 + team.ordinal() * 3 - 3;
         }
         if (type == UnitType.LEVEL_ONE_DEFENSE_TOWER || type == UnitType.LEVEL_TWO_DEFENSE_TOWER || type == UnitType.LEVEL_THREE_DEFENSE_TOWER) {
-            return 3 + team.ordinal() * 3;
+            return 3 + team.ordinal() * 3 - 3;
         }
         return 0;
     }
