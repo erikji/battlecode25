@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; //BUILD mode
+    public static UnitType towerType = null; //ATTACK mode
     public static MapLocation towerLocation = null; //ATTACK mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
@@ -25,6 +26,7 @@ public class Soldier {
                     RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                     if (bot.team == POI.opponentTeam && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
                         towerLocation = loc;
+                        towerType = bot.type;
                         mode = ATTACK;
                         break;
                     }
@@ -101,13 +103,14 @@ public class Soldier {
             case ATTACK:
                 G.indicatorString.append("ATTACK ");
                 // attack micro moment
-                RobotInfo enemy = G.rc.senseRobotAtLocation(towerLocation); 
-                if (towerLocation.isWithinDistanceSquared(G.me, enemy.type.actionRadiusSquared)) {
-                    G.rc.attack(towerLocation);
+                if (towerLocation.isWithinDistanceSquared(G.me, towerType.actionRadiusSquared)) {
+                    if (G.rc.canAttack(towerLocation))
+                        G.rc.attack(towerLocation);
                     Motion.bugnavAway(towerLocation);
                 } else {
                     Motion.bugnavTowards(towerLocation);
-                    G.rc.attack(towerLocation);
+                    if (G.rc.canAttack(towerLocation))
+                        G.rc.attack(towerLocation);
                 }
                 break;
             case RETREAT:

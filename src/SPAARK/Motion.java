@@ -970,15 +970,16 @@ public class Motion {
             int bestScore = Integer.MIN_VALUE;
             for (int i = 8; --i >= 0; ) {
                 int score = 0;
+                MapLocation nxt = G.me.add(G.ALL_DIRECTIONS[i]);
+                if (!G.rc.onTheMap(nxt)) continue;
+                MapInfo info = G.rc.senseMapInfo(nxt);
+                if (info.getPaint().isEnemy()) score -= 10;
+                else if (info.getPaint() == PaintType.EMPTY) score -= 5;
                 if (G.ALL_DIRECTIONS[i] == d) {
                     score += 20;
                 } else if (G.ALL_DIRECTIONS[i].rotateLeft() == d || G.ALL_DIRECTIONS[i].rotateRight() == d) {
                     score += 10;
                 }
-                MapLocation nxt = G.me.add(G.ALL_DIRECTIONS[i]);
-                MapInfo info = G.rc.senseMapInfo(nxt);
-                if (info.getPaint().isEnemy()) score -= 10;
-                else if (info.getPaint() == PaintType.EMPTY) score -= 5;
                 if (score > bestScore) {
                     best = G.ALL_DIRECTIONS[i];
                     bestScore = score;
