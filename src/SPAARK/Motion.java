@@ -66,11 +66,11 @@ public class Motion {
         return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
     }
 
-    public static MapLocation getClosest(MapLocation[] a) throws GameActionException {
+    public static MapLocation getClosest(MapLocation[] a) throws Exception {
         return getClosest(a, G.rc.getLocation());
     }
 
-    public static MapLocation getClosest(MapLocation[] a, MapLocation me) throws GameActionException {
+    public static MapLocation getClosest(MapLocation[] a, MapLocation me) throws Exception {
         /* Get closest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
         int distance = me.distanceSquaredTo(a[0]);
@@ -84,7 +84,7 @@ public class Motion {
         return closest;
     }
 
-    public static MapLocation getClosestPair(MapLocation[] a, MapLocation[] b) throws GameActionException {
+    public static MapLocation getClosestPair(MapLocation[] a, MapLocation[] b) throws Exception {
         /* Get closest pair (Euclidean) */
         MapLocation closest = a[0];
         int distance = b[0].distanceSquaredTo(a[0]);
@@ -101,12 +101,12 @@ public class Motion {
         return closest;
     }
 
-    public static MapLocation getFarthest(MapLocation[] a) throws GameActionException {
+    public static MapLocation getFarthest(MapLocation[] a) throws Exception {
         /* Get farthest MapLocation to this robot (Euclidean) */
         return getFarthest(a, G.rc.getLocation());
     }
 
-    public static MapLocation getFarthest(MapLocation[] a, MapLocation me) throws GameActionException {
+    public static MapLocation getFarthest(MapLocation[] a, MapLocation me) throws Exception {
         /* Get farthest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
         int distance = me.distanceSquaredTo(a[0]);
@@ -121,7 +121,7 @@ public class Motion {
     }
 
     // basic random movement
-    public static void moveRandomly() throws GameActionException {
+    public static void moveRandomly() throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
             for (int i = DIRECTIONS.length; --i >= 0;) {
@@ -146,7 +146,7 @@ public class Motion {
         }
     }
 
-    public static void spreadRandomly() throws GameActionException {
+    public static void spreadRandomly() throws Exception {
         boolean stuck = true;
         for (int i = DIRECTIONS.length; --i >= 0;) {
             if (canMove(DIRECTIONS[i])) {
@@ -209,7 +209,7 @@ public class Motion {
     // bugnav helpers
     public static StringBuilder visitedList = new StringBuilder();
 
-    public static int[] simulateMovement(MapLocation me, MapLocation dest) throws GameActionException {
+    public static int[] simulateMovement(MapLocation me, MapLocation dest) throws Exception {
         MapLocation clockwiseLoc = G.rc.getLocation();
         Direction clockwiseLastDir = lastDir;
         int clockwiseStuck = 0;
@@ -275,8 +275,7 @@ public class Motion {
         return new int[] { clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck };
     }
 
-    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared,
-            int maxRadiusSquared) throws GameActionException {
+    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared, int maxRadiusSquared) throws Exception {
         Direction direction = me.directionTo(dest);
         if (me.equals(dest)) {
             if (mode == AROUND) {
@@ -476,34 +475,43 @@ public class Motion {
     }
 
     // bugnav
-    public static void bugnavTowards(MapLocation dest) throws GameActionException {
+
+    public static void bugnavTowards(MapLocation dest) throws Exception {
+        bugnavTowards(dest, defaultMicro);
+    }
+    public static void bugnavTowards(MapLocation dest, Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, TOWARDS, 0, 0);
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            Micro.micro(d, dest);
+            m.micro(d, dest);
         }
     }
 
-    public static void bugnavAway(MapLocation dest) throws GameActionException {
+    public static void bugnavAway(MapLocation dest) throws Exception {
+        bugnavAway(dest, defaultMicro);
+    }
+    public static void bugnavAway(MapLocation dest, Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AWAY, 0, 0);
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            Micro.micro(d, dest);
+            m.micro(d, dest);
         }
     }
 
-    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared)
-            throws GameActionException {
+    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared) throws Exception {
+        bugnavAround(dest, minRadiusSquared, maxRadiusSquared, defaultMicro);
+    }
+    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared, Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared, maxRadiusSquared);
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            Micro.micro(d, dest);
+            m.micro(d, dest);
         }
     }
 
@@ -531,7 +539,7 @@ public class Motion {
     public static long long1 = 1;
     public static int recalculationNeeded = MAX_PATH_LENGTH;
 
-    public static void updateBfsMap() throws GameActionException {
+    public static void updateBfsMap() throws Exception {
         MapInfo[] map = G.rc.senseNearbyMapInfos();
         for (int i = map.length; --i >= 0;) {
             MapInfo m = map[i];
@@ -552,7 +560,7 @@ public class Motion {
         }
     }
 
-    public static void bfs() throws GameActionException {
+    public static void bfs() throws Exception {
 
         if (recalculationNeeded != MAX_PATH_LENGTH && recalculationNeeded < step) {
             step = recalculationNeeded;
@@ -750,7 +758,7 @@ public class Motion {
         G.indicatorString.append("BFS-STP=" + step + " ");
     }
 
-    public static Direction getBfsDirection(MapLocation dest) throws GameActionException {
+    public static Direction getBfsDirection(MapLocation dest) throws Exception {
         MapLocation me = G.rc.getLocation();
 
         boolean[] directions = new boolean[9];
@@ -818,7 +826,10 @@ public class Motion {
         return Direction.CENTER;
     }
 
-    public static void bfsnav(MapLocation dest) throws GameActionException {
+    public static void bfsnav(MapLocation dest) throws Exception {
+        bfsnav(dest, defaultMicro);
+    }
+    public static void bfsnav(MapLocation dest, Micro m) throws Exception {
         G.indicatorString.append("BFS-BT: " + Clock.getBytecodesLeft() + "-");
         updateBfsTarget(dest);
 
@@ -827,7 +838,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            Micro.micro(d, dest);
+            m.micro(d, dest);
         } else {
             // ADD THIS BACK
             // ADD THIS BACK
@@ -946,7 +957,7 @@ public class Motion {
         G.indicatorString.append(Clock.getBytecodesLeft() + " ");
     }
 
-    public static void updateBfsTarget(MapLocation dest) throws GameActionException {
+    public static void updateBfsTarget(MapLocation dest) throws Exception {
         if (!dest.equals(bfsDest)) {
             bfsDest = dest;
             for (int i = 1; i <= height; i++) {
@@ -959,7 +970,13 @@ public class Motion {
         }
     }
 
-    public static void move(Direction dir) throws GameActionException {
+    public static Micro defaultMicro = new Micro() {
+        public void micro(Direction d, MapLocation dest) throws Exception {
+            Motion.move(d);
+        }
+    };
+
+    public static void move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);
             lastDir = dir;
@@ -967,11 +984,11 @@ public class Motion {
         }
     }
 
-    public static boolean canMove(Direction dir) throws GameActionException {
+    public static boolean canMove(Direction dir) throws Exception {
         return G.rc.canMove(dir);
     }
 
-    public static void updateInfo() throws GameActionException {
+    public static void updateInfo() throws Exception {
         opponentRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam().opponent());
         allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
         // MapInfo[] infos = G.rc.senseNearbyMapInfos();

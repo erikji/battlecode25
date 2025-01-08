@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; //BUILD mode
+    public static MapLocation towerLocation = null; //ATTACK mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int ATTACK = 2;
@@ -21,11 +22,17 @@ public class Soldier {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
-                    continue; // tower already there
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    if (bot.team == POI.opponentTeam && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
+                        towerLocation = loc;
+                        mode = ATTACK;
+                        break;
+                    }
+                } else {
+                    ruinLocation = loc;
+                    mode = BUILD;
+                    break;
                 }
-                ruinLocation = loc;
-                mode = BUILD;
-                break;
             }
         }
         switch (mode) {
@@ -93,8 +100,15 @@ public class Soldier {
                 break;
             case ATTACK:
                 G.indicatorString.append("ATTACK ");
-                // do some attack micro idk
-                // pretty useless with the range nerf
+                // attack micro moment
+                RobotInfo enemy = G.rc.senseRobotAtLocation(towerLocation); 
+                if (towerLocation.isWithinDistanceSquared(G.me, enemy.type.actionRadiusSquared)) {
+                    G.rc.attack(towerLocation);
+                    Motion.bugnavAway(towerLocation);
+                } else {
+                    Motion.bugnavTowards(towerLocation);
+                    G.rc.attack(towerLocation);
+                }
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
