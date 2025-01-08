@@ -60,17 +60,17 @@ public class POI {
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
 
         for (MapLocation i : nearbyRuins) {
-            addTower(-1, intifyTower(2) | intifyLocation(i));
+            addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(i));
         }
         // hopefully its set
         for (RobotInfo i : Motion.allyRobots) {
             if (Robot.isTower(i.getType())) {
-                addTower(-1, intifyTower(i.getTeam().ordinal()) | intifyLocation(i.getLocation()));
+                addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
             }
         }
         for (RobotInfo i : Motion.opponentRobots) {
             if (Robot.isTower(i.getType())) {
-                addTower(-1, intifyTower(i.getTeam().ordinal()) | intifyLocation(i.getLocation()));
+                addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
             }
         }
 
@@ -242,11 +242,27 @@ public class POI {
     // team 0 for ally
     // team 1 for opp
     // team 2 for neutral
-    protected static int intifyTower(int team) {
-        return team << 12;
+    // 0: neutral
+    // 1: paint
+    // 2: chip
+    // 3: defense
+    protected static int intifyTower(Team team, UnitType type) {
+        if (team.ordinal() == 0) {
+            return 0;
+        }
+        if (type == UnitType.LEVEL_ONE_PAINT_TOWER || type == UnitType.LEVEL_TWO_PAINT_TOWER || type == UnitType.LEVEL_THREE_PAINT_TOWER) {
+            return 1 + team.ordinal() * 3;
+        }
+        if (type == UnitType.LEVEL_ONE_MONEY_TOWER || type == UnitType.LEVEL_TWO_MONEY_TOWER || type == UnitType.LEVEL_THREE_MONEY_TOWER) {
+            return 2 + team.ordinal() * 3;
+        }
+        if (type == UnitType.LEVEL_ONE_DEFENSE_TOWER || type == UnitType.LEVEL_TWO_DEFENSE_TOWER || type == UnitType.LEVEL_THREE_DEFENSE_TOWER) {
+            return 3 + team.ordinal() * 3;
+        }
+        return 0;
     }
     protected static int intifySymmetry() {
-        return ((symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 3) << 12;
+        return ((symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7) << 12;
     }
     
     protected static int appendToMessage(int message, int a) {

@@ -54,7 +54,11 @@ public class Robot {
             }
         }
         if (best != -1) {
-            Motion.bugnavTowards(POI.parseLocation(POI.towers[best]));
+            MapLocation loc = POI.parseLocation(POI.towers[best]);
+            Motion.bugnavTowards(loc);
+            if (G.rc.getLocation().distanceSquaredTo(loc) <= 2) {
+                G.rc.transferPaint(loc, Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(), G.rc.senseRobotAtLocation(loc).getPaintAmount()));
+            }
         }
     }
     public static boolean isTower(UnitType t) throws Exception {
