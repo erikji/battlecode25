@@ -25,6 +25,7 @@ public class Splasher {
             }
         }
         if (mode == RETREAT) {
+            G.indicatorString.append("RETREAT ");
             Robot.retreat();
         }
     }

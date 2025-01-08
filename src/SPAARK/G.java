@@ -14,5 +14,17 @@ public class G {
         UnitType.LEVEL_ONE_MONEY_TOWER
     };
 
+    public static UnitType[] allTowerTypes = new UnitType[] {
+        UnitType.LEVEL_ONE_DEFENSE_TOWER,
+        UnitType.LEVEL_ONE_PAINT_TOWER,
+        UnitType.LEVEL_ONE_MONEY_TOWER,
+        UnitType.LEVEL_TWO_DEFENSE_TOWER,
+        UnitType.LEVEL_TWO_PAINT_TOWER,
+        UnitType.LEVEL_TWO_MONEY_TOWER,
+        UnitType.LEVEL_THREE_DEFENSE_TOWER,
+        UnitType.LEVEL_THREE_PAINT_TOWER,
+        UnitType.LEVEL_THREE_MONEY_TOWER
+    };
+
     public static StringBuilder indicatorString;
 }
