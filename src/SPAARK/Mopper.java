@@ -16,17 +16,17 @@ public class Mopper {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity - 40) {
             mode = EXPLORE;
-            // make sure not stuck between exploring and building
-            if (lastBuild + 10 < G.rc.getRoundNum()) {
-                MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-                for (MapLocation loc : locs) {
-                    if (G.rc.canSenseRobotAtLocation(loc)) {
-                        continue; // tower already there
-                    }
-                    ruinLocation = loc;
-                    mode = BUILD;
-                    break;
+        }
+        // make sure not stuck between exploring and building
+        if (mode == EXPLORE && lastBuild + 10 < G.rc.getRoundNum()) {
+            MapLocation[] locs = G.rc.senseNearbyRuins(-1);
+            for (MapLocation loc : locs) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    continue; // tower already there
                 }
+                ruinLocation = loc;
+                mode = BUILD;
+                break;
             }
         }
         switch (mode) {

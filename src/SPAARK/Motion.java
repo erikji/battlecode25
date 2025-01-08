@@ -161,7 +161,7 @@ public class Motion {
             MapLocation target = me;
             for (int i = allyRobots.length; --i >= 0;) {
                 MapLocation loc = allyRobots[i].getLocation();
-                if (!G.rc.senseMapInfo(loc).hasRuin())
+                if (!G.rc.senseRobotAtLocation(loc).type.isRobotType())
                     // ignore towers
                     target = target.add(me.directionTo(loc).opposite());
             }

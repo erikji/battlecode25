@@ -16,6 +16,8 @@ public class Soldier {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity - 40) {
             mode = EXPLORE;
+        }
+        if (mode == EXPLORE) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
