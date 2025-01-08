@@ -38,7 +38,7 @@ public class Tower {
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
-        if (spawnedRobots < 3 && G.rc.getRoundNum() < 100) {
+        if (spawnedRobots < 2) {
             for (MapLocation loc : spawnLocs) {
                 if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
                     G.rc.buildRobot(UnitType.SOLDIER, loc);
@@ -50,16 +50,17 @@ public class Tower {
         } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
             switch (spawnedRobots % 4) {
                 case 0:
+                case 1:
                     for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                            G.rc.buildRobot(UnitType.SOLDIER, loc);
+                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            G.rc.buildRobot(UnitType.MOPPER, loc);
                             spawnedRobots++;
-                            spawnedSoldiers++;
+                            spawnedMoppers++;
                             break;
                         }
                     }
                     break;
-                case 1:
+                case 2:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                             G.rc.buildRobot(UnitType.SPLASHER, loc);
@@ -71,8 +72,8 @@ public class Tower {
                     break;
                 default:
                     for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
-                            G.rc.buildRobot(UnitType.MOPPER, loc);
+                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            G.rc.buildRobot(UnitType.SOLDIER, loc);
                             spawnedRobots++;
                             spawnedMoppers++;
                             break;
