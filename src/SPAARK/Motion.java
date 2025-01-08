@@ -74,7 +74,8 @@ public class Motion {
         /* Get closest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
         int distance = me.distanceSquaredTo(a[0]);
-        for (MapLocation loc : a) {
+        for (int i = a.length; --i >= 0;) {
+            MapLocation loc = a[i];
             if (me.distanceSquaredTo(loc) < distance) {
                 closest = loc;
                 distance = me.distanceSquaredTo(loc);
@@ -87,37 +88,14 @@ public class Motion {
         /* Get closest pair (Euclidean) */
         MapLocation closest = a[0];
         int distance = b[0].distanceSquaredTo(a[0]);
-        for (MapLocation loc : a) {
-            for (MapLocation loc2 : b) {
+        for (int i = a.length; --i >= 0;) {
+            MapLocation loc = a[i];
+            for (int j = b.length; --j >= 0;) {
+                MapLocation loc2 = b[i];
                 if (loc2.distanceSquaredTo(loc) < distance) {
                     closest = loc;
                     distance = loc2.distanceSquaredTo(loc);
                 }
-            }
-        }
-        return closest;
-    }
-
-    public static RobotInfo getClosestRobot(RobotInfo[] a) throws GameActionException {
-        MapLocation me = G.rc.getLocation();
-        RobotInfo closest = null;
-        int distance = 0;
-        for (RobotInfo loc : a) {
-            if (closest == null || me.distanceSquaredTo(loc.getLocation()) < distance) {
-                closest = loc;
-                distance = me.distanceSquaredTo(loc.getLocation());
-            }
-        }
-        return closest;
-    }
-
-    public static RobotInfo getClosestRobot(RobotInfo[] a, MapLocation b) throws GameActionException {
-        RobotInfo closest = null;
-        int distance = 0;
-        for (RobotInfo loc : a) {
-            if (closest == null || b.distanceSquaredTo(loc.getLocation()) < distance) {
-                closest = loc;
-                distance = b.distanceSquaredTo(loc.getLocation());
             }
         }
         return closest;
@@ -132,7 +110,8 @@ public class Motion {
         /* Get farthest MapLocation to me (Euclidean) */
         MapLocation closest = a[0];
         int distance = me.distanceSquaredTo(a[0]);
-        for (MapLocation loc : a) {
+        for (int i = a.length; --i >= 0;) {
+            MapLocation loc = a[i];
             if (me.distanceSquaredTo(loc) > distance) {
                 closest = loc;
                 distance = me.distanceSquaredTo(loc);
@@ -296,8 +275,7 @@ public class Motion {
         return new int[] { clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck };
     }
 
-    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared,
-            int maxRadiusSquared) throws GameActionException {
+    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared, int maxRadiusSquared) throws GameActionException {
         Direction direction = me.directionTo(dest);
         if (me.equals(dest)) {
             if (mode == AROUND) {
@@ -516,8 +494,7 @@ public class Motion {
         }
     }
 
-    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared)
-            throws GameActionException {
+    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared) throws GameActionException {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared, maxRadiusSquared);
             if (d == Direction.CENTER) {

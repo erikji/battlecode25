@@ -4,23 +4,24 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Mopper {
-    public static MapLocation ruinLocation = null; //BUILD mode
+    public static MapLocation ruinLocation = null; // BUILD mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-    public static int lastBuild = -10; //last time we are in BUILD mode to prevent 
+    public static int lastBuild = -10; // last time we are in BUILD mode to prevent
 
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
         } else {
             mode = EXPLORE;
+            // make sure not stuck between exploring and building
             if (lastBuild + 10 < G.rc.getRoundNum()) {
                 MapLocation[] locs = G.rc.senseNearbyRuins(-1);
                 for (MapLocation loc : locs) {
                     if (G.rc.canSenseRobotAtLocation(loc)) {
-                        continue; //tower already there
+                        continue; // tower already there
                     }
                     ruinLocation = loc;
                     mode = BUILD;
@@ -29,55 +30,91 @@ public class Mopper {
             }
         }
         switch (mode) {
-            case EXPLORE:
-                G.indicatorString.append("EXPLORE ");
-                break;
-            case BUILD:
-                G.indicatorString.append("BUILD ");
-                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
-                if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
-                    mode = EXPLORE;
-                    ruinLocation = null;
-                } else {
-                    MapInfo[] infos = G.rc.senseNearbyMapInfos();
-                    MapLocation bestLoc = null;
-                    MapLocation bestLoc2 = null;
-                    int bestDistanceSquared = 10000;
-                    int bestDistanceSquared2 = 10001;
-                    for (MapInfo info : infos) {
-                        if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && !info.getPaint().isAlly() && info.getPaint() != PaintType.EMPTY) {
-                            //necessarily opponent paint
-                            int distanceSquared = info.getMapLocation().distanceSquaredTo(G.me);
-                            if (distanceSquared<bestDistanceSquared){
-                                bestDistanceSquared2 = bestDistanceSquared;
-                                bestLoc2 = bestLoc;
-                                bestDistanceSquared = distanceSquared;
-                                bestLoc = info.getMapLocation();
-                            }
-                            else if (distanceSquared<bestDistanceSquared2){
-                                bestDistanceSquared2 = distanceSquared;
-                                bestLoc2 = info.getMapLocation();
-                            }
-                        }
+            case EXPLORE -> explore();
+            case BUILD -> build();
+            case RETREAT -> {
+                G.indicatorString.append("RETREAT ");
+                Robot.retreat();
+            }
+        }
+    }
+
+    public static void explore() throws Exception {
+        G.indicatorString.append("EXPLORE ");
+        MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
+        // will try to unpaint squares under opponent bots
+        // but if no opponents, just move to paint and attack
+        MapInfo best = null;
+        double bestPaint = -1;
+        MapLocation microDir = G.rc.getLocation();
+        for (int i = mapInfos.length; --i >= 0;) {
+            MapInfo info = mapInfos[i];
+            MapLocation loc = info.getMapLocation();
+            PaintType p = info.getPaint();
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                // go to bots also slap bots with more paint
+                microDir.add(G.me.directionTo(loc));
+                if (G.rc.canAttack(loc) && !p.isAlly()) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                    double paint = r.paintAmount / (double) r.type.paintCapacity;
+                    if (paint > bestPaint) {
+                        bestPaint = paint;
+                        best = info;
                     }
-                    if (bestLoc != null) {
-                        G.rc.setIndicatorLine(G.me, bestLoc, 128, 128, 128);
-                        if (G.rc.canAttack(bestLoc)) {
-                            G.rc.attack(bestLoc);
-                            if (bestLoc2 != null) {
-                                G.rc.setIndicatorLine(G.me, bestLoc2, 255, 255, 255);
-                                Motion.bugnavTowards(bestLoc2);
-                            } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
-                                mode = EXPLORE;
-                                ruinLocation = null;
-                                lastBuild = G.rc.getRoundNum();
-                                Motion.spreadRandomly();
-                            } else {
-                                Motion.bugnavTowards(ruinLocation);
-                            }
-                        } else {
-                            Motion.bugnavTowards(bestLoc);
-                        }
+                }
+            }
+            if (bestPaint == -1 && (p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY)) {
+                if (best == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(best.getMapLocation()))
+                    best = info;
+            }
+        }
+        if (best == null) {
+            if (G.me.distanceSquaredTo(microDir) >= 3)
+                Motion.spreadRandomly();
+            else
+                Motion.bugnavTowards(microDir);
+        } else {
+            Motion.bugnavAround(best.getMapLocation(), 0, 1);
+        }
+    }
+
+    public static void build() throws Exception {
+        G.indicatorString.append("BUILD ");
+        // get 2 best locations to build stuff on
+        // so if the first one is already there just go to the next one
+        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
+            mode = EXPLORE;
+            ruinLocation = null;
+        } else {
+            MapInfo[] infos = G.rc.senseNearbyMapInfos();
+            MapLocation bestLoc = null;
+            MapLocation bestLoc2 = null;
+            int bestDistanceSquared = 10000;
+            int bestDistanceSquared2 = 10001;
+            for (MapInfo info : infos) {
+                if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && !info.getPaint().isAlly()
+                        && info.getPaint() != PaintType.EMPTY) {
+                    // necessarily opponent paint
+                    int distanceSquared = info.getMapLocation().distanceSquaredTo(G.me);
+                    if (distanceSquared < bestDistanceSquared) {
+                        bestDistanceSquared2 = bestDistanceSquared;
+                        bestLoc2 = bestLoc;
+                        bestDistanceSquared = distanceSquared;
+                        bestLoc = info.getMapLocation();
+                    } else if (distanceSquared < bestDistanceSquared2) {
+                        bestDistanceSquared2 = distanceSquared;
+                        bestLoc2 = info.getMapLocation();
+                    }
+                }
+            }
+            if (bestLoc != null) {
+                G.rc.setIndicatorLine(G.me, bestLoc, 128, 128, 128);
+                if (G.rc.canAttack(bestLoc)) {
+                    G.rc.attack(bestLoc);
+                    if (bestLoc2 != null) {
+                        G.rc.setIndicatorLine(G.me, bestLoc2, 255, 255, 255);
+                        Motion.bugnavTowards(bestLoc2);
                     } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                         mode = EXPLORE;
                         ruinLocation = null;
@@ -86,42 +123,20 @@ public class Mopper {
                     } else {
                         Motion.bugnavTowards(ruinLocation);
                     }
+                } else {
+                    Motion.bugnavTowards(bestLoc);
                 }
-                break;
-            case RETREAT:
-                G.indicatorString.append("RETREAT ");
-                Robot.retreat();
-                break;
-        }
-    }
-
-    public static MapLocation attackPaintWithMicro() throws Exception {
-        MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
-        // will try to unpaint squares under opponent bots
-        // but if no opponents, just move to paint and attack
-        MapInfo best = null;
-        float bestPaint = -1;
-        MapLocation microDir = G.rc.getLocation();
-        for (int i = mapInfos.length; --i >= 0;) {
-            MapInfo info = mapInfos[i];
-            MapLocation loc = info.getMapLocation();
-            PaintType p = info.getPaint();
-            boolean isEnemPaint = p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY;
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                microDir.add(G.me.directionTo(loc));
-                if (G.rc.canAttack(loc)) {
-                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
-                    float paint = r.paintAmount / (float) r.type.paintCapacity;
-                    if (paint > bestPaint) {
-
-                    }
-                }
+            } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
+                mode = EXPLORE;
+                ruinLocation = null;
+                lastBuild = G.rc.getRoundNum();
+                Motion.spreadRandomly();
+            } else {
+                Motion.bugnavTowards(ruinLocation);
             }
         }
-        return microDir;
     }
 
-    /** Move this out later!!! */
     /**
      * Attempt mop swing with some microstrategy. Returns if a swing was executed.
      */
