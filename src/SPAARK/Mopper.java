@@ -53,15 +53,17 @@ public class Mopper {
             MapInfo info = mapInfos[i];
             MapLocation loc = info.getMapLocation();
             PaintType p = info.getPaint();
-            RobotInfo r = G.rc.senseRobotAtLocation(loc);
-            if (r != null && r.team == POI.opponentTeam) {
-                // go to bots also slap bots with more paint
-                microDir.add(G.me.directionTo(loc));
-                if (G.rc.canAttack(loc) && !p.isAlly()) {
-                    double paint = r.paintAmount / (double) r.type.paintCapacity;
-                    if (paint > bestPaint) {
-                        bestPaint = paint;
-                        best = info;
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                if (r.team == POI.opponentTeam) {
+                    // go to bots also slap bots with more paint
+                    microDir.add(G.me.directionTo(loc));
+                    if (G.rc.canAttack(loc) && !p.isAlly()) {
+                        double paint = r.paintAmount / (double) r.type.paintCapacity;
+                        if (paint > bestPaint) {
+                            bestPaint = paint;
+                            best = info;
+                        }
                     }
                 }
             }
@@ -75,12 +77,16 @@ public class Mopper {
             }
         }
         if (best == null) {
-            if (G.me.distanceSquaredTo(microDir) >= 2)
+            if (G.me.distanceSquaredTo(microDir) >= 2) {
+                G.rc.setIndicatorLine(G.me, microDir, 0, 120, 255);
                 Motion.bugnavTowards(microDir);
-            else
+            } else {
+                G.indicatorString.append("RAND ");
                 Motion.spreadRandomly();
+            }
         } else {
             MapLocation loc = best.getMapLocation();
+            G.rc.setIndicatorLine(G.me, loc, 0, 0, 255);
             if (G.rc.isActionReady())
                 G.rc.attack(loc);
             Motion.bugnavAround(loc, 0, 1);

@@ -1,6 +1,11 @@
 package SPAARK;
 
-import battlecode.common.*;
+import battlecode.common.Clock;
+import battlecode.common.Direction;
+import battlecode.common.GameActionException;
+import battlecode.common.MapInfo;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotInfo;
 
 public class Motion {
     public static final Direction[] DIRECTIONS = {
@@ -312,7 +317,7 @@ public class Motion {
             return Direction.CENTER;
         }
 
-        G.indicatorString.append("DIR=" + direction + " ");
+        // G.indicatorString.append("DIR=" + direction + " ");
         if (optimalDir != Direction.CENTER && mode != AROUND) {
             if (G.rc.canMove(optimalDir) && lastDir != optimalDir.opposite()) {
                 optimalDir = Direction.CENTER;
@@ -322,11 +327,11 @@ public class Motion {
                 direction = optimalDir;
             }
         }
-        G.indicatorString.append("OPTIMAL=" + optimalDir + " ");
+        // G.indicatorString.append("OPTIMAL=" + optimalDir + " ");
 
-        // G.indicatorString.append("CIRCLE: " + circleDirection);
-        // G.indicatorString.append("DIR: " + direction);
-        // G.indicatorString.append("OFF: " + G.rc.onTheMap(me.add(direction)));
+        // G.indicatorString.append("CIRCLE: " + circleDirection + " ");
+        // G.indicatorString.append("DIR: " + direction + " ");
+        // G.indicatorString.append("OFF: " + G.rc.onTheMap(me.add(direction)) + " ");
 
         if (lastDir != direction.opposite()) {
             if (G.rc.canMove(direction)) {
@@ -378,7 +383,7 @@ public class Motion {
             if (mode == AROUND) {
                 circleDirection *= -1;
                 direction = direction.opposite();
-                G.indicatorString.append("FLIPPED");
+                // G.indicatorString.append("FLIPPED ");
             } else {
                 direction = me.directionTo(dest);
             }
@@ -391,7 +396,7 @@ public class Motion {
             optimalDir = direction;
         }
 
-        G.indicatorString.append("ROTATION=" + rotation + " ");
+        // G.indicatorString.append("ROTATION=" + rotation + " ");
         if (rotation == NONE) {
             int[] simulated = simulateMovement(me, dest);
 
@@ -400,7 +405,7 @@ public class Motion {
             boolean clockwiseStuck = simulated[1] == 1;
             boolean counterClockwiseStuck = simulated[3] == 1;
 
-            G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist);
+            // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist + " ");
             int tempMode = mode;
             if (mode == AROUND) {
                 if (clockwiseDist < minRadiusSquared) {
@@ -559,7 +564,7 @@ public class Motion {
                 bfsCurr[i] = bfsDist[step * (height + 2) + i];
             }
             step += 1;
-            G.indicatorString.append("RECALCULATING;");
+            G.indicatorString.append("BFS-RECALC ");
         }
         recalculationNeeded = MAX_PATH_LENGTH;
 
@@ -744,7 +749,7 @@ public class Motion {
         // }
         // }
         // }
-        G.indicatorString.append("STEP=" + step);
+        G.indicatorString.append("BFS-STP=" + step + " ");
     }
 
     public static Direction getBfsDirection(MapLocation dest) throws GameActionException {
@@ -803,7 +808,7 @@ public class Motion {
         }
         if (optimalDirection == Direction.CENTER) {
             optimalDirection = bug2Helper(me, dest, TOWARDS, 0, 0);
-            G.indicatorString.append("BUGNAV");
+            G.indicatorString.append("BFS-BUG ");
 
             if (canMove(optimalDirection)) {
                 return optimalDirection;
@@ -816,7 +821,7 @@ public class Motion {
     }
 
     public static void bfsnav(MapLocation dest) throws GameActionException {
-        G.indicatorString.append("BFSN: " + Clock.getBytecodesLeft() + " ");
+        G.indicatorString.append("BFS-BT: " + Clock.getBytecodesLeft() + "-");
         updateBfsTarget(dest);
 
         if (!G.rc.getLocation().equals(dest) && G.rc.isMovementReady()) {
