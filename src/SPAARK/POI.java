@@ -4,7 +4,7 @@ import battlecode.common.*;
 import java.util.*;
 
 public class POI {
-    public static Team opponentTeam = Team.NEUTRAL;
+    public static Team opponentTeam = G.rc.getTeam().opponent();
 
     public static int[] towers = new int[25];
     public static int[] towerIDs = new int[25];
