@@ -10,6 +10,7 @@ public class RobotPlayer {
             G.rng = new Random(G.rc.getID() + 2025);
             Motion.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
             POI.opponentTeam = G.rc.getTeam().opponent();
+            POI.init();
             switch (G.rc.getType()) {
                 case MOPPER:
                 case SOLDIER:
@@ -24,6 +25,7 @@ public class RobotPlayer {
                 try {
                     G.indicatorString = new StringBuilder();
                     Motion.currLoc = G.rc.getLocation();
+                    POI.updateInfo();
                     switch (G.rc.getType()) {
                         case MOPPER:
                         case SOLDIER:

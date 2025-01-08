@@ -5,6 +5,6 @@ import java.util.*;
 
 public class Splasher {
     public static void run() throws Exception {
-
+        Motion.moveRandomly();
     }
 }
