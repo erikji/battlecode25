@@ -106,12 +106,11 @@ public class POI {
             // System.out.println(parseLocation(towers[i]));
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 255, 0, 255);
+                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
                 } else {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 255, 0, 0);
+                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
                 }
             } catch (Exception e) {
-
             }
         }
 
@@ -323,10 +322,6 @@ public class POI {
     // team 0 for ally
     // team 1 for opp
     // team 2 for neutral
-    // 0: neutral
-    // 1: paint
-    // 2: chip
-    // 3: defense
     public static Team parseTowerTeam(int n) {
         int t = n >> 12;
         if (t == 0) {
@@ -338,6 +333,10 @@ public class POI {
         return Team.B;
     }
 
+    // 0: neutral
+    // 1: paint
+    // 2: chip
+    // 3: defense
     public static UnitType parseTowerType(int n) {
         int t = n >> 12;
         if (t == 0) {

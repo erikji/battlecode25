@@ -1,11 +1,6 @@
 package SPAARK;
 
-import battlecode.common.Clock;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapInfo;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotInfo;
+import battlecode.common.*;
 
 public class Motion {
     public static final Direction[] DIRECTIONS = {
@@ -193,10 +188,10 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                G.rc.setIndicatorLine(me,
-                        new MapLocation(Math.max(0, Math.min(G.rc.getMapWidth() - 1, target.x)),
-                                Math.max(0, Math.min(G.rc.getMapHeight() - 1, target.y))),
-                        DEFAULT_RETREAT_HP, AWAY, AROUND);
+                // try {
+                // G.rc.setIndicatorLine(me, target, 0, 0, 0);
+                // } catch (Exception e) {
+                // }
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
@@ -280,7 +275,8 @@ public class Motion {
         return new int[] { clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck };
     }
 
-    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared, int maxRadiusSquared) throws GameActionException {
+    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared,
+            int maxRadiusSquared) throws GameActionException {
         Direction direction = me.directionTo(dest);
         if (me.equals(dest)) {
             if (mode == AROUND) {
@@ -405,7 +401,8 @@ public class Motion {
             boolean clockwiseStuck = simulated[1] == 1;
             boolean counterClockwiseStuck = simulated[3] == 1;
 
-            // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist + " ");
+            // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist
+            // + " ");
             int tempMode = mode;
             if (mode == AROUND) {
                 if (clockwiseDist < minRadiusSquared) {
@@ -499,7 +496,8 @@ public class Motion {
         }
     }
 
-    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared) throws GameActionException {
+    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared)
+            throws GameActionException {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared, maxRadiusSquared);
             if (d == Direction.CENTER) {
