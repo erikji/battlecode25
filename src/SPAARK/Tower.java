@@ -4,20 +4,18 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Tower {
-    public static int spawnedSoldiers = 0;
-    public static int spawnedSplashers = 0;
-    public static int spawnedMoppers = 0;
-    public static int spawnedRobots = 0;
+    protected static int spawnedSoldiers = 0;
+    protected static int spawnedSplashers = 0;
+    protected static int spawnedMoppers = 0;
+    protected static int spawnedRobots = 0;
 
-    static UnitType moneyLevels[] = {UnitType.LEVEL_THREE_MONEY_TOWER, UnitType.LEVEL_TWO_MONEY_TOWER, UnitType.LEVEL_ONE_MONEY_TOWER};
-    static UnitType paintLevels[] = {UnitType.LEVEL_THREE_PAINT_TOWER, UnitType.LEVEL_TWO_PAINT_TOWER, UnitType.LEVEL_ONE_PAINT_TOWER};
+    protected static UnitType moneyLevels[] = {UnitType.LEVEL_THREE_MONEY_TOWER, UnitType.LEVEL_TWO_MONEY_TOWER, UnitType.LEVEL_ONE_MONEY_TOWER};
+    protected static UnitType paintLevels[] = {UnitType.LEVEL_THREE_PAINT_TOWER, UnitType.LEVEL_TWO_PAINT_TOWER, UnitType.LEVEL_ONE_PAINT_TOWER};
+    protected static MapLocation[] spawnLocs;
+    protected static int level;
 
     public static void init() throws Exception {
-        
-    }
-
-    public static void run() throws Exception {
-        MapLocation[] spawnLocs = new MapLocation[] {
+        spawnLocs = new MapLocation[] {
             Motion.currLoc.add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
             Motion.currLoc.add(Direction.NORTHEAST),
@@ -31,12 +29,14 @@ public class Tower {
             Motion.currLoc.add(Direction.WEST).add(Direction.WEST),
             Motion.currLoc.add(Direction.NORTHWEST)
         };
-
         Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
             public int compare(MapLocation a, MapLocation b) {
                 return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
             };
         });
+    }
+
+    public static void run() throws Exception {
         // general common code for all towers
         // spawning
         // Note that we r going to have >50% moppers since they r cheaper
@@ -86,39 +86,39 @@ public class Tower {
         // more specialized here
         switch (G.rc.getType()) {
             case LEVEL_ONE_DEFENSE_TOWER:
-                DefenseTower.level = 0;
+                level = 0;
                 DefenseTower.run();
                 break;
             case LEVEL_TWO_DEFENSE_TOWER:
-                DefenseTower.level = 1;
+                level = 1;
                 DefenseTower.run();
                 break;
             case LEVEL_THREE_DEFENSE_TOWER:
-                DefenseTower.level = 2;
+                level = 2;
                 DefenseTower.run();
                 break;
             case LEVEL_ONE_MONEY_TOWER:
-                MoneyTower.level = 0;
+                level = 0;
                 MoneyTower.run();
                 break;
             case LEVEL_TWO_MONEY_TOWER:
-                MoneyTower.level = 1;
+                level = 1;
                 MoneyTower.run();
                 break;
             case LEVEL_THREE_MONEY_TOWER:
-                MoneyTower.level = 2;
+                level = 2;
                 MoneyTower.run();
                 break;
             case LEVEL_ONE_PAINT_TOWER:
-                PaintTower.level = 0;
+                level = 0;
                 PaintTower.run();
                 break;
             case LEVEL_TWO_PAINT_TOWER:
-                PaintTower.level = 1;
+                level = 1;
                 PaintTower.run();
                 break;
             case LEVEL_THREE_PAINT_TOWER:
-                PaintTower.level = 2;
+                level = 2;
                 PaintTower.run();
                 break;
             default:
