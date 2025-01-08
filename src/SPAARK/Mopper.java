@@ -56,10 +56,12 @@ public class Mopper {
                 microDir.add(G.me.directionTo(loc));
                 if (G.rc.canAttack(loc) && !p.isAlly()) {
                     RobotInfo r = G.rc.senseRobotAtLocation(loc);
-                    double paint = r.paintAmount / (double) r.type.paintCapacity;
-                    if (paint > bestPaint) {
-                        bestPaint = paint;
-                        best = info;
+                    if (r.team == POI.opponentTeam) {
+                        double paint = r.paintAmount / (double) r.type.paintCapacity;
+                        if (paint > bestPaint) {
+                            bestPaint = paint;
+                            best = info;
+                        }
                     }
                 }
             }
@@ -74,7 +76,10 @@ public class Mopper {
             else
                 Motion.bugnavTowards(microDir);
         } else {
-            Motion.bugnavAround(best.getMapLocation(), 0, 1);
+            MapLocation loc = best.getMapLocation();
+            Motion.bugnavAround(loc, 0, 1);
+            if (G.rc.canAttack(loc))
+                G.rc.attack(loc);
         }
     }
 

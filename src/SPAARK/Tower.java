@@ -13,7 +13,6 @@ public class Tower {
     public static int level;
 
     public static void init() throws Exception {
-        G.me = G.rc.getLocation();
         spawnLocs = new MapLocation[] {
                 G.me.add(Direction.NORTH),
                 G.me.add(Direction.NORTH).add(Direction.NORTH),

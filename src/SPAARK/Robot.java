@@ -17,7 +17,6 @@ public class Robot {
     }
 
     public static void run() throws Exception {
-        G.me = G.rc.getLocation();
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
