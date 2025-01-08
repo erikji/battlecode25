@@ -4,6 +4,11 @@ import battlecode.common.*;
 import java.util.*;
 
 public class RobotPlayer {
+    public static void updateInfo() throws Exception {
+        G.indicatorString = new StringBuilder();
+        Motion.updateInfo();
+        POI.updateInfo();
+    }
     public static void run(RobotController rc) throws Exception {
         try {
             G.rc = rc;
@@ -23,9 +28,7 @@ public class RobotPlayer {
             }
             while (true) {
                 try {
-                    G.indicatorString = new StringBuilder();
-                    Motion.updateInfo();
-                    POI.updateInfo();
+                    updateInfo();
                     switch (G.rc.getType()) {
                         case MOPPER:
                         case SOLDIER:

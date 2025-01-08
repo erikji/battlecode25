@@ -25,6 +25,32 @@ public class G {
         UnitType.LEVEL_THREE_PAINT_TOWER,
         UnitType.LEVEL_THREE_MONEY_TOWER
     };
+    
+    protected static final Direction[] DIRECTIONS = {
+        Direction.SOUTHWEST,
+        Direction.SOUTH,
+        Direction.SOUTHEAST,
+        Direction.WEST,
+        Direction.EAST,
+        Direction.NORTHWEST,
+        Direction.NORTH,
+        Direction.NORTHEAST,
+    };
 
+    protected static final Direction[] ALL_DIRECTIONS = {
+        Direction.SOUTHWEST,
+        Direction.SOUTH,
+        Direction.SOUTHEAST,
+        Direction.WEST,
+        Direction.EAST,
+        Direction.NORTHWEST,
+        Direction.NORTH,
+        Direction.NORTHEAST,
+        Direction.CENTER,
+    };
+
+    //stuff that changes
     public static StringBuilder indicatorString;
+    // public static MapInfo[][] infos = new MapInfo[60][60]; //updated in Motion.updateInfo
+    //oh wait it doesn't save bytecode
 }

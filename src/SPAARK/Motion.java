@@ -977,5 +977,10 @@ public class Motion {
         currLoc = G.rc.getLocation();
         opponentRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam().opponent());
         allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
+        // MapInfo[] infos = G.rc.senseNearbyMapInfos();
+        // for (MapInfo info : infos) {
+        //     G.infos[info.getMapLocation().x][info.getMapLocation().y] = info;
+        // }
+        //oh wait it doesn't save bytecode
     }
 }
