@@ -99,7 +99,8 @@ public class POI {
             if (towers[i] == -1) {
                 break;
             }
-            G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
+            if (G.rc.onTheMap(parseLocation(towers[i])))
+                G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 0, 255, 0);
         }
 
         // bytecode inefficient symmetry detection
