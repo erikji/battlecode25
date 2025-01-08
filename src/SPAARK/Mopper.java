@@ -5,30 +5,43 @@ import java.util.*;
 
 public class Mopper {
     public static boolean tempReachedCenter = false;
+    public static final int EXPLORE = 0;
+    public static final int RETREAT = 1;
+    public static int mode = EXPLORE;
 
     public static void run() throws Exception {
-        Motion.currLoc = G.rc.getLocation();
-        // idk just make it attack anything it sees
-        if (!trySwing()) {
-            // no bots attacked, look for paint
-            MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
-            MapInfo best = null;
-            for (MapInfo info : mapInfos) {
-                if (((info.getPaint() == PaintType.ENEMY_PRIMARY || info.getPaint() == PaintType.ENEMY_SECONDARY) && (best == null || (G.rc.canSenseRobotAtLocation(info.getMapLocation()) && G.rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam)))) {
-                    //if we didn't mop swing, prioritize unpainting squares under opponents
-                    int distSq = info.getMapLocation().distanceSquaredTo(Motion.currLoc);
-                    if (distSq <= 2 && G.rc.isActionReady() && G.rc.canAttack(info.getMapLocation())) {
-                        G.rc.attack(info.getMapLocation());
-                    }
-                    Motion.bugnavAround(info.getMapLocation(), 0, 2);
-                    break;
-                }
-            }
+        if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
+            mode = RETREAT;
         }
-        // move i guess?
-        if (Motion.currLoc.distanceSquaredTo(Motion.mapCenter) < 8) tempReachedCenter = true;
-        if (tempReachedCenter) Motion.bugnavTowards(Motion.mapCenter);
-        else Motion.spreadRandomly();
+        else {
+            mode = EXPLORE;
+        }
+        switch (mode) {
+            case EXPLORE:
+                G.indicatorString.append("EXPLORE ");
+                Motion.spreadRandomly();
+                if (!trySwing()) {
+                    // no bots attacked, look for paint
+                    MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
+                    MapInfo best = null;
+                    for (MapInfo info : mapInfos) {
+                        if (((info.getPaint() == PaintType.ENEMY_PRIMARY || info.getPaint() == PaintType.ENEMY_SECONDARY) && (best == null || (G.rc.canSenseRobotAtLocation(info.getMapLocation()) && G.rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam)))) {
+                            //if we didn't mop swing, prioritize unpainting squares under opponents
+                            int distSq = info.getMapLocation().distanceSquaredTo(Motion.currLoc);
+                            if (distSq <= 2 && G.rc.isActionReady() && G.rc.canAttack(info.getMapLocation())) {
+                                G.rc.attack(info.getMapLocation());
+                            }
+                            Motion.bugnavAround(info.getMapLocation(), 0, 2);
+                            break;
+                        }
+                    }
+                }
+                break;
+            case RETREAT:
+                G.indicatorString.append("RETREAT ");
+                Robot.retreat();
+                break;
+        }
     }
 
     /** Move this out later!!! */
