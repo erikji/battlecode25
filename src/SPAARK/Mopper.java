@@ -66,20 +66,20 @@ public class Mopper {
                 }
             }
             if (bestPaint == -1 && (p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY)) {
-                if (best == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(best.getMapLocation()))
+                microDir.add(G.me.directionTo(loc));
+                if (best == null || (G.rc.canAttack(loc) && G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(best.getMapLocation())))
                     best = info;
             }
         }
         if (best == null) {
-            if (G.me.distanceSquaredTo(microDir) >= 3)
-                Motion.spreadRandomly();
-            else
+            if (G.me.distanceSquaredTo(microDir) >= 2)
                 Motion.bugnavTowards(microDir);
+            else
+                Motion.spreadRandomly();
         } else {
             MapLocation loc = best.getMapLocation();
             Motion.bugnavAround(loc, 0, 1);
-            if (G.rc.canAttack(loc))
-                G.rc.attack(loc);
+            G.rc.attack(loc);
         }
     }
 
