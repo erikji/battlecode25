@@ -10,23 +10,24 @@ public class Tower {
     public static int spawnedRobots = 0;
 
     public static MapLocation[] spawnLocs;
+    public static int level;
 
     public static void init() throws Exception {
+        G.me = G.rc.getLocation();
         spawnLocs = new MapLocation[] {
-            Motion.currLoc.add(Direction.NORTH),
-            Motion.currLoc.add(Direction.NORTH).add(Direction.NORTH),
-            Motion.currLoc.add(Direction.NORTHEAST),
-            Motion.currLoc.add(Direction.EAST),
-            Motion.currLoc.add(Direction.EAST).add(Direction.EAST),
-            Motion.currLoc.add(Direction.SOUTHEAST),
-            Motion.currLoc.add(Direction.SOUTH),
-            Motion.currLoc.add(Direction.SOUTH).add(Direction.SOUTH),
-            Motion.currLoc.add(Direction.SOUTHWEST),
-            Motion.currLoc.add(Direction.WEST),
-            Motion.currLoc.add(Direction.WEST).add(Direction.WEST),
-            Motion.currLoc.add(Direction.NORTHWEST)
+                G.me.add(Direction.NORTH),
+                G.me.add(Direction.NORTH).add(Direction.NORTH),
+                G.me.add(Direction.NORTHEAST),
+                G.me.add(Direction.EAST),
+                G.me.add(Direction.EAST).add(Direction.EAST),
+                G.me.add(Direction.SOUTHEAST),
+                G.me.add(Direction.SOUTH),
+                G.me.add(Direction.SOUTH).add(Direction.SOUTH),
+                G.me.add(Direction.SOUTHWEST),
+                G.me.add(Direction.WEST),
+                G.me.add(Direction.WEST).add(Direction.WEST),
+                G.me.add(Direction.NORTHWEST)
         };
-
         Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
             public int compare(MapLocation a, MapLocation b) {
                 return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
@@ -84,46 +85,46 @@ public class Tower {
         // more specialized here
         switch (G.rc.getType()) {
             case LEVEL_ONE_DEFENSE_TOWER:
-                DefenseTower.level = 0;
+                level = 0;
                 DefenseTower.run();
                 break;
             case LEVEL_TWO_DEFENSE_TOWER:
-                DefenseTower.level = 1;
+                level = 1;
                 DefenseTower.run();
                 break;
             case LEVEL_THREE_DEFENSE_TOWER:
-                DefenseTower.level = 2;
+                level = 2;
                 DefenseTower.run();
                 break;
             case LEVEL_ONE_MONEY_TOWER:
-                MoneyTower.level = 0;
+                level = 0;
                 MoneyTower.run();
                 break;
             case LEVEL_TWO_MONEY_TOWER:
-                MoneyTower.level = 1;
+                level = 1;
                 MoneyTower.run();
                 break;
             case LEVEL_THREE_MONEY_TOWER:
-                MoneyTower.level = 2;
+                level = 2;
                 MoneyTower.run();
                 break;
             case LEVEL_ONE_PAINT_TOWER:
-                PaintTower.level = 0;
+                level = 0;
                 PaintTower.run();
                 break;
             case LEVEL_TWO_PAINT_TOWER:
-                PaintTower.level = 1;
+                level = 1;
                 PaintTower.run();
                 break;
             case LEVEL_THREE_PAINT_TOWER:
-                PaintTower.level = 2;
+                level = 2;
                 PaintTower.run();
                 break;
             default:
                 throw new Exception("Challenge Complete! How Did We Get Here?");
         }
-        while (G.rc.canUpgradeTower(Motion.currLoc) && (G.rc.getRoundNum() > 100 || G.rc.getMoney() >= 3000)) {
-            G.rc.upgradeTower(Motion.currLoc);
+        while (G.rc.canUpgradeTower(G.me) && (G.rc.getRoundNum() > 100 || G.rc.getMoney() >= 3000)) {
+            G.rc.upgradeTower(G.me);
         }
         // attack AFTER run (in case we get an upgrade)
         MapLocation bestEnemyLoc = null;

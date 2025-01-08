@@ -9,6 +9,7 @@ public class RobotPlayer {
         Motion.updateInfo();
         POI.updateInfo();
     }
+
     public static void run(RobotController rc) throws Exception {
         try {
             G.rc = rc;
