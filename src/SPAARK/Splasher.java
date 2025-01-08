@@ -77,7 +77,6 @@ public class Splasher {
                             bestScore = score;
                         }
                         if (Clock.getBytecodesLeft() < 2000) {
-                            System.out.println(i);
                             break;
                         }
                     }
