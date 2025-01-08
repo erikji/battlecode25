@@ -41,11 +41,13 @@ public class Mopper {
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
+        mopSwingWithMicro();
         MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
         // will try to unpaint squares under opponent bots
         // but if no opponents, just move to paint and attack
         MapInfo best = null;
         double bestPaint = -1;
+        int bestDist = -1;
         MapLocation microDir = G.rc.getLocation();
         for (int i = mapInfos.length; --i >= 0;) {
             MapInfo info = mapInfos[i];
@@ -63,10 +65,13 @@ public class Mopper {
                     }
                 }
             }
-            if (bestPaint == -1 && (p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY)) {
+            if (bestPaint == -1 && p.isEnemy()) {
                 microDir.add(G.me.directionTo(loc));
-                if (best == null || (G.rc.canAttack(loc) && G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(best.getMapLocation())))
+                int dist = G.me.distanceSquaredTo(loc);
+                if (best == null || G.rc.canAttack(loc) && dist < bestDist) {
                     best = info;
+                    bestDist = dist;
+                }
             }
         }
         if (best == null) {
@@ -76,8 +81,9 @@ public class Mopper {
                 Motion.spreadRandomly();
         } else {
             MapLocation loc = best.getMapLocation();
+            if (G.rc.isActionReady())
+                G.rc.attack(loc);
             Motion.bugnavAround(loc, 0, 1);
-            G.rc.attack(loc);
         }
     }
 
@@ -145,89 +151,66 @@ public class Mopper {
      */
     public static boolean mopSwingWithMicro() throws Exception {
         // spaghetti copy paste
-        float up = 0, down = 0, left = 0, right = 0;
-        int up2 = 0, down2 = 0, left2 = 0, right2 = 0;
+        int up = 0, down = 0, left = 0, right = 0;
         RobotInfo r;
         if (G.rc.onTheMap(G.me.add(Direction.NORTH))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTH));
-            if (r != null && r.team == POI.opponentTeam) {
-                up += r.paintAmount / (float) r.type.paintCapacity;
-                up2++;
-            }
+            if (r != null && r.team == POI.opponentTeam)
+                up++;
         }
         if (G.rc.onTheMap(G.me.add(Direction.NORTHEAST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
-                up += r.paintAmount / (float) r.type.paintCapacity;
-                right += r.paintAmount / (float) r.type.paintCapacity;
-                up2++;
-                right2++;
+                up++;
+                right++;
             }
         }
         if (G.rc.onTheMap(G.me.add(Direction.EAST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.EAST));
             if (r != null && r.team == POI.opponentTeam)
-                right += r.paintAmount / (float) r.type.paintCapacity;
+                right++;
         }
         if (G.rc.onTheMap(G.me.add(Direction.SOUTHEAST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.SOUTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
-                down += r.paintAmount / (float) r.type.paintCapacity;
-                right += r.paintAmount / (float) r.type.paintCapacity;
+                down++;
+                right++;
             }
         }
         if (G.rc.onTheMap(G.me.add(Direction.SOUTH))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.SOUTH));
             if (r != null && r.team == POI.opponentTeam)
-                down += r.paintAmount / (float) r.type.paintCapacity;
+                down++;
         }
         if (G.rc.onTheMap(G.me.add(Direction.SOUTHWEST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.SOUTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
-                down += r.paintAmount / (float) r.type.paintCapacity;
-                left += r.paintAmount / (float) r.type.paintCapacity;
+                down++;
+                left++;
             }
         }
         if (G.rc.onTheMap(G.me.add(Direction.WEST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.WEST));
             if (r != null && r.team == POI.opponentTeam)
-                left += r.paintAmount / (float) r.type.paintCapacity;
+                left++;
         }
         if (G.rc.onTheMap(G.me.add(Direction.NORTHWEST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTHWEST));
             if (r != null && r.team == POI.opponentTeam) {
-                up += r.paintAmount / (float) r.type.paintCapacity;
-                left += r.paintAmount / (float) r.type.paintCapacity;
+                up++;
+                left++;
             }
         }
-        // SPAGHETITIITIUUITHREIHSIHDFSDF
-        if (left + right + up + down == 0)
+        if (up >= 3)
+            G.rc.mopSwing(Direction.NORTH);
+        else if (down >= 3)
+            G.rc.mopSwing(Direction.SOUTH);
+        else if (left >= 3)
+            G.rc.mopSwing(Direction.WEST);
+        else if (right >= 3)
+            G.rc.mopSwing(Direction.EAST);
+        else
             return false;
-        if (left > right) {
-            if (up > left) {
-                if (down > up)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.NORTH);
-            } else {
-                if (down > left)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.WEST);
-            }
-        } else {
-            if (up > right) {
-                if (down > up)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.NORTH);
-            } else {
-                if (down > right)
-                    G.rc.mopSwing(Direction.SOUTH);
-                else
-                    G.rc.mopSwing(Direction.EAST);
-            }
-        }
         return true;
     }
 }
