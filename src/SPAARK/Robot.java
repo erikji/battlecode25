@@ -38,6 +38,10 @@ public class Robot {
                 continue;
             }
             boolean paint = POI.parseTowerType(POI.towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER;
+            if (!paint) {
+                // This is dumb but borks code for some reason
+                continue;
+            }
             int distance = Motion.getChebyshevDistance(Motion.currLoc, POI.parseLocation(POI.towers[i]));
             if (best == -1) {
                 best = i;
@@ -66,6 +70,7 @@ public class Robot {
         }
         if (best != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[best]);
+            G.rc.setIndicatorLine(Motion.currLoc, loc, 0, 255, 0);
             Motion.bugnavTowards(loc);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(), G.rc.senseRobotAtLocation(loc).getPaintAmount());
@@ -74,8 +79,5 @@ public class Robot {
                 }
             }
         }
-    }
-    public static boolean isTower(UnitType t) throws Exception {
-        return t != UnitType.MOPPER && t != UnitType.SOLDIER && t != UnitType.SPLASHER;
     }
 }

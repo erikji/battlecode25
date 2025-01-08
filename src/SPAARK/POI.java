@@ -79,12 +79,12 @@ public class POI {
         }
         // hopefully its set
         for (RobotInfo i : Motion.allyRobots) {
-            if (Robot.isTower(i.getType())) {
+            if (i.getType().isTowerType()) {
                 addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
             }
         }
         for (RobotInfo i : Motion.opponentRobots) {
-            if (Robot.isTower(i.getType())) {
+            if (i.getType().isTowerType()) {
                 addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
             }
         }
@@ -92,7 +92,18 @@ public class POI {
             if (towers[i] == -1) {
                 break;
             }
-            G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
+            // System.out.println(parseLocation(towers[i]));
+            try {
+                if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
+                    G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 255);
+                }
+                else {
+                    G.rc.setIndicatorLine(Motion.currLoc, parseLocation(towers[i]), 255, 0, 0);
+                }
+            }
+            catch (Exception e) {
+
+            }
         }
 
         // bytecode inefficient symmetry detection
@@ -113,6 +124,8 @@ public class POI {
         if (symmetry[2]&&!symmetryValid(2)) {
             removeValidSymmetry(-1, 2);
         }
+
+        sendMessages();
     };
 
     protected static boolean symmetryValid(int sym) throws GameActionException {
@@ -149,10 +162,10 @@ public class POI {
         return false;
     }
     public static void sendMessages() throws Exception {
-        if (Robot.isTower(G.rc.getType())) {
+        if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
             for (RobotInfo r : Motion.allyRobots) {
-                if (!Robot.isTower(r.getType())) {
+                if (r.getType().isRobotType()) {
                     while (G.rc.canSendMessage(r.getLocation(), 0)) {
                         int message = -1;
                         int messages = 0;
@@ -190,7 +203,7 @@ public class POI {
                 messages += 1;
             }
             for (RobotInfo r : Motion.allyRobots) {
-                if (Robot.isTower(r.getType())) {
+                if (r.getType().isTowerType()) {
                     if (G.rc.canSendMessage(r.getLocation(), 0)) {
                         if (messages < 2) {
                             for (int i = 0; i < 50; i++) {
@@ -259,17 +272,19 @@ public class POI {
             else {
                 addTower(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             }
-            if (m.getBytes() >> 16 != 0) {
+            if ((m.getBytes() >> 16) != 0) {
                 addTower(m.getSenderID(), (m.getBytes() >> 16) & 0b1111111111111111);
             }
         }
     };
 
     protected static MapLocation parseLocation(int n) {
-        return new MapLocation((n & 0b111111) - 1, (n >> 6) & 0b111111);
+        // n -= 1;
+        return new MapLocation((n & 0b111111), (n >> 6) & 0b111111);
     }
     protected static int intifyLocation(MapLocation loc) {
-        return ((loc.y << 6) | loc.x) + 1;
+        // return ((loc.y << 6) | loc.x) + 1;
+        return ((loc.y << 6) | loc.x);
     }
     
     // team 0 for ally
@@ -280,17 +295,17 @@ public class POI {
     // 2: chip
     // 3: defense
     protected static Team parseTowerTeam(int n) {
-        int t = n << 12;
+        int t = n >> 12;
         if (t == 0) {
             return Team.NEUTRAL;
         }
-        if (t < 3) {
+        if (t <= 3) {
             return Team.A;
         }
         return Team.B;
     }
     protected static UnitType parseTowerType(int n) {
-        int t = n << 12;
+        int t = n >> 12;
         if (t == 0) {
             return UnitType.LEVEL_TWO_PAINT_TOWER;
         }
@@ -303,17 +318,17 @@ public class POI {
         return UnitType.LEVEL_ONE_DEFENSE_TOWER;
     }
     protected static int intifyTower(Team team, UnitType type) {
-        if (team.ordinal() == 0) {
+        if (team == Team.NEUTRAL) {
             return 0;
         }
         if (type == UnitType.LEVEL_ONE_PAINT_TOWER || type == UnitType.LEVEL_TWO_PAINT_TOWER || type == UnitType.LEVEL_THREE_PAINT_TOWER) {
-            return 1 + team.ordinal() * 3 - 3;
+            return (1 + team.ordinal() * 3) << 12;
         }
         if (type == UnitType.LEVEL_ONE_MONEY_TOWER || type == UnitType.LEVEL_TWO_MONEY_TOWER || type == UnitType.LEVEL_THREE_MONEY_TOWER) {
-            return 2 + team.ordinal() * 3 - 3;
+            return (2 + team.ordinal() * 3) << 12;
         }
         if (type == UnitType.LEVEL_ONE_DEFENSE_TOWER || type == UnitType.LEVEL_TWO_DEFENSE_TOWER || type == UnitType.LEVEL_THREE_DEFENSE_TOWER) {
-            return 3 + team.ordinal() * 3 - 3;
+            return (3 + team.ordinal() * 3) << 12;
         }
         return 0;
     }
