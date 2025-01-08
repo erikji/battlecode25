@@ -8,6 +8,9 @@ public class POI {
 
     public static int[] towers = new int[50];
 
+    public static int lastMoney = 0;
+    public static int dMoney = 10;
+    public static int normDMoney = 10;
 
     //symmetry detection
     protected static long[] nowall = new long[60];
@@ -57,6 +60,10 @@ public class POI {
         }
     };
     public static void updateInfo() throws Exception {
+        dMoney = G.rc.getMoney() - lastMoney;
+        //dMoney doesnt change by more than 50 each turn
+        if (dMoney > 0 && Math.abs(dMoney - normDMoney) < 50) normDMoney = dMoney;
+        lastMoney = G.rc.getMoney();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
 
         for (MapLocation i : nearbyRuins) {
@@ -96,6 +103,11 @@ public class POI {
             criticalSymmetry = true;
         }
     };
+    protected static int getNumChipTowers() throws Exception {
+        //call updateInfo() first
+        //guess that each chip tower is making 15 currency
+        return (normDMoney + 14) / 15;
+    }
 
     protected static boolean symmetryValid(int sym) throws GameActionException {
         //completely untested...
