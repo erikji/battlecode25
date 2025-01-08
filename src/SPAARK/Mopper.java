@@ -41,7 +41,9 @@ public class Mopper {
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
+        int bt = Clock.getBytecodesLeft();
         mopSwingWithMicro();
+        G.indicatorString.append((Clock.getBytecodesLeft() - bt) + " ");
         MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
         // will try to unpaint squares under opponent bots
         // but if no opponents, just move to paint and attack
@@ -56,7 +58,7 @@ public class Mopper {
             MapLocation loc = info.getMapLocation();
             PaintType p = info.getPaint();
             if (p.isEnemy()) {
-                microDir.add(G.me.directionTo(loc));
+                microDir = microDir.add(G.me.directionTo(loc));
                 if (G.rc.canSenseRobotAtLocation(loc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(loc);
                     if (r.team == POI.opponentTeam) {
@@ -75,11 +77,16 @@ public class Mopper {
                 }
             }
         }
-        G.rc.setIndicatorLine(G.me, microDir, 0, 120, 255);
+        G.indicatorString.append((Clock.getBytecodesLeft() - bt) + " ");
+        // this is using all the bytecode???
+        G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        G.rc.setIndicatorString("sdf " + Clock.getBytecodesLeft());
         if (bestEmpty == null && bestBot == null) {
             if (G.me.distanceSquaredTo(microDir) >= 2) {
+                G.rc.setIndicatorString("a " + Clock.getBytecodesLeft());
                 Motion.bugnavTowards(microDir);
             } else {
+                G.rc.setIndicatorString("b " + Clock.getBytecodesLeft());
                 G.indicatorString.append("RAND ");
                 Motion.spreadRandomly();
             }
@@ -89,7 +96,9 @@ public class Mopper {
             G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
             if (G.rc.isActionReady())
                 G.rc.attack(bestEmpty);
-            Motion.bugnavAround(bestEmpty, 0, 1);
+            G.indicatorString.append(Clock.getBytecodesLeft());
+            G.rc.setIndicatorString("c " + Clock.getBytecodesLeft());
+            Motion.bugnavAround(bestEmpty, 1, 1);
         }
     }
 

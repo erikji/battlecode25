@@ -184,10 +184,10 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                G.rc.setIndicatorLine(me,
-                        new MapLocation(Math.max(0, Math.min(G.rc.getMapWidth() - 1, target.x)),
-                                Math.max(0, Math.min(G.rc.getMapHeight() - 1, target.y))),
-                        DEFAULT_RETREAT_HP, AWAY, AROUND);
+                // try {
+                // G.rc.setIndicatorLine(me, target, 0, 0, 0);
+                // } catch (Exception e) {
+                // }
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
@@ -394,7 +394,8 @@ public class Motion {
             boolean clockwiseStuck = simulated[1] == 1;
             boolean counterClockwiseStuck = simulated[3] == 1;
 
-            // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist + " ");
+            // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist
+            // + " ");
             int tempMode = mode;
             if (mode == AROUND) {
                 if (clockwiseDist < minRadiusSquared) {
