@@ -31,26 +31,6 @@ public class Mopper {
         switch (mode) {
             case EXPLORE:
                 G.indicatorString.append("EXPLORE ");
-                Motion.spreadRandomly();
-                if (!mopSwingWithMicro()) {
-                    // no bots attacked, look for paint
-                    MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
-                    for (MapInfo info : mapInfos) {
-                        PaintType p = info.getPaint();
-                        if ((p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY)
-                                && G.rc.canSenseRobotAtLocation(info.getMapLocation())
-                                && G.rc.senseRobotAtLocation(info.getMapLocation()).team == POI.opponentTeam) {
-                            // if we didn't mop swing, prioritize unpainting squares under opponents
-                            int distSq = info.getMapLocation().distanceSquaredTo(G.me);
-                            if (distSq <= 2 && G.rc.isActionReady() &&
-                                    G.rc.canAttack(info.getMapLocation())) {
-                                G.rc.attack(info.getMapLocation());
-                            }
-                            Motion.bugnavAround(info.getMapLocation(), 0, 2);
-                            break;
-                        }
-                    }
-                }
                 break;
             case BUILD:
                 G.indicatorString.append("BUILD ");
@@ -115,22 +95,30 @@ public class Mopper {
         }
     }
 
-    public static void attackPaintWithMicro() throws Exception {
+    public static MapLocation attackPaintWithMicro() throws Exception {
         MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
+        // will try to unpaint squares under opponent bots
+        // but if no opponents, just move to paint and attack
         MapInfo best = null;
         float bestPaint = -1;
         MapLocation microDir = G.rc.getLocation();
-        for (MapInfo info : mapInfos) {
+        for (int i = mapInfos.length; --i >= 0;) {
+            MapInfo info = mapInfos[i];
             MapLocation loc = info.getMapLocation();
+            PaintType p = info.getPaint();
+            boolean isEnemPaint = p == PaintType.ENEMY_PRIMARY || p == PaintType.ENEMY_SECONDARY;
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 microDir.add(G.me.directionTo(loc));
-                RobotInfo r = G.rc.senseRobotAtLocation(loc);
-                float paint = r.paintAmount / (float) r.type.paintCapacity;
-                if (paint > bestPaint) {
+                if (G.rc.canAttack(loc)) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                    float paint = r.paintAmount / (float) r.type.paintCapacity;
+                    if (paint > bestPaint) {
 
+                    }
                 }
             }
         }
+        return microDir;
     }
 
     /** Move this out later!!! */
@@ -140,17 +128,22 @@ public class Mopper {
     public static boolean mopSwingWithMicro() throws Exception {
         // spaghetti copy paste
         float up = 0, down = 0, left = 0, right = 0;
+        int up2 = 0, down2 = 0, left2 = 0, right2 = 0;
         RobotInfo r;
         if (G.rc.onTheMap(G.me.add(Direction.NORTH))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTH));
-            if (r != null && r.team == POI.opponentTeam)
+            if (r != null && r.team == POI.opponentTeam) {
                 up += r.paintAmount / (float) r.type.paintCapacity;
+                up2++;
+            }
         }
         if (G.rc.onTheMap(G.me.add(Direction.NORTHEAST))) {
             r = G.rc.senseRobotAtLocation(G.me.add(Direction.NORTHEAST));
             if (r != null && r.team == POI.opponentTeam) {
                 up += r.paintAmount / (float) r.type.paintCapacity;
                 right += r.paintAmount / (float) r.type.paintCapacity;
+                up2++;
+                right2++;
             }
         }
         if (G.rc.onTheMap(G.me.add(Direction.EAST))) {

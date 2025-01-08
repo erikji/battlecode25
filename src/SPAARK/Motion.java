@@ -1,7 +1,5 @@
 package SPAARK;
 
-import java.util.*;
-
 import battlecode.common.*;
 
 public class Motion {
@@ -147,8 +145,8 @@ public class Motion {
     public static void moveRandomly() throws GameActionException {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
-            for (Direction d : DIRECTIONS) {
-                if (G.rc.canMove(d)) {
+            for (int i = DIRECTIONS.length; --i >= 0;) {
+                if (G.rc.canMove(DIRECTIONS[i])) {
                     stuck = false;
                 }
             }
@@ -171,8 +169,8 @@ public class Motion {
 
     public static void spreadRandomly() throws GameActionException {
         boolean stuck = true;
-        for (Direction d : DIRECTIONS) {
-            if (canMove(d)) {
+        for (int i = DIRECTIONS.length; --i >= 0;) {
+            if (canMove(DIRECTIONS[i])) {
                 stuck = false;
             }
         }
@@ -182,10 +180,11 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation me = G.rc.getLocation();
             MapLocation target = me;
-            for (RobotInfo r : allyRobots) {
-                if (!G.rc.senseMapInfo(r.getLocation()).hasRuin())
+            for (int i = allyRobots.length; --i >= 0;) {
+                MapLocation loc = allyRobots[i].getLocation();
+                if (!G.rc.senseMapInfo(loc).hasRuin())
                     // ignore towers
-                    target = target.add(me.directionTo(r.getLocation()).opposite());
+                    target = target.add(me.directionTo(loc).opposite());
             }
             if (target.equals(me)) {
                 // just keep moving in the same direction as before if there's no robots nearby
@@ -358,7 +357,7 @@ public class Motion {
                 // }
                 // lastBlocked = false;
                 // boolean touchingTheWallBefore = false;
-                // for (Direction d : DIRECTIONS) {
+                // for (int i = DIRECTIONS.length; --i>=0;) {
                 // MapLocation translatedMapLocation = me.add(d);
                 // if (G.rc.onTheMap(translatedMapLocation)) {
                 // if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
@@ -381,7 +380,7 @@ public class Motion {
             }
             if (!G.rc.onTheMap(me.add(dir))) {
                 // boolean touchingTheWallBefore = false;
-                // for (Direction d : DIRECTIONS) {
+                // for (int i = DIRECTIONS.length; --i>=0;) {
                 // MapLocation translatedMapLocation = me.add(d);
                 // if (G.rc.onTheMap(translatedMapLocation)) {
                 // if (!G.rc.senseMapInfo(translatedMapLocation).isPassable()) {
@@ -554,16 +553,17 @@ public class Motion {
 
     public static void updateBfsMap() throws GameActionException {
         MapInfo[] map = G.rc.senseNearbyMapInfos();
-        for (MapInfo m : map) {
+        for (int i = map.length; --i >= 0;) {
+            MapInfo m = map[i];
             if (m.isWall()) {
                 int loc = m.getMapLocation().y + 1;
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
                     G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
-                    for (int i = step - 1; i >= 0; i--) {
-                        if (((bfsDist[i * (height + 2) + loc] >> subloc) & 1) != 1) {
-                            recalculationNeeded = Math.min(i, recalculationNeeded);
+                    for (int j = step - 1; j >= 0; j--) {
+                        if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
+                            recalculationNeeded = Math.min(j, recalculationNeeded);
                             break;
                         }
                     }
