@@ -49,8 +49,7 @@ public class Soldier {
                     G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
                 }
                 MapInfo me = G.rc.senseMapInfo(G.me);
-                if (me.getPaint() != PaintType.ALLY_PRIMARY && me.getPaint() != PaintType.ALLY_SECONDARY
-                        && G.rc.canAttack(G.me)) {
+                if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
                     G.rc.attack(G.me); // also add logic to paint in special resource pattern
                 }
                 break;

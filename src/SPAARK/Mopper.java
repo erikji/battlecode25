@@ -54,9 +54,9 @@ public class Mopper {
             MapLocation loc = info.getMapLocation();
             PaintType p = info.getPaint();
             if (G.rc.canSenseRobotAtLocation(loc)) {
-                if (!p.isAlly() && p != PaintType.EMPTY) {
+                if (p.isEnemy()) {
                     RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                    if (bot.getType() == UnitType.MOPPER || bot.getType() == UnitType.SOLDIER || bot.getType() == UnitType.SPLASHER) {
+                    if (bot.getType().getBaseType().isRobotType()) {
                         microDir.add(G.me.directionTo(loc));
                         double paint = bot.paintAmount / (double) bot.type.paintCapacity;
                         if (paint > bestPaint) {
@@ -66,7 +66,7 @@ public class Mopper {
                     }
                 }
             }
-            if (!p.isAlly() && p != PaintType.EMPTY) {
+            if (p.isEnemy()) {
                 microDir.add(G.me.directionTo(loc));
                 if (bestEmpty == null ||G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
                     bestEmpty = info.getMapLocation();
@@ -107,9 +107,7 @@ public class Mopper {
             int bestDistanceSquared = 10000;
             int bestDistanceSquared2 = 10001;
             for (MapInfo info : infos) {
-                if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && !info.getPaint().isAlly()
-                        && info.getPaint() != PaintType.EMPTY) {
-                    // necessarily opponent paint
+                if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && info.getPaint().isEnemy()) {
                     int distanceSquared = info.getMapLocation().distanceSquaredTo(G.me);
                     if (distanceSquared < bestDistanceSquared) {
                         bestDistanceSquared2 = bestDistanceSquared;
