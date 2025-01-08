@@ -7,7 +7,7 @@ public class Soldier {
     //modes
     public static MapLocation ruinLocation = null;
     public static final int EXPLORE = 0;
-    public static final int RUIN_BUILD = 1;
+    public static final int BUILD_RUIN = 1;
     public static final int ATTACK = 2;
     public static int mode = EXPLORE;
 
@@ -25,12 +25,12 @@ public class Soldier {
                     continue;
                 }
                 ruinLocation = loc;
-                mode = RUIN_BUILD;
+                mode = BUILD_RUIN;
                 break;
             }
         }
-        if (mode == RUIN_BUILD) {
-            G.indicatorString.append("RUIN_BUILD ");
+        if (mode == BUILD_RUIN) {
+            G.indicatorString.append("BUILD_RUIN ");
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 0, 0);
             if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
                 mode = EXPLORE;
@@ -55,6 +55,7 @@ public class Soldier {
                         for (UnitType ruinType : G.towerTypes) {
                             if (G.rc.canCompleteTowerPattern(ruinType, ruinLocation)) {
                                 G.rc.completeTowerPattern(ruinType, ruinLocation);
+                                POI.addTower(-1, POI.intifyTower(G.rc.getTeam().ordinal()) | POI.intifyLocation(ruinLocation));
                                 // probably also transmit some information
                                 mode = EXPLORE;
                                 ruinLocation = null;
@@ -64,8 +65,9 @@ public class Soldier {
                         break;
                     }
                 }
-                if (ruinLocation != null)
+                if (ruinLocation != null) {
                     Motion.bugnavAround(ruinLocation, 1, 2);
+                }
             }
         }
     }
