@@ -17,7 +17,7 @@ public class POI {
     protected static long[] wall = new long[60];
     protected static long[] ruin = new long[60];
     protected static long[] noruin = new long[60];
-    protected static boolean[] symmetry = new boolean[]{false, false, false};
+    protected static boolean[] symmetry = new boolean[]{true, true, true};
     public static boolean criticalSymmetry = false;
     //0: horz
     //1: vert
