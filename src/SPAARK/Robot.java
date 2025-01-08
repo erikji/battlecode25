@@ -28,26 +28,40 @@ public class Robot {
         // depends on which information needs to be transmitted and if tower has paint
         int best = -1;
         int bestDistance = 0;
+        boolean bestPaint = false;
         boolean bestCritical = false;
         for (int i = 0; i < 50; i++) {
             if (POI.towers[i] == -1) {
                 break;
             }
+            if (POI.parseTowerTeam(POI.towers[i]) != G.rc.getTeam()) {
+                continue;
+            }
+            boolean paint = POI.parseTowerType(POI.towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER;
             int distance = Motion.getChebyshevDistance(Motion.currLoc, POI.parseLocation(POI.towers[i]));
             if (best == -1) {
                 best = i;
                 bestDistance = distance;
                 bestCritical = POI.critical[i];
+                bestPaint = paint;
             }
             else if (bestCritical && !POI.critical[i]) {
                 best = i;
                 bestDistance = distance;
                 bestCritical = POI.critical[i];
+                bestPaint = paint;
+            }
+            else if (paint && !bestPaint) {
+                best = i;
+                bestDistance = distance;
+                bestCritical = POI.critical[i];
+                bestPaint = paint;
             }
             else if (distance < bestDistance) {
                 best = i;
                 bestDistance = distance;
                 bestCritical = POI.critical[i];
+                bestPaint = paint;
             }
         }
         if (best != -1) {

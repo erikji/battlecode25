@@ -55,7 +55,7 @@ public class Soldier {
                         for (UnitType ruinType : G.towerTypes) {
                             if (G.rc.canCompleteTowerPattern(ruinType, ruinLocation)) {
                                 G.rc.completeTowerPattern(ruinType, ruinLocation);
-                                POI.addTower(-1, POI.intifyTower(G.rc.getTeam().ordinal()) | POI.intifyLocation(ruinLocation));
+                                POI.addTower(-1, POI.intifyTower(G.rc.getTeam(), ruinType) | POI.intifyLocation(ruinLocation));
                                 // probably also transmit some information
                                 mode = EXPLORE;
                                 ruinLocation = null;
