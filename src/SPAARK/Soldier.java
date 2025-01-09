@@ -84,7 +84,7 @@ public class Soldier {
         // find towers to attack out of vision, doesn't switch modes
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
-        searchTowers: for (int i = 50; --i >= 0;) {
+        searchTowers: for (int i = 144; --i >= 0;) {
             if (POI.towers[i] == -1) {
                 break;
             }

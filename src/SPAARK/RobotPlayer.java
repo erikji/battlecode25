@@ -9,7 +9,6 @@ public class RobotPlayer {
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
         G.infos = G.rc.senseNearbyMapInfos();
-        POI.updateInfo();
     }
 
     public static void run(RobotController rc) throws Exception {
@@ -28,6 +27,7 @@ public class RobotPlayer {
                 try {
                     G.indicatorString = new StringBuilder();
                     updateInfo();
+                    POI.updateInfo();
                     switch (G.rc.getType()) {
                         case MOPPER, SOLDIER, SPLASHER -> Robot.run();
                         default -> Tower.run();

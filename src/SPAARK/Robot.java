@@ -29,7 +29,7 @@ public class Robot {
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         G.indicatorString.append("SYM="
-                + (POI.symmetry[0] ? "0" : "1") + (POI.symmetry[1] ? "0" : "1") + (POI.symmetry[2] ? "0 " : "1 "));
+                + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
         POI.drawIndicators();
     }
 
@@ -65,7 +65,7 @@ public class Robot {
                 boolean bestPaint = false;
                 boolean bestCritical = false;
                 String tried = triedRetreatTowers.toString();
-                for (int i = 50; --i >= 0;) {
+                for (int i = 144; --i >= 0;) {
                     if (POI.towers[i] == -1) {
                         break;
                     }
