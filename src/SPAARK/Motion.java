@@ -354,48 +354,54 @@ public class Motion {
 
         // G.indicatorString.append("ROTATION=" + rotation + " ");
         if (rotation == NONE) {
-            int[] simulated = simulateMovement(me, dest);
-
-            int clockwiseDist = simulated[0];
-            int counterClockwiseDist = simulated[2];
-            boolean clockwiseStuck = simulated[1] == 1;
-            boolean counterClockwiseStuck = simulated[3] == 1;
-
-            // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist
-            // + " ");
-            int tempMode = mode;
-            if (mode == AROUND) {
-                if (clockwiseDist < minRadiusSquared) {
-                    if (counterClockwiseDist < minRadiusSquared) {
-                        tempMode = AWAY;
-                    } else {
-                        tempMode = AWAY;
-                    }
-                } else {
-                    if (counterClockwiseDist < minRadiusSquared) {
-                        tempMode = AWAY;
-                    } else {
-                        tempMode = TOWARDS;
-                    }
-                }
-            }
-            if (clockwiseStuck) {
-                rotation = COUNTER_CLOCKWISE;
-            } else if (counterClockwiseStuck) {
+            if (G.rng.nextInt(2) == 0) {
                 rotation = CLOCKWISE;
-            } else if (tempMode == TOWARDS) {
-                if (clockwiseDist < counterClockwiseDist) {
-                    rotation = CLOCKWISE;
-                } else {
-                    rotation = COUNTER_CLOCKWISE;
-                }
-            } else if (tempMode == AWAY) {
-                if (clockwiseDist < counterClockwiseDist) {
-                    rotation = COUNTER_CLOCKWISE;
-                } else {
-                    rotation = CLOCKWISE;
-                }
             }
+            else {
+                rotation = COUNTER_CLOCKWISE;
+            }
+        //     int[] simulated = simulateMovement(me, dest);
+
+        //     int clockwiseDist = simulated[0];
+        //     int counterClockwiseDist = simulated[2];
+        //     boolean clockwiseStuck = simulated[1] == 1;
+        //     boolean counterClockwiseStuck = simulated[3] == 1;
+
+        //     // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist
+        //     // + " ");
+        //     int tempMode = mode;
+        //     if (mode == AROUND) {
+        //         if (clockwiseDist < minRadiusSquared) {
+        //             if (counterClockwiseDist < minRadiusSquared) {
+        //                 tempMode = AWAY;
+        //             } else {
+        //                 tempMode = AWAY;
+        //             }
+        //         } else {
+        //             if (counterClockwiseDist < minRadiusSquared) {
+        //                 tempMode = AWAY;
+        //             } else {
+        //                 tempMode = TOWARDS;
+        //             }
+        //         }
+        //     }
+        //     if (clockwiseStuck) {
+        //         rotation = COUNTER_CLOCKWISE;
+        //     } else if (counterClockwiseStuck) {
+        //         rotation = CLOCKWISE;
+        //     } else if (tempMode == TOWARDS) {
+        //         if (clockwiseDist < counterClockwiseDist) {
+        //             rotation = CLOCKWISE;
+        //         } else {
+        //             rotation = COUNTER_CLOCKWISE;
+        //         }
+        //     } else if (tempMode == AWAY) {
+        //         if (clockwiseDist < counterClockwiseDist) {
+        //             rotation = COUNTER_CLOCKWISE;
+        //         } else {
+        //             rotation = CLOCKWISE;
+        //         }
+        //     }
         }
 
         boolean flip = false;

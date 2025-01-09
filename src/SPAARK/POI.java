@@ -176,14 +176,15 @@ public class POI {
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
+            int shift = G.rng.nextInt(G.allyRobots.length);
             for (int j = G.allyRobots.length; --j >= 0;) {
-                RobotInfo r = G.allyRobots[j];
+                RobotInfo r = G.allyRobots[(j + shift) % G.allyRobots.length];
                 while (G.rc.canSendMessage(r.getLocation())) {
                     int message = -1;
                     int messages = 0;
                     if (!robotsThatKnowInformation[50].toString().contains("-" + r.getID() + "-")) {
                         message = intifySymmetry();
-                        messages += 1;
+                        messages++;
                         robotsThatKnowInformation[50].append("-" + r.getID() + "-");
                     }
                     for (int i = 49; --i >= 0; ) {
@@ -203,9 +204,8 @@ public class POI {
                         break;
                     }
                     G.rc.sendMessage(r.getLocation(), message);
-                    if (Clock.getBytecodesLeft() < 3000) break;
+                    if (Clock.getBytecodesLeft() < 3000) return;
                 }
-                if (Clock.getBytecodesLeft() < 3000) break;
             }
         } else {
             int message = -1;
