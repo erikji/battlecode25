@@ -203,6 +203,7 @@ public class POI {
                         break;
                     }
                     G.rc.sendMessage(r.getLocation(), message);
+                    if (Clock.getBytecodesLeft() < 3000) break;
                 }
                 if (Clock.getBytecodesLeft() < 3000) break;
             }
