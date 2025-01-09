@@ -106,9 +106,9 @@ public class Soldier {
                 if (towerLocation.isWithinDistanceSquared(G.me, towerType.actionRadiusSquared)) {
                     if (G.rc.canAttack(towerLocation))
                         G.rc.attack(towerLocation);
-                    Motion.bugnavAway(towerLocation);
+                    Motion.bugnavAway(towerLocation, attackMicro);
                 } else {
-                    Motion.bugnavTowards(towerLocation);
+                    Motion.bugnavTowards(towerLocation, attackMicro);
                     if (G.rc.canAttack(towerLocation))
                         G.rc.attack(towerLocation);
                 }
@@ -120,11 +120,57 @@ public class Soldier {
         }
     }
 
-    // public static Micro attackMicro = new Micro() {
-    //     public void micro(Direction d, MapLocation dest) throws Exception {
-            
-    //     }
-    // };
+    public static Micro attackMicro = new Micro() {
+        public void micro(Direction d, MapLocation dest) throws Exception {
+            //try to stay out of range if on cd, otherwise try to get in range
+            Direction best = d;
+            int bestScore = Integer.MIN_VALUE;
+            if (G.rc.isActionReady()) {
+                for (int i = 7; --i >= 0; ) {
+                    if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
+                    int score = 0;
+                    MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
+                    MapInfo info = G.rc.senseMapInfo(nxt);
+                    if (info.getPaint().isEnemy()) score -= 10;
+                    else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                    if (G.DIRECTIONS[i] == d) {
+                        score += 20;
+                    } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
+                        score += 10;
+                    }
+                    if (!G.me.isWithinDistanceSquared(towerLocation, G.rc.getType().actionRadiusSquared)) {
+                        score += 40;
+                    }
+                    if (score > bestScore) {
+                        best = G.DIRECTIONS[i];
+                        bestScore = score;
+                    }
+                }
+            } else {
+                for (int i = 7; --i >= 0; ) {
+                    if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
+                    int score = 0;
+                    MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
+                    MapInfo info = G.rc.senseMapInfo(nxt);
+                    if (info.getPaint().isEnemy()) score -= 10;
+                    else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                    if (G.DIRECTIONS[i] == d) {
+                        score += 20;
+                    } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
+                        score += 10;
+                    }
+                    if (!G.me.isWithinDistanceSquared(towerLocation, towerType.actionRadiusSquared)) {
+                        score += 40;
+                    }
+                    if (score > bestScore) {
+                        best = G.DIRECTIONS[i];
+                        bestScore = score;
+                    }
+                }
+            }
+            Motion.move(best);
+        }
+    };
 
     public static int predictTowerType(MapLocation m){
         return (m.x^m.y)%6/3+1;
