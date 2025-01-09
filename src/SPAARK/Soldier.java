@@ -21,17 +21,17 @@ public class Soldier {
         }
         if (mode == EXPLORE) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-            for (MapLocation loc : locs) {
-                if (G.rc.canSenseRobotAtLocation(loc)) {
-                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            for (int i = locs.length; --i >= 0; ) {
+                if (G.rc.canSenseRobotAtLocation(locs[i])) {
+                    RobotInfo bot = G.rc.senseRobotAtLocation(locs[i]);
                     if (bot.team == POI.opponentTeam && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
-                        towerLocation = loc;
+                        towerLocation = locs[i];
                         towerType = bot.type;
                         mode = ATTACK;
                         break;
                     }
                 } else {
-                    ruinLocation = loc;
+                    ruinLocation = locs[i];
                     mode = BUILD;
                     break;
                 }
@@ -46,7 +46,7 @@ public class Soldier {
                     if (POI.towers[i] == -1) {
                         break;
                     }
-                    if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+                    if (POI.parseTowerTeam(POI.towers[i]) != G.rc.getTeam()) {
                         if (G.me.isWithinDistanceSquared(POI.parseLocation(POI.towers[i]), bestDistanceSquared)) {
                             bestDistanceSquared = G.me.distanceSquaredTo(POI.parseLocation(POI.towers[i]));
                             bestLoc = POI.parseLocation(POI.towers[i]);
