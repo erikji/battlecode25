@@ -126,6 +126,7 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.spreadRandomly();
+                G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 break;
             case ATTACK:
                 // painting heuristic
@@ -164,6 +165,7 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.bugnavTowards(attackTarget);
+                G.rc.setIndicatorDot(G.me, 255, 0, 0);
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");

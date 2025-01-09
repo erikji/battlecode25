@@ -204,8 +204,6 @@ public class Soldier {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
             // try to stay out of range if on cd, otherwise try to get in range
-            Direction best = d;
-            int bestScore = Integer.MIN_VALUE;
             int scores[] = new int[8];
             if (G.rc.isActionReady()) {
                 for (int i = 8; --i >= 0;) {
@@ -227,10 +225,6 @@ public class Soldier {
                     }
                     if (nxt.isWithinDistanceSquared(towerLocation, G.rc.getType().actionRadiusSquared)) {
                         score += 40;
-                    }
-                    if (score > bestScore) {
-                        best = G.DIRECTIONS[i];
-                        bestScore = score;
                     }
                     scores[i] = score;
                 }
@@ -255,14 +249,9 @@ public class Soldier {
                     if (!nxt.isWithinDistanceSquared(towerLocation, towerType.actionRadiusSquared)) {
                         score += 40;
                     }
-                    if (score > bestScore) {
-                        best = G.DIRECTIONS[i];
-                        bestScore = score;
-                    }
                     scores[i] = score;
                 }
             }
-            Motion.move(best);
             return scores;
         }
     };

@@ -353,52 +353,52 @@ public class Motion {
         if (rotation == NONE) {
             if (G.rng.nextInt(2) == 0) {
                 rotation = CLOCKWISE;
-            }
-            else {
+            } else {
                 rotation = COUNTER_CLOCKWISE;
             }
-        //     int[] simulated = simulateMovement(me, dest);
+            // int[] simulated = simulateMovement(me, dest);
 
-        //     int clockwiseDist = simulated[0];
-        //     int counterClockwiseDist = simulated[2];
-        //     boolean clockwiseStuck = simulated[1] == 1;
-        //     boolean counterClockwiseStuck = simulated[3] == 1;
+            // int clockwiseDist = simulated[0];
+            // int counterClockwiseDist = simulated[2];
+            // boolean clockwiseStuck = simulated[1] == 1;
+            // boolean counterClockwiseStuck = simulated[3] == 1;
 
-        //     // G.indicatorString.append("DIST=" + clockwiseDist + " " + counterClockwiseDist
-        //     // + " ");
-        //     int tempMode = mode;
-        //     if (mode == AROUND) {
-        //         if (clockwiseDist < minRadiusSquared) {
-        //             if (counterClockwiseDist < minRadiusSquared) {
-        //                 tempMode = AWAY;
-        //             } else {
-        //                 tempMode = AWAY;
-        //             }
-        //         } else {
-        //             if (counterClockwiseDist < minRadiusSquared) {
-        //                 tempMode = AWAY;
-        //             } else {
-        //                 tempMode = TOWARDS;
-        //             }
-        //         }
-        //     }
-        //     if (clockwiseStuck) {
-        //         rotation = COUNTER_CLOCKWISE;
-        //     } else if (counterClockwiseStuck) {
-        //         rotation = CLOCKWISE;
-        //     } else if (tempMode == TOWARDS) {
-        //         if (clockwiseDist < counterClockwiseDist) {
-        //             rotation = CLOCKWISE;
-        //         } else {
-        //             rotation = COUNTER_CLOCKWISE;
-        //         }
-        //     } else if (tempMode == AWAY) {
-        //         if (clockwiseDist < counterClockwiseDist) {
-        //             rotation = COUNTER_CLOCKWISE;
-        //         } else {
-        //             rotation = CLOCKWISE;
-        //         }
-        //     }
+            // // G.indicatorString.append("DIST=" + clockwiseDist + " " +
+            // counterClockwiseDist
+            // // + " ");
+            // int tempMode = mode;
+            // if (mode == AROUND) {
+            // if (clockwiseDist < minRadiusSquared) {
+            // if (counterClockwiseDist < minRadiusSquared) {
+            // tempMode = AWAY;
+            // } else {
+            // tempMode = AWAY;
+            // }
+            // } else {
+            // if (counterClockwiseDist < minRadiusSquared) {
+            // tempMode = AWAY;
+            // } else {
+            // tempMode = TOWARDS;
+            // }
+            // }
+            // }
+            // if (clockwiseStuck) {
+            // rotation = COUNTER_CLOCKWISE;
+            // } else if (counterClockwiseStuck) {
+            // rotation = CLOCKWISE;
+            // } else if (tempMode == TOWARDS) {
+            // if (clockwiseDist < counterClockwiseDist) {
+            // rotation = CLOCKWISE;
+            // } else {
+            // rotation = COUNTER_CLOCKWISE;
+            // }
+            // } else if (tempMode == AWAY) {
+            // if (clockwiseDist < counterClockwiseDist) {
+            // rotation = COUNTER_CLOCKWISE;
+            // } else {
+            // rotation = CLOCKWISE;
+            // }
+            // }
         }
 
         boolean flip = false;
@@ -450,7 +450,14 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            int[] weights = m.micro(d, dest);
+            int best = 8;
+            for (int i = 8; --i >= 0;) {
+                if (weights[i] > weights[best])
+                    best = i;
+            }
+            if (best != 8)
+                move(G.ALL_DIRECTIONS[best]);
         }
     }
 
@@ -464,7 +471,14 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            int[] weights = m.micro(d, dest);
+            int best = 8;
+            for (int i = 8; --i >= 0;) {
+                if (weights[i] > weights[best])
+                    best = i;
+            }
+            if (best != 8)
+                move(G.ALL_DIRECTIONS[best]);
         }
     }
 
@@ -479,7 +493,14 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            int[] weights = m.micro(d, dest);
+            int best = 8;
+            for (int i = 8; --i >= 0;) {
+                if (weights[i] > weights[best])
+                    best = i;
+            }
+            if (best != 8)
+                move(G.ALL_DIRECTIONS[best]);
         }
     }
 
@@ -807,120 +828,14 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
-        } else {
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // Atk.attack();
-            // Atk.heal();
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
-            // ADD THIS BACK
+            int[] weights = m.micro(d, dest);
+            int best = 8;
+            for (int i = 8; --i >= 0;) {
+                if (weights[i] > weights[best])
+                    best = i;
+            }
+            if (best != 8)
+                move(G.ALL_DIRECTIONS[best]);
         }
         bfs();
         G.indicatorString.append(Clock.getBytecodesLeft() + " ");
@@ -940,8 +855,6 @@ public class Motion {
     }
 
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
-        Direction best = d;
-        int bestScore = Integer.MIN_VALUE;
         int[] scores = new int[8];
         for (int i = 8; --i >= 0;) {
             if (!G.rc.canMove(G.DIRECTIONS[i])) {
@@ -960,13 +873,8 @@ public class Motion {
             } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
                 score += 16;
             }
-            if (score > bestScore) {
-                best = G.DIRECTIONS[i];
-                bestScore = score;
-            }
             scores[i] = score;
         }
-        Motion.move(best);
         return scores;
     };
 
