@@ -20,6 +20,7 @@ public class Soldier {
             mode = EXPLORE;
         }
         if (mode == EXPLORE) {
+            // if we see an enemy paint/money tower or a ruin, then try to do something with it
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (int i = locs.length; --i >= 0;) {
                 if (G.rc.canSenseRobotAtLocation(locs[i])) {
@@ -31,7 +32,7 @@ public class Soldier {
                         mode = ATTACK;
                         break;
                     }
-                } else {
+                } else if (G.rc.getNumberTowers() < 25) {
                     ruinLocation = locs[i];
                     mode = BUILD;
                     break;
@@ -68,7 +69,7 @@ public class Soldier {
             case BUILD:
                 G.indicatorString.append("BUILD ");
                 G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
-                if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
+                if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
                     mode = EXPLORE;
                     ruinLocation = null;
                 } else {

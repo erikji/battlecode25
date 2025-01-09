@@ -18,7 +18,7 @@ public class Mopper {
             mode = EXPLORE;
         }
         // make sure not stuck between exploring and building
-        if (mode == EXPLORE && lastBuild + 10 < G.rc.getRoundNum()) {
+        if (mode == EXPLORE && lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
@@ -108,7 +108,7 @@ public class Mopper {
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
         G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             ruinLocation = null;
         } else {
