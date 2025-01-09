@@ -8,7 +8,8 @@ import java.util.*;
 public class G {
     public static RobotController rc;
     public static Random rng;
-    public static MapLocation me;
+    public static MapLocation mapCenter;
+    public static Team opponentTeam;
 
     public static UnitType[] towerTypes = new UnitType[] {
             UnitType.LEVEL_ONE_DEFENSE_TOWER,
@@ -53,7 +54,8 @@ public class G {
 
     // stuff that changes
     public static StringBuilder indicatorString;
-    // public static MapInfo[][] infos = new MapInfo[60][60]; //updated in
-    // Motion.updateInfo
-    // oh wait it doesn't save bytecode
+    public static MapLocation me;
+    public static RobotInfo[] allyRobots;
+    public static RobotInfo[] opponentRobots;
+    public static MapInfo[] infos;
 }

@@ -42,7 +42,7 @@ public class Robot {
             int bestDistance = 0;
             boolean bestPaint = false;
             boolean bestCritical = false;
-            for (int i = 0; i < 50; i++) {
+            for (int i = 49; --i >= 0; ) {
                 if (POI.towers[i] == -1) {
                     break;
                 }

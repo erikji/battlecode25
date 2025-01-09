@@ -29,7 +29,7 @@ public class Tower {
         };
         Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
             public int compare(MapLocation a, MapLocation b) {
-                return a.distanceSquaredTo(Motion.mapCenter) - b.distanceSquaredTo(Motion.mapCenter);
+                return a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter);
             };
         });
     }
@@ -151,7 +151,8 @@ public class Tower {
         UnitType bestEnemyType = UnitType.MOPPER;
         // priority: soldier, splasher, mopper
         int numAttackableRobots = 0;
-        for (RobotInfo r : Motion.opponentRobots) {
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            RobotInfo r = G.opponentRobots[i];
             if (G.rc.canAttack(r.location)) {
                 numAttackableRobots++;
                 switch (bestEnemyType) {

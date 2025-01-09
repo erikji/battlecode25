@@ -74,6 +74,9 @@ public class Splasher {
                             bestLoc = loc;
                             bestScore = score;
                         }
+                        if (Clock.getBytecodesLeft() < 2000) {
+                            break;
+                        }
                     }
                 }
                 if (bestScore > 4 && bestLoc != null) {

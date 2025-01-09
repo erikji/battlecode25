@@ -6,17 +6,15 @@ import java.util.*;
 public class POI {
     public static Team opponentTeam = G.rc.getTeam().opponent();
 
-    public static int[] towers = new int[50];
-
-    public static int lastMoney = 0;
-    public static int dMoney = 10;
-    public static int normDMoney = 10;
+    //50 towers
+    //filled in backwards cuz for loop bytecode optimization
+    public static int[] towers = new int[] {
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+    };
 
     // symmetry detection
-    public static long[] nowall = new long[60];
     public static long[] wall = new long[60];
     public static long[] ruin = new long[60];
-    public static long[] noruin = new long[60];
     public static boolean[] symmetry = new boolean[] { true, true, true };
     public static boolean criticalSymmetry = false;
     // 0: horz
@@ -25,22 +23,30 @@ public class POI {
 
     // stores all tower and ruin data
 
+    // upto 50 robots
     // 51 is symmetry
-    public static StringBuilder[] robotsThatKnowInformation = new StringBuilder[51];
+    public static StringBuilder[] robotsThatKnowInformation = new StringBuilder[] {
+        new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder()
+    };
     public static boolean[] critical = new boolean[50];
 
-    public static void init() {
-        for (int i = 0; i < 50; i++) {
-            towers[i] = -1;
+    public static void addTowers(int[] data) {
+        // IMPORTANT: make sure to call addTower right after tower is built
+        if (data[0] == -1) return;
+        for (int i = 49, ind = 0; --i >= 0; ) {
+            if (((towers[i] ^ data[ind]) & 0b111111111111) == 0 || towers[i] == -1) {
+                if (towers[i] != data[ind]) {
+                    towers[i] = data[ind++];
+                    robotsThatKnowInformation[i] = new StringBuilder("--1-");
+                    critical[i] = true;
+                }
+            }
         }
-        for (int i = 0; i < 51; i++) {
-            robotsThatKnowInformation[i] = new StringBuilder();
-        }
-    };
+    }
 
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
-        for (int i = 0; i < 50; i++) {
+        for (int i = 49; --i >= 0; ) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
@@ -77,29 +83,26 @@ public class POI {
     // bytecode optimize this later
     // bytecode optimize this later
     // bytecode optimize this later
+    // uses a ton of bytecode wtf?
     public static void updateInfo() throws Exception {
-        dMoney = G.rc.getMoney() - lastMoney;
-        // dMoney doesnt change by more than 50 each turn
-        if (dMoney > 0 && Math.abs(dMoney - normDMoney) < 50)
-            normDMoney = dMoney;
-        lastMoney = G.rc.getMoney();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
 
-        for (MapLocation i : nearbyRuins) {
-            addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(i));
-        }
-        // hopefully its set
-        for (RobotInfo i : Motion.allyRobots) {
-            if (i.getType().isTowerType()) {
-                addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
+        int[] towersToAdd = new int[]{-1,-1,-1,-1,-1}; //no way you can see that many
+        int ind = 0;
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
+                RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
+                if (info.team == G.opponentTeam) {
+                    towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]);
+                } else {
+                    towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
+                }
+            } else {
+                towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]);
             }
         }
-        for (RobotInfo i : Motion.opponentRobots) {
-            if (i.getType().isTowerType()) {
-                addTower(-1, intifyTower(i.getTeam(), i.getType()) | intifyLocation(i.getLocation()));
-            }
-        }
-        for (int i = 0; i < 50; i++) {
+        addTowers(towersToAdd);
+        for (int i = 49; --i >= 0; ) {
             if (towers[i] == -1) {
                 break;
             }
@@ -114,18 +117,15 @@ public class POI {
             }
         }
 
-        // bytecode inefficient symmetry detection
-        MapInfo[] infos = G.rc.senseNearbyMapInfos();
-        for (MapInfo info : infos) {
-            MapLocation xy = info.getMapLocation();
-            if (info.isWall())
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            MapLocation xy = G.infos[i].getMapLocation();
+            ruin[xy.y] |= 1L << xy.x;
+        }
+        for (int i = G.infos.length; --i >= 0;) {
+            if (G.infos[i].isWall()) {
+                MapLocation xy = G.infos[i].getMapLocation();
                 wall[xy.y] |= 1L << xy.x;
-            else
-                nowall[xy.y] |= 1L << xy.x;
-            if (info.hasRuin())
-                ruin[xy.y] |= 1L << xy.x;
-            else
-                noruin[xy.y] |= 1L << xy.x;
+            }
         }
         if (symmetry[0] && !symmetryValid(0)) {
             removeValidSymmetry(-1, 0);
@@ -136,15 +136,8 @@ public class POI {
         if (symmetry[2] && !symmetryValid(2)) {
             removeValidSymmetry(-1, 2);
         }
-
         sendMessages();
     };
-
-    public static int getNumChipTowers() throws Exception {
-        // call updateInfo() first
-        // guess that each chip tower is making 15 currency
-        return (normDMoney + 14) / 15;
-    }
 
     public static boolean symmetryValid(int sym) throws Exception {
         // completely untested...
@@ -152,36 +145,24 @@ public class POI {
         int h = G.rc.getMapHeight();
         switch (sym) {
             case 0: // horz
-                for (int i = 0; i < h / 2; i++) {
-                    if ((nowall[i] ^ nowall[h - i]) != 0)
-                        return false;
+                for (int i = h / 2; --i >= 0; ) {
                     if ((wall[i] ^ wall[h - i]) != 0)
-                        return false;
-                    if ((noruin[i] ^ noruin[h - i]) != 0)
                         return false;
                     if ((ruin[i] ^ ruin[h - i]) != 0)
                         return false;
                 }
                 return true;
             case 1: // vert
-                for (int i = 0; i < h; i++) {
-                    if ((Long.reverse(nowall[i]) << (64 - w)) != nowall[i])
-                        return false;
+                for (int i = h; --i >= 0; ) {
                     if ((Long.reverse(wall[i]) << (64 - w)) != wall[i])
-                        return false;
-                    if ((Long.reverse(noruin[i]) << (64 - w)) != noruin[i])
                         return false;
                     if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i])
                         return false;
                 }
                 return true;
             case 2: // rot
-                for (int i = 0; i < h / 2; i++) {
-                    if (((Long.reverse(nowall[i]) << (64 - w)) ^ nowall[h - i]) != 0)
-                        return false;
+                for (int i = h / 2; --i >= 0; ) {
                     if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i]) != 0)
-                        return false;
-                    if (((Long.reverse(noruin[i]) << (64 - w)) ^ noruin[h - i]) != 0)
                         return false;
                     if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i]) != 0)
                         return false;
@@ -195,35 +176,35 @@ public class POI {
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
-            for (RobotInfo r : Motion.allyRobots) {
-                if (r.getType().isRobotType()) {
-                    while (G.rc.canSendMessage(r.getLocation(), 0)) {
-                        int message = -1;
-                        int messages = 0;
-                        if (!robotsThatKnowInformation[50].toString().contains("-" + r.getID() + "-")) {
-                            message = intifySymmetry();
-                            messages += 1;
-                            robotsThatKnowInformation[50].append("-" + r.getID() + "-");
-                        }
-                        for (int i = 0; i < 50; i++) {
-                            if (towers[i] == -1) {
-                                break;
-                            }
-                            if (!robotsThatKnowInformation[i].toString().contains("-" + r.getID() + "-")) {
-                                message = appendToMessage(message, towers[i]);
-                                messages += 1;
-                                robotsThatKnowInformation[i].append("-" + r.getID() + "-");
-                                if (messages == 2) {
-                                    break;
-                                }
-                            }
-                        }
-                        if (messages == 0) {
+            for (int j = G.allyRobots.length; --j >= 0;) {
+                RobotInfo r = G.allyRobots[j];
+                while (G.rc.canSendMessage(r.getLocation())) {
+                    int message = -1;
+                    int messages = 0;
+                    if (!robotsThatKnowInformation[50].toString().contains("-" + r.getID() + "-")) {
+                        message = intifySymmetry();
+                        messages += 1;
+                        robotsThatKnowInformation[50].append("-" + r.getID() + "-");
+                    }
+                    for (int i = 49; --i >= 0; ) {
+                        if (towers[i] == -1) {
                             break;
                         }
-                        G.rc.sendMessage(r.getLocation(), message);
+                        if (!robotsThatKnowInformation[i].toString().contains("-" + r.getID() + "-")) {
+                            message = appendToMessage(message, towers[i]);
+                            messages++;
+                            robotsThatKnowInformation[i].append("-" + r.getID() + "-");
+                            if (messages == 2) {
+                                break;
+                            }
+                        }
                     }
+                    if (messages == 0) {
+                        break;
+                    }
+                    G.rc.sendMessage(r.getLocation(), message);
                 }
+                if (Clock.getBytecodesLeft() < 3000) break;
             }
         } else {
             int message = -1;
@@ -232,18 +213,19 @@ public class POI {
                 message = intifySymmetry();
                 messages += 1;
             }
-            for (RobotInfo r : Motion.allyRobots) {
-                if (r.getType().isTowerType()) {
-                    if (G.rc.canSendMessage(r.getLocation(), 0)) {
+            for (int j = G.allyRobots.length; --j >= 0;) {
+                if (G.allyRobots[j].getType().isTowerType()) {
+                    RobotInfo r = G.allyRobots[j];
+                    if (G.rc.canSendMessage(r.getLocation())) {
                         if (messages < 2) {
-                            for (int i = 0; i < 50; i++) {
+                            for (int i = 49; --i >= 0; ) {
                                 if (towers[i] == -1) {
                                     break;
                                 }
                                 if (critical[i]
                                         && ((intifyLocation(r.getLocation()) ^ towers[i]) & 0b111111111111) != 0) {
                                     message = appendToMessage(message, towers[i]);
-                                    messages += 1;
+                                    messages++;
                                     critical[i] = false;
                                     if (messages == 2) {
                                         break;
@@ -256,13 +238,13 @@ public class POI {
                                 robotsThatKnowInformation[50].append("-" + r.getID() + "-");
                             }
                             if (messages < 2) {
-                                for (int i = 0; i < 50; i++) {
+                                for (int i = 49; --i >= 0; ) {
                                     if (towers[i] == -1) {
                                         break;
                                     }
                                     if (!robotsThatKnowInformation[i].toString().contains("-" + r.getID() + "-")) {
                                         message = appendToMessage(message, towers[i]);
-                                        messages += 1;
+                                        messages++;
                                         robotsThatKnowInformation[i].append("-" + r.getID() + "-");
                                         if (messages == 2) {
                                             break;
@@ -272,14 +254,13 @@ public class POI {
                             }
                         }
                         if (messages != 0) {
-                            if (criticalSymmetry) {
-                                criticalSymmetry = false;
-                            }
+                            criticalSymmetry = false;
                             G.rc.sendMessage(r.getLocation(), message);
                             break;
                         }
                     }
                 }
+                if (Clock.getBytecodesLeft() < 3000) break;
             }
         }
     };

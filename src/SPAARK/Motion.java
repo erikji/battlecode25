@@ -12,11 +12,6 @@ public class Motion {
 
     public static final int DEFAULT_RETREAT_HP = 999;
 
-    public static RobotInfo[] opponentRobots;
-    public static RobotInfo[] allyRobots;
-
-    public static MapLocation mapCenter;
-
     public static Direction lastDir = Direction.CENTER;
     public static Direction optimalDir = Direction.CENTER;
     public static int rotation = NONE;
@@ -125,11 +120,15 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation me = G.rc.getLocation();
             MapLocation target = me;
-            for (int i = allyRobots.length; --i >= 0;) {
-                MapLocation loc = allyRobots[i].getLocation();
-                if (!G.rc.senseRobotAtLocation(loc).type.isRobotType())
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (!G.allyRobots[i].type.isRobotType())
                     // ignore towers
-                    target = target.add(me.directionTo(loc).opposite());
+                    target = target.subtract(me.directionTo(G.allyRobots[i].getLocation()));
+            }
+            for (int i = 7; --i >= 0;) {
+                if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                    target = target.subtract(G.DIRECTIONS[i]);
+                }
             }
             if (target.equals(me)) {
                 // just keep moving in the same direction as before if there's no robots nearby
@@ -936,20 +935,20 @@ public class Motion {
         public void micro(Direction d, MapLocation dest) throws Exception {
             Direction best = d;
             int bestScore = Integer.MIN_VALUE;
-            for (int i = 8; --i >= 0; ) {
+            for (int i = 7; --i >= 0; ) {
+                if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
                 int score = 0;
-                MapLocation nxt = G.me.add(G.ALL_DIRECTIONS[i]);
-                if (!G.rc.onTheMap(nxt)) continue;
+                MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
                 MapInfo info = G.rc.senseMapInfo(nxt);
                 if (info.getPaint().isEnemy()) score -= 10;
                 else if (info.getPaint() == PaintType.EMPTY) score -= 5;
-                if (G.ALL_DIRECTIONS[i] == d) {
+                if (G.DIRECTIONS[i] == d) {
                     score += 20;
-                } else if (G.ALL_DIRECTIONS[i].rotateLeft() == d || G.ALL_DIRECTIONS[i].rotateRight() == d) {
+                } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
                     score += 10;
                 }
                 if (score > bestScore) {
-                    best = G.ALL_DIRECTIONS[i];
+                    best = G.DIRECTIONS[i];
                     bestScore = score;
                 }
             }
@@ -969,15 +968,5 @@ public class Motion {
 
     public static boolean canMove(Direction dir) throws Exception {
         return G.rc.canMove(dir);
-    }
-
-    public static void updateInfo() throws Exception {
-        opponentRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam().opponent());
-        allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
-        // MapInfo[] infos = G.rc.senseNearbyMapInfos();
-        // for (MapInfo info : infos) {
-        // G.infos[info.getMapLocation().x][info.getMapLocation().y] = info;
-        // }
-        // oh wait it doesn't save bytecode
     }
 }
