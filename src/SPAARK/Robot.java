@@ -38,16 +38,22 @@ public class Robot {
     public static void retreat() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
-        if (retreatTower != -1) {
+        if (retreatTower >= 0) {
             if (POI.parseTowerTeam(POI.towers[retreatTower]) != G.rc.getTeam()) {
                 retreatTower = -1;
             }
         }
-        if (retreatTower != -1) {
+        if (retreatTower >= 0) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 if (G.rc.senseNearbyRobots(loc, 2, G.rc.getTeam()).length > 4) {
                     retreatTower = -1;
+                }
+                else {
+                    RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
+                    if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER && robotInfo.getPaintAmount() == 0) {
+                        retreatTower = -1;
+                    }
                 }
             }
         }
@@ -97,6 +103,10 @@ public class Robot {
                     }
                 }
                 if (best == -1) {
+                    if (tried.length() == 0) {
+                        retreatTower = -2;
+                        break;
+                    }
                     triedRetreatTowers = new StringBuilder();
                     continue;
                 }
@@ -105,7 +115,12 @@ public class Robot {
                 break;
             }
         }
-        if (retreatTower != -1) {
+        // -2 = spreadrandomly
+        if (retreatTower == -2) {
+            Motion.spreadRandomly();
+            retreatTower = -1;
+        }
+        else if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             G.rc.setIndicatorLine(G.me, loc, 255, 0, 255);
             Motion.bugnavTowards(loc);

@@ -118,7 +118,6 @@ public class Soldier {
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
-                System.out.println(Clock.getBytecodeNum());
                 Robot.retreat();
                 break;
         }
@@ -178,6 +177,6 @@ public class Soldier {
 
     public static int predictTowerType(MapLocation xy){
         Random rng = new Random(xy.x*0x67f176e2+xy.y);
-        return rng.nextInt(10)>3?2:1;
+        return rng.nextInt(10)>5?2:1;
     }
 }

@@ -87,6 +87,8 @@ public class Splasher {
                 }
                 Motion.spreadRandomly();
                 break;
+            case ATTACK:
+                break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
                 Robot.retreat();

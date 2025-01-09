@@ -125,7 +125,7 @@ public class Motion {
                     // ignore towers
                     target = target.subtract(me.directionTo(G.allyRobots[i].getLocation()));
             }
-            for (int i = 7; --i >= 0;) {
+            for (int i = 8; --i >= 0;) {
                 if (!G.rc.canMove(G.DIRECTIONS[i])) {
                     target = target.subtract(G.DIRECTIONS[i]);
                 }
