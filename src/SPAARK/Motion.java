@@ -163,6 +163,25 @@ public class Motion {
         }
     }
 
+    public static MapLocation exploreLoc;
+    public static void exploreRandomly() throws Exception {
+        if (G.rc.isMovementReady()) {
+            if (exploreLoc != null) {
+                if (G.rc.canSenseLocation(exploreLoc)) {
+                    exploreLoc = null;
+                }
+                if (G.rng.nextInt(25) == 0) {
+                    exploreLoc = null;
+                }
+            }
+            if (exploreLoc == null) {
+                exploreLoc = new MapLocation(G.rng.nextInt(G.rc.getMapWidth()), G.rng.nextInt(G.rc.getMapHeight()));
+            }
+            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 255, 255);
+            bugnavTowards(exploreLoc);
+        }
+    }
+
     // bugnav helpers
     public static StringBuilder visitedList = new StringBuilder();
 
@@ -878,6 +897,7 @@ public class Motion {
         return scores;
     };
 
+    //false if it didn't move
     public static boolean move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);

@@ -18,6 +18,7 @@ public class RobotPlayer {
             G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
+            G.indicatorString = new StringBuilder();
             updateInfo();
             switch (G.rc.getType()) {
                 case MOPPER, SOLDIER, SPLASHER -> Robot.init();
@@ -26,6 +27,7 @@ public class RobotPlayer {
             while (true) {
                 try {
                     G.indicatorString = new StringBuilder();
+                    POI.readMessages();
                     updateInfo();
                     POI.updateInfo();
                     switch (G.rc.getType()) {

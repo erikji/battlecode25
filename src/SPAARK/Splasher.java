@@ -2,8 +2,6 @@ package SPAARK;
 
 import battlecode.common.*;
 
-import java.util.*;
-
 public class Splasher {
     public static final int EXPLORE = 0;
     public static final int ATTACK = 1;
@@ -125,10 +123,12 @@ public class Splasher {
                 if (bestScore > 4 && bestLoc != null) {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
-                Motion.spreadRandomly();
+                // Motion.spreadRandomly();
+                Motion.exploreRandomly();
                 G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 break;
             case ATTACK:
+                G.indicatorString.append("ATTACK ");
                 // painting heuristic
                 for (int i = attackRange.length; --i >= 0;) {
                     MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
