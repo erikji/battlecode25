@@ -4,9 +4,9 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Soldier {
-    public static MapLocation ruinLocation = null; //BUILD mode
-    public static UnitType towerType = null; //ATTACK mode
-    public static MapLocation towerLocation = null; //ATTACK mode
+    public static MapLocation ruinLocation = null; // BUILD mode
+    public static UnitType towerType = null; // ATTACK mode
+    public static MapLocation towerLocation = null; // ATTACK mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int ATTACK = 2;
@@ -21,10 +21,11 @@ public class Soldier {
         }
         if (mode == EXPLORE) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-            for (int i = locs.length; --i >= 0; ) {
+            for (int i = locs.length; --i >= 0;) {
                 if (G.rc.canSenseRobotAtLocation(locs[i])) {
                     RobotInfo bot = G.rc.senseRobotAtLocation(locs[i]);
-                    if (bot.team == POI.opponentTeam && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
+                    if (bot.team == POI.opponentTeam
+                            && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
                         towerLocation = locs[i];
                         towerType = bot.type;
                         mode = ATTACK;
@@ -42,7 +43,7 @@ public class Soldier {
                 G.indicatorString.append("EXPLORE ");
                 MapLocation bestLoc = null;
                 int bestDistanceSquared = 10000;
-                for (int i = 50; --i >= 0; ) {
+                for (int i = 50; --i >= 0;) {
                     if (POI.towers[i] == -1) {
                         break;
                     }
@@ -72,14 +73,18 @@ public class Soldier {
                     ruinLocation = null;
                 } else {
                     MapInfo[] infos = G.rc.senseNearbyMapInfos(UnitType.SOLDIER.actionRadiusSquared);
-                    for (int i = infos.length; --i >= 0; ) {
-                        if (G.me.isWithinDistanceSquared(infos[i].getMapLocation(), UnitType.SOLDIER.actionRadiusSquared) && infos[i].getMapLocation().isWithinDistanceSquared(ruinLocation, 8)) {
-                            int dx = infos[i].getMapLocation().x-ruinLocation.x+2;
-                            int dy = infos[i].getMapLocation().y-ruinLocation.y+2;
-                            if(dx!=2||dy!=2){
+                    for (int i = infos.length; --i >= 0;) {
+                        if (G.me.isWithinDistanceSquared(infos[i].getMapLocation(),
+                                UnitType.SOLDIER.actionRadiusSquared)
+                                && infos[i].getMapLocation().isWithinDistanceSquared(ruinLocation, 8)) {
+                            int dx = infos[i].getMapLocation().x - ruinLocation.x + 2;
+                            int dy = infos[i].getMapLocation().y - ruinLocation.y + 2;
+                            if (dx != 2 || dy != 2) {
                                 boolean paint = Robot.towerPatterns[predictTowerType(ruinLocation)][dx][dy];
-                                if(G.rc.canAttack(infos[i].getMapLocation()) && (infos[i].getPaint() == PaintType.EMPTY || infos[i].getPaint() == (paint?PaintType.ALLY_PRIMARY:PaintType.ALLY_SECONDARY))) {
-                                    G.rc.attack(infos[i].getMapLocation(),paint);
+                                if (G.rc.canAttack(infos[i].getMapLocation()) && (infos[i].getPaint() == PaintType.EMPTY
+                                        || infos[i].getPaint() == (paint ? PaintType.ALLY_PRIMARY
+                                                : PaintType.ALLY_SECONDARY))) {
+                                    G.rc.attack(infos[i].getMapLocation(), paint);
                                     G.rc.setIndicatorLine(G.me, infos[i].getMapLocation(), 0, 255, 255);
                                     break;
                                 }
@@ -112,7 +117,8 @@ public class Soldier {
                         if (G.rc.canAttack(towerLocation))
                             G.rc.attack(towerLocation);
                     } else {
-                        Motion.bugnavAround(towerLocation, towerType.actionRadiusSquared+1, towerType.actionRadiusSquared+1);
+                        Motion.bugnavAround(towerLocation, towerType.actionRadiusSquared + 1,
+                                towerType.actionRadiusSquared + 1);
                     }
                 }
                 break;
@@ -124,18 +130,24 @@ public class Soldier {
     }
 
     public static Micro attackMicro = new Micro() {
-        public void micro(Direction d, MapLocation dest) throws Exception {
-            //try to stay out of range if on cd, otherwise try to get in range
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            // try to stay out of range if on cd, otherwise try to get in range
             Direction best = d;
             int bestScore = Integer.MIN_VALUE;
+            int scores[] = new int[8];
             if (G.rc.isActionReady()) {
-                for (int i = 8; --i >= 0; ) {
-                    if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
+                for (int i = 8; --i >= 0;) {
+                    if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                        scores[i] = 0;
+                        continue;
+                    }
                     int score = 0;
                     MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
                     MapInfo info = G.rc.senseMapInfo(nxt);
-                    if (info.getPaint().isEnemy()) score -= 10;
-                    else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                    if (info.getPaint().isEnemy())
+                        score -= 10;
+                    else if (info.getPaint() == PaintType.EMPTY)
+                        score -= 5;
                     if (G.DIRECTIONS[i] == d) {
                         score += 20;
                     } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
@@ -148,15 +160,21 @@ public class Soldier {
                         best = G.DIRECTIONS[i];
                         bestScore = score;
                     }
+                    scores[i] = score;
                 }
             } else {
-                for (int i = 8; --i >= 0; ) {
-                    if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
+                for (int i = 8; --i >= 0;) {
+                    if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                        scores[i] = 0;
+                        continue;
+                    }
                     int score = 0;
                     MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
                     MapInfo info = G.rc.senseMapInfo(nxt);
-                    if (info.getPaint().isEnemy()) score -= 10;
-                    else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                    if (info.getPaint().isEnemy())
+                        score -= 10;
+                    else if (info.getPaint() == PaintType.EMPTY)
+                        score -= 5;
                     if (G.DIRECTIONS[i] == d) {
                         score += 20;
                     } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
@@ -169,14 +187,16 @@ public class Soldier {
                         best = G.DIRECTIONS[i];
                         bestScore = score;
                     }
+                    scores[i] = score;
                 }
             }
             Motion.move(best);
+            return scores;
         }
     };
 
-    public static int predictTowerType(MapLocation xy){
-        Random rng = new Random(xy.x*0x67f176e2+xy.y);
-        return rng.nextInt(10)>5?2:1;
+    public static int predictTowerType(MapLocation xy) {
+        Random rng = new Random(xy.x * 0x67f176e2 + xy.y);
+        return rng.nextInt(10) > 5 ? 2 : 1;
     }
 }

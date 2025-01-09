@@ -6,10 +6,11 @@ import java.util.*;
 public class POI {
     public static Team opponentTeam = G.rc.getTeam().opponent();
 
-    //50 towers
-    //filled in backwards cuz for loop bytecode optimization
+    // 50 towers
+    // filled in backwards cuz for loop bytecode optimization
     public static int[] towers = new int[] {
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
     };
 
     // symmetry detection
@@ -26,14 +27,25 @@ public class POI {
     // upto 50 robots
     // 51 is symmetry
     public static StringBuilder[] robotsThatKnowInformation = new StringBuilder[] {
-        new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder()
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder()
     };
     public static boolean[] critical = new boolean[50];
 
     public static void addTowers(int[] data) {
         // IMPORTANT: make sure to call addTower right after tower is built
-        if (data[0] == -1) return;
-        for (int i = 50, ind = 0; --i >= 0; ) {
+        if (data[0] == -1)
+            return;
+        for (int i = 50, ind = 0; --i >= 0;) {
             if (((towers[i] ^ data[ind]) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data[ind]) {
                     towers[i] = data[ind++];
@@ -46,7 +58,7 @@ public class POI {
 
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
-        for (int i = 50; --i >= 0; ) {
+        for (int i = 50; --i >= 0;) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
@@ -87,7 +99,7 @@ public class POI {
     public static void updateInfo() throws Exception {
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
 
-        int[] towersToAdd = new int[]{-1,-1,-1,-1,-1}; //no way you can see that many
+        int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see that many
         int ind = 0;
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
@@ -98,11 +110,12 @@ public class POI {
                     towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
                 }
             } else {
-                towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]);
+                towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
+                        | intifyLocation(nearbyRuins[i]);
             }
         }
         addTowers(towersToAdd);
-        for (int i = 50; --i >= 0; ) {
+        for (int i = 50; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
             }
@@ -145,7 +158,7 @@ public class POI {
         int h = G.rc.getMapHeight();
         switch (sym) {
             case 0: // horz
-                for (int i = h / 2; --i >= 0; ) {
+                for (int i = h / 2; --i >= 0;) {
                     if ((wall[i] ^ wall[h - i]) != 0)
                         return false;
                     if ((ruin[i] ^ ruin[h - i]) != 0)
@@ -153,7 +166,7 @@ public class POI {
                 }
                 return true;
             case 1: // vert
-                for (int i = h; --i >= 0; ) {
+                for (int i = h; --i >= 0;) {
                     if ((Long.reverse(wall[i]) << (64 - w)) != wall[i])
                         return false;
                     if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i])
@@ -161,7 +174,7 @@ public class POI {
                 }
                 return true;
             case 2: // rot
-                for (int i = h / 2; --i >= 0; ) {
+                for (int i = h / 2; --i >= 0;) {
                     if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i]) != 0)
                         return false;
                     if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i]) != 0)
@@ -186,7 +199,7 @@ public class POI {
                         messages += 1;
                         robotsThatKnowInformation[50].append("-" + r.getID() + "-");
                     }
-                    for (int i = 49; --i >= 0; ) {
+                    for (int i = 49; --i >= 0;) {
                         if (towers[i] == -1) {
                             break;
                         }
@@ -203,9 +216,11 @@ public class POI {
                         break;
                     }
                     G.rc.sendMessage(r.getLocation(), message);
-                    if (Clock.getBytecodesLeft() < 3000) break;
+                    if (Clock.getBytecodesLeft() < 3000)
+                        break;
                 }
-                if (Clock.getBytecodesLeft() < 3000) break;
+                if (Clock.getBytecodesLeft() < 3000)
+                    break;
             }
         } else {
             int message = -1;
@@ -219,7 +234,7 @@ public class POI {
                     RobotInfo r = G.allyRobots[j];
                     if (G.rc.canSendMessage(r.getLocation())) {
                         if (messages < 2) {
-                            for (int i = 49; --i >= 0; ) {
+                            for (int i = 49; --i >= 0;) {
                                 if (towers[i] == -1) {
                                     break;
                                 }
@@ -239,7 +254,7 @@ public class POI {
                                 robotsThatKnowInformation[50].append("-" + r.getID() + "-");
                             }
                             if (messages < 2) {
-                                for (int i = 49; --i >= 0; ) {
+                                for (int i = 49; --i >= 0;) {
                                     if (towers[i] == -1) {
                                         break;
                                     }
@@ -261,7 +276,8 @@ public class POI {
                         }
                     }
                 }
-                if (Clock.getBytecodesLeft() < 3000) break;
+                if (Clock.getBytecodesLeft() < 3000)
+                    break;
             }
         }
     };

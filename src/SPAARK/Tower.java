@@ -27,11 +27,8 @@ public class Tower {
                 G.me.add(Direction.WEST).add(Direction.WEST),
                 G.me.add(Direction.NORTHWEST)
         };
-        Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
-            public int compare(MapLocation a, MapLocation b) {
-                return a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter);
-            };
-        });
+        Arrays.sort(spawnLocs,
+                (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
     }
 
     public static void run() throws Exception {
@@ -48,7 +45,7 @@ public class Tower {
             }
         } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
             switch (spawnedRobots % 5) {
-                //make sure to subtract 2
+                // make sure to subtract 2
                 case 0:
                     for (MapLocation loc : spawnLocs) {
                         if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
