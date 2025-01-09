@@ -139,6 +139,7 @@ public class POI {
         // }
         // addTowers(towersToAdd);
 
+        //update symmetry array
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation xy = nearbyRuins[i];
             ruin[xy.y] |= 1L << xy.x;
@@ -163,10 +164,10 @@ public class POI {
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
-        // completely untested...
         int w = G.rc.getMapWidth();
         int h = G.rc.getMapHeight();
         switch (sym) {
+            //only consider bits where we explored both it and its rotation
             case 0: // horz
                 for (int i = h / 2; --i >= 0;) {
                     long exploredRow = explored[i] & explored[h - i - 1];

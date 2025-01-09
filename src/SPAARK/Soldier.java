@@ -74,7 +74,7 @@ public class Soldier {
                     runMode();
                     break;
                 }
-            } else {
+            } else if (G.rc.getNumberTowers() < 25) {
                 ruinLocation = locs[i];
                 mode = BUILD_TOWER;
                 runMode();
