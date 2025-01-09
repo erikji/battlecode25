@@ -25,20 +25,10 @@ public class POI {
 
     // stores all tower and ruin data
 
-    // upto 50 robots
-    // 51 is symmetry
+    // upto 144 robots
+    // 145 is symmetry
     public static StringBuilder[] robotsThatKnowInformation = new StringBuilder[] {
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
-            new StringBuilder()
+        new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),
     };
     public static boolean[] critical = new boolean[144];
 
@@ -65,14 +55,14 @@ public class POI {
     public static void removeValidSymmetry(int source, int index) {
         if (symmetry[index]) {
             symmetry[index] = false;
-            robotsThatKnowInformation[50] = new StringBuilder("-" + source + "-");
+            robotsThatKnowInformation[144] = new StringBuilder("-" + source + "-");
             if (source == -1) {
                 criticalSymmetry = true;
             } else {
                 criticalSymmetry = false;
             }
         } else if (source != -1) {
-            robotsThatKnowInformation[50].append("-" + source + "-");
+            robotsThatKnowInformation[144].append("-" + source + "-");
         }
     };
 
@@ -199,10 +189,10 @@ public class POI {
                 while (G.rc.canSendMessage(r.getLocation())) {
                     int message = -1;
                     int messages = 0;
-                    if (!robotsThatKnowInformation[50].toString().contains("-" + r.getID() + "-")) {
+                    if (!robotsThatKnowInformation[144].toString().contains("-" + r.getID() + "-")) {
                         message = intifySymmetry();
                         messages++;
-                        robotsThatKnowInformation[50].append("-" + r.getID() + "-");
+                        robotsThatKnowInformation[144].append("-" + r.getID() + "-");
                     }
                     for (int i = 49; --i >= 0;) {
                         if (towers[i] == -1) {
@@ -250,10 +240,10 @@ public class POI {
                                     }
                                 }
                             }
-                            if (!robotsThatKnowInformation[50].toString().contains("-" + r.getID() + "-")) {
+                            if (!robotsThatKnowInformation[144].toString().contains("-" + r.getID() + "-")) {
                                 message = appendToMessage(message, intifySymmetry());
                                 messages += 1;
-                                robotsThatKnowInformation[50].append("-" + r.getID() + "-");
+                                robotsThatKnowInformation[144].append("-" + r.getID() + "-");
                             }
                             if (messages < 2) {
                                 for (int i = 49; --i >= 0;) {
