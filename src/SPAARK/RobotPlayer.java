@@ -16,7 +16,7 @@ public class RobotPlayer {
             G.rc = rc;
             G.rng = new Random(G.rc.getID() + 2025);
             G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
-            G.team = G.team;
+            G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
             updateInfo();
             switch (G.rc.getType()) {
