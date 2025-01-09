@@ -137,7 +137,7 @@ public class Soldier {
                 runMode();
             }
         }
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
             ruinLocation = null;
