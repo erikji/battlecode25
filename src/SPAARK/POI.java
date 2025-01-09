@@ -83,7 +83,7 @@ public class POI {
     // uses a ton of bytecode wtf?
     public static void updateInfo() throws Exception {
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
-        
+
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
@@ -171,7 +171,7 @@ public class POI {
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
-            int shift = G.rng.nextInt(G.allyRobots.length);
+            int shift = G.rng.nextInt(G.allyRobots.length + 1);
             for (int j = G.allyRobots.length; --j >= 0;) {
                 RobotInfo r = G.allyRobots[(j + shift) % G.allyRobots.length];
                 while (G.rc.canSendMessage(r.getLocation())) {
