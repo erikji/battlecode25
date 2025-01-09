@@ -118,6 +118,7 @@ public class Soldier {
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
+                System.out.println(Clock.getBytecodeNum());
                 Robot.retreat();
                 break;
         }
