@@ -125,9 +125,11 @@ public class Splasher {
                 if (bestScore > 4 && bestLoc != null) {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
-                Motion.spreadRandomly();
+                // Motion.spreadRandomly();
+                Motion.exploreRandomly();
                 break;
             case ATTACK:
+                G.indicatorString.append("ATTACK ");
                 // painting heuristic
                 for (int i = attackRange.length; --i >= 0;) {
                     MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);

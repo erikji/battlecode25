@@ -18,6 +18,7 @@ public class RobotPlayer {
             G.rng = new Random(G.rc.getID() + 2025);
             G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
             G.opponentTeam = G.rc.getTeam().opponent();
+            G.indicatorString = new StringBuilder();
             updateInfo();
             switch (G.rc.getType()) {
                 case MOPPER:
@@ -32,6 +33,7 @@ public class RobotPlayer {
             while (true) {
                 try {
                     G.indicatorString = new StringBuilder();
+                    POI.readMessages();
                     updateInfo();
                     switch (G.rc.getType()) {
                         case MOPPER:
