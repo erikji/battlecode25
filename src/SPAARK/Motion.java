@@ -151,10 +151,6 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                // try {
-                // G.rc.setIndicatorLine(me, target, 0, 0, 0);
-                // } catch (Exception e) {
-                // }
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
@@ -164,6 +160,25 @@ public class Motion {
                     lastRandomDir = direction;
                 }
             }
+        }
+    }
+
+    public static MapLocation exploreLoc;
+    public static void exploreRandomly() throws Exception {
+        if (G.rc.isMovementReady()) {
+            if (exploreLoc != null) {
+                if (G.rc.canSenseLocation(exploreLoc)) {
+                    exploreLoc = null;
+                }
+                if (G.rng.nextInt(25) == 0) {
+                    exploreLoc = null;
+                }
+            }
+            if (exploreLoc == null) {
+                exploreLoc = new MapLocation(G.rng.nextInt(G.rc.getMapWidth()), G.rng.nextInt(G.rc.getMapHeight()));
+            }
+            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 255, 255);
+            bugnavTowards(exploreLoc);
         }
     }
 
@@ -975,10 +990,13 @@ public class Motion {
                 }
                 MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
                 MapInfo info = G.rc.senseMapInfo(nxt);
-                if (info.getPaint().isEnemy())
+                if (info.getPaint().isEnemy()) {
                     scores[i] -= 10;
-                else if (info.getPaint() == PaintType.EMPTY)
+                }
+                else if (info.getPaint() == PaintType.EMPTY) {
                     scores[i] -= 5;
+                }
+
                 if (G.DIRECTIONS[i] == d) {
                     scores[i] += 20;
                 } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {

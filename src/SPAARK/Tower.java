@@ -100,44 +100,43 @@ public class Tower {
         }
         // more specialized here
         switch (G.rc.getType()) {
-            case LEVEL_ONE_DEFENSE_TOWER:
+            case LEVEL_ONE_DEFENSE_TOWER -> {
                 level = 0;
                 DefenseTower.run();
-                break;
-            case LEVEL_TWO_DEFENSE_TOWER:
+            }
+            case LEVEL_TWO_DEFENSE_TOWER -> {
                 level = 1;
                 DefenseTower.run();
-                break;
-            case LEVEL_THREE_DEFENSE_TOWER:
+            }
+            case LEVEL_THREE_DEFENSE_TOWER -> {
                 level = 2;
                 DefenseTower.run();
-                break;
-            case LEVEL_ONE_MONEY_TOWER:
+            }
+            case LEVEL_ONE_MONEY_TOWER -> {
                 level = 0;
                 MoneyTower.run();
-                break;
-            case LEVEL_TWO_MONEY_TOWER:
+            }
+            case LEVEL_TWO_MONEY_TOWER -> {
                 level = 1;
                 MoneyTower.run();
-                break;
-            case LEVEL_THREE_MONEY_TOWER:
+            }
+            case LEVEL_THREE_MONEY_TOWER -> {
                 level = 2;
                 MoneyTower.run();
-                break;
-            case LEVEL_ONE_PAINT_TOWER:
+            }
+            case LEVEL_ONE_PAINT_TOWER -> {
                 level = 0;
                 PaintTower.run();
-                break;
-            case LEVEL_TWO_PAINT_TOWER:
+            }
+            case LEVEL_TWO_PAINT_TOWER -> {
                 level = 1;
                 PaintTower.run();
-                break;
-            case LEVEL_THREE_PAINT_TOWER:
+            }
+            case LEVEL_THREE_PAINT_TOWER -> {
                 level = 2;
                 PaintTower.run();
-                break;
-            default:
-                throw new Exception("Challenge Complete! How Did We Get Here?");
+            }
+            default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - G.rc.getType().moneyCost >= 5000) {
             G.rc.upgradeTower(G.me);

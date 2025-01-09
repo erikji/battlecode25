@@ -1,19 +1,34 @@
 package SPAARK;
 
 import battlecode.common.*;
+import scala.collection.mutable.Map;
+
 import java.util.*;
 
 public class POI {
-    public static Team opponentTeam = G.rc.getTeam().opponent();
+    public static final boolean ENABLE_INDICATORS = false;
 
     // 144 towers (including ruins)
     // filled in backwards cuz for loop bytecode optimization
+
+    // each tower contains a location and tower type
+    // bits 0-11 store location
+    // bits 12-15 store tower type
+    //  - 0 for neutral (ruin)
+    //  - 1-3 for paint, money, defense (team a)
+    //  - 4-6 for paint, money, defense (team b)
     public static int[] towers = new int[] {
-        -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1
     };
 
     // symmetry detection
-    // set bit if its a wall, ruin, or we explored it, and use bit operators to check symmetry
+    // set bit if its a wall, ruin, or we explored it, and use bit operators to
+    // check symmetry
     public static long[] wall = new long[60];
     public static long[] ruin = new long[60];
     public static long[] explored = new long[60];
@@ -28,14 +43,45 @@ public class POI {
     // upto 144 robots
     // 145 is symmetry
     public static StringBuilder[] robotsThatKnowInformation = new StringBuilder[] {
-        new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
+            new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
     };
+    // basically critical array means this robot found this informatoin, not received through message
+    // robot prioritizes critical informatoin to be sent first
     public static boolean[] critical = new boolean[144];
 
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
         for (int i = 144; --i >= 0;) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
+                G.indicatorString.append(data + " " + i + " " + towers[i] + " ");
                 if (towers[i] != data) {
                     towers[i] = data;
                     robotsThatKnowInformation[i] = new StringBuilder("-" + source + "-");
@@ -46,6 +92,7 @@ public class POI {
                     }
                 } else if (source != -1) {
                     robotsThatKnowInformation[i].append("-" + source + "-");
+                    critical[i] = false;
                 }
                 break;
             }
@@ -78,33 +125,38 @@ public class POI {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
                 addTower(-1, intifyTower(info.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]));
-            }
-            else {
-                addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
+            } else {
+                addTower(-1,
+                        intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
             }
         }
 
-        // int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see that many
+        // int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see
+        // that many
         // int ind = 0;
         // for (int i = nearbyRuins.length; --i >= 0;) {
-        //     if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
-        //         RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
-        //         if (info.team == G.opponentTeam) {
-        //             towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]);
-        //         } else {
-        //             towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
-        //         }
-        //     } else {
-        //         towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
-        //                 | intifyLocation(nearbyRuins[i]);
-        //     }
+        // if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
+        // RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
+        // if (info.team == G.opponentTeam) {
+        // towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) |
+        // intifyLocation(nearbyRuins[i]);
+        // } else {
+        // towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) |
+        // intifyLocation(nearbyRuins[i]);
+        // }
+        // } else {
+        // towersToAdd[ind++] = intifyTower(Team.NEUTRAL,
+        // UnitType.LEVEL_ONE_DEFENSE_TOWER)
+        // | intifyLocation(nearbyRuins[i]);
+        // }
         // }
         // addTowers(towersToAdd);
-        for (int i = 144; --i >= 0;) {
+        for (int i = 50; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
             }
             // System.out.println(parseLocation(towers[i]));
+            G.indicatorString.append(i + " ");
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
                     G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
@@ -147,9 +199,9 @@ public class POI {
             case 0: // horz
                 for (int i = h / 2; --i >= 0;) {
                     long exploredRow = explored[i] & explored[h - i - 1];
-                    if (((wall[i] ^ wall[h - i - 1]) & exploredRow) != 0) 
+                    if (((wall[i] ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
-                    if (((ruin[i] ^ ruin[h - i - 1]) & exploredRow) != 0){
+                    if (((ruin[i] ^ ruin[h - i - 1]) & exploredRow) != 0) {
                         return false;
                     }
                 }
@@ -165,6 +217,7 @@ public class POI {
                 return true;
             case 2: // rot
                 for (int i = h / 2; --i >= 0;) {
+                    // only consider bits where we explored both it and its rotation
                     long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[h - i - 1];
                     if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
@@ -176,7 +229,21 @@ public class POI {
         System.out.println("invalid symmetry argument");
         return false;
     }
+    // public static MapLocation[] symmetryLocations(MapLocation loc) throws Exception {
+    //     // completely untested...
+    //     int w = G.rc.getMapWidth();
+    //     int h = G.rc.getMapHeight();
+    //     MapLocation[] locs = new MapLocation[4];
+    //     locs[0] = loc;
+    //     if (symmetry[0]) {
+    //         locs[1] = new MapLocation(loc.x, h - loc.y - 1);
+    //     }
+    //     return false;
+    // }
 
+
+    // each message contains 2 towers/symmetries
+    // because its 32 bit integer so it gets split into 2 16 bit integers
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
@@ -194,7 +261,7 @@ public class POI {
                         messages++;
                         robotsThatKnowInformation[144].append("-" + r.getID() + "-");
                     }
-                    for (int i = 49; --i >= 0;) {
+                    for (int i = 144; --i >= 0;) {
                         if (towers[i] == -1) {
                             break;
                         }
@@ -211,7 +278,8 @@ public class POI {
                         break;
                     }
                     G.rc.sendMessage(r.getLocation(), message);
-                    if (Clock.getBytecodesLeft() < 3000) return;
+                    if (Clock.getBytecodesLeft() < 3000)
+                        return;
                 }
             }
         } else {
@@ -226,7 +294,7 @@ public class POI {
                     RobotInfo r = G.allyRobots[j];
                     if (G.rc.canSendMessage(r.getLocation())) {
                         if (messages < 2) {
-                            for (int i = 49; --i >= 0;) {
+                            for (int i = 144; --i >= 0;) {
                                 if (towers[i] == -1) {
                                     break;
                                 }
@@ -246,7 +314,7 @@ public class POI {
                                 robotsThatKnowInformation[144].append("-" + r.getID() + "-");
                             }
                             if (messages < 2) {
-                                for (int i = 49; --i >= 0;) {
+                                for (int i = 144; --i >= 0;) {
                                     if (towers[i] == -1) {
                                         break;
                                     }
@@ -264,6 +332,7 @@ public class POI {
                         if (messages != 0) {
                             criticalSymmetry = false;
                             G.rc.sendMessage(r.getLocation(), message);
+                            G.indicatorString.append("sent message ");
                             break;
                         }
                     }
@@ -278,24 +347,27 @@ public class POI {
         // what hapepns if message is sent in same round?? oof oof oof
         Message[] messages = G.rc.readMessages(G.rc.getRoundNum() - 1);
         for (Message m : messages) {
-            int n1 = m.getBytes() & 0b1111111111111111;
-            if ((n1 << 12) >= 7) {
-                int n2 = (n1 << 12) - 7;
-                if (n2 % 2 == 0) {
-                    removeValidSymmetry(m.getSenderID(), 0);
-                }
-                if ((n2 >> 1) % 2 == 0) {
-                    removeValidSymmetry(m.getSenderID(), 1);
-                }
-                if ((n2 >> 2) % 2 == 0) {
-                    removeValidSymmetry(m.getSenderID(), 2);
-                }
-            } else {
-                addTower(m.getSenderID(), m.getBytes() & 0b1111111111111111);
-            }
+            read16BitMessage(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             if ((m.getBytes() >> 16) != 0) {
-                addTower(m.getSenderID(), (m.getBytes() >> 16) & 0b1111111111111111);
+                read16BitMessage(m.getSenderID(), (m.getBytes() >> 16) & 0b1111111111111111);
             }
+        }
+    };
+    public static void read16BitMessage(int id, int n) throws Exception {
+        G.indicatorString.append("d:" + n + " ");
+        if ((n << 12) >= 7) {
+            int n2 = (n << 12) - 7;
+            if (n2 % 2 == 0) {
+                removeValidSymmetry(id, 0);
+            }
+            if ((n2 >> 1) % 2 == 0) {
+                removeValidSymmetry(id, 1);
+            }
+            if ((n2 >> 2) % 2 == 0) {
+                removeValidSymmetry(id, 2);
+            }
+        } else {
+            addTower(id, n);
         }
     };
 
@@ -377,4 +449,26 @@ public class POI {
 
     // for tower, recieve message = update stuff
     // also send most important stuff to nearby robots
+
+    public static void drawIndicators() {
+        if (ENABLE_INDICATORS) {
+            for (int i = 144; --i >= 0;) {
+                if (towers[i] == -1) {
+                    break;
+                }
+                // System.out.println(parseLocation(towers[i]));
+                try {
+                    Team t = parseTowerTeam(towers[i]);
+                    if (t == G.team) {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                    } else if (t == G.opponentTeam) {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
+                    } else {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 100);
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
