@@ -1,13 +1,15 @@
 package SPAARK;
 
 import battlecode.common.*;
+
 import java.util.*;
 
 public class RobotPlayer {
     public static void updateInfo() throws Exception {
-        G.indicatorString = new StringBuilder();
         G.me = G.rc.getLocation();
-        Motion.updateInfo();
+        G.allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
+        G.opponentRobots = G.rc.senseNearbyRobots(-1, POI.opponentTeam);
+        G.infos = G.rc.senseNearbyMapInfos();
         POI.updateInfo();
     }
 
@@ -15,11 +17,9 @@ public class RobotPlayer {
         try {
             G.rc = rc;
             G.rng = new Random(G.rc.getID() + 2025);
-            G.me = G.rc.getLocation();
-            Motion.updateInfo();
-            Motion.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
-            POI.opponentTeam = G.rc.getTeam().opponent();
-            POI.init();
+            G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
+            G.opponentTeam = G.rc.getTeam().opponent();
+            updateInfo();
             switch (G.rc.getType()) {
                 case MOPPER:
                 case SOLDIER:
@@ -32,6 +32,7 @@ public class RobotPlayer {
             }
             while (true) {
                 try {
+                    G.indicatorString = new StringBuilder();
                     updateInfo();
                     switch (G.rc.getType()) {
                         case MOPPER:

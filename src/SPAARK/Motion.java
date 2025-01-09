@@ -3,38 +3,6 @@ package SPAARK;
 import battlecode.common.*;
 
 public class Motion {
-    public static final Direction[] DIRECTIONS = {
-            Direction.SOUTHWEST,
-            Direction.SOUTH,
-            Direction.SOUTHEAST,
-            Direction.WEST,
-            Direction.EAST,
-            Direction.NORTHWEST,
-            Direction.NORTH,
-            Direction.NORTHEAST,
-    };
-    public static final Direction[] ALL_DIRECTIONS = {
-            Direction.SOUTHWEST,
-            Direction.SOUTH,
-            Direction.SOUTHEAST,
-            Direction.WEST,
-            Direction.EAST,
-            Direction.NORTHWEST,
-            Direction.NORTH,
-            Direction.NORTHEAST,
-            Direction.CENTER,
-    };
-    public static final String[] DIRABBREV = {
-            "C",
-            "W",
-            "NW",
-            "N",
-            "NE",
-            "E",
-            "SE",
-            "S",
-            "SW",
-    };
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
     public static final int AROUND = 2;
@@ -43,11 +11,6 @@ public class Motion {
     public static final int COUNTER_CLOCKWISE = -1;
 
     public static final int DEFAULT_RETREAT_HP = 999;
-
-    public static RobotInfo[] opponentRobots;
-    public static RobotInfo[] allyRobots;
-
-    public static MapLocation mapCenter;
 
     public static Direction lastDir = Direction.CENTER;
     public static Direction optimalDir = Direction.CENTER;
@@ -124,8 +87,8 @@ public class Motion {
     public static void moveRandomly() throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
-            for (int i = DIRECTIONS.length; --i >= 0;) {
-                if (G.rc.canMove(DIRECTIONS[i])) {
+            for (int i = G.DIRECTIONS.length; --i >= 0;) {
+                if (G.rc.canMove(G.DIRECTIONS[i])) {
                     stuck = false;
                 }
             }
@@ -134,22 +97,20 @@ public class Motion {
             }
             // move in a random direction but minimize making useless moves back to where
             // you came from
-            Direction direction = DIRECTIONS[G.rng.nextInt(DIRECTIONS.length)];
+            Direction direction = G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)];
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
-            if (G.rc.canMove(direction)) {
-                G.rc.move(direction);
+            if (move(direction)) {
                 lastRandomDir = direction;
-                updateInfo();
             }
         }
     }
 
     public static void spreadRandomly() throws Exception {
         boolean stuck = true;
-        for (int i = DIRECTIONS.length; --i >= 0;) {
-            if (canMove(DIRECTIONS[i])) {
+        for (int i = G.DIRECTIONS.length; --i >= 0;) {
+            if (canMove(G.DIRECTIONS[i])) {
                 stuck = false;
             }
         }
@@ -159,11 +120,15 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation me = G.rc.getLocation();
             MapLocation target = me;
-            for (int i = allyRobots.length; --i >= 0;) {
-                MapLocation loc = allyRobots[i].getLocation();
-                if (!G.rc.senseRobotAtLocation(loc).type.isRobotType())
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (!G.allyRobots[i].type.isRobotType())
                     // ignore towers
-                    target = target.add(me.directionTo(loc).opposite());
+                    target = target.subtract(me.directionTo(G.allyRobots[i].getLocation()));
+            }
+            for (int i = 7; --i >= 0;) {
+                if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                    target = target.subtract(G.DIRECTIONS[i]);
+                }
             }
             if (target.equals(me)) {
                 // just keep moving in the same direction as before if there's no robots nearby
@@ -171,16 +136,14 @@ public class Motion {
                     moveRandomly(); // occasionally move randomly to avoid getting stuck
                 } else if (G.rng.nextInt(20) == 1) {
                     // don't get stuck in corners
-                    lastRandomSpread = me.add(DIRECTIONS[G.rng.nextInt(DIRECTIONS.length)]);
+                    lastRandomSpread = me.add(G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)]);
                     moveRandomly();
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
                     Direction direction = me.directionTo(target);
-                    if (G.rc.canMove(direction)) {
-                        G.rc.move(direction);
+                    if (move(direction)) {
                         lastRandomSpread = lastRandomSpread.add(direction);
                         lastRandomDir = direction;
-                        updateInfo();
                     } else {
                         moveRandomly();
                     }
@@ -196,11 +159,9 @@ public class Motion {
                     lastDir = Direction.CENTER;
                 }
                 Direction direction = bug2Helper(me, target, TOWARDS, 0, 0);
-                if (G.rc.canMove(direction)) {
-                    G.rc.move(direction);
+                if (move(direction)) {
                     lastRandomSpread = target;
                     lastRandomDir = direction;
-                    updateInfo();
                 }
             }
         }
@@ -972,29 +933,40 @@ public class Motion {
 
     public static Micro defaultMicro = new Micro() {
         public void micro(Direction d, MapLocation dest) throws Exception {
-            Motion.move(d);
+            Direction best = d;
+            int bestScore = Integer.MIN_VALUE;
+            for (int i = 7; --i >= 0; ) {
+                if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
+                int score = 0;
+                MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
+                MapInfo info = G.rc.senseMapInfo(nxt);
+                if (info.getPaint().isEnemy()) score -= 10;
+                else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                if (G.DIRECTIONS[i] == d) {
+                    score += 20;
+                } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
+                    score += 10;
+                }
+                if (score > bestScore) {
+                    best = G.DIRECTIONS[i];
+                    bestScore = score;
+                }
+            }
+            Motion.move(best);
         }
     };
 
-    public static void move(Direction dir) throws Exception {
+    public static boolean move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);
             lastDir = dir;
-            updateInfo();
+            RobotPlayer.updateInfo();
+            return true;
         }
+        return false;
     }
 
     public static boolean canMove(Direction dir) throws Exception {
         return G.rc.canMove(dir);
-    }
-
-    public static void updateInfo() throws Exception {
-        opponentRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam().opponent());
-        allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
-        // MapInfo[] infos = G.rc.senseNearbyMapInfos();
-        // for (MapInfo info : infos) {
-        // G.infos[info.getMapLocation().x][info.getMapLocation().y] = info;
-        // }
-        // oh wait it doesn't save bytecode
     }
 }

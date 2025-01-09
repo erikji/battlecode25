@@ -79,7 +79,8 @@ public class Mopper {
         }
         G.indicatorString.append((Clock.getBytecodesLeft() - bt) + " ");
         // this is using all the bytecode???
-        G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        if (G.rc.onTheMap(microDir))
+            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         G.rc.setIndicatorString("sdf " + Clock.getBytecodesLeft());
         if (bestEmpty == null && bestBot == null) {
             if (G.me.distanceSquaredTo(microDir) >= 2) {
@@ -94,7 +95,7 @@ public class Mopper {
             if (bestBot != null)
                 bestEmpty = bestBot;
             G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
-            if (G.rc.isActionReady())
+            if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
             G.indicatorString.append(Clock.getBytecodesLeft());
             G.rc.setIndicatorString("c " + Clock.getBytecodesLeft());
