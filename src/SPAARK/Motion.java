@@ -454,7 +454,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            doMicroAndMove(m, d, dest);
         }
     }
 
@@ -468,7 +468,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            doMicroAndMove(m, d, dest);
         }
     }
 
@@ -483,7 +483,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            doMicroAndMove(m, d, dest);
         }
     }
 
@@ -811,7 +811,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            m.micro(d, dest);
+            doMicroAndMove(m, d, dest);
         } else {
             // ADD THIS BACK
             // ADD THIS BACK
@@ -942,40 +942,54 @@ public class Motion {
             step = 1;
         }
     }
+    
+    //do micro, get best direction, and MOVE
+    public static boolean doMicroAndMove(Micro micro, Direction d, MapLocation dest) throws Exception {
+        int[] scores = micro.micro(d, dest);
+        int bestDir = 0;
+        //randomly go forward or backward through the array (idk if this actually does anything tho)
+        //also we dont have to check 0
+        if (G.rng.nextBoolean()) {
+            for (int i = 8; --i >= 1;) {
+                if (scores[i] > scores[bestDir]) {
+                    bestDir = i;
+                }
+            }
+        } else {
+            for (int i = 0; ++i < 8;) {
+                if (scores[i] > scores[bestDir]) {
+                    bestDir = i;
+                }
+            }
+        }
+        return Motion.move(G.DIRECTIONS[bestDir]);
+    }
 
     public static Micro defaultMicro = new Micro() {
         public int[] micro(Direction d, MapLocation dest) throws Exception {
-            Direction best = d;
-            int bestScore = Integer.MIN_VALUE;
             int[] scores = new int[8];
             for (int i = 8; --i >= 0;) {
                 if (!G.rc.canMove(G.DIRECTIONS[i])) {
-                    scores[i] = 0;
+                    scores[i] = -2000000000;
                     continue;
                 }
-                int score = 0;
                 MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
                 MapInfo info = G.rc.senseMapInfo(nxt);
                 if (info.getPaint().isEnemy())
-                    score -= 10;
+                    scores[i] -= 10;
                 else if (info.getPaint() == PaintType.EMPTY)
-                    score -= 5;
+                    scores[i] -= 5;
                 if (G.DIRECTIONS[i] == d) {
-                    score += 20;
+                    scores[i] += 20;
                 } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                    score += 16;
+                    scores[i] += 16;
                 }
-                if (score > bestScore) {
-                    best = G.DIRECTIONS[i];
-                    bestScore = score;
-                }
-                scores[i] = score;
             }
-            Motion.move(best);
             return scores;
         }
     };
 
+    //false if it didn't move
     public static boolean move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);

@@ -133,65 +133,20 @@ public class Soldier {
     public static Micro attackMicro = new Micro() {
         public int[] micro(Direction d, MapLocation dest) throws Exception {
             // try to stay out of range if on cd, otherwise try to get in range
-            Direction best = d;
-            int bestScore = Integer.MIN_VALUE;
-            int scores[] = new int[8];
+            int[] scores = Motion.defaultMicro.micro(d, dest);
             if (G.rc.isActionReady()) {
                 for (int i = 8; --i >= 0;) {
-                    if (!G.rc.canMove(G.DIRECTIONS[i])) {
-                        scores[i] = 0;
-                        continue;
+                    if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation, G.rc.getType().actionRadiusSquared)) {
+                        scores[i] += 40;
                     }
-                    int score = 0;
-                    MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
-                    MapInfo info = G.rc.senseMapInfo(nxt);
-                    if (info.getPaint().isEnemy())
-                        score -= 10;
-                    else if (info.getPaint() == PaintType.EMPTY)
-                        score -= 5;
-                    if (G.DIRECTIONS[i] == d) {
-                        score += 20;
-                    } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                        score += 16;
-                    }
-                    if (nxt.isWithinDistanceSquared(towerLocation, G.rc.getType().actionRadiusSquared)) {
-                        score += 40;
-                    }
-                    if (score > bestScore) {
-                        best = G.DIRECTIONS[i];
-                        bestScore = score;
-                    }
-                    scores[i] = score;
                 }
             } else {
                 for (int i = 8; --i >= 0;) {
-                    if (!G.rc.canMove(G.DIRECTIONS[i])) {
-                        scores[i] = 0;
-                        continue;
+                    if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation, towerType.actionRadiusSquared)) {
+                        scores[i] += 40;
                     }
-                    int score = 0;
-                    MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
-                    MapInfo info = G.rc.senseMapInfo(nxt);
-                    if (info.getPaint().isEnemy())
-                        score -= 10;
-                    else if (info.getPaint() == PaintType.EMPTY)
-                        score -= 5;
-                    if (G.DIRECTIONS[i] == d) {
-                        score += 20;
-                    } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                        score += 16;
-                    }
-                    if (!nxt.isWithinDistanceSquared(towerLocation, towerType.actionRadiusSquared)) {
-                        score += 40;
-                    }
-                    if (score > bestScore) {
-                        best = G.DIRECTIONS[i];
-                        bestScore = score;
-                    }
-                    scores[i] = score;
                 }
             }
-            Motion.move(best);
             return scores;
         }
     };
