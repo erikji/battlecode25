@@ -92,9 +92,9 @@ public class Soldier {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)) {
                     for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[i] == invalidLoc)
+                        if (excludedRuins[j] == invalidLoc)
                             continue;
-                        if (pos.equals(excludedRuins[i])) {
+                        if (pos.equals(excludedRuins[j])) {
                             continue searchTowers;
                         }
                     }
