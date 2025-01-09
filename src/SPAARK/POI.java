@@ -41,21 +41,6 @@ public class POI {
     };
     public static boolean[] critical = new boolean[50];
 
-    public static void addTowers(int[] data) {
-        // IMPORTANT: make sure to call addTower right after tower is built
-        if (data[0] == -1)
-            return;
-        for (int i = 50, ind = 0; --i >= 0;) {
-            if (((towers[i] ^ data[ind]) & 0b111111111111) == 0 || towers[i] == -1) {
-                if (towers[i] != data[ind]) {
-                    towers[i] = data[ind++];
-                    robotsThatKnowInformation[i] = new StringBuilder("--1-");
-                    critical[i] = true;
-                }
-            }
-        }
-    }
-
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
         for (int i = 50; --i >= 0;) {
@@ -168,9 +153,9 @@ public class POI {
         switch (sym) {
             case 0: // horz
                 for (int i = h / 2; --i >= 0;) {
-                    if ((wall[i] ^ wall[h - i]) != 0)
+                    if ((wall[i] ^ wall[h - i - 1]) != 0)
                         return false;
-                    if ((ruin[i] ^ ruin[h - i]) != 0)
+                    if ((ruin[i] ^ ruin[h - i - 1]) != 0)
                         return false;
                 }
                 return true;
@@ -184,9 +169,9 @@ public class POI {
                 return true;
             case 2: // rot
                 for (int i = h / 2; --i >= 0;) {
-                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i]) != 0)
+                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i - 1]) != 0)
                         return false;
-                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i]) != 0)
+                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i - 1]) != 0)
                         return false;
                 }
                 return true;
