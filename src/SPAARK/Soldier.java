@@ -16,7 +16,7 @@ public class Soldier {
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
-        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
+        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
         if (mode == EXPLORE) {
@@ -103,12 +103,10 @@ public class Soldier {
                 G.indicatorString.append("ATTACK ");
                 // attack micro moment
                 if (towerLocation.isWithinDistanceSquared(G.me, towerType.actionRadiusSquared)) {
-                    System.out.println("BUH");
                     if (G.rc.canAttack(towerLocation))
                         G.rc.attack(towerLocation);
                     Motion.bugnavAway(towerLocation, attackMicro);
                 } else {
-                    System.out.println("BUH2");
                     if (G.rc.isActionReady()) {
                         Motion.bugnavTowards(towerLocation, attackMicro);
                         if (G.rc.canAttack(towerLocation))
@@ -131,7 +129,6 @@ public class Soldier {
             Direction best = d;
             int bestScore = Integer.MIN_VALUE;
             if (G.rc.isActionReady()) {
-                System.out.println("BUH2");
                 for (int i = 8; --i >= 0; ) {
                     if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
                     int score = 0;
@@ -153,7 +150,6 @@ public class Soldier {
                     }
                 }
             } else {
-                System.out.println("BUH");
                 for (int i = 8; --i >= 0; ) {
                     if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
                     int score = 0;

@@ -14,7 +14,7 @@ public class Mopper {
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
-        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
+        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
         // make sure not stuck between exploring and building

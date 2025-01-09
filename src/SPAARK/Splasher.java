@@ -42,7 +42,7 @@ public class Splasher {
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
-        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
+        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
         switch (mode) {
