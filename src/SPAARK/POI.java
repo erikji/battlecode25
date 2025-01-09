@@ -159,9 +159,9 @@ public class POI {
         switch (sym) {
             case 0: // horz
                 for (int i = h / 2; --i >= 0;) {
-                    if ((wall[i] ^ wall[h - i]) != 0)
+                    if ((wall[i] ^ wall[h - i - 1]) != 0)
                         return false;
-                    if ((ruin[i] ^ ruin[h - i]) != 0)
+                    if ((ruin[i] ^ ruin[h - i - 1]) != 0)
                         return false;
                 }
                 return true;
@@ -175,9 +175,9 @@ public class POI {
                 return true;
             case 2: // rot
                 for (int i = h / 2; --i >= 0;) {
-                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i]) != 0)
+                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i - 1]) != 0)
                         return false;
-                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i]) != 0)
+                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i - 1]) != 0)
                         return false;
                 }
                 return true;
