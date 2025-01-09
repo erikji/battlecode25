@@ -43,7 +43,7 @@ public class Soldier {
                 G.indicatorString.append("EXPLORE ");
                 MapLocation bestLoc = null;
                 int bestDistanceSquared = 10000;
-                for (int i = 50; --i >= 0;) {
+                for (int i = 144; --i >= 0;) {
                     if (POI.towers[i] == -1) {
                         break;
                     }

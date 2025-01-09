@@ -64,7 +64,7 @@ public class Robot {
                 boolean bestPaint = false;
                 boolean bestCritical = false;
                 String tried = triedRetreatTowers.toString();
-                for (int i = 50; --i >= 0;) {
+                for (int i = 144; --i >= 0;) {
                     if (POI.towers[i] == -1) {
                         break;
                     }

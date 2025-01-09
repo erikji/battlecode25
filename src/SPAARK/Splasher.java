@@ -52,7 +52,7 @@ public class Splasher {
         if (attackTarget.x == -1) {
             int best = -1;
             int bestWeight = 0;
-            for (int i = 50; --i >= 0;) {
+            for (int i = 144; --i >= 0;) {
                 if (POI.towers[i] == -1) {
                     break;
                 }

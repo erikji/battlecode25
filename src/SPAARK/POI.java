@@ -6,11 +6,10 @@ import java.util.*;
 public class POI {
     public static Team opponentTeam = G.rc.getTeam().opponent();
 
-    // 50 towers
+    // 144 towers (including ruins)
     // filled in backwards cuz for loop bytecode optimization
     public static int[] towers = new int[] {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+        -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
     };
 
     // symmetry detection
@@ -45,7 +44,7 @@ public class POI {
 
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
-        for (int i = 50; --i >= 0;) {
+        for (int i = 144; --i >= 0;) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
@@ -111,7 +110,7 @@ public class POI {
         //     }
         // }
         // addTowers(towersToAdd);
-        for (int i = 50; --i >= 0;) {
+        for (int i = 144; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
             }
