@@ -236,7 +236,8 @@ public class Motion {
         return new int[] { clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck };
     }
 
-    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared, int maxRadiusSquared) throws Exception {
+    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared,
+            int maxRadiusSquared) throws Exception {
         Direction direction = me.directionTo(dest);
         if (me.equals(dest)) {
             if (mode == AROUND) {
@@ -446,6 +447,7 @@ public class Motion {
     public static void bugnavTowards(MapLocation dest) throws Exception {
         bugnavTowards(dest, defaultMicro);
     }
+
     public static void bugnavTowards(MapLocation dest, Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, TOWARDS, 0, 0);
@@ -459,6 +461,7 @@ public class Motion {
     public static void bugnavAway(MapLocation dest) throws Exception {
         bugnavAway(dest, defaultMicro);
     }
+
     public static void bugnavAway(MapLocation dest, Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AWAY, 0, 0);
@@ -472,7 +475,9 @@ public class Motion {
     public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared) throws Exception {
         bugnavAround(dest, minRadiusSquared, maxRadiusSquared, defaultMicro);
     }
-    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared, Micro m) throws Exception {
+
+    public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared, Micro m)
+            throws Exception {
         if (G.rc.isMovementReady()) {
             Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared, maxRadiusSquared);
             if (d == Direction.CENTER) {
@@ -796,6 +801,7 @@ public class Motion {
     public static void bfsnav(MapLocation dest) throws Exception {
         bfsnav(dest, defaultMicro);
     }
+
     public static void bfsnav(MapLocation dest, Micro m) throws Exception {
         G.indicatorString.append("BFS-BT: " + Clock.getBytecodesLeft() + "-");
         updateBfsTarget(dest);
@@ -938,16 +944,22 @@ public class Motion {
     }
 
     public static Micro defaultMicro = new Micro() {
-        public void micro(Direction d, MapLocation dest) throws Exception {
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
             Direction best = d;
             int bestScore = Integer.MIN_VALUE;
-            for (int i = 8; --i >= 0; ) {
-                if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
+            int[] scores = new int[8];
+            for (int i = 8; --i >= 0;) {
+                if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                    scores[i] = 0;
+                    continue;
+                }
                 int score = 0;
                 MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
                 MapInfo info = G.rc.senseMapInfo(nxt);
-                if (info.getPaint().isEnemy()) score -= 10;
-                else if (info.getPaint() == PaintType.EMPTY) score -= 5;
+                if (info.getPaint().isEnemy())
+                    score -= 10;
+                else if (info.getPaint() == PaintType.EMPTY)
+                    score -= 5;
                 if (G.DIRECTIONS[i] == d) {
                     score += 20;
                 } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
@@ -957,8 +969,10 @@ public class Motion {
                     best = G.DIRECTIONS[i];
                     bestScore = score;
                 }
+                scores[i] = score;
             }
             Motion.move(best);
+            return scores;
         }
     };
 

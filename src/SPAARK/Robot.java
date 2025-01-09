@@ -7,9 +7,9 @@ public class Robot {
     public static boolean[][] resourcePattern;
     public static boolean[][][] towerPatterns;
     public static UnitType[] towers = new UnitType[] {
-        UnitType.LEVEL_ONE_DEFENSE_TOWER,
-        UnitType.LEVEL_ONE_MONEY_TOWER,
-        UnitType.LEVEL_ONE_PAINT_TOWER
+            UnitType.LEVEL_ONE_DEFENSE_TOWER,
+            UnitType.LEVEL_ONE_MONEY_TOWER,
+            UnitType.LEVEL_ONE_PAINT_TOWER
     };
 
     public static void init() throws Exception {
@@ -48,10 +48,10 @@ public class Robot {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 if (G.rc.senseNearbyRobots(loc, 2, G.rc.getTeam()).length > 4) {
                     retreatTower = -1;
-                }
-                else {
+                } else {
                     RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
-                    if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER && robotInfo.getPaintAmount() == 0) {
+                    if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER
+                            && robotInfo.getPaintAmount() == 0) {
                         retreatTower = -1;
                     }
                 }
@@ -64,7 +64,7 @@ public class Robot {
                 boolean bestPaint = false;
                 boolean bestCritical = false;
                 String tried = triedRetreatTowers.toString();
-                for (int i = 50; --i >= 0; ) {
+                for (int i = 50; --i >= 0;) {
                     if (POI.towers[i] == -1) {
                         break;
                     }
@@ -119,8 +119,7 @@ public class Robot {
         if (retreatTower == -2) {
             Motion.spreadRandomly();
             retreatTower = -1;
-        }
-        else if (retreatTower != -1) {
+        } else if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             G.rc.setIndicatorLine(G.me, loc, 255, 0, 255);
             Motion.bugnavTowards(loc);
