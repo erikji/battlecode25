@@ -86,9 +86,11 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.spreadRandomly();
+                break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
                 Robot.retreat();
+                break;
         }
     }
 }
