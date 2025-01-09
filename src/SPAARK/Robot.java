@@ -6,6 +6,11 @@ import java.util.*;
 public class Robot {
     public static boolean[][] resourcePattern;
     public static boolean[][][] towerPatterns;
+    public static UnitType[] towers = new UnitType[] {
+        UnitType.LEVEL_ONE_DEFENSE_TOWER,
+        UnitType.LEVEL_ONE_MONEY_TOWER,
+        UnitType.LEVEL_ONE_PAINT_TOWER
+    };
 
     public static void init() throws Exception {
         resourcePattern = G.rc.getResourcePattern();
@@ -53,7 +58,7 @@ public class Robot {
                 boolean bestPaint = false;
                 boolean bestCritical = false;
                 String tried = triedRetreatTowers.toString();
-                for (int i = 49; --i >= 0; ) {
+                for (int i = 50; --i >= 0; ) {
                     if (POI.towers[i] == -1) {
                         break;
                     }

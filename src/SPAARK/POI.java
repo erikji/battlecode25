@@ -33,7 +33,7 @@ public class POI {
     public static void addTowers(int[] data) {
         // IMPORTANT: make sure to call addTower right after tower is built
         if (data[0] == -1) return;
-        for (int i = 49, ind = 0; --i >= 0; ) {
+        for (int i = 50, ind = 0; --i >= 0; ) {
             if (((towers[i] ^ data[ind]) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data[ind]) {
                     towers[i] = data[ind++];
@@ -46,7 +46,7 @@ public class POI {
 
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
-        for (int i = 49; --i >= 0; ) {
+        for (int i = 50; --i >= 0; ) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
@@ -102,7 +102,7 @@ public class POI {
             }
         }
         addTowers(towersToAdd);
-        for (int i = 49; --i >= 0; ) {
+        for (int i = 50; --i >= 0; ) {
             if (towers[i] == -1) {
                 break;
             }

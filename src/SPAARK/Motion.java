@@ -935,7 +935,7 @@ public class Motion {
         public void micro(Direction d, MapLocation dest) throws Exception {
             Direction best = d;
             int bestScore = Integer.MIN_VALUE;
-            for (int i = 7; --i >= 0; ) {
+            for (int i = 8; --i >= 0; ) {
                 if (!G.rc.canMove(G.DIRECTIONS[i])) continue;
                 int score = 0;
                 MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
