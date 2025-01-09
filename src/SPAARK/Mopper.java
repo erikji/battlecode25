@@ -1,7 +1,6 @@
 package SPAARK;
 
 import battlecode.common.*;
-import java.util.*;
 
 public class Mopper {
     public static MapLocation ruinLocation = null; // BUILD mode

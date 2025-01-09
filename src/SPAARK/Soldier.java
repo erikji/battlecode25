@@ -195,6 +195,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1);
             }
         }
+        G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     public static Micro attackMicro = new Micro() {
