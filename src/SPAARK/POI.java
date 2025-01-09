@@ -40,7 +40,7 @@ public class POI {
             new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
             new StringBuilder()
     };
-    public static boolean[] critical = new boolean[50];
+    public static boolean[] critical = new boolean[144];
 
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
