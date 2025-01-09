@@ -98,23 +98,32 @@ public class POI {
     // uses a ton of bytecode wtf?
     public static void updateInfo() throws Exception {
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
-
-        int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see that many
-        int ind = 0;
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
-                if (info.team == G.opponentTeam) {
-                    towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]);
-                } else {
-                    towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
-                }
-            } else {
-                towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
-                        | intifyLocation(nearbyRuins[i]);
+                addTower(-1, intifyTower(info.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]));
+            }
+            else {
+                addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
             }
         }
-        addTowers(towersToAdd);
+
+        // int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see that many
+        // int ind = 0;
+        // for (int i = nearbyRuins.length; --i >= 0;) {
+        //     if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
+        //         RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
+        //         if (info.team == G.opponentTeam) {
+        //             towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]);
+        //         } else {
+        //             towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
+        //         }
+        //     } else {
+        //         towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
+        //                 | intifyLocation(nearbyRuins[i]);
+        //     }
+        // }
+        // addTowers(towersToAdd);
         for (int i = 50; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
@@ -189,6 +198,9 @@ public class POI {
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
+            if (G.allyRobots.length == 0) {
+                return;
+            }
             int shift = G.rng.nextInt(G.allyRobots.length);
             for (int j = G.allyRobots.length; --j >= 0;) {
                 RobotInfo r = G.allyRobots[(j + shift) % G.allyRobots.length];
