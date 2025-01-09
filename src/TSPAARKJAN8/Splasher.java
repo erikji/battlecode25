@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN8;
 
 import battlecode.common.*;
 
@@ -42,7 +42,7 @@ public class Splasher {
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
-        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
+        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity - 40) {
             mode = EXPLORE;
         }
         switch (mode) {
@@ -59,17 +59,14 @@ public class Splasher {
                             // only care about sqrt(2) distance because bytecode restrictions
                             MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                             if (G.rc.canSenseLocation(nxt)) {
-                                MapInfo info = G.rc.senseMapInfo(nxt);
-                                if (info.isPassable()) {
-                                    PaintType paint = info.getPaint();
-                                    if (paint == PaintType.EMPTY)
-                                        score++;
-                                    if (paint.isEnemy())
-                                        score += 2; // bonus points for deleting opponent paint
-                                    if (!paint.isAlly() && nxt == G.me) {
-                                        // bonus points for painting self
-                                        score++;
-                                    }
+                                PaintType paint = G.rc.senseMapInfo(nxt).getPaint();
+                                if (paint == PaintType.EMPTY)
+                                    score++;
+                                if (paint.isEnemy())
+                                    score += 2; // bonus points for deleting opponent paint
+                                if (!paint.isAlly() && nxt == G.me) {
+                                    // bonus points for painting self
+                                    score++;
                                 }
                             }
                         }
