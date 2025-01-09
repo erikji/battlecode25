@@ -3,38 +3,6 @@ package SPAARK;
 import battlecode.common.*;
 
 public class Motion {
-    public static final Direction[] DIRECTIONS = {
-            Direction.SOUTHWEST,
-            Direction.SOUTH,
-            Direction.SOUTHEAST,
-            Direction.WEST,
-            Direction.EAST,
-            Direction.NORTHWEST,
-            Direction.NORTH,
-            Direction.NORTHEAST,
-    };
-    public static final Direction[] ALL_DIRECTIONS = {
-            Direction.SOUTHWEST,
-            Direction.SOUTH,
-            Direction.SOUTHEAST,
-            Direction.WEST,
-            Direction.EAST,
-            Direction.NORTHWEST,
-            Direction.NORTH,
-            Direction.NORTHEAST,
-            Direction.CENTER,
-    };
-    public static final String[] DIRABBREV = {
-            "C",
-            "W",
-            "NW",
-            "N",
-            "NE",
-            "E",
-            "SE",
-            "S",
-            "SW",
-    };
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
     public static final int AROUND = 2;
@@ -124,8 +92,8 @@ public class Motion {
     public static void moveRandomly() throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
-            for (int i = DIRECTIONS.length; --i >= 0;) {
-                if (G.rc.canMove(DIRECTIONS[i])) {
+            for (int i = G.DIRECTIONS.length; --i >= 0;) {
+                if (G.rc.canMove(G.DIRECTIONS[i])) {
                     stuck = false;
                 }
             }
@@ -134,7 +102,7 @@ public class Motion {
             }
             // move in a random direction but minimize making useless moves back to where
             // you came from
-            Direction direction = DIRECTIONS[G.rng.nextInt(DIRECTIONS.length)];
+            Direction direction = G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)];
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
@@ -146,8 +114,8 @@ public class Motion {
 
     public static void spreadRandomly() throws Exception {
         boolean stuck = true;
-        for (int i = DIRECTIONS.length; --i >= 0;) {
-            if (canMove(DIRECTIONS[i])) {
+        for (int i = G.DIRECTIONS.length; --i >= 0;) {
+            if (canMove(G.DIRECTIONS[i])) {
                 stuck = false;
             }
         }
@@ -169,7 +137,7 @@ public class Motion {
                     moveRandomly(); // occasionally move randomly to avoid getting stuck
                 } else if (G.rng.nextInt(20) == 1) {
                     // don't get stuck in corners
-                    lastRandomSpread = me.add(DIRECTIONS[G.rng.nextInt(DIRECTIONS.length)]);
+                    lastRandomSpread = me.add(G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)]);
                     moveRandomly();
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);

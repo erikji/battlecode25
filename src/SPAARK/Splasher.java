@@ -57,7 +57,7 @@ public class Splasher {
                         int score = 0;
                         for (int dir = 9; --dir >= 0;) {
                             // only care about sqrt(2) distance because bytecode restrictions
-                            MapLocation nxt = loc.add(Motion.ALL_DIRECTIONS[dir]);
+                            MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                             if (G.rc.canSenseLocation(nxt)) {
                                 PaintType paint = G.rc.senseMapInfo(nxt).getPaint();
                                 if (paint == PaintType.EMPTY)
