@@ -945,7 +945,7 @@ public class Motion {
                 if (G.DIRECTIONS[i] == d) {
                     score += 20;
                 } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                    score += 10;
+                    score += 16;
                 }
                 if (score > bestScore) {
                     best = G.DIRECTIONS[i];
