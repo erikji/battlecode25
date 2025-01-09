@@ -172,7 +172,8 @@ public class Soldier {
         }
     };
 
-    public static int predictTowerType(MapLocation m){
-        return (m.x^m.y)%6/3+1;
+    public static int predictTowerType(MapLocation xy){
+        Random rng = new Random(xy.x*0x67f176e2+xy.y);
+        return rng.nextInt(10)>3?2:1;
     }
 }

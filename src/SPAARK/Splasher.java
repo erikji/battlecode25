@@ -59,14 +59,17 @@ public class Splasher {
                             // only care about sqrt(2) distance because bytecode restrictions
                             MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                             if (G.rc.canSenseLocation(nxt)) {
-                                PaintType paint = G.rc.senseMapInfo(nxt).getPaint();
-                                if (paint == PaintType.EMPTY)
-                                    score++;
-                                if (paint.isEnemy())
-                                    score += 2; // bonus points for deleting opponent paint
-                                if (!paint.isAlly() && nxt == G.me) {
-                                    // bonus points for painting self
-                                    score++;
+                                MapInfo info = G.rc.senseMapInfo(loc);
+                                if (!info.isPassable()) {
+                                    PaintType paint = G.rc.senseMapInfo(nxt).getPaint();
+                                    if (paint == PaintType.EMPTY)
+                                        score++;
+                                    if (paint.isEnemy())
+                                        score += 2; // bonus points for deleting opponent paint
+                                    if (!paint.isAlly() && nxt == G.me) {
+                                        // bonus points for painting self
+                                        score++;
+                                    }
                                 }
                             }
                         }
