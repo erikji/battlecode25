@@ -41,21 +41,6 @@ public class POI {
     };
     public static boolean[] critical = new boolean[50];
 
-    public static void addTowers(int[] data) {
-        // IMPORTANT: make sure to call addTower right after tower is built
-        if (data[0] == -1)
-            return;
-        for (int i = 50, ind = 0; --i >= 0;) {
-            if (((towers[i] ^ data[ind]) & 0b111111111111) == 0 || towers[i] == -1) {
-                if (towers[i] != data[ind]) {
-                    towers[i] = data[ind++];
-                    robotsThatKnowInformation[i] = new StringBuilder("--1-");
-                    critical[i] = true;
-                }
-            }
-        }
-    }
-
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
         for (int i = 50; --i >= 0;) {
@@ -98,23 +83,20 @@ public class POI {
     // uses a ton of bytecode wtf?
     public static void updateInfo() throws Exception {
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
-
-        int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see that many
-        int ind = 0;
+        
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
                 if (info.team == G.opponentTeam) {
-                    towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]);
+                    addTower(-1, intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]));
                 } else {
-                    towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
+                    addTower(-1, intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]));
                 }
             } else {
-                towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
-                        | intifyLocation(nearbyRuins[i]);
+                addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
+                        | intifyLocation(nearbyRuins[i]));
             }
         }
-        addTowers(towersToAdd);
         for (int i = 50; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
