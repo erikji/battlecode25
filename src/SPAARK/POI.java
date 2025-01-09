@@ -14,11 +14,13 @@ public class POI {
     };
 
     // symmetry detection
+    // set bit if its a wall, ruin, or we explored it, and use bit operators to check symmetry
     public static long[] wall = new long[60];
     public static long[] ruin = new long[60];
+    public static long[] explored = new long[60];
     public static boolean[] symmetry = new boolean[] { true, true, true };
     public static boolean criticalSymmetry = false;
-    // 0: horz
+    // 0: horz (the line of symmetry is horizontal and parallel to the x axis)
     // 1: vert
     // 2: rot
 
@@ -113,14 +115,15 @@ public class POI {
         }
 
         for (int i = nearbyRuins.length; --i >= 0;) {
-            MapLocation xy = G.infos[i].getMapLocation();
+            MapLocation xy = nearbyRuins[i];
             ruin[xy.y] |= 1L << xy.x;
         }
         for (int i = G.infos.length; --i >= 0;) {
+            MapLocation xy = G.infos[i].getMapLocation();
             if (G.infos[i].isWall()) {
-                MapLocation xy = G.infos[i].getMapLocation();
                 wall[xy.y] |= 1L << xy.x;
             }
+            explored[xy.y] |= 1L << xy.x;
         }
         if (symmetry[0] && !symmetryValid(0)) {
             removeValidSymmetry(-1, 0);
@@ -141,25 +144,30 @@ public class POI {
         switch (sym) {
             case 0: // horz
                 for (int i = h / 2; --i >= 0;) {
-                    if ((wall[i] ^ wall[h - i - 1]) != 0)
+                    long exploredRow = explored[i] & explored[h - i - 1];
+                    if (((wall[i] ^ wall[h - i - 1]) & exploredRow) != 0) 
                         return false;
-                    if ((ruin[i] ^ ruin[h - i - 1]) != 0)
+                    if (((ruin[i] ^ ruin[h - i - 1]) & exploredRow) != 0){
                         return false;
+                    }
                 }
                 return true;
             case 1: // vert
                 for (int i = h; --i >= 0;) {
-                    if ((Long.reverse(wall[i]) << (64 - w)) != wall[i])
+                    long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[i];
+                    if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[i]) & exploredRow) != 0)
                         return false;
-                    if ((Long.reverse(ruin[i]) << (64 - w)) != ruin[i])
+                    if ((((Long.reverse(ruin[i]) << 64 - w) ^ ruin[i]) & exploredRow) != 0)
                         return false;
                 }
                 return true;
             case 2: // rot
                 for (int i = h / 2; --i >= 0;) {
-                    if (((Long.reverse(wall[i]) << (64 - w)) ^ wall[h - i - 1]) != 0)
+                    //only consider bits where we explored both it and its rotation
+                    long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[h - i - 1];
+                    if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
-                    if (((Long.reverse(ruin[i]) << (64 - w)) ^ ruin[h - i - 1]) != 0)
+                    if ((((Long.reverse(ruin[i]) << 64 - w) ^ ruin[h - i - 1]) & exploredRow) != 0)
                         return false;
                 }
                 return true;

@@ -29,7 +29,7 @@ public class Robot {
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         G.indicatorString.append("SYM="
-                + (POI.symmetry[0] ? "0" : "1") + (POI.symmetry[1] ? "0" : "1") + (POI.symmetry[2] ? "0 " : "1 "));
+                + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
     }
 
     public static int retreatTower = -1;
