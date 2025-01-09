@@ -4,7 +4,7 @@ import battlecode.common.*;
 import java.util.*;
 
 public class POI {
-    public static Team opponentTeam = G.rc.getTeam().opponent();
+    public static final boolean ENABLE_INDICATORS = false;
 
     // 50 towers
     // filled in backwards cuz for loop bytecode optimization
@@ -107,7 +107,7 @@ public class POI {
                 if (info.team == G.opponentTeam) {
                     towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) | intifyLocation(nearbyRuins[i]);
                 } else {
-                    towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]);
+                    towersToAdd[ind++] = intifyTower(G.team, info.getType()) | intifyLocation(nearbyRuins[i]);
                 }
             } else {
                 towersToAdd[ind++] = intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER)
@@ -115,20 +115,6 @@ public class POI {
             }
         }
         addTowers(towersToAdd);
-        for (int i = 50; --i >= 0;) {
-            if (towers[i] == -1) {
-                break;
-            }
-            // System.out.println(parseLocation(towers[i]));
-            try {
-                if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
-                } else {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
-                }
-            } catch (Exception e) {
-            }
-        }
 
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation xy = G.infos[i].getMapLocation();
@@ -385,4 +371,26 @@ public class POI {
 
     // for tower, recieve message = update stuff
     // also send most important stuff to nearby robots
+
+    public static void drawIndicators() {
+        if (ENABLE_INDICATORS) {
+            for (int i = 50; --i >= 0;) {
+                if (towers[i] == -1) {
+                    break;
+                }
+                // System.out.println(parseLocation(towers[i]));
+                try {
+                    Team t = parseTowerTeam(towers[i]);
+                    if (t == G.team) {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                    } else if (t == G.opponentTeam) {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
+                    } else {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 100);
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }

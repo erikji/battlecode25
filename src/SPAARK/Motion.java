@@ -151,10 +151,6 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                // try {
-                // G.rc.setIndicatorLine(me, target, 0, 0, 0);
-                // } catch (Exception e) {
-                // }
                 if (lastDir == me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
@@ -937,37 +933,35 @@ public class Motion {
         }
     }
 
-    public static Micro defaultMicro = new Micro() {
-        public int[] micro(Direction d, MapLocation dest) throws Exception {
-            Direction best = d;
-            int bestScore = Integer.MIN_VALUE;
-            int[] scores = new int[8];
-            for (int i = 8; --i >= 0;) {
-                if (!G.rc.canMove(G.DIRECTIONS[i])) {
-                    scores[i] = 0;
-                    continue;
-                }
-                int score = 0;
-                MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
-                MapInfo info = G.rc.senseMapInfo(nxt);
-                if (info.getPaint().isEnemy())
-                    score -= 10;
-                else if (info.getPaint() == PaintType.EMPTY)
-                    score -= 5;
-                if (G.DIRECTIONS[i] == d) {
-                    score += 20;
-                } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                    score += 16;
-                }
-                if (score > bestScore) {
-                    best = G.DIRECTIONS[i];
-                    bestScore = score;
-                }
-                scores[i] = score;
+    public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
+        Direction best = d;
+        int bestScore = Integer.MIN_VALUE;
+        int[] scores = new int[8];
+        for (int i = 8; --i >= 0;) {
+            if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                scores[i] = 0;
+                continue;
             }
-            Motion.move(best);
-            return scores;
+            int score = 0;
+            MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
+            MapInfo info = G.rc.senseMapInfo(nxt);
+            if (info.getPaint().isEnemy())
+                score -= 10;
+            else if (info.getPaint() == PaintType.EMPTY)
+                score -= 5;
+            if (G.DIRECTIONS[i] == d) {
+                score += 20;
+            } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
+                score += 16;
+            }
+            if (score > bestScore) {
+                best = G.DIRECTIONS[i];
+                bestScore = score;
+            }
+            scores[i] = score;
         }
+        Motion.move(best);
+        return scores;
     };
 
     public static boolean move(Direction dir) throws Exception {
