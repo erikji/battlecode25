@@ -9,6 +9,7 @@ public class G {
     public static RobotController rc;
     public static Random rng;
     public static MapLocation mapCenter;
+    public static Team team;
     public static Team opponentTeam;
 
     public static UnitType[] towerTypes = new UnitType[] {
