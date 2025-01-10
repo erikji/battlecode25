@@ -56,7 +56,7 @@ public class Soldier {
         }
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
-            case BUILD_TOWER -> buildTower();
+            case BUILD_TOWER -> buildTowerCheckMode();
             case BUILD_RESOURCE -> buildResourceCheckMode();
             case ATTACK -> attackCheckMode();
         }
@@ -99,7 +99,8 @@ public class Soldier {
         // make sure 5x5 square clear first
         clearCheck: for (int i = -3; ++i <= 2;) {
             for (int j = -3; ++j <= 2;) {
-                if (!G.rc.sensePassability(G.me.translate(j, i))) {
+                MapLocation loc = G.me.translate(j, i);
+                if (G.rc.onTheMap(loc) && !G.rc.sensePassability(loc)) {
                     canBuildSrpHere = false;
                     break clearCheck;
                 }
@@ -140,7 +141,7 @@ public class Soldier {
                     existingSoldiers++;
                 }
             }
-            if (existingSoldiers > 3) {
+            if (existingSoldiers > 4) {
                 mode = EXPLORE;
                 excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
                 ruinLocation = null;
@@ -241,6 +242,10 @@ public class Soldier {
                 }
             }
         }
+        // G.indicatorString.append(t);
+        // G.indicatorString.append(ruinLocation.toString());
+        // G.indicatorString.append(G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation));
+        // G.indicatorString.append(G.rc.getPaint());
         if (G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation) && G.rc.getPaint() > 50) {
             G.rc.completeTowerPattern(Robot.towers[t], ruinLocation);
             POI.addTower(-1,
@@ -250,10 +255,10 @@ public class Soldier {
             Motion.exploreRandomly();
         } else {
             Motion.bugnavAround(ruinLocation, 1, 2);
+            G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
@@ -283,10 +288,10 @@ public class Soldier {
             Motion.exploreRandomly();
         } else {
             Motion.bugnavAround(resourceLocation, 0, 2);
+            G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 200, 0);
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 200, 0);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 

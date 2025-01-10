@@ -148,7 +148,6 @@ public class Splasher {
                 if (bestScore > 4 && bestLoc != null) {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
-                // Motion.spreadRandomly();
                 Motion.exploreRandomly();
                 G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 break;

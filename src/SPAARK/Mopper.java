@@ -94,7 +94,7 @@ public class Mopper {
                 Motion.bugnavTowards(microDir);
             } else {
                 G.indicatorString.append("RAND ");
-                Motion.spreadRandomly();
+                Motion.exploreRandomly();
             }
         } else {
             if (bestBot != null)
@@ -146,7 +146,7 @@ public class Mopper {
                 } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                     mode = EXPLORE;
                     lastBuild = G.rc.getRoundNum();
-                    Motion.spreadRandomly();
+                    Motion.exploreRandomly();
                     G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
                     ruinLocation = null;
                 } else {
@@ -159,7 +159,7 @@ public class Mopper {
         } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
             mode = EXPLORE;
             lastBuild = G.rc.getRoundNum();
-            Motion.spreadRandomly();
+            Motion.exploreRandomly();
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;
         } else {
