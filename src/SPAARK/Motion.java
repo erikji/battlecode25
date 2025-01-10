@@ -7,6 +7,8 @@ import battlecode.common.MapLocation;
 import battlecode.common.PaintType;
 
 public class Motion {
+    public static final boolean ENABLE_EXPLORE_INDICATORS = false;
+
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
     public static final int AROUND = 2;
@@ -191,7 +193,8 @@ public class Motion {
                 exploreLoc = new MapLocation(G.rng.nextInt(G.rc.getMapWidth()), G.rng.nextInt(G.rc.getMapHeight()));
             }
             bugnavTowards(exploreLoc);
-            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+            if (ENABLE_EXPLORE_INDICATORS)
+                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
 
