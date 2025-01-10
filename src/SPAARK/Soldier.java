@@ -358,7 +358,11 @@ public class Soldier {
     };
 
     public static int predictTowerType(MapLocation xy) {
-        Random rng = new Random(xy.x * 0x67f176e2 + xy.y);
-        return rng.nextInt(10) > 5 ? 2 : 1;
+        switch (G.rc.getNumberTowers()) {
+            case 2:return 1;
+            case 3:return 2;
+            default:
+                return new Random(xy.x * 0x67f176e2 + xy.y).nextInt(10) > 5 ? 2 : 1;
+        }
     }
 }
