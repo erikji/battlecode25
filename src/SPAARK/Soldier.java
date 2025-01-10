@@ -45,8 +45,7 @@ public class Soldier {
     public static MapInfo[] nearbyMapInfos;
 
     /**
-     * General flow:
-     * 
+     * Always:
      * If low on paint, retreat
      * Default to explore mode
      * 

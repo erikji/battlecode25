@@ -10,6 +10,19 @@ public class Mopper {
     public static int mode = EXPLORE;
     public static int lastBuild = -10; // last time we are in BUILD mode to prevent
 
+    /**
+     * Always:
+     * If low on paint, retreat
+     * Default to explore mode
+     * 
+     * Explore:
+     * Run around randomly deleting enemy paint if it sees it
+     * If near a ruin, go to BUILD mode
+     * If mop swing works, do it
+     * 
+     * Build:
+     * Help soldiers mop enemy paint around ruins
+     */
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
