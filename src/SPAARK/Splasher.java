@@ -71,7 +71,10 @@ public class Splasher {
                 if (POI.towers[i] == -1) {
                     break;
                 }
-                if (POI.parseTowerTeam(POI.towers[i]) == G.rc.getTeam()) {
+                if (POI.parseTowerTeam(POI.towers[i]) == G.team) {
+                    continue;
+                }
+                if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() == 25) {
                     continue;
                 }
                 int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
