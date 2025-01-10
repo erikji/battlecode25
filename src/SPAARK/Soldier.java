@@ -17,15 +17,15 @@ public class Soldier {
     // allowed marker locations
     // fills entire vision range
     public static final boolean[][] allowedSrpMarkerLocations = new boolean[][] {
-            { false, false, false, false, false, true, false, false, false },
-            { false, false, false, false, false, false, true, false, false },
-            { false, true, false, false, false, false, false, false, false },
-            { true, false, false, false, false, false, false, false, false },
-            { false, false, false, false, false, false, false, false, false },
-            { false, false, false, false, false, false, false, false, true },
-            { false, false, false, false, false, false, false, true, false },
-            { false, false, true, false, false, false, false, false, false },
-            { false, false, false, true, false, false, false, false, false },
+            { false, false, false, true, false, true, false, false, false },
+            { false, false, true, false, true, false, true, false, false },
+            { false, true, false, false, false, false, false, true, false },
+            { true, false, false, false, false, false, false, false, true },
+            { false, true, false, false, false, false, false, true, false },
+            { true, false, false, false, false, false, false, false, true },
+            { false, true, false, false, false, false, false, true, false },
+            { false, false, true, false, true, false, true, false, false },
+            { false, false, false, true, false, true, false, false, false },
     };
 
     public static final int EXPLORE = 0;
@@ -244,15 +244,17 @@ public class Soldier {
         }
         // G.indicatorString.append(t);
         // G.indicatorString.append(ruinLocation.toString());
-        // G.indicatorString.append(G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation));
+        // G.indicatorString.append(G.rc.canCompleteTowerPattern(Robot.towers[t],
+        // ruinLocation));
         // G.indicatorString.append(G.rc.getPaint());
         if (G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation) && G.rc.getPaint() > 50) {
             G.rc.completeTowerPattern(Robot.towers[t], ruinLocation);
             POI.addTower(-1,
                     POI.intifyTower(G.team, Robot.towers[t]) | POI.intifyLocation(ruinLocation));
             mode = EXPLORE;
-            ruinLocation = null;
             Motion.exploreRandomly();
+            G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
+            ruinLocation = null;
         } else {
             Motion.bugnavAround(ruinLocation, 1, 2);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
@@ -284,11 +286,12 @@ public class Soldier {
         if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
             G.rc.completeResourcePattern(resourceLocation);
             mode = EXPLORE;
-            resourceLocation = null;
             Motion.exploreRandomly();
+            G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            resourceLocation = null;
         } else {
             Motion.bugnavAround(resourceLocation, 0, 2);
-            G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 200, 0);
+            G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
