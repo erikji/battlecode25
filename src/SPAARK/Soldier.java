@@ -103,7 +103,7 @@ public class Soldier {
         clearCheck: for (int i = -3; ++i <= 2;) {
             for (int j = -3; ++j <= 2;) {
                 MapLocation loc = G.me.translate(j, i);
-                if (G.rc.onTheMap(loc) && !G.rc.sensePassability(loc)) {
+                if (!G.rc.onTheMap(loc) || !G.rc.sensePassability(loc)) {
                     canBuildSrpHere = false;
                     break clearCheck;
                 }
