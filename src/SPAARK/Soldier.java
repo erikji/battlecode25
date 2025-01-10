@@ -207,7 +207,7 @@ public class Soldier {
                 }
             } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 2) && !G.me.isWithinDistanceSquared(pos, 20)) {
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)) {
                     for (int j = excludedRuins.length; --j >= 0;) {
                         if (excludedRuins[j] == invalidLoc)
                             continue;
@@ -215,7 +215,7 @@ public class Soldier {
                             continue searchTowers;
                         }
                     }
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * 2; //lol 
+                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; //lol 
                     bestLoc = pos;
                 }
             }
