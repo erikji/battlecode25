@@ -260,6 +260,8 @@ public class POI {
             for (int j = G.allyRobots.length; --j >= 0;) {
                 RobotInfo r = G.allyRobots[(j + shift) % G.allyRobots.length];
                 while (G.rc.canSendMessage(r.getLocation())) {
+                    if (Clock.getBytecodesLeft() < 3000)
+                        return;
                     int message = -1;
                     int messages = 0;
                     if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID() + ":")) {
@@ -284,8 +286,6 @@ public class POI {
                         break;
                     }
                     G.rc.sendMessage(r.getLocation(), message);
-                    if (Clock.getBytecodesLeft() < 3000)
-                        return;
                 }
             }
         } else {
