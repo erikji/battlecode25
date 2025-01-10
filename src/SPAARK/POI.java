@@ -148,30 +148,8 @@ public class POI {
         // }
         // }
         // addTowers(towersToAdd);
-        for (int i = 144; --i >= 0;) {
-            if (towers[i] == -1) {
-                break;
-            }
-            // System.out.println(parseLocation(towers[i]));
-            // G.indicatorString.append(i + " ");
-            try {
-                if (parseTowerTeam(towers[i]) == G.team) {
-                    if (parseTowerType(towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 255, 0);
-                    }
-                    else {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 125, 0);
-                    }
-                }
-                else if (parseTowerTeam(towers[i]) == G.opponentTeam) {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 255, 0, 0);
-                }
-                else {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 255);
-                }
-            } catch (Exception e) {
-            }
-        }
+
+        drawIndicators();
 
         // update symmetry array
         for (int i = nearbyRuins.length; --i >= 0;) {
@@ -462,14 +440,18 @@ public class POI {
                     break;
                 }
                 // System.out.println(parseLocation(towers[i]));
+                // G.indicatorString.append(i + " ");
                 try {
-                    Team t = parseTowerTeam(towers[i]);
-                    if (t == G.team) {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
-                    } else if (t == G.opponentTeam) {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
+                    if (parseTowerTeam(towers[i]) == G.team) {
+                        if (parseTowerType(towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER) {
+                            G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                        } else {
+                            G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
+                        }
+                    } else if (parseTowerTeam(towers[i]) == G.opponentTeam) {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
                     } else {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 100);
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
                     }
                 } catch (Exception e) {
                 }
