@@ -1,9 +1,6 @@
 package SPAARK;
 
 import battlecode.common.*;
-import scala.collection.mutable.Map;
-
-import java.util.*;
 
 public class POI {
     public static final boolean ENABLE_INDICATORS = false;

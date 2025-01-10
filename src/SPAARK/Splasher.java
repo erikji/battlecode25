@@ -2,8 +2,6 @@ package SPAARK;
 
 import battlecode.common.*;
 
-import java.util.*;
-
 public class Splasher {
     public static final int EXPLORE = 0;
     public static final int ATTACK = 1;
@@ -127,6 +125,7 @@ public class Splasher {
                 }
                 // Motion.spreadRandomly();
                 Motion.exploreRandomly();
+                G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 break;
             case ATTACK:
                 G.indicatorString.append("ATTACK ");
@@ -166,6 +165,7 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.bugnavTowards(attackTarget);
+                G.rc.setIndicatorDot(G.me, 255, 0, 0);
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
