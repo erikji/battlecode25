@@ -122,29 +122,28 @@ public class Motion {
             return;
         }
         if (G.rc.isMovementReady()) {
-            MapLocation me = G.rc.getLocation();
-            MapLocation target = me;
+            MapLocation target = G.me;
             for (int i = G.allyRobots.length; --i >= 0;) {
+                // ignore towers
                 if (!G.allyRobots[i].type.isRobotType())
-                    // ignore towers
-                    target = target.subtract(me.directionTo(G.allyRobots[i].getLocation()));
+                    target = target.subtract(G.me.directionTo(G.allyRobots[i].getLocation()));
             }
             for (int i = 8; --i >= 0;) {
                 if (!G.rc.canMove(G.DIRECTIONS[i])) {
                     target = target.subtract(G.DIRECTIONS[i]);
                 }
             }
-            if (target.equals(me)) {
+            if (target.equals(G.me)) {
                 // just keep moving in the same direction as before if there's no robots nearby
                 if (G.rc.getRoundNum() % 3 == 0 || lastRandomSpread == null) {
                     moveRandomly(); // occasionally move randomly to avoid getting stuck
                 } else if (G.rng.nextInt(20) == 1) {
                     // don't get stuck in corners
-                    lastRandomSpread = me.add(G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)]);
+                    lastRandomSpread = G.me.add(G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)]);
                     moveRandomly();
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
-                    Direction direction = me.directionTo(target);
+                    Direction direction = G.me.directionTo(target);
                     if (move(direction)) {
                         lastRandomSpread = lastRandomSpread.add(direction);
                         lastRandomDir = direction;
@@ -155,10 +154,10 @@ public class Motion {
                 lastDir = Direction.CENTER;
                 optimalDir = Direction.CENTER;
             } else {
-                if (lastDir == me.directionTo(target)) {
+                if (lastDir == G.me.directionTo(target)) {
                     lastDir = Direction.CENTER;
                 }
-                Direction direction = bug2Helper(me, target, TOWARDS, 0, 0);
+                Direction direction = bug2Helper(G.me, target, TOWARDS, 0, 0);
                 if (move(direction)) {
                     lastRandomSpread = target;
                     lastRandomDir = direction;
@@ -168,6 +167,7 @@ public class Motion {
     }
 
     public static MapLocation exploreLoc;
+
     public static void exploreRandomly() throws Exception {
         if (G.rc.isMovementReady()) {
             if (exploreLoc != null) {
@@ -177,6 +177,15 @@ public class Motion {
                 if (G.rng.nextInt(25) == 0) {
                     exploreLoc = null;
                 }
+            }
+            // don't explore in direction of a lot of allied bots
+            MapLocation otherBots = G.me;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
+            }
+            if (!G.me.isWithinDistanceSquared(otherBots, 36)
+                    && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+                exploreLoc = null;
             }
             if (exploreLoc == null) {
                 exploreLoc = new MapLocation(G.rng.nextInt(G.rc.getMapWidth()), G.rng.nextInt(G.rc.getMapHeight()));
@@ -771,36 +780,34 @@ public class Motion {
     }
 
     public static Direction getBfsDirection(MapLocation dest) throws Exception {
-        MapLocation me = G.rc.getLocation();
-
         boolean[] directions = new boolean[9];
         for (int i = 1; i < step; i++) {
-            if (((bfsDist[i * (height + 2) + 1 + me.y] >> me.x) & 1) == 1) {
-                if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y - 1] >> me.x) & 1) == 1) {
+            if (((bfsDist[i * (height + 2) + 1 + G.me.y] >> G.me.x) & 1) == 1) {
+                if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y - 1] >> G.me.x) & 1) == 1) {
                     directions[7] = true;
                 }
-                if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y + 1] >> me.x) & 1) == 1) {
+                if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y + 1] >> G.me.x) & 1) == 1) {
                     directions[3] = true;
                 }
-                if (me.x > 0) {
-                    if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y] >> (me.x - 1)) & 1) == 1) {
+                if (G.me.x > 0) {
+                    if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y] >> (G.me.x - 1)) & 1) == 1) {
                         directions[1] = true;
                     }
-                    if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y - 1] >> (me.x - 1)) & 1) == 1) {
+                    if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y - 1] >> (G.me.x - 1)) & 1) == 1) {
                         directions[8] = true;
                     }
-                    if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y + 1] >> (me.x - 1)) & 1) == 1) {
+                    if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y + 1] >> (G.me.x - 1)) & 1) == 1) {
                         directions[2] = true;
                     }
                 }
-                if (me.x < width - 1) {
-                    if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y] >> (me.x + 1)) & 1) == 1) {
+                if (G.me.x < width - 1) {
+                    if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y] >> (G.me.x + 1)) & 1) == 1) {
                         directions[5] = true;
                     }
-                    if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y - 1] >> (me.x + 1)) & 1) == 1) {
+                    if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y - 1] >> (G.me.x + 1)) & 1) == 1) {
                         directions[6] = true;
                     }
-                    if (((bfsDist[(i - 1) * (height + 2) + 1 + me.y + 1] >> (me.x + 1)) & 1) == 1) {
+                    if (((bfsDist[(i - 1) * (height + 2) + 1 + G.me.y + 1] >> (G.me.x + 1)) & 1) == 1) {
                         directions[4] = true;
                     }
                 }
@@ -814,9 +821,9 @@ public class Motion {
             if (directions[i]) {
                 Direction dir = Direction.DIRECTION_ORDER[i];
                 if (G.rc.canMove(dir)) {
-                    if (me.add(dir).distanceSquaredTo(dest) < minDist) {
+                    if (G.me.add(dir).distanceSquaredTo(dest) < minDist) {
                         optimalDirection = dir;
-                        minDist = me.add(dir).distanceSquaredTo(dest);
+                        minDist = G.me.add(dir).distanceSquaredTo(dest);
                     }
                 }
             }
@@ -825,7 +832,7 @@ public class Motion {
             return optimalDirection;
         }
         if (optimalDirection == Direction.CENTER) {
-            optimalDirection = bug2Helper(me, dest, TOWARDS, 0, 0);
+            optimalDirection = bug2Helper(G.me, dest, TOWARDS, 0, 0);
             G.indicatorString.append("BFS-BUG ");
 
             if (canMove(optimalDirection)) {
@@ -901,7 +908,7 @@ public class Motion {
         return scores;
     };
 
-    //false if it didn't move
+    // false if it didn't move
     public static boolean move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);

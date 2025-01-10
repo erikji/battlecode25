@@ -101,7 +101,7 @@ public class Soldier {
             }
         }
         if (bestLoc == null) {
-            Motion.spreadRandomly();
+            Motion.exploreRandomly();
         } else {
             Motion.bugnavTowards(bestLoc);
             G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
