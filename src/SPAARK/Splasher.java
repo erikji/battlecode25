@@ -140,7 +140,7 @@ public class Splasher {
                             bestLoc = loc;
                             bestScore = score;
                         }
-                        if (Clock.getBytecodesLeft() < 2000) {
+                        if (Clock.getBytecodesLeft() < 2500) {
                             break;
                         }
                     }
@@ -184,7 +184,7 @@ public class Splasher {
                             bestLoc = loc;
                             bestScore = score;
                         }
-                        if (Clock.getBytecodesLeft() < 2000) {
+                        if (Clock.getBytecodesLeft() < 2500) {
                             break;
                         }
                     }
