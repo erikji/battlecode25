@@ -8,10 +8,9 @@ public class Soldier {
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
-    public static final MapLocation invalidLoc = new MapLocation(-1, -1);
     // if already lots of soldiers near a ruin that needs to be built
-    public static MapLocation[] excludedRuins = new MapLocation[] { invalidLoc, invalidLoc, invalidLoc, invalidLoc,
-            invalidLoc, invalidLoc, invalidLoc, invalidLoc, invalidLoc, invalidLoc };
+    public static MapLocation[] excludedRuins = new MapLocation[] { G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc,
+            G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc };
     public static int excludedRuinIndex = 0; // rotating exclusion list
 
     // allowed marker locations
@@ -38,16 +37,16 @@ public class Soldier {
     public static void run() throws Exception {
         // occasionally clear excluded build ruins
         if (G.rc.getRoundNum() % 50 == 0) {
-            excludedRuins[0] = invalidLoc;
-            excludedRuins[1] = invalidLoc;
-            excludedRuins[2] = invalidLoc;
-            excludedRuins[3] = invalidLoc;
-            excludedRuins[4] = invalidLoc;
-            excludedRuins[5] = invalidLoc;
-            excludedRuins[6] = invalidLoc;
-            excludedRuins[7] = invalidLoc;
-            excludedRuins[8] = invalidLoc;
-            excludedRuins[9] = invalidLoc;
+            excludedRuins[0] = G.invalidLoc;
+            excludedRuins[1] = G.invalidLoc;
+            excludedRuins[2] = G.invalidLoc;
+            excludedRuins[3] = G.invalidLoc;
+            excludedRuins[4] = G.invalidLoc;
+            excludedRuins[5] = G.invalidLoc;
+            excludedRuins[6] = G.invalidLoc;
+            excludedRuins[7] = G.invalidLoc;
+            excludedRuins[8] = G.invalidLoc;
+            excludedRuins[9] = G.invalidLoc;
         }
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
@@ -185,7 +184,7 @@ public class Soldier {
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
-        // find towers to attack out of vision, doesn't switch modes
+        // find towers to attack/build out of vision
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
         searchTowers: for (int i = 144; --i >= 0;) {
@@ -196,7 +195,7 @@ public class Soldier {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)) {
                     for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == invalidLoc)
+                        if (excludedRuins[j] == G.invalidLoc)
                             continue;
                         if (pos.equals(excludedRuins[j])) {
                             continue searchTowers;
@@ -207,9 +206,10 @@ public class Soldier {
                 }
             } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
+                //prioritize opponent towers more than neutral towers, so it has to be REALLY close
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)) {
                     for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == invalidLoc)
+                        if (excludedRuins[j] == G.invalidLoc)
                             continue;
                         if (pos.equals(excludedRuins[j])) {
                             continue searchTowers;

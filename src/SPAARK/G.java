@@ -52,6 +52,7 @@ public class G {
             Direction.NORTHEAST,
             Direction.CENTER,
     };
+    public static final MapLocation invalidLoc = new MapLocation(-1, -1);
 
     // stuff that changes
     public static StringBuilder indicatorString;
