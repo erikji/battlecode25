@@ -101,7 +101,6 @@ public class Soldier {
             for (int j = -3; ++j <= 2;) {
                 if (!G.rc.sensePassability(G.me.translate(j, i))) {
                     canBuildSrpHere = false;
-                    G.indicatorString.append("BORK ");
                     break clearCheck;
                 }
             }
@@ -287,7 +286,7 @@ public class Soldier {
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
+        G.rc.setIndicatorLine(G.rc.getLocation(), paintLocation, 255, 200, 0);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
