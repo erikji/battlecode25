@@ -7,6 +7,9 @@ public class Splasher {
     public static final int ATTACK = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
+    // if already lots of soldiers near a ruin that needs to be built
+    public static MapLocation[] excludedRuins = new MapLocation[] { G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc,
+            G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc };
 
     // every tile in attack range
     public static MapLocation[] attackRange = new MapLocation[] {
@@ -97,6 +100,18 @@ public class Splasher {
     }
 
     public static void run() throws Exception {
+        if (G.rc.getRoundNum() % 50 == 0) {
+            excludedRuins[0] = G.invalidLoc;
+            excludedRuins[1] = G.invalidLoc;
+            excludedRuins[2] = G.invalidLoc;
+            excludedRuins[3] = G.invalidLoc;
+            excludedRuins[4] = G.invalidLoc;
+            excludedRuins[5] = G.invalidLoc;
+            excludedRuins[6] = G.invalidLoc;
+            excludedRuins[7] = G.invalidLoc;
+            excludedRuins[8] = G.invalidLoc;
+            excludedRuins[9] = G.invalidLoc;
+        }
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
@@ -140,7 +155,7 @@ public class Splasher {
                             bestLoc = loc;
                             bestScore = score;
                         }
-                        if (Clock.getBytecodesLeft() < 2000) {
+                        if (Clock.getBytecodesLeft() < 3500) {
                             break;
                         }
                     }
@@ -148,7 +163,47 @@ public class Splasher {
                 if (bestScore > 4 && bestLoc != null) {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
-                Motion.exploreRandomly();
+                bestLoc = null;
+                int bestDistanceSquared = 10000;
+                searchTowers: for (int i = 144; --i >= 0;) {
+                    if (POI.towers[i] == -1) {
+                        break;
+                    }
+                    if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                        MapLocation pos = POI.parseLocation(POI.towers[i]);
+                        if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)) {
+                            // for (int j = excludedRuins.length; --j >= 0;) {
+                            //     if (excludedRuins[j] == G.invalidLoc)
+                            //         continue;
+                            //     if (pos.equals(excludedRuins[j])) {
+                            //         continue searchTowers;
+                            //     }
+                            // }
+                            bestDistanceSquared = G.me.distanceSquaredTo(pos);
+                            bestLoc = pos;
+                        }
+                    } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+                        MapLocation pos = POI.parseLocation(POI.towers[i]);
+                        //prioritize opponent towers more than neutral towers, so it has to be REALLY close
+                        if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)) {
+                            // for (int j = excludedRuins.length; --j >= 0;) {
+                            //     if (excludedRuins[j] == G.invalidLoc)
+                            //         continue;
+                            //     if (pos.equals(excludedRuins[j])) {
+                            //         continue searchTowers;
+                            //     }
+                            // }
+                            bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; //lol 
+                            bestLoc = pos;
+                        }
+                    }
+                }
+                if (bestLoc == null) {
+                    Motion.exploreRandomly();
+                } else {
+                    Motion.bugnavTowards(bestLoc);
+                    G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+                }
                 G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 break;
             case ATTACK:
@@ -184,7 +239,7 @@ public class Splasher {
                             bestLoc = loc;
                             bestScore = score;
                         }
-                        if (Clock.getBytecodesLeft() < 2000) {
+                        if (Clock.getBytecodesLeft() < 2500) {
                             break;
                         }
                     }

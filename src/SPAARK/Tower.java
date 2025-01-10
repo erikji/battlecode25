@@ -43,7 +43,7 @@ public class Tower {
                     break;
                 }
             }
-        } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
+        } else {
             switch (spawnedRobots % 5) {
                 // make sure to subtract 2
                 case 0:

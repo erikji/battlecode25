@@ -283,7 +283,7 @@ public class POI {
                         }
                     }
                 }
-                if (Clock.getBytecodesLeft() < 3000)
+                if (Clock.getBytecodesLeft() < 2000)
                     break;
             }
         }
