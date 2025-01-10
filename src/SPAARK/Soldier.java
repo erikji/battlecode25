@@ -92,23 +92,24 @@ public class Soldier {
             }
         }
         // search for SRP markers
-
+        // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
         // see if SRP on current square is possible
         boolean canBuildSrpHere = true;
         // definitely can try more spots but also bytecode limits
         // make sure 5x5 square clear first
-        for (int i = -3; ++i <= 2;) {
+        clearCheck: for (int i = -3; ++i <= 2;) {
             for (int j = -3; ++j <= 2;) {
-                if (!G.rc.canMark(G.me.translate(j, i))) {
+                if (!G.rc.sensePassability(G.me.translate(j, i))) {
                     canBuildSrpHere = false;
-                    break;
+                    G.indicatorString.append("BORK ");
+                    break clearCheck;
                 }
             }
         }
         MapInfo[] infos = G.rc.senseNearbyMapInfos();
         for (int i = infos.length; --i >= 0;) {
             // can't have markers without spots but can have spots without markers
-            if ((infos[i].getMark() == PaintType.ALLY_PRIMARY)) {
+            if ((infos[i].getMark() == PaintType.ALLY_SECONDARY)) {
                 MapLocation loc = infos[i].getMapLocation();
                 if (!allowedSrpMarkerLocations[loc.y - G.me.y + 4][loc.x - G.me.x + 4]) {
                     // try shifting the pattern? very complicated and lots of code, not worth it
@@ -157,21 +158,22 @@ public class Soldier {
 
     public static void buildResourceCheckMode() throws Exception {
         // if lots of soldiers nearby or resource pattern already built leave
-        if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
-            // don't leave the tower if you're close to the tower
-            int existingSoldiers = 0;
-            for (int i = G.allyRobots.length; --i >= 0;) {
-                if (G.allyRobots[i].type == UnitType.SOLDIER
-                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
-                    existingSoldiers++;
-                }
-            }
-            if (existingSoldiers > 3) {
-                mode = EXPLORE;
-                excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
-                ruinLocation = null;
-            }
-        }
+        // if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
+        // // don't leave the tower if you're close to the tower
+        // int existingSoldiers = 0;
+        // for (int i = G.allyRobots.length; --i >= 0;) {
+        // if (G.allyRobots[i].type == UnitType.SOLDIER
+        // && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
+        // existingSoldiers++;
+        // }
+        // }
+        // if (existingSoldiers > 3) {
+        // mode = EXPLORE;
+        // excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) %
+        // excludedRuins.length] = ruinLocation;
+        // ruinLocation = null;
+        // }
+        // }
         // REMOVE MARKERS IF SRP IS INTERFERING
     }
 
