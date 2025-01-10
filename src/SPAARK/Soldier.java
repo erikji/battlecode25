@@ -14,6 +14,20 @@ public class Soldier {
             invalidLoc, invalidLoc, invalidLoc, invalidLoc, invalidLoc, invalidLoc };
     public static int excludedRuinIndex = 0; // rotating exclusion list
 
+    // allowed marker locations
+    // fills entire vision range
+    public static final boolean[][] allowedSrpMarkerLocations = new boolean[][] {
+            { false, false, false, false, false, true, false, false, false },
+            { false, false, false, false, false, false, true, false, false },
+            { false, true, false, false, false, false, false, false, false },
+            { true, false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false, true },
+            { false, false, false, false, false, false, false, true, false },
+            { false, false, true, false, false, false, false, false, false },
+            { false, false, false, true, false, false, false, false, false },
+    };
+
     public static final int EXPLORE = 0;
     public static final int BUILD_TOWER = 1;
     public static final int BUILD_RESOURCE = 2;
@@ -40,14 +54,16 @@ public class Soldier {
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
             mode = EXPLORE;
         }
-        runMode();
-    }
-
-    public static void runMode() throws Exception {
+        switch (mode) {
+            case EXPLORE -> exploreCheckMode();
+            case BUILD_TOWER -> buildTower();
+            case BUILD_RESOURCE -> buildResourceCheckMode();
+            case ATTACK -> attackCheckMode();
+        }
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD_TOWER -> buildTower();
-            // case BUILD_RESOURCE -> buildResource();
+            case BUILD_RESOURCE -> buildResource();
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
@@ -56,8 +72,7 @@ public class Soldier {
         }
     }
 
-    public static void explore() throws Exception {
-        G.indicatorString.append("EXPLORE ");
+    public static void exploreCheckMode() throws Exception {
         // switch modes if seeing towers/ruins
         MapLocation[] locs = G.rc.senseNearbyRuins(-1);
         for (int i = locs.length; --i >= 0;) {
@@ -68,16 +83,104 @@ public class Soldier {
                     towerLocation = locs[i];
                     towerType = bot.type;
                     mode = ATTACK;
-                    runMode();
-                    break;
+                    return;
                 }
             } else if (G.rc.getNumberTowers() < 25) {
                 ruinLocation = locs[i];
                 mode = BUILD_TOWER;
-                runMode();
-                break;
+                return;
             }
         }
+        // search for SRP markers
+
+        // see if SRP on current square is possible
+        boolean canBuildSrpHere = true;
+        // definitely can try more spots but also bytecode limits
+        // make sure 5x5 square clear first
+        for (int i = -3; ++i <= 2;) {
+            for (int j = -3; ++j <= 2;) {
+                if (!G.rc.canMark(G.me.translate(j, i))) {
+                    canBuildSrpHere = false;
+                    break;
+                }
+            }
+        }
+        MapInfo[] infos = G.rc.senseNearbyMapInfos();
+        for (int i = infos.length; --i >= 0;) {
+            // can't have markers without spots but can have spots without markers
+            if ((infos[i].getMark() == PaintType.ALLY_PRIMARY)) {
+                MapLocation loc = infos[i].getMapLocation();
+                if (!allowedSrpMarkerLocations[loc.y - G.me.y + 4][loc.x - G.me.x + 4]) {
+                    // try shifting the pattern? very complicated and lots of code, not worth it
+                    canBuildSrpHere = false;
+                    break;
+                }
+            }
+        }
+        if (canBuildSrpHere) {
+            // place markers
+            resourceLocation = G.me;
+            G.rc.mark(G.me.add(Direction.NORTH), true);
+            G.rc.mark(G.me.add(Direction.EAST), true);
+            G.rc.mark(G.me.add(Direction.SOUTH), true);
+            G.rc.mark(G.me.add(Direction.WEST), true);
+            G.indicatorString.append("MK_SRP ");
+            mode = BUILD_RESOURCE;
+        }
+    }
+
+    public static void buildTowerCheckMode() throws Exception {
+        // if lots of soldiers nearby or tower already built leave build tower mode
+        if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
+            // don't leave the tower if you're close to the tower
+            int existingSoldiers = 0;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (G.allyRobots[i].type == UnitType.SOLDIER
+                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
+                    existingSoldiers++;
+                }
+            }
+            if (existingSoldiers > 3) {
+                mode = EXPLORE;
+                excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
+                ruinLocation = null;
+                return;
+            }
+        }
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
+                || G.rc.getNumberTowers() == 25) {
+            mode = EXPLORE;
+            excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
+            ruinLocation = null;
+        }
+    }
+
+    public static void buildResourceCheckMode() throws Exception {
+        // if lots of soldiers nearby or resource pattern already built leave
+        if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
+            // don't leave the tower if you're close to the tower
+            int existingSoldiers = 0;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (G.allyRobots[i].type == UnitType.SOLDIER
+                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
+                    existingSoldiers++;
+                }
+            }
+            if (existingSoldiers > 3) {
+                mode = EXPLORE;
+                excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
+                ruinLocation = null;
+            }
+        }
+        // REMOVE MARKERS IF SRP IS INTERFERING
+    }
+
+    public static void attackCheckMode() throws Exception {
+        // nothing for now
+    }
+
+    public static void explore() throws Exception {
+        G.indicatorString.append("EXPLORE ");
         // find towers to attack out of vision, doesn't switch modes
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
@@ -111,71 +214,79 @@ public class Soldier {
         if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
             G.rc.attack(G.me);
         }
-        // see if possible to build resource pattern here (or nearby)
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void buildTower() throws Exception {
-        G.indicatorString.append("BUILD_T ");
-        // if lots of soldiers nearby or tower already built leave build tower mode
-        if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
-            // don't leave the tower if you're close to the tower
-            int existingSoldiers = 0;
-            for (int i = G.allyRobots.length; --i >= 0;) {
-                if (G.allyRobots[i].type == UnitType.SOLDIER
-                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
-                    existingSoldiers++;
-                }
-            }
-            if (existingSoldiers > 3) {
-                mode = EXPLORE;
-                excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
-                ruinLocation = null;
-                runMode();
-            }
-        }
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
-            mode = EXPLORE;
-            excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
-            ruinLocation = null;
-            runMode();
-        } else {
-            MapInfo[] infos = G.rc.senseNearbyMapInfos(UnitType.SOLDIER.actionRadiusSquared);
-            MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-            for (int i = infos.length; --i >= 0;) {
-                if (G.me.isWithinDistanceSquared(infos[i].getMapLocation(),
-                        UnitType.SOLDIER.actionRadiusSquared)
-                        && infos[i].getMapLocation().isWithinDistanceSquared(ruinLocation, 8)) {
-                    int dx = infos[i].getMapLocation().x - ruinLocation.x + 2;
-                    int dy = infos[i].getMapLocation().y - ruinLocation.y + 2;
-                    if (dx != 2 || dy != 2) {
-                        boolean paint = Robot.towerPatterns[predictTowerType(ruinLocation)][dx][dy];
-                        if (G.rc.canAttack(infos[i].getMapLocation()) && (infos[i].getPaint() == PaintType.EMPTY
-                                || infos[i].getPaint() == (paint ? PaintType.ALLY_PRIMARY
-                                        : PaintType.ALLY_SECONDARY))) {
-                            G.rc.attack(infos[i].getMapLocation(), paint);
-                            paintLocation = infos[i].getMapLocation();
-                            break;
-                        }
+        G.indicatorString.append("BUILD_TW ");
+        MapInfo[] infos = G.rc.senseNearbyMapInfos(UnitType.SOLDIER.actionRadiusSquared);
+        int t = predictTowerType(ruinLocation);
+        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        for (int i = infos.length; --i >= 0;) {
+            MapLocation loc = infos[i].getMapLocation();
+            if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
+                    && loc.isWithinDistanceSquared(ruinLocation, 8)) {
+                int dx = loc.x - ruinLocation.x + 2;
+                int dy = loc.y - ruinLocation.y + 2;
+                if (dx != 2 || dy != 2) {
+                    boolean paint = Robot.towerPatterns[t][dx][dy];
+                    PaintType exist = infos[i].getPaint();
+                    if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
+                            || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
+                        G.rc.attack(loc, paint);
+                        paintLocation = loc;
+                        break;
                     }
                 }
             }
-            int t = predictTowerType(ruinLocation);
-            if (G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation) && G.rc.getPaint() > 50) {
-                G.rc.completeTowerPattern(Robot.towers[t], ruinLocation);
-                POI.addTower(-1,
-                        POI.intifyTower(G.team, Robot.towers[t]) | POI.intifyLocation(ruinLocation));
-                mode = EXPLORE;
-                ruinLocation = null;
-                Motion.bugnavTowards(G.mapCenter);
-            } else {
-                Motion.bugnavAround(ruinLocation, 1, 2);
-            }
-            if (paintLocation != null)
-                G.rc.setIndicatorLine(G.me, paintLocation, 0, 255, 255);
         }
-        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
+        if (G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation) && G.rc.getPaint() > 50) {
+            G.rc.completeTowerPattern(Robot.towers[t], ruinLocation);
+            POI.addTower(-1,
+                    POI.intifyTower(G.team, Robot.towers[t]) | POI.intifyLocation(ruinLocation));
+            mode = EXPLORE;
+            ruinLocation = null;
+            Motion.exploreRandomly();
+        } else {
+            Motion.bugnavAround(ruinLocation, 1, 2);
+        }
+        if (paintLocation != null)
+            G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
+    }
+
+    public static void buildResource() throws Exception {
+        G.indicatorString.append("BUILD_RP ");
+        // MUCH IS IDENTICAL TO TOWER BUILD CODE
+        MapInfo[] infos = G.rc.senseNearbyMapInfos(UnitType.SOLDIER.actionRadiusSquared);
+        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        for (int i = infos.length; --i >= 0;) {
+            MapLocation loc = infos[i].getMapLocation();
+            if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
+                    && loc.isWithinDistanceSquared(resourceLocation, 8)) {
+                boolean paint = Robot.resourcePattern[loc.x - resourceLocation.x + 2][loc.y - resourceLocation.y + 2];
+                PaintType exist = infos[i].getPaint();
+                if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
+                        || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
+                    G.rc.attack(loc, paint);
+                    paintLocation = loc;
+                    break;
+                }
+            }
+        }
+        if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
+            G.rc.completeResourcePattern(resourceLocation);
+            mode = EXPLORE;
+            resourceLocation = null;
+            Motion.exploreRandomly();
+        } else {
+            Motion.bugnavAround(resourceLocation, 0, 2);
+        }
+        if (paintLocation != null)
+            G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
+        G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void attack() throws Exception {
@@ -205,13 +316,15 @@ public class Soldier {
             int[] scores = Motion.defaultMicro.micro(d, dest);
             if (G.rc.isActionReady()) {
                 for (int i = 8; --i >= 0;) {
-                    if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation, G.rc.getType().actionRadiusSquared)) {
+                    if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
+                            G.rc.getType().actionRadiusSquared)) {
                         scores[i] += 40;
                     }
                 }
             } else {
                 for (int i = 8; --i >= 0;) {
-                    if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation, towerType.actionRadiusSquared)) {
+                    if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
+                            towerType.actionRadiusSquared)) {
                         scores[i] += 40;
                     }
                 }

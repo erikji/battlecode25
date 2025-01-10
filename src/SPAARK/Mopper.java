@@ -16,10 +16,10 @@ public class Mopper {
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
-        runMode();
-    }
-
-    public static void runMode() throws Exception {
+        switch (mode) {
+            case EXPLORE -> exploreCheckMode();
+            case BUILD -> buildCheckMode();
+        }
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD -> build();
@@ -30,8 +30,7 @@ public class Mopper {
         }
     }
 
-    public static void explore() throws Exception {
-        G.indicatorString.append("EXPLORE ");
+    public static void exploreCheckMode() throws Exception {
         // make sure not stuck between exploring and building
         if (lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
@@ -41,10 +40,21 @@ public class Mopper {
                 }
                 ruinLocation = loc;
                 mode = BUILD;
-                runMode();
                 break;
             }
         }
+    }
+
+    public static void buildCheckMode() throws Exception {
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
+                || G.rc.getNumberTowers() == 25) {
+            mode = EXPLORE;
+            ruinLocation = null;
+        }
+    }
+
+    public static void explore() throws Exception {
+        G.indicatorString.append("EXPLORE ");
         mopSwingWithMicro();
         MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
         // will try to unpaint squares under opponent bots
@@ -108,58 +118,52 @@ public class Mopper {
         // TODO: FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
-                || G.rc.getNumberTowers() == 25) {
+        MapInfo[] infos = G.rc.senseNearbyMapInfos();
+        MapLocation bestLoc = null;
+        MapLocation bestLoc2 = null;
+        int bestDistanceSquared = 10000;
+        int bestDistanceSquared2 = 10001;
+        for (MapInfo info : infos) {
+            if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && info.getPaint().isEnemy()) {
+                int distanceSquared = info.getMapLocation().distanceSquaredTo(G.me);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared2 = bestDistanceSquared;
+                    bestLoc2 = bestLoc;
+                    bestDistanceSquared = distanceSquared;
+                    bestLoc = info.getMapLocation();
+                } else if (distanceSquared < bestDistanceSquared2) {
+                    bestDistanceSquared2 = distanceSquared;
+                    bestLoc2 = info.getMapLocation();
+                }
+            }
+        }
+        if (bestLoc != null) {
+            if (G.rc.canAttack(bestLoc)) {
+                G.rc.attack(bestLoc);
+                if (bestLoc2 != null) {
+                    Motion.bugnavTowards(bestLoc2);
+                    G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
+                } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
+                    mode = EXPLORE;
+                    lastBuild = G.rc.getRoundNum();
+                    Motion.spreadRandomly();
+                    G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+                    ruinLocation = null;
+                } else {
+                    Motion.bugnavTowards(ruinLocation);
+                }
+            } else {
+                Motion.bugnavTowards(bestLoc);
+            }
+            G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
+        } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
             mode = EXPLORE;
+            lastBuild = G.rc.getRoundNum();
+            Motion.spreadRandomly();
+            G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;
         } else {
-            MapInfo[] infos = G.rc.senseNearbyMapInfos();
-            MapLocation bestLoc = null;
-            MapLocation bestLoc2 = null;
-            int bestDistanceSquared = 10000;
-            int bestDistanceSquared2 = 10001;
-            for (MapInfo info : infos) {
-                if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && info.getPaint().isEnemy()) {
-                    int distanceSquared = info.getMapLocation().distanceSquaredTo(G.me);
-                    if (distanceSquared < bestDistanceSquared) {
-                        bestDistanceSquared2 = bestDistanceSquared;
-                        bestLoc2 = bestLoc;
-                        bestDistanceSquared = distanceSquared;
-                        bestLoc = info.getMapLocation();
-                    } else if (distanceSquared < bestDistanceSquared2) {
-                        bestDistanceSquared2 = distanceSquared;
-                        bestLoc2 = info.getMapLocation();
-                    }
-                }
-            }
-            if (bestLoc != null) {
-                if (G.rc.canAttack(bestLoc)) {
-                    G.rc.attack(bestLoc);
-                    if (bestLoc2 != null) {
-                        Motion.bugnavTowards(bestLoc2);
-                        G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 100);
-                    } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
-                        mode = EXPLORE;
-                        lastBuild = G.rc.getRoundNum();
-                        Motion.spreadRandomly();
-                        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
-                        ruinLocation = null;
-                    } else {
-                        Motion.bugnavTowards(ruinLocation);
-                    }
-                } else {
-                    Motion.bugnavTowards(bestLoc);
-                }
-                G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 200);
-            } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
-                mode = EXPLORE;
-                lastBuild = G.rc.getRoundNum();
-                Motion.spreadRandomly();
-                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
-                ruinLocation = null;
-            } else {
-                Motion.bugnavTowards(ruinLocation);
-            }
+            Motion.bugnavTowards(ruinLocation);
         }
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
