@@ -46,7 +46,7 @@ public class Robot {
         if (retreatTower >= 0) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             if (G.rc.canSenseRobotAtLocation(loc)) {
-                if (G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
+                if (G.me.distanceSquaredTo(loc) > 2 && G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
                     retreatTower = -1;
                 } else {
                     RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
