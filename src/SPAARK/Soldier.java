@@ -286,7 +286,7 @@ public class Soldier {
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorLine(G.rc.getLocation(), paintLocation, 255, 200, 0);
+        G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 200, 0);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
