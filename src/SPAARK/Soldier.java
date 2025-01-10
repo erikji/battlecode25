@@ -188,22 +188,24 @@ public class Soldier {
         // find towers to attack out of vision, doesn't switch modes
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
-        searchTowers: for (int i = 144; --i >= 0;) {
-            if (POI.towers[i] == -1) {
-                break;
-            }
-            if (POI.parseTowerTeam(POI.towers[i]) != G.team) {
-                MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)) {
-                    for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == invalidLoc)
-                            continue;
-                        if (pos.equals(excludedRuins[j])) {
-                            continue searchTowers;
+        if (G.rc.getNumberTowers() < 25) {
+            searchTowers: for (int i = 144; --i >= 0;) {
+                if (POI.towers[i] == -1) {
+                    break;
+                }
+                if (POI.parseTowerTeam(POI.towers[i]) != G.team) {
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)) {
+                        for (int j = excludedRuins.length; --j >= 0;) {
+                            if (excludedRuins[j] == invalidLoc)
+                                continue;
+                            if (pos.equals(excludedRuins[j])) {
+                                continue searchTowers;
+                            }
                         }
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos);
+                        bestLoc = pos;
                     }
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos);
-                    bestLoc = pos;
                 }
             }
         }
