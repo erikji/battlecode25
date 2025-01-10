@@ -128,26 +128,6 @@ public class POI {
             }
         }
 
-        // int[] towersToAdd = new int[] { -1, -1, -1, -1, -1 }; // no way you can see
-        // that many
-        // int ind = 0;
-        // for (int i = nearbyRuins.length; --i >= 0;) {
-        // if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
-        // RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
-        // if (info.team == G.opponentTeam) {
-        // towersToAdd[ind++] = intifyTower(G.opponentTeam, info.getType()) |
-        // intifyLocation(nearbyRuins[i]);
-        // } else {
-        // towersToAdd[ind++] = intifyTower(G.rc.getTeam(), info.getType()) |
-        // intifyLocation(nearbyRuins[i]);
-        // }
-        // } else {
-        // towersToAdd[ind++] = intifyTower(Team.NEUTRAL,
-        // UnitType.LEVEL_ONE_DEFENSE_TOWER)
-        // | intifyLocation(nearbyRuins[i]);
-        // }
-        // }
-        // addTowers(towersToAdd);
         for (int i = 144; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
@@ -235,30 +215,14 @@ public class POI {
         System.out.println("invalid symmetry argument");
         return false;
     }
-    // public static MapLocation[] symmetryLocations(MapLocation loc) throws
-    // Exception {
-    // // completely untested...
-    // int w = G.rc.getMapWidth();
-    // int h = G.rc.getMapHeight();
-    // MapLocation[] locs = new MapLocation[4];
-    // locs[0] = loc;
-    // if (symmetry[0]) {
-    // locs[1] = new MapLocation(loc.x, h - loc.y - 1);
-    // }
-    // return false;
-    // }
 
     // each message contains 2 towers/symmetries
     // because its 32 bit integer so it gets split into 2 16 bit integers
     public static void sendMessages() throws Exception {
-        if (G.rc.getType().isTowerType()) {
+        if (G.rc.getType().isTowerType() && G.allyRobots.length > 0) {
             // we just send all info that the robots dont have
-            if (G.allyRobots.length == 0) {
-                return;
-            }
-            int shift = G.rng.nextInt(G.allyRobots.length);
             for (int j = G.allyRobots.length; --j >= 0;) {
-                RobotInfo r = G.allyRobots[(j + shift) % G.allyRobots.length];
+                RobotInfo r = G.allyRobots[G.rng.nextInt(G.allyRobots.length)];
                 while (G.rc.canSendMessage(r.getLocation())) {
                     if (Clock.getBytecodesLeft() < 3000)
                         return;
