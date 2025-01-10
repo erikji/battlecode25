@@ -149,7 +149,7 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.exploreRandomly();
-                G.rc.setIndicatorDot(G.me, 0, 255, 0);
+                // G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 break;
             case ATTACK:
                 G.indicatorString.append("ATTACK ");
@@ -193,8 +193,8 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.bugnavTowards(attackTarget);
-                G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);
-                G.rc.setIndicatorDot(G.me, 255, 0, 0);
+                // G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);
+                // G.rc.setIndicatorDot(G.me, 255, 0, 0);
                 break;
             case RETREAT:
                 G.indicatorString.append("RETREAT ");
