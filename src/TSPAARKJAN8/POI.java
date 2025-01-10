@@ -1,7 +1,11 @@
 package TSPAARKJAN8;
 
-import battlecode.common.*;
-import java.util.*;
+import battlecode.common.Clock;
+import battlecode.common.MapLocation;
+import battlecode.common.Message;
+import battlecode.common.RobotInfo;
+import battlecode.common.Team;
+import battlecode.common.UnitType;
 
 public class POI {
     public static Team opponentTeam = G.rc.getTeam().opponent();
@@ -109,9 +113,9 @@ public class POI {
             // System.out.println(parseLocation(towers[i]));
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                    // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
                 } else {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
+                    // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
                 }
             } catch (Exception e) {
             }

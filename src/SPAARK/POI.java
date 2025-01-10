@@ -11,9 +11,9 @@ public class POI {
     // each tower contains a location and tower type
     // bits 0-11 store location
     // bits 12-15 store tower type
-    //  - 0 for neutral (ruin)
-    //  - 1-3 for paint, money, defense (team a)
-    //  - 4-6 for paint, money, defense (team b)
+    // - 0 for neutral (ruin)
+    // - 1-3 for paint, money, defense (team a)
+    // - 4-6 for paint, money, defense (team b)
     public static int[] towers = new int[] {
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -70,7 +70,8 @@ public class POI {
             new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
             new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
     };
-    // basically critical array means this robot found this informatoin, not received through message
+    // basically critical array means this robot found this informatoin, not
+    // received through message
     // robot prioritizes critical informatoin to be sent first
     public static boolean[] critical = new boolean[144];
 
@@ -164,7 +165,7 @@ public class POI {
             }
         }
 
-        //update symmetry array
+        // update symmetry array
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation xy = nearbyRuins[i];
             ruin[xy.y] |= 1L << xy.x;
@@ -192,7 +193,7 @@ public class POI {
         int w = G.rc.getMapWidth();
         int h = G.rc.getMapHeight();
         switch (sym) {
-            //only consider bits where we explored both it and its rotation
+            // only consider bits where we explored both it and its rotation
             case 0: // horz
                 for (int i = h / 2; --i >= 0;) {
                     long exploredRow = explored[i] & explored[h - i - 1];
@@ -226,18 +227,18 @@ public class POI {
         System.out.println("invalid symmetry argument");
         return false;
     }
-    // public static MapLocation[] symmetryLocations(MapLocation loc) throws Exception {
-    //     // completely untested...
-    //     int w = G.rc.getMapWidth();
-    //     int h = G.rc.getMapHeight();
-    //     MapLocation[] locs = new MapLocation[4];
-    //     locs[0] = loc;
-    //     if (symmetry[0]) {
-    //         locs[1] = new MapLocation(loc.x, h - loc.y - 1);
-    //     }
-    //     return false;
+    // public static MapLocation[] symmetryLocations(MapLocation loc) throws
+    // Exception {
+    // // completely untested...
+    // int w = G.rc.getMapWidth();
+    // int h = G.rc.getMapHeight();
+    // MapLocation[] locs = new MapLocation[4];
+    // locs[0] = loc;
+    // if (symmetry[0]) {
+    // locs[1] = new MapLocation(loc.x, h - loc.y - 1);
     // }
-
+    // return false;
+    // }
 
     // each message contains 2 towers/symmetries
     // because its 32 bit integer so it gets split into 2 16 bit integers
@@ -350,6 +351,7 @@ public class POI {
             }
         }
     };
+
     public static void read16BitMessage(int id, int n) throws Exception {
         G.indicatorString.append("d:" + n + " ");
         if ((n << 12) >= 7) {

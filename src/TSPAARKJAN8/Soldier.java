@@ -57,7 +57,7 @@ public class Soldier {
                     Motion.spreadRandomly();
                 } else {
                     Motion.bugnavTowards(bestLoc);
-                    G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+                    // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
                 }
                 MapInfo me = G.rc.senseMapInfo(G.me);
                 if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
@@ -66,7 +66,7 @@ public class Soldier {
                 break;
             case BUILD:
                 G.indicatorString.append("BUILD ");
-                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
+                // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
                 if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
                     mode = EXPLORE;
                     ruinLocation = null;
@@ -80,7 +80,7 @@ public class Soldier {
                             boolean paint = Robot.towerPatterns[towerType][dx][dy];
                             if((info.getPaint() == PaintType.EMPTY || info.getPaint() == (paint?PaintType.ALLY_PRIMARY:PaintType.ALLY_SECONDARY)) && G.rc.canAttack(info.getMapLocation())) {
                                 G.rc.attack(info.getMapLocation(),paint);
-                                G.rc.setIndicatorLine(G.me, info.getMapLocation(), 0, 255, 255);
+                                // G.rc.setIndicatorLine(G.me, info.getMapLocation(), 0, 255, 255);
                                 break;
                             }
                         }

@@ -1,6 +1,10 @@
 package SPAARK;
 
-import battlecode.common.*;
+import battlecode.common.Clock;
+import battlecode.common.Direction;
+import battlecode.common.MapInfo;
+import battlecode.common.MapLocation;
+import battlecode.common.PaintType;
 
 public class Motion {
     public static final int TOWARDS = 0;
@@ -177,8 +181,8 @@ public class Motion {
             if (exploreLoc == null) {
                 exploreLoc = new MapLocation(G.rng.nextInt(G.rc.getMapWidth()), G.rng.nextInt(G.rc.getMapHeight()));
             }
-            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 255, 255);
             bugnavTowards(exploreLoc);
+            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
 
@@ -874,7 +878,7 @@ public class Motion {
     }
 
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
-        int[] scores = new int[8];
+        int[] scores = new int[9];
         for (int i = 8; --i >= 0;) {
             if (!G.rc.canMove(G.DIRECTIONS[i])) {
                 scores[i] = 0;
