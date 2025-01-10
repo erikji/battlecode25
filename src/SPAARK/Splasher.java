@@ -1,5 +1,7 @@
 package SPAARK;
 
+import java.util.Map;
+
 import battlecode.common.*;
 
 public class Splasher {
@@ -39,17 +41,32 @@ public class Splasher {
 
     public static MapLocation attackTarget = new MapLocation(-1, -1);
     public static int attackTargetTower;
+    public static StringBuilder triedAttackTargets = new StringBuilder();
 
     public static void updateAttackTarget() throws Exception {
         if (attackTargetTower != -1) {
             if (POI.parseTowerTeam(POI.towers[attackTargetTower]) != G.opponentTeam) {
                 attackTarget = new MapLocation(-1, -1);
             }
+            else {
+                MapLocation loc = POI.parseLocation(POI.towers[attackTargetTower]);
+                search: if (G.me.distanceSquaredTo(loc) <= 4) {
+                    for (int y = -2; y <= 2; y++) {
+                        for (int x = -2; x <= 2; x++) {
+                            if (G.rc.senseMapInfo(new MapLocation(loc.x + x, loc.y + y)).getPaint().isEnemy()) {
+                                break search;
+                            }
+                        }
+                    }
+                    attackTarget = new MapLocation(-1, -1);
+                }
+            }
             // TODO: make it change targets if it finds ruin with 24 empty/ally paint
         }
         if (attackTarget.x == -1) {
             int best = -1;
             int bestWeight = 0;
+            String tried = triedAttackTargets.toString();
             for (int i = 144; --i >= 0;) {
                 if (POI.towers[i] == -1) {
                     break;
@@ -59,6 +76,9 @@ public class Splasher {
                 }
                 int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
                 int weight = -distance;
+                if (tried.contains("-" + i + "-")) {
+                    weight -= 1000;
+                }
                 if (best == -1 || weight > bestWeight) {
                     best = i;
                     bestWeight = weight;
@@ -70,6 +90,7 @@ public class Splasher {
             }
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
+            triedAttackTargets.append(":" + best + ":");
             mode = ATTACK;
         }
     }
@@ -82,6 +103,9 @@ public class Splasher {
         }
         if (mode != RETREAT) {
             updateAttackTarget();
+        }
+        else {
+            triedAttackTargets = new StringBuilder();
         }
         MapLocation bestLoc = null;
         int bestScore = 0;
@@ -143,8 +167,12 @@ public class Splasher {
                                     PaintType paint = info.getPaint();
                                     if (paint == PaintType.EMPTY)
                                         score++;
-                                    if (paint.isEnemy())
+                                    if (paint.isEnemy()) {
                                         score += 2; // bonus points for deleting opponent paint
+                                        if (attackTarget.x != -1 && Motion.getChebyshevDistance(nxt, attackTarget) <= 2) {
+                                            score += 4;
+                                        }
+                                    }
                                     if (!paint.isAlly() && nxt == G.me) {
                                         // bonus points for painting self
                                         score++;
@@ -165,6 +193,7 @@ public class Splasher {
                     G.rc.attack(bestLoc, G.rng.nextBoolean());
                 }
                 Motion.bugnavTowards(attackTarget);
+                G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);
                 G.rc.setIndicatorDot(G.me, 255, 0, 0);
                 break;
             case RETREAT:
