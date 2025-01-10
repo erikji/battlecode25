@@ -104,7 +104,7 @@ public class Mopper {
             Motion.bugnavAround(bestEmpty, 1, 1);
             // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
-        if (G.rc.onTheMap(microDir))
+        // if (G.rc.onTheMap(microDir))
             // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }

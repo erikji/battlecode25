@@ -261,7 +261,7 @@ public class Soldier {
             Motion.bugnavAround(ruinLocation, 1, 2);
             // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
-        if (paintLocation != null)
+        // if (paintLocation != null)
             // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
         // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
@@ -295,7 +295,7 @@ public class Soldier {
             Motion.bugnavAround(resourceLocation, 0, 2);
             // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
-        if (paintLocation != null)
+        // if (paintLocation != null)
             // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
         // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
