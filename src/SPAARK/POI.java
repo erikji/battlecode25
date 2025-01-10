@@ -81,14 +81,14 @@ public class POI {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
-                    robotsThatKnowInformation[i] = new StringBuilder("-" + source + "-");
+                    robotsThatKnowInformation[i] = new StringBuilder(":" + source + ":");
                     if (source == -1) {
                         critical[i] = true;
                     } else {
                         critical[i] = false;
                     }
                 } else if (source != -1) {
-                    robotsThatKnowInformation[i].append("-" + source + "-");
+                    robotsThatKnowInformation[i].append(":" + source + ":");
                     critical[i] = false;
                 }
                 break;
@@ -99,14 +99,14 @@ public class POI {
     public static void removeValidSymmetry(int source, int index) {
         if (symmetry[index]) {
             symmetry[index] = false;
-            robotsThatKnowInformation[144] = new StringBuilder("-" + source + "-");
+            robotsThatKnowInformation[144] = new StringBuilder(":" + source + ":");
             if (source == -1) {
                 criticalSymmetry = true;
             } else {
                 criticalSymmetry = false;
             }
         } else if (source != -1) {
-            robotsThatKnowInformation[144].append("-" + source + "-");
+            robotsThatKnowInformation[144].append(":" + source + ":");
         }
     };
 
@@ -155,10 +155,19 @@ public class POI {
             // System.out.println(parseLocation(towers[i]));
             // G.indicatorString.append(i + " ");
             try {
-                if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
-                } else {
-                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
+                if (parseTowerTeam(towers[i]) == G.team) {
+                    if (parseTowerType(towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER) {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 255, 0);
+                    }
+                    else {
+                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 125, 0);
+                    }
+                }
+                else if (parseTowerTeam(towers[i]) == G.opponentTeam) {
+                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 255, 0, 0);
+                }
+                else {
+                    G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 255);
                 }
             } catch (Exception e) {
             }
@@ -253,19 +262,19 @@ public class POI {
                 while (G.rc.canSendMessage(r.getLocation())) {
                     int message = -1;
                     int messages = 0;
-                    if (!robotsThatKnowInformation[144].toString().contains("-" + r.getID() + "-")) {
+                    if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID() + ":")) {
                         message = intifySymmetry();
                         messages++;
-                        robotsThatKnowInformation[144].append("-" + r.getID() + "-");
+                        robotsThatKnowInformation[144].append(":" + r.getID() + ":");
                     }
                     for (int i = 144; --i >= 0;) {
                         if (towers[i] == -1) {
                             break;
                         }
-                        if (!robotsThatKnowInformation[i].toString().contains("-" + r.getID() + "-")) {
+                        if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID() + ":")) {
                             message = appendToMessage(message, towers[i]);
                             messages++;
-                            robotsThatKnowInformation[i].append("-" + r.getID() + "-");
+                            robotsThatKnowInformation[i].append(":" + r.getID() + ":");
                             if (messages == 2) {
                                 break;
                             }
@@ -305,20 +314,20 @@ public class POI {
                                     }
                                 }
                             }
-                            if (!robotsThatKnowInformation[144].toString().contains("-" + r.getID() + "-")) {
+                            if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID() + ":")) {
                                 message = appendToMessage(message, intifySymmetry());
                                 messages += 1;
-                                robotsThatKnowInformation[144].append("-" + r.getID() + "-");
+                                robotsThatKnowInformation[144].append(":" + r.getID() + ":");
                             }
                             if (messages < 2) {
                                 for (int i = 144; --i >= 0;) {
                                     if (towers[i] == -1) {
                                         break;
                                     }
-                                    if (!robotsThatKnowInformation[i].toString().contains("-" + r.getID() + "-")) {
+                                    if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID() + ":")) {
                                         message = appendToMessage(message, towers[i]);
                                         messages++;
-                                        robotsThatKnowInformation[i].append("-" + r.getID() + "-");
+                                        robotsThatKnowInformation[i].append(":" + r.getID() + ":");
                                         if (messages == 2) {
                                             break;
                                         }
