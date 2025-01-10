@@ -209,6 +209,7 @@ public class Motion {
         Direction counterClockwiseLastDir = lastDir;
         int counterClockwiseStuck = 0;
         search: for (int t = 0; t < 10; t++) {
+        // search: for (int t = 0; t < 2; t++) {
             if (clockwiseLoc.equals(dest)) {
                 break;
             }
@@ -386,54 +387,54 @@ public class Motion {
 
         // G.indicatorString.append("ROTATION=" + rotation + " ");
         if (rotation == NONE) {
-            if (G.rng.nextInt(2) == 0) {
-                rotation = CLOCKWISE;
-            } else {
-                rotation = COUNTER_CLOCKWISE;
-            }
-            // int[] simulated = simulateMovement(me, dest);
+            // if (G.rng.nextInt(2) == 0) {
+            //     rotation = CLOCKWISE;
+            // } else {
+            //     rotation = COUNTER_CLOCKWISE;
+            // }
+            int[] simulated = simulateMovement(me, dest);
 
-            // int clockwiseDist = simulated[0];
-            // int counterClockwiseDist = simulated[2];
-            // boolean clockwiseStuck = simulated[1] == 1;
-            // boolean counterClockwiseStuck = simulated[3] == 1;
+            int clockwiseDist = simulated[0];
+            int counterClockwiseDist = simulated[2];
+            boolean clockwiseStuck = simulated[1] == 1;
+            boolean counterClockwiseStuck = simulated[3] == 1;
 
-            // // G.indicatorString.append("DIST=" + clockwiseDist + " " +
+            // G.indicatorString.append("DIST=" + clockwiseDist + " " +
             // counterClockwiseDist
-            // // + " ");
-            // int tempMode = mode;
-            // if (mode == AROUND) {
-            // if (clockwiseDist < minRadiusSquared) {
-            // if (counterClockwiseDist < minRadiusSquared) {
-            // tempMode = AWAY;
-            // } else {
-            // tempMode = AWAY;
-            // }
-            // } else {
-            // if (counterClockwiseDist < minRadiusSquared) {
-            // tempMode = AWAY;
-            // } else {
-            // tempMode = TOWARDS;
-            // }
-            // }
-            // }
-            // if (clockwiseStuck) {
-            // rotation = COUNTER_CLOCKWISE;
-            // } else if (counterClockwiseStuck) {
-            // rotation = CLOCKWISE;
-            // } else if (tempMode == TOWARDS) {
-            // if (clockwiseDist < counterClockwiseDist) {
-            // rotation = CLOCKWISE;
-            // } else {
-            // rotation = COUNTER_CLOCKWISE;
-            // }
-            // } else if (tempMode == AWAY) {
-            // if (clockwiseDist < counterClockwiseDist) {
-            // rotation = COUNTER_CLOCKWISE;
-            // } else {
-            // rotation = CLOCKWISE;
-            // }
-            // }
+            // + " ");
+            int tempMode = mode;
+            if (mode == AROUND) {
+            if (clockwiseDist < minRadiusSquared) {
+            if (counterClockwiseDist < minRadiusSquared) {
+            tempMode = AWAY;
+            } else {
+            tempMode = AWAY;
+            }
+            } else {
+            if (counterClockwiseDist < minRadiusSquared) {
+            tempMode = AWAY;
+            } else {
+            tempMode = TOWARDS;
+            }
+            }
+            }
+            if (clockwiseStuck) {
+            rotation = COUNTER_CLOCKWISE;
+            } else if (counterClockwiseStuck) {
+            rotation = CLOCKWISE;
+            } else if (tempMode == TOWARDS) {
+            if (clockwiseDist < counterClockwiseDist) {
+            rotation = CLOCKWISE;
+            } else {
+            rotation = COUNTER_CLOCKWISE;
+            }
+            } else if (tempMode == AWAY) {
+            if (clockwiseDist < counterClockwiseDist) {
+            rotation = COUNTER_CLOCKWISE;
+            } else {
+            rotation = CLOCKWISE;
+            }
+            }
         }
 
         boolean flip = false;
@@ -475,8 +476,14 @@ public class Motion {
 
     // bugnav
 
+    static int total = 0;
+    static int turns = 0;
     public static void bugnavTowards(MapLocation dest) throws Exception {
+        int a = Clock.getBytecodeNum();
         bugnavTowards(dest, defaultMicro);
+        total += Clock.getBytecodeNum() - a;
+        turns++;
+        G.indicatorString.append("bug: " + (total / turns));
     }
 
     public static void bugnavTowards(MapLocation dest, Micro m) throws Exception {

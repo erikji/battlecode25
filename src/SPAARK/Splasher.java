@@ -270,8 +270,11 @@ public class Splasher {
                 }
                 int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
                 int weight = -distance;
-                if (tried.contains("-" + i + "-")) {
+                if (tried.contains(":" + i)) {
                     weight -= 1000;
+                }
+                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                    weight += 100;
                 }
                 if (best == -1 || weight > bestWeight) {
                     best = i;
@@ -284,7 +287,7 @@ public class Splasher {
             }
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
-            triedAttackTargets.append(":" + best + ":");
+            triedAttackTargets.append(":" + best);
             mode = ATTACK;
         }
     }

@@ -77,7 +77,7 @@ public class Robot {
                         // This is dumb but borks code for some reason
                         continue;
                     }
-                    if (tried.contains(":" + i + ":")) {
+                    if (tried.contains(":" + i)) {
                         continue;
                     }
                     int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
@@ -112,7 +112,7 @@ public class Robot {
                     continue;
                 }
                 retreatTower = best;
-                triedRetreatTowers.append(":" + best + ":");
+                triedRetreatTowers.append(":" + best);
                 break;
             }
         }

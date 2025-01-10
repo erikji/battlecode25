@@ -72,6 +72,10 @@ public class Soldier {
      * Attack tower until ded lmao
      */
     public static void run() throws Exception {
+        // Motion.bugnavTowards(new MapLocation(20, 14));
+        // if (true) {
+        //     return;
+        // }
         // occasionally clear excluded build ruins
         if (G.rc.getRoundNum() % 50 == 0) {
             excludedRuins[0] = G.invalidLoc;
