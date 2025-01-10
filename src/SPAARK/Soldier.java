@@ -93,6 +93,9 @@ public class Soldier {
         }
         // search for SRP markers
         // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
+        // TODO: ALSO REPAIRING
+        // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
+        // don't make it remove and rebuild patterns that interfere?
         // see if SRP on current square is possible
         boolean canBuildSrpHere = true;
         // definitely can try more spots but also bytecode limits
@@ -132,8 +135,8 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         // if lots of soldiers nearby or tower already built leave build tower mode
+        // don't leave the tower if you're close to the tower
         if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
-            // don't leave the tower if you're close to the tower
             int existingSoldiers = 0;
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].type == UnitType.SOLDIER
@@ -158,23 +161,22 @@ public class Soldier {
 
     public static void buildResourceCheckMode() throws Exception {
         // if lots of soldiers nearby or resource pattern already built leave
-        // if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
-        // // don't leave the tower if you're close to the tower
-        // int existingSoldiers = 0;
-        // for (int i = G.allyRobots.length; --i >= 0;) {
-        // if (G.allyRobots[i].type == UnitType.SOLDIER
-        // && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
-        // existingSoldiers++;
-        // }
-        // }
-        // if (existingSoldiers > 3) {
-        // mode = EXPLORE;
-        // excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) %
-        // excludedRuins.length] = ruinLocation;
-        // ruinLocation = null;
-        // }
-        // }
-        // REMOVE MARKERS IF SRP IS INTERFERING
+        // don't leave if you're close
+        if (!G.me.isWithinDistanceSquared(resourceLocation, 8)) {
+            int existingSoldiers = 0;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (G.allyRobots[i].type == UnitType.SOLDIER
+                        && G.allyRobots[i].location.isWithinDistanceSquared(resourceLocation, 4)) {
+                    existingSoldiers++;
+                }
+            }
+            if (existingSoldiers > 3) {
+                mode = EXPLORE;
+                resourceLocation = null;
+            }
+        }
+        // POSSIBLY HAVE TO REMOVE MARKERS IF INTERFERING?
+        // shouldn't happen though?
     }
 
     public static void attackCheckMode() throws Exception {
