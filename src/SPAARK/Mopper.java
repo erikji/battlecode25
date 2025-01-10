@@ -1,7 +1,6 @@
 package SPAARK;
 
 import battlecode.common.*;
-import java.util.*;
 
 public class Mopper {
     public static MapLocation ruinLocation = null; // BUILD mode
@@ -17,18 +16,10 @@ public class Mopper {
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
-        // make sure not stuck between exploring and building
-        if (mode == EXPLORE && lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
-            MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-            for (MapLocation loc : locs) {
-                if (G.rc.canSenseRobotAtLocation(loc)) {
-                    continue; // tower already there
-                }
-                ruinLocation = loc;
-                mode = BUILD;
-                break;
-            }
-        }
+        runMode();
+    }
+
+    public static void runMode() throws Exception {
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD -> build();
@@ -41,6 +32,19 @@ public class Mopper {
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
+        // make sure not stuck between exploring and building
+        if (lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
+            MapLocation[] locs = G.rc.senseNearbyRuins(-1);
+            for (MapLocation loc : locs) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    continue; // tower already there
+                }
+                ruinLocation = loc;
+                mode = BUILD;
+                runMode();
+                break;
+            }
+        }
         mopSwingWithMicro();
         MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
         // will try to unpaint squares under opponent bots
@@ -75,7 +79,6 @@ public class Mopper {
                 }
             }
         }
-        // this is using all the bytecode???
         if (bestEmpty == null && bestBot == null) {
             if (G.me.distanceSquaredTo(microDir) >= 2) {
                 Motion.bugnavTowards(microDir);
@@ -93,14 +96,20 @@ public class Mopper {
         }
         if (G.rc.onTheMap(microDir))
             G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void build() throws Exception {
         G.indicatorString.append("BUILD ");
+        // clean enemy paint for ruin patterns
+        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
+        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
+        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
+        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
+                || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             ruinLocation = null;
         } else {
@@ -124,32 +133,35 @@ public class Mopper {
                 }
             }
             if (bestLoc != null) {
-                G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 255);
                 if (G.rc.canAttack(bestLoc)) {
                     G.rc.attack(bestLoc);
                     if (bestLoc2 != null) {
-                        G.rc.setIndicatorLine(G.me, bestLoc2, 128, 128, 128);
                         Motion.bugnavTowards(bestLoc2);
+                        G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 100);
                     } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                         mode = EXPLORE;
-                        ruinLocation = null;
                         lastBuild = G.rc.getRoundNum();
                         Motion.spreadRandomly();
+                        G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+                        ruinLocation = null;
                     } else {
                         Motion.bugnavTowards(ruinLocation);
                     }
                 } else {
                     Motion.bugnavTowards(bestLoc);
                 }
+                G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 200);
             } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                 mode = EXPLORE;
-                ruinLocation = null;
                 lastBuild = G.rc.getRoundNum();
                 Motion.spreadRandomly();
+                G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+                ruinLocation = null;
             } else {
                 Motion.bugnavTowards(ruinLocation);
             }
         }
+        G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     /**

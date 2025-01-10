@@ -1,9 +1,6 @@
 package SPAARK;
 
 import battlecode.common.*;
-import scala.collection.mutable.Map;
-
-import java.util.*;
 
 public class POI {
     public static final boolean ENABLE_INDICATORS = false;
@@ -81,7 +78,6 @@ public class POI {
         // IMPORTANT: make sure to call addTower right after tower is built
         for (int i = 144; --i >= 0;) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
-                G.indicatorString.append(data + " " + i + " " + towers[i] + " ");
                 if (towers[i] != data) {
                     towers[i] = data;
                     robotsThatKnowInformation[i] = new StringBuilder("-" + source + "-");
@@ -151,12 +147,12 @@ public class POI {
         // }
         // }
         // addTowers(towersToAdd);
-        for (int i = 50; --i >= 0;) {
+        for (int i = 144; --i >= 0;) {
             if (towers[i] == -1) {
                 break;
             }
             // System.out.println(parseLocation(towers[i]));
-            G.indicatorString.append(i + " ");
+            // G.indicatorString.append(i + " ");
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
                     G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
@@ -332,7 +328,6 @@ public class POI {
                         if (messages != 0) {
                             criticalSymmetry = false;
                             G.rc.sendMessage(r.getLocation(), message);
-                            G.indicatorString.append("sent message ");
                             break;
                         }
                     }
@@ -354,9 +349,8 @@ public class POI {
         }
     };
     public static void read16BitMessage(int id, int n) throws Exception {
-        G.indicatorString.append("d:" + n + " ");
-        if ((n << 12) >= 7) {
-            int n2 = (n << 12) - 7;
+        if ((n >> 12) >= 7) {
+            int n2 = (n >> 12) - 7;
             if (n2 % 2 == 0) {
                 removeValidSymmetry(id, 0);
             }

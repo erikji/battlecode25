@@ -1,7 +1,6 @@
 package SPAARK;
 
 import battlecode.common.*;
-import java.util.*;
 
 public class Robot {
     public static boolean[][] resourcePattern;
@@ -47,7 +46,7 @@ public class Robot {
         if (retreatTower >= 0) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             if (G.rc.canSenseRobotAtLocation(loc)) {
-                if (G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
+                if (G.me.distanceSquaredTo(loc) > 2 && G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
                     retreatTower = -1;
                 } else {
                     RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
@@ -116,14 +115,15 @@ public class Robot {
                 break;
             }
         }
-        // -2 = spreadrandomly
         if (retreatTower == -2) {
+            // oof no tower
             Motion.spreadRandomly();
             retreatTower = -1;
         } else if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             Motion.bugnavTowards(loc);
-            G.rc.setIndicatorLine(G.me, loc, 255, 0, 255);
+            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+            G.rc.setIndicatorDot(G.me, 255, 0, 255);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
                         G.rc.senseRobotAtLocation(loc).getPaintAmount());

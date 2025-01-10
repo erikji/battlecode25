@@ -1,10 +1,7 @@
 package SPAARK;
 
 import battlecode.common.*;
-
-import java.util.*;
-
-import battlecode.schema.RobotType;
+import java.util.Random;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
@@ -198,6 +195,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1);
             }
         }
+        G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     public static Micro attackMicro = new Micro() {
