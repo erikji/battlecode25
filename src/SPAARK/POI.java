@@ -116,6 +116,43 @@ public class POI {
     // bytecode optimize this later
     // bytecode optimize this later
     // uses a ton of bytecode wtf? not anymore
+
+    // basically it takes tons of bytecode to update all map infos
+    // so we only update the ones on the edge
+    public static boolean firstUpdate = true;
+    public static MapLocation[] edgeLocations = new MapLocation[] {new MapLocation(-4, -2),
+        new MapLocation(-4, -1),
+        new MapLocation(-4, 0),
+        new MapLocation(-4, 1),
+        new MapLocation(-4, 2),
+        new MapLocation(-3, -3),
+        new MapLocation(-3, -2),
+        new MapLocation(-3, 2),
+        new MapLocation(-3, 3),
+        new MapLocation(-2, -4),
+        new MapLocation(-2, -3),
+        new MapLocation(-2, 3),
+        new MapLocation(-2, 4),
+        new MapLocation(-1, -4),
+        new MapLocation(-1, 4),
+        new MapLocation(0, -4),
+        new MapLocation(0, 4),
+        new MapLocation(1, -4),
+        new MapLocation(1, 4),
+        new MapLocation(2, -4),
+        new MapLocation(2, -3),
+        new MapLocation(2, 3),
+        new MapLocation(2, 4),
+        new MapLocation(3, -3),
+        new MapLocation(3, -2),
+        new MapLocation(3, 2),
+        new MapLocation(3, 3),
+        new MapLocation(4, -2),
+        new MapLocation(4, -1),
+        new MapLocation(4, 0),
+        new MapLocation(4, 1),
+        new MapLocation(4, 2),
+    };
     public static void updateRound() throws Exception {
         readMessages();
         
@@ -138,12 +175,27 @@ public class POI {
             MapLocation xy = nearbyRuins[i];
             ruin[xy.y] |= 1L << xy.x;
         }
-        for (int i = G.infos.length; --i >= 0;) {
-            MapLocation xy = G.infos[i].getMapLocation();
-            if (G.infos[i].isWall()) {
-                wall[xy.y] |= 1L << xy.x;
+        if (firstUpdate) {
+            for (int i = G.infos.length; --i >= 0;) {
+                MapLocation xy = G.infos[i].getMapLocation();
+                if (G.infos[i].isWall()) {
+                    wall[xy.y] |= 1L << xy.x;
+                }
+                explored[xy.y] |= 1L << xy.x;
             }
-            explored[xy.y] |= 1L << xy.x;
+            firstUpdate = false;
+        }
+        else {
+            for (int i = edgeLocations.length; --i >= 0;) {
+                MapLocation xy = edgeLocations[i].translate(G.me.x, G.me.y);
+                if (!G.rc.onTheMap(xy)) {
+                    continue;
+                }
+                if (G.rc.senseMapInfo(xy).isWall()) {
+                    wall[xy.y] |= 1L << xy.x;
+                }
+                explored[xy.y] |= 1L << xy.x;
+            }
         }
         G.indicatorString.append("infos: " + (Clock.getBytecodeNum() - a) + " ");
         if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0]) || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
