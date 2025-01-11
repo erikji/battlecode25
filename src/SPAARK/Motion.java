@@ -186,7 +186,29 @@ public class Motion {
                 exploreLoc = null;
             }
             if (exploreLoc == null) {
-                exploreLoc = new MapLocation(G.rng.nextInt(G.rc.getMapWidth()), G.rng.nextInt(G.rc.getMapHeight()));
+                //pick a random location that we haven't seen before
+                int sum = G.rc.getMapHeight()*G.rc.getMapWidth();
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                int rand = G.rng.nextInt(sum);
+                int cur = 0;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
             }
             bugnavTowards(exploreLoc);
             if (ENABLE_EXPLORE_INDICATORS)
