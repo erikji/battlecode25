@@ -165,7 +165,7 @@ public class POI {
         switch (sym) {
             // only consider bits where we explored both it and its rotation
             case 0: // horz
-                for (int i = h / 2; --i >= 0;) {
+                for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
                     long exploredRow = explored[i] & explored[h - i - 1];
                     if (((wall[i] ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
@@ -175,7 +175,7 @@ public class POI {
                 }
                 return true;
             case 1: // vert
-                for (int i = h; --i >= 0;) {
+                for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
                     long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[i];
                     if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[i]) & exploredRow) != 0)
                         return false;
@@ -184,7 +184,7 @@ public class POI {
                 }
                 return true;
             case 2: // rot
-                for (int i = h / 2; --i >= 0;) {
+                for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
                     // only consider bits where we explored both it and its rotation
                     long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[h - i - 1];
                     if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
