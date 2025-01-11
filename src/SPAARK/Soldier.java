@@ -120,15 +120,17 @@ public class Soldier {
         }
         // search for SRP markers for repairing/building/expanding
         // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // TODO: ALSO REPAIRING
+        // TODO: ALSO REPAIRING (enter build mode if is messed up)
         // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP is possible nearby
         for (int i = 8; --i >= 0;) {
             MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
             if (canBuildSRPHere(loc)) {
+                // TOOD: prioritize lining up checkerboards
                 srpCheckLocations = new MapLocation[] { loc };
                 mode = EXPAND_RESOURCE;
+                break;
             }
         }
         if (canBuildSRPHere(G.me)) {
@@ -152,17 +154,18 @@ public class Soldier {
             ruinLocation = null;
             return;
         }
-        // bot with lowest id and bot with highest id builds tower
-        int existingSoldiers = 0;
-        for (int i = G.allyRobots.length; --i >= 0;) {
-            if (G.allyRobots[i].type == UnitType.SOLDIER
-                    && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
-                existingSoldiers++;
+        if (!G.me.isWithinDistanceSquared(ruinLocation, 2)) {
+            int existingSoldiers = 0;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (G.allyRobots[i].type == UnitType.SOLDIER
+                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
+                    existingSoldiers++;
+                }
             }
-        }
-        if (existingSoldiers > 4) {
-            mode = EXPLORE;
-            ruinLocation = null;
+            if (existingSoldiers > 2) {
+                mode = EXPLORE;
+                ruinLocation = null;
+            }
         }
     }
 
