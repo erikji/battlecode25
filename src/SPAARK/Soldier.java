@@ -72,7 +72,15 @@ public class Soldier {
      * Attack tower until ded lmao
      */
     public static void run() throws Exception {
-        // Motion.bugnavTowards(new MapLocation(20, 14));
+        // if (G.rc.getRoundNum() < 500) {
+        //     Motion.bugnavTowards(new MapLocation(59, 14));
+        // }
+        // else if (G.rc.getRoundNum() < 1000) {
+        //     Motion.bugnavAway(new MapLocation(59, 14));
+        // }
+        // else if (G.rc.getRoundNum() < 1500) {
+        //     Motion.bugnavAround(new MapLocation(13, 7), 4, 20);
+        // }
         // if (true) {
         //     return;
         // }

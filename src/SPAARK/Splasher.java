@@ -101,6 +101,16 @@ public class Splasher {
         int bestScore = 0;
         G.indicatorString.append("EXPLORE ");
         // painting heuristic
+        StringBuilder allyRobotsList = new StringBuilder();
+        for (RobotInfo i : G.allyRobots) {
+            allyRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+        }
+        StringBuilder opponentRobotsList = new StringBuilder();
+        for (RobotInfo i : G.opponentRobots) {
+            opponentRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+        }
+        String allyRobotsString = allyRobotsList.toString();
+        String opponentRobotsString = opponentRobotsList.toString();
         for (int i = attackRange.length; --i >= 0;) {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
@@ -119,6 +129,12 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 // bonus points for painting self
                                 score++;
+                            }
+                            if (allyRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                                score++; // bonus points for painting self
+                            }
+                            if (opponentRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                                score++; // bonus points for painting self
                             }
                         }
                     }
@@ -156,23 +172,24 @@ public class Splasher {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
-            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
-                MapLocation pos = POI.parseLocation(POI.towers[i]);
-                // prioritize opponent towers more than neutral towers, so it has to be REALLY
-                // close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
-                        && !G.me.isWithinDistanceSquared(pos, 20)) {
-                    // for (int j = excludedRuins.length; --j >= 0;) {
-                    // if (excludedRuins[j] == G.invalidLoc)
-                    // continue;
-                    // if (pos.equals(excludedRuins[j])) {
-                    // continue searchTowers;
-                    // }
-                    // }
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
-                    bestLoc = pos;
-                }
             }
+            // else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+            //     MapLocation pos = POI.parseLocation(POI.towers[i]);
+            //     // prioritize opponent towers more than neutral towers, so it has to be REALLY
+            //     // close
+            //     if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
+            //             && !G.me.isWithinDistanceSquared(pos, 20)) {
+            //         // for (int j = excludedRuins.length; --j >= 0;) {
+            //         // if (excludedRuins[j] == G.invalidLoc)
+            //         // continue;
+            //         // if (pos.equals(excludedRuins[j])) {
+            //         // continue searchTowers;
+            //         // }
+            //         // }
+            //         bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
+            //         bestLoc = pos;
+            //     }
+            // }
         }
         if (bestLoc == null) {
             Motion.exploreRandomly();
@@ -188,6 +205,16 @@ public class Splasher {
         int bestScore = 0;
         G.indicatorString.append("ATTACK ");
         // painting heuristic
+        StringBuilder allyRobotsList = new StringBuilder();
+        for (RobotInfo i : G.allyRobots) {
+            allyRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+        }
+        StringBuilder opponentRobotsList = new StringBuilder();
+        for (RobotInfo i : G.opponentRobots) {
+            opponentRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+        }
+        String allyRobotsString = allyRobotsList.toString();
+        String opponentRobotsString = opponentRobotsList.toString();
         for (int i = attackRange.length; --i >= 0;) {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
@@ -209,6 +236,12 @@ public class Splasher {
                                 }
                             }
                             if (!paint.isAlly() && nxt == G.me) {
+                                score++; // bonus points for painting self
+                            }
+                            if (allyRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                                score++; // bonus points for painting self
+                            }
+                            if (opponentRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
                                 score++; // bonus points for painting self
                             }
                         }
