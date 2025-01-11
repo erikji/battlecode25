@@ -129,7 +129,7 @@ public class Soldier {
             if (canBuildSRPHere(loc)) {
                 // TOOD: prioritize lining up checkerboards
                 srpCheckLocations = new MapLocation[] { loc };
-                mode = EXPAND_RESOURCE;
+                mode = BUILD_RESOURCE;
                 break;
             }
         }
