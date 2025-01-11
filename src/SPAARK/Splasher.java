@@ -192,9 +192,9 @@ public class Splasher {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
+                int opponentRobotsPaintedScore = 0;
                 for (int dir = 9; --dir >= 0;) {
                     // TODO: negative weight for painting SRP
-                    // TODO: extra weight based on # of enemy robots
                     // only care about sqrt(2) distance because bytecode restrictions
                     MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                     if (G.rc.canSenseLocation(nxt)) {
@@ -219,11 +219,15 @@ public class Splasher {
                             }
                             if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
+                                if (!paint.isAlly()) {
+                                    opponentRobotsPaintedScore++;
+                                }
                             }
                             score += paintScore;
                         }
                     }
                 }
+                score += opponentRobotsPaintedScore * opponentRobotsPaintedScore;
                 if (score > bestScore) {
                     bestLoc = loc;
                     bestScore = score;
