@@ -272,6 +272,9 @@ public class Splasher {
                 int weight = -distance;
                 if (tried.contains(":" + i)) {
                     weight -= 1000;
+                    if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+                        continue;
+                    }
                 }
                 if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                     weight += 100;

@@ -292,10 +292,12 @@ public class Motion {
             lastDir = Direction.CENTER;
         }
 
+
         boolean stuck = true;
         for (int i = 4; --i >= 0;) {
-            if (!visitedList.toString().contains(me + " " + i + " ")) {
-                visitedList.append(me + " " + i + " ");
+            String m = me + " " + i + " ";
+            if (!visitedList.toString().contains(m)) {
+                visitedList.append(m);
                 stuck = false;
                 break;
             }
