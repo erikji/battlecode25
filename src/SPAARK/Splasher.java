@@ -60,7 +60,7 @@ public class Splasher {
      */
     public static void run() throws Exception {
         // occasionally clear ruins to not oof forever
-        if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
+        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
@@ -89,11 +89,11 @@ public class Splasher {
         // remove opponent paint, paint under enemy bots, paint under allied bots
         StringBuilder allyRobotsList = new StringBuilder();
         for (RobotInfo i : G.allyRobots) {
-            allyRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+            allyRobotsList.append(i.getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
         for (RobotInfo i : G.opponentRobots) {
-            opponentRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+            opponentRobotsList.append(i.getLocation().toString());
         }
         for (int i = attackRange.length; --i >= 0;) {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
@@ -115,10 +115,10 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (allyRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
+                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (opponentRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
+                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
                             }
                             score += paintScore;
@@ -162,6 +162,9 @@ public class Splasher {
                     bestLoc = pos;
                 }
             }
+            if (Clock.getBytecodesLeft() < 1500) {
+                break;
+            }
         }
         if (bestLoc == null) {
             Motion.exploreRandomly();
@@ -179,11 +182,11 @@ public class Splasher {
         // painting heuristic
         StringBuilder allyRobotsList = new StringBuilder();
         for (RobotInfo i : G.allyRobots) {
-            allyRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+            allyRobotsList.append(i.getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
         for (RobotInfo i : G.opponentRobots) {
-            opponentRobotsList.append((char) POI.intifyLocation(i.getLocation()));
+            opponentRobotsList.append(i.getLocation().toString());
         }
         for (int i = attackRange.length; --i >= 0;) {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
@@ -211,10 +214,10 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (allyRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
+                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (opponentRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
+                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
                             }
                             score += paintScore;

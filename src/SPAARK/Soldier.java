@@ -69,7 +69,7 @@ public class Soldier {
      * Attack tower until ded lmao
      */
     public static void run() throws Exception {
-        if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
+        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
             mode = EXPLORE;

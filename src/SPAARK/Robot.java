@@ -21,23 +21,36 @@ public class Robot {
     }
 
     public static void run() throws Exception {
+        paintLost += Math.max(lastPaint - G.rc.getPaint(), 0);
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
             case SPLASHER -> Splasher.run();
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
+        lastPaint = G.rc.getPaint();
         G.indicatorString.append("SYM="
                 + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
         POI.drawIndicators();
     }
 
+    // lastPaint stores how much paint has been lost to neutral/opponent territory
+    // used to determine how much paint until retreating
+    public static int lastPaint = 0;
+    public static int paintLost = 0;
+
     public static int retreatTower = -1;
     public static StringBuilder triedRetreatTowers = new StringBuilder();
+
+    public static int getRetreatPaint() throws Exception {
+        // TODO: this can be micro parameter
+        return Math.max(paintLost, G.rc.getType().paintCapacity / 5);
+    }
 
     public static void retreat() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
+        paintLost = 0;
         if (retreatTower >= 0) {
             if (POI.parseTowerTeam(POI.towers[retreatTower]) != G.team) {
                 retreatTower = -1;
