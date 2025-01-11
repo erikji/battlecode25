@@ -1,14 +1,12 @@
 package SPAARK;
 
 import battlecode.common.*;
-import java.util.Random;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
-    // if already lots of soldiers near a ruin that needs to be built
 
     // allowed marker locations
     // fills entire vision range

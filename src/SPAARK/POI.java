@@ -70,7 +70,7 @@ public class POI {
             new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
             new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(), new StringBuilder(),
     };
-    // basically critical array means this robot found this informatoin, not
+    // basically critical array means this robot found this information, not
     // received through message
     // robot prioritizes critical informatoin to be sent first
     public static boolean[] critical = new boolean[144];
@@ -109,13 +109,6 @@ public class POI {
             robotsThatKnowInformation[144].append(":" + source);
         }
     };
-
-    // bytecode optimize this later
-    // bytecode optimize this later
-    // bytecode optimize this later
-    // bytecode optimize this later
-    // bytecode optimize this later
-    // uses a ton of bytecode wtf? not anymore
 
     // basically it takes tons of bytecode to update all map infos
     // so we only update the ones on the edge
