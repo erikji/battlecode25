@@ -45,7 +45,7 @@ public class RobotPlayer {
      * @param rc  The RobotController object. You use it to perform actions from this robot, and to get
      *            information on its current status. Essentially your portal to interacting with the world.
      **/
-    @SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
@@ -123,12 +123,12 @@ public class RobotPlayer {
         }
 
         // Read incoming messages
-        Message[] messages = rc.readMessages(-1);
-        for (Message m : messages) {
+        // Message[] messages = rc.readMessages(-1);
+        // for (Message m : messages) {
             //System.out.println("Tower received message: '#" + m.getSenderID() + " " + m.getBytes());
-        }
+        // }
 
-        // TODO: can we attack other bots?
+        // : can we attack other bots?
         // new Exception();
     }
 
@@ -176,7 +176,7 @@ public class RobotPlayer {
 
         // Move and attack randomly if no objective.
         Direction dir = directions[rng.nextInt(directions.length)];
-        MapLocation nextLoc = rc.getLocation().add(dir);
+        // MapLocation nextLoc = rc.getLocation().add(dir);
         if (rc.canMove(dir)){
             rc.move(dir);
         }
