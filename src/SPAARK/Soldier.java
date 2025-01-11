@@ -36,6 +36,8 @@ public class Soldier {
     public static final int ATTACK = 3;
     public static final int RETREAT = 4;
     public static int mode = EXPLORE;
+    // controls round between visiting ruins (G.lastVisited)
+    public static final int VISIT_TIMEOUT = 75;
 
     public static MapInfo[] nearbyMapInfos;
 
@@ -67,19 +69,6 @@ public class Soldier {
      * Attack tower until ded lmao
      */
     public static void run() throws Exception {
-        // if (G.rc.getRoundNum() < 500) {
-        // Motion.bugnavTowards(new MapLocation(59, 14));
-        // }
-        // else if (G.rc.getRoundNum() < 1000) {
-        // Motion.bugnavAway(new MapLocation(59, 14));
-        // }
-        // else if (G.rc.getRoundNum() < 1500) {
-        // Motion.bugnavAround(new MapLocation(13, 7), 4, 20);
-        // }
-        // if (true) {
-        // return;
-        // }
-        // occasionally clear excluded build ruins
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
@@ -108,17 +97,18 @@ public class Soldier {
         // switch modes if seeing towers/ruins
         MapLocation[] locs = G.rc.senseNearbyRuins(-1);
         for (int i = locs.length; --i >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(locs[i])) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(locs[i]);
+            MapLocation loc = locs[i];
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam
                         && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
-                    towerLocation = locs[i];
+                    towerLocation = loc;
                     towerType = bot.type;
                     mode = ATTACK;
                     return;
                 }
-            } else if (G.rc.getNumberTowers() < 25) {
-                ruinLocation = locs[i];
+            } else if (G.rc.getNumberTowers() < 25 && G.lastVisited[loc.y][loc.x] > G.rc.getRoundNum() + VISIT_TIMEOUT) {
+                ruinLocation = loc;
                 mode = BUILD_TOWER;
                 return;
             }
@@ -127,6 +117,7 @@ public class Soldier {
         // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
         // TODO: ALSO REPAIRING
         // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
+        // TODO: SEARCH ALL 9 DIRECTIONS
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP on current square is possible
         if (canBuildSRPHere(G.me)) {
@@ -142,7 +133,13 @@ public class Soldier {
     }
 
     public static void buildTowerCheckMode() throws Exception {
+        G.lastVisited[ruinLocation.y][ruinLocation.x] = G.rc.getRoundNum();
         // if lots of soldiers nearby or tower already built leave build tower mode
+        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
+                || G.rc.getNumberTowers() == 25) {
+            mode = EXPLORE;
+            ruinLocation = null;
+        }
         // don't leave the tower if you're close to the tower
         if (!G.me.isWithinDistanceSquared(ruinLocation, 1)) {
             int existingSoldiers = 0;
@@ -155,13 +152,7 @@ public class Soldier {
             if (existingSoldiers > 2) {
                 mode = EXPLORE;
                 ruinLocation = null;
-                return;
             }
-        }
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
-                || G.rc.getNumberTowers() == 25) {
-            mode = EXPLORE;
-            ruinLocation = null;
         }
     }
 
