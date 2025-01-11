@@ -26,7 +26,7 @@ public class POI {
     // symmetry detection
     // set bit if its a wall, ruin, or we explored it, and use bit operators to
     // check symmetry
-    public static long[] wall = new long[60];
+    public static long[] wall = new long[60]; // wall[xy.y] |= 1L << xy.x;
     public static long[] ruin = new long[60];
     public static long[] explored = new long[60];
     public static boolean[] symmetry = new boolean[] { true, true, true };
@@ -115,8 +115,10 @@ public class POI {
     // bytecode optimize this later
     // bytecode optimize this later
     // bytecode optimize this later
-    // uses a ton of bytecode wtf?
-    public static void updateInfo() throws Exception {
+    // uses a ton of bytecode wtf? not anymore
+    public static void updateRound() throws Exception {
+        readMessages();
+        
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
@@ -144,14 +146,16 @@ public class POI {
             explored[xy.y] |= 1L << xy.x;
         }
         G.indicatorString.append("infos: " + (Clock.getBytecodeNum() - a) + " ");
-        if (symmetry[0] && !symmetryValid(0)) {
-            removeValidSymmetry(-1, 0);
-        }
-        if (symmetry[1] && !symmetryValid(1)) {
-            removeValidSymmetry(-1, 1);
-        }
-        if (symmetry[2] && !symmetryValid(2)) {
-            removeValidSymmetry(-1, 2);
+        if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0]) || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
+            if (symmetry[0] && !symmetryValid(0)) {
+                removeValidSymmetry(-1, 0);
+            }
+            if (symmetry[1] && !symmetryValid(1)) {
+                removeValidSymmetry(-1, 1);
+            }
+            if (symmetry[2] && !symmetryValid(2)) {
+                removeValidSymmetry(-1, 2);
+            }
         }
         G.indicatorString.append("POI: " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
@@ -163,7 +167,7 @@ public class POI {
         switch (sym) {
             // only consider bits where we explored both it and its rotation
             case 0: // horz
-                for (int i = h / 2; --i >= 0;) {
+                for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
                     long exploredRow = explored[i] & explored[h - i - 1];
                     if (((wall[i] ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
@@ -173,7 +177,7 @@ public class POI {
                 }
                 return true;
             case 1: // vert
-                for (int i = h; --i >= 0;) {
+                for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
                     long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[i];
                     if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[i]) & exploredRow) != 0)
                         return false;
@@ -182,8 +186,7 @@ public class POI {
                 }
                 return true;
             case 2: // rot
-                for (int i = h / 2; --i >= 0;) {
-                    // only consider bits where we explored both it and its rotation
+                for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
                     long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[h - i - 1];
                     if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;

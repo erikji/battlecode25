@@ -60,4 +60,5 @@ public class G {
     public static RobotInfo[] allyRobots;
     public static RobotInfo[] opponentRobots;
     public static MapInfo[] infos;
+    public static int[][] lastVisited = new int[60][60];
 }

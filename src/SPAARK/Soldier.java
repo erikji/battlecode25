@@ -9,9 +9,6 @@ public class Soldier {
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
     // if already lots of soldiers near a ruin that needs to be built
-    public static MapLocation[] excludedRuins = new MapLocation[] { G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc,
-            G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc };
-    public static int excludedRuinIndex = 0; // rotating exclusion list
 
     // allowed marker locations
     // fills entire vision range
@@ -85,18 +82,6 @@ public class Soldier {
         //     return;
         // }
         // occasionally clear excluded build ruins
-        if (G.rc.getRoundNum() % 50 == 0) {
-            excludedRuins[0] = G.invalidLoc;
-            excludedRuins[1] = G.invalidLoc;
-            excludedRuins[2] = G.invalidLoc;
-            excludedRuins[3] = G.invalidLoc;
-            excludedRuins[4] = G.invalidLoc;
-            excludedRuins[5] = G.invalidLoc;
-            excludedRuins[6] = G.invalidLoc;
-            excludedRuins[7] = G.invalidLoc;
-            excludedRuins[8] = G.invalidLoc;
-            excludedRuins[9] = G.invalidLoc;
-        }
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
@@ -161,7 +146,7 @@ public class Soldier {
     public static void buildTowerCheckMode() throws Exception {
         // if lots of soldiers nearby or tower already built leave build tower mode
         // don't leave the tower if you're close to the tower
-        if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
+        if (!G.me.isWithinDistanceSquared(ruinLocation, 1)) {
             int existingSoldiers = 0;
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].type == UnitType.SOLDIER
@@ -169,9 +154,8 @@ public class Soldier {
                     existingSoldiers++;
                 }
             }
-            if (existingSoldiers > 4) {
+            if (existingSoldiers > 2) {
                 mode = EXPLORE;
-                excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
                 ruinLocation = null;
                 return;
             }
@@ -179,7 +163,6 @@ public class Soldier {
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
-            excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
             ruinLocation = null;
         }
     }
@@ -204,34 +187,20 @@ public class Soldier {
         // find towers to attack/build out of vision
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
-        searchTowers: for (int i = 144; --i >= 0;) {
+        for (int i = 144; --i >= 0;) {
             if (POI.towers[i] == -1) {
                 break;
             }
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)) {
-                    for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == G.invalidLoc)
-                            continue;
-                        if (pos.equals(excludedRuins[j])) {
-                            continue searchTowers;
-                        }
-                    }
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
             } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 //prioritize opponent towers more than neutral towers, so it has to be REALLY close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)) {
-                    for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == G.invalidLoc)
-                            continue;
-                        if (pos.equals(excludedRuins[j])) {
-                            continue searchTowers;
-                        }
-                    }
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; //lol 
                     bestLoc = pos;
                 }
@@ -246,7 +215,14 @@ public class Soldier {
         MapInfo me = G.rc.senseMapInfo(G.me);
         // place paint under self to avoid passive paint drain if possible
         if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
-            G.rc.attack(G.me);
+            //determine which checkerboard pattern to copy
+            int[] cnt = new int[]{0,0};
+            for (int i = G.infos.length; --i >= 0;) {
+                if (G.infos[i].getPaint() == PaintType.ALLY_SECONDARY) {
+                    cnt[(G.infos[i].getMapLocation().x+G.infos[i].getMapLocation().y)&1]++;
+                }
+            }
+            G.rc.attack(G.me, (cnt[(G.me.x+G.me.y)&1]>cnt[(1+G.me.x+G.me.y)&1]?true:false));
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
@@ -402,11 +378,7 @@ public class Soldier {
     };
 
     public static int predictTowerType(MapLocation xy) {
-        switch (G.rc.getNumberTowers()) {
-            case 2:return 1;
-            case 3:return 2;
-            default:
-                return new Random(xy.x * 0x67f176e2 + xy.y).nextInt(10) > 5 ? 2 : 1;
-        }
+        if (G.rc.getNumberTowers() % 2 == 1) return 2;
+        return 1;
     }
 }
