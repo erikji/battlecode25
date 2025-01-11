@@ -266,7 +266,7 @@ public class Motion {
             reset();
         }
 
-        if (visitedList.toString().contains("" + getState())) {
+        if (visitedList.indexOf("" + getState()) != -1) {
             reset();
         }
         visitedList.append("" + getState());

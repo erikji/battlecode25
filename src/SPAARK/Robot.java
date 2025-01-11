@@ -64,7 +64,6 @@ public class Robot {
                 int bestDistance = 0;
                 boolean bestPaint = false;
                 boolean bestCritical = false;
-                String tried = triedRetreatTowers.toString();
                 for (int i = 144; --i >= 0;) {
                     if (POI.towers[i] == -1) {
                         break;
@@ -77,7 +76,7 @@ public class Robot {
                         // This is dumb but borks code for some reason
                         continue;
                     }
-                    if (tried.contains(":" + i)) {
+                    if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
                         continue;
                     }
                     int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
@@ -104,7 +103,7 @@ public class Robot {
                     }
                 }
                 if (best == -1) {
-                    if (tried.length() == 0) {
+                    if (triedRetreatTowers.length() == 0) {
                         retreatTower = -2;
                         break;
                     }
@@ -112,7 +111,7 @@ public class Robot {
                     continue;
                 }
                 retreatTower = best;
-                triedRetreatTowers.append(":" + best);
+                triedRetreatTowers.append((char) best);
                 break;
             }
         }

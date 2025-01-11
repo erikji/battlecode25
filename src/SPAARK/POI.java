@@ -258,7 +258,7 @@ public class POI {
                         return;
                     int message = -1;
                     int messages = 0;
-                    if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID())) {
+                    if (robotsThatKnowInformation[144].indexOf(":" + r.getID()) == -1) {
                         message = intifySymmetry();
                         messages++;
                         robotsThatKnowInformation[144].append(":" + r.getID());
@@ -267,7 +267,7 @@ public class POI {
                         if (towers[i] == -1) {
                             break;
                         }
-                        if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID())) {
+                        if (robotsThatKnowInformation[i].indexOf(":" + r.getID()) == -1) {
                             message = appendToMessage(message, towers[i]);
                             messages++;
                             robotsThatKnowInformation[i].append(":" + r.getID());
@@ -308,7 +308,7 @@ public class POI {
                                     }
                                 }
                             }
-                            if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID())) {
+                            if (robotsThatKnowInformation[144].indexOf(":" + r.getID()) == -1) {
                                 message = appendToMessage(message, intifySymmetry());
                                 messages += 1;
                                 robotsThatKnowInformation[144].append(":" + r.getID());
@@ -318,7 +318,7 @@ public class POI {
                                     if (towers[i] == -1) {
                                         break;
                                     }
-                                    if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID())) {
+                                    if (robotsThatKnowInformation[i].indexOf(":" + r.getID()) == -1) {
                                         message = appendToMessage(message, towers[i]);
                                         messages++;
                                         robotsThatKnowInformation[i].append(":" + r.getID());

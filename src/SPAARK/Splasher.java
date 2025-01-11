@@ -95,8 +95,6 @@ public class Splasher {
         for (RobotInfo i : G.opponentRobots) {
             opponentRobotsList.append((char) POI.intifyLocation(i.getLocation()));
         }
-        String allyRobotsString = allyRobotsList.toString();
-        String opponentRobotsString = opponentRobotsList.toString();
         for (int i = attackRange.length; --i >= 0;) {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
@@ -116,10 +114,10 @@ public class Splasher {
                                 // bonus points for painting self
                                 score++;
                             }
-                            if (allyRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                            if (allyRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
                                 score++; // bonus points for painting self
                             }
-                            if (opponentRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                            if (opponentRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
                                 score++; // bonus points for painting self
                             }
                         }
@@ -185,8 +183,6 @@ public class Splasher {
         for (RobotInfo i : G.opponentRobots) {
             opponentRobotsList.append((char) POI.intifyLocation(i.getLocation()));
         }
-        String allyRobotsString = allyRobotsList.toString();
-        String opponentRobotsString = opponentRobotsList.toString();
         for (int i = attackRange.length; --i >= 0;) {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
@@ -210,10 +206,10 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score++; // bonus points for painting self
                             }
-                            if (allyRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                            if (allyRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
                                 score++; // bonus points for painting self
                             }
-                            if (opponentRobotsString.contains("" + (char) POI.intifyLocation(nxt))) {
+                            if (opponentRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
                                 score++; // bonus points for painting self
                             }
                         }
@@ -263,7 +259,6 @@ public class Splasher {
         if (attackTarget.x == -1) {
             int best = -1;
             int bestWeight = 0;
-            String tried = triedAttackTargets.toString();
             for (int i = 144; --i >= 0;) {
                 if (POI.towers[i] == -1) {
                     break;
@@ -276,7 +271,7 @@ public class Splasher {
                 }
                 int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
                 int weight = -distance;
-                if (tried.contains(":" + i)) {
+                if (triedAttackTargets.indexOf("" + (char) i) != -1) {
                     weight -= 1000;
                     if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                         continue;
@@ -296,7 +291,7 @@ public class Splasher {
             }
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
-            triedAttackTargets.append(":" + best);
+            triedAttackTargets.append((char) best);
             G.lastVisited[attackTarget.y][attackTarget.x] = G.rc.getRoundNum();
             mode = ATTACK;
         }
