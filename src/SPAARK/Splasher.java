@@ -106,20 +106,22 @@ public class Splasher {
                         MapInfo info = G.rc.senseMapInfo(nxt);
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
+                            int paintScore = 0;
                             if (paint == PaintType.EMPTY)
-                                score++;
-                            if (paint.isEnemy())
-                                score += 2; // bonus points for deleting opponent paint
+                                paintScore = 1;
+                            if (paint.isEnemy()) {
+                                paintScore = 2; // bonus points for deleting opponent paint
+                            }
                             if (!paint.isAlly() && nxt == G.me) {
-                                // bonus points for painting self
-                                score++;
+                                score += paintScore; // bonus points for painting self
                             }
                             if (allyRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
-                                score++; // bonus points for painting self
+                                score += paintScore; // bonus points for painting self
                             }
                             if (opponentRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
-                                score++; // bonus points for painting self
+                                score += paintScore; // bonus points for painting self
                             }
+                            score += paintScore;
                         }
                     }
                 }
@@ -194,24 +196,26 @@ public class Splasher {
                         MapInfo info = G.rc.senseMapInfo(nxt);
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
+                            int paintScore = 0;
                             if (paint == PaintType.EMPTY)
-                                score++;
+                                paintScore = 1;
                             if (paint.isEnemy()) {
-                                score += 2; // bonus points for deleting opponent paint
+                                paintScore = 2; // bonus points for deleting opponent paint
                                 if (attackTarget.x != -1
                                         && Motion.getChebyshevDistance(nxt, attackTarget) <= 2) {
-                                    score += 4;
+                                    score += 4; // bonus points for painting target
                                 }
                             }
                             if (!paint.isAlly() && nxt == G.me) {
-                                score++; // bonus points for painting self
+                                score += paintScore; // bonus points for painting self
                             }
                             if (allyRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
-                                score++; // bonus points for painting self
+                                score += paintScore; // bonus points for painting self
                             }
                             if (opponentRobotsList.indexOf("" + (char) POI.intifyLocation(nxt)) != -1) {
-                                score++; // bonus points for painting self
+                                score += paintScore; // bonus points for painting self
                             }
+                            score += paintScore;
                         }
                     }
                 }
