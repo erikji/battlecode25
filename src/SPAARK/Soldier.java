@@ -151,6 +151,7 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
+        G.lastVisited[ruinLocation.y][ruinLocation.x] = G.rc.getRoundNum();
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -219,13 +220,15 @@ public class Soldier {
                 break;
             }
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                // attack these
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
                         && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
-            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 // prioritize opponent towers more than neutral towers, so it has to be REALLY
                 // close
