@@ -699,12 +699,15 @@ public class Motion {
     static int total = 0;
     static int turns = 0;
 
+    // IMPORTANT: bugnav takes around 1100 bytecode
+
     public static void bugnavTowards(MapLocation dest) throws Exception {
         // int a = Clock.getBytecodeNum();
         bugnavTowards(dest, defaultMicro);
         // total += Clock.getBytecodeNum() - a;
         turns++;
         // G.indicatorString.append("BUG-BT" + (total / turns) + " ");
+        // G.indicatorString.append("BUG-BT" + (Clock.getBytecodeNum() - a) + " ");
     }
 
     public static void bugnavTowards(MapLocation dest, Micro m) throws Exception {

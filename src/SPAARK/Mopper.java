@@ -24,7 +24,7 @@ public class Mopper {
      * Help soldiers mop enemy paint around ruins
      */
     public static void run() throws Exception {
-        if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
+        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;

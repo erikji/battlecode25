@@ -76,7 +76,7 @@ public class Soldier {
      * Attempt to repair SRPs if not in range to attack tower
      */
     public static void run() throws Exception {
-        if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
+        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
             mode = EXPLORE;
