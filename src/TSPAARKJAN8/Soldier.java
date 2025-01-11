@@ -1,7 +1,6 @@
 package TSPAARKJAN8;
 
 import battlecode.common.*;
-import java.util.*;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; //BUILD mode
