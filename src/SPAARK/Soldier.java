@@ -228,6 +228,9 @@ public class Soldier {
                 }
             }
             G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
+        } else {
+            // repair nearby SRP if possible (may use a lot of bytecode?)
+            attemptRepairSRP();
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
@@ -361,7 +364,7 @@ public class Soldier {
     }
 
     public static void attemptRepairSRP() throws Exception {
-
+        // TODO: check nearbyMapInfos for SRP markers and repair
     }
 
     public static Micro attackMicro = new Micro() {
