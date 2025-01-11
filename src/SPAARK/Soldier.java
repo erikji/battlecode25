@@ -138,7 +138,7 @@ public class Soldier {
     public static void buildTowerCheckMode() throws Exception {
         // if lots of soldiers nearby or tower already built leave build tower mode
         // don't leave the tower if you're close to the tower
-        if (!G.me.isWithinDistanceSquared(ruinLocation, 8)) {
+        if (!G.me.isWithinDistanceSquared(ruinLocation, 1)) {
             int existingSoldiers = 0;
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].type == UnitType.SOLDIER
@@ -146,7 +146,7 @@ public class Soldier {
                     existingSoldiers++;
                 }
             }
-            if (existingSoldiers > 4) {
+            if (existingSoldiers > 2) {
                 mode = EXPLORE;
                 ruinLocation = null;
                 return;
@@ -185,14 +185,14 @@ public class Soldier {
             }
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && G.lastVisited[pos.x][pos.y] + 50 < G.rc.getRoundNum()) {
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
             } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 //prioritize opponent towers more than neutral towers, so it has to be REALLY close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && G.lastVisited[pos.x][pos.y] + 50 < G.rc.getRoundNum()) {
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; //lol 
                     bestLoc = pos;
                 }

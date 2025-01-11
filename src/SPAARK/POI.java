@@ -115,7 +115,7 @@ public class POI {
     // bytecode optimize this later
     // bytecode optimize this later
     // bytecode optimize this later
-    // uses a ton of bytecode wtf?
+    // uses a ton of bytecode wtf? not anymore
     public static void updateRound() throws Exception {
         readMessages();
         
@@ -146,14 +146,16 @@ public class POI {
             explored[xy.y] |= 1L << xy.x;
         }
         G.indicatorString.append("infos: " + (Clock.getBytecodeNum() - a) + " ");
-        if (symmetry[0] && !symmetryValid(0)) {
-            removeValidSymmetry(-1, 0);
-        }
-        if (symmetry[1] && !symmetryValid(1)) {
-            removeValidSymmetry(-1, 1);
-        }
-        if (symmetry[2] && !symmetryValid(2)) {
-            removeValidSymmetry(-1, 2);
+        if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0]) || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
+            if (symmetry[0] && !symmetryValid(0)) {
+                removeValidSymmetry(-1, 0);
+            }
+            if (symmetry[1] && !symmetryValid(1)) {
+                removeValidSymmetry(-1, 1);
+            }
+            if (symmetry[2] && !symmetryValid(2)) {
+                removeValidSymmetry(-1, 2);
+            }
         }
         G.indicatorString.append("POI: " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
@@ -185,7 +187,6 @@ public class POI {
                 return true;
             case 2: // rot
                 for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
-                    // only consider bits where we explored both it and its rotation
                     long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[h - i - 1];
                     if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
