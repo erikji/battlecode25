@@ -34,12 +34,21 @@ public class Tower {
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
-        if (spawnedRobots < 1) {
+        if (spawnedRobots == 0) {
             for (MapLocation loc : spawnLocs) {
                 if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
                     G.rc.buildRobot(UnitType.SOLDIER, loc);
                     spawnedRobots++;
                     spawnedSoldiers++;
+                    break;
+                }
+            }
+        } else if (spawnedRobots == 1) {
+            for (MapLocation loc : spawnLocs) {
+                if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                    G.rc.buildRobot(UnitType.MOPPER, loc);
+                    spawnedRobots++;
+                    spawnedMoppers++;
                     break;
                 }
             }
@@ -62,17 +71,17 @@ public class Tower {
                         if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                             G.rc.buildRobot(UnitType.SPLASHER, loc);
                             spawnedRobots++;
-                            spawnedMoppers++;
+                            spawnedSplashers++;
                             break;
                         }
                     }
                     break;
                 case 2:
                     for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
-                            G.rc.buildRobot(UnitType.MOPPER, loc);
+                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            G.rc.buildRobot(UnitType.SOLDIER, loc);
                             spawnedRobots++;
-                            spawnedMoppers++;
+                            spawnedSoldiers++;
                             break;
                         }
                     }
@@ -82,15 +91,15 @@ public class Tower {
                         if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                             G.rc.buildRobot(UnitType.SPLASHER, loc);
                             spawnedRobots++;
-                            spawnedMoppers++;
+                            spawnedSplashers++;
                             break;
                         }
                     }
                     break;
                 default:
                     for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                            G.rc.buildRobot(UnitType.SOLDIER, loc);
+                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            G.rc.buildRobot(UnitType.MOPPER, loc);
                             spawnedRobots++;
                             spawnedMoppers++;
                             break;
