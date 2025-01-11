@@ -27,6 +27,8 @@ public class RobotPlayer {
             G.opponentTeam = G.team.opponent();
             G.indicatorString = new StringBuilder();
             updateInfo();
+            System.out.println(G.lastVisited.length);
+            System.out.println(G.lastVisited[0].length);
             switch (G.rc.getType()) {
                 case MOPPER, SOLDIER, SPLASHER -> Robot.init();
                 default -> Tower.init();
