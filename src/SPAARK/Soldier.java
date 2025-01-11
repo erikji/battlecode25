@@ -304,7 +304,7 @@ public class Soldier {
             // TODO: PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
             // put the 4 optimal locations of next pattern into a queue
             // that the bot then pathfinds to and checks if can build pattern
-            mode = EXPAND_RESOURCE;
+            mode = EXPLORE;
             Motion.exploreRandomly();
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
