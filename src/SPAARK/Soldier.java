@@ -40,7 +40,7 @@ public class Soldier {
     // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 75;
 
-    public static MapInfo[] nearbyMapInfos;
+    public static MapLocation[] nearbyRuins;
 
     /**
      * Always:
@@ -51,6 +51,7 @@ public class Soldier {
      * Run around randomly while painting below self, maybe check sus POI stuff
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * If can build SRP nearby (adjacent), queue location and enter SRP expand mode
+     * - SRPs won't be built overlapping with tower 5x5 squares
      * Attempt to repair SRPs
      * 
      * Build tower:
@@ -78,7 +79,7 @@ public class Soldier {
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
             mode = EXPLORE;
         }
-        nearbyMapInfos = G.rc.senseNearbyMapInfos();
+        nearbyRuins = G.rc.senseNearbyRuins(-1);
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
             case BUILD_TOWER -> buildTowerCheckMode();
@@ -99,9 +100,8 @@ public class Soldier {
 
     public static void exploreCheckMode() throws Exception {
         // switch modes if seeing towers/ruins
-        MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-        for (int i = locs.length; --i >= 0;) {
-            MapLocation loc = locs[i];
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = nearbyRuins[i];
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam
@@ -125,13 +125,13 @@ public class Soldier {
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP is possible nearby
         // for (int i = 8; --i >= 0;) {
-        //     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-        //     if (canBuildSRPHere(loc)) {
-        //         // TOOD: prioritize lining up checkerboards
-        //         srpCheckLocations = new MapLocation[] { loc };
-        //         mode = BUILD_RESOURCE;
-        //         break;
-        //     }
+        // MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
+        // if (canBuildSRPHere(loc)) {
+        // // TOOD: prioritize lining up checkerboards
+        // srpCheckLocations = new MapLocation[] { loc };
+        // mode = BUILD_RESOURCE;
+        // break;
+        // }
         // }
         if (canBuildSRPHere(G.me)) {
             // place markers
@@ -175,10 +175,6 @@ public class Soldier {
     }
 
     public static void expandResourceCheckMode() throws Exception {
-        // FOR NOW, JUST RE-ENTER EXPLORE
-        // CODE NOT DONE
-        mode = EXPLORE;
-        exploreCheckMode();
         // if can see optimal queued location and can't build SRP set to go to next
         // location
         // if queue empty go back to explore mode
@@ -226,9 +222,9 @@ public class Soldier {
         if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
             // determine which checkerboard pattern to copy
             int[] cnt = new int[] { 0, 0 };
-            for (int i = G.infos.length; --i >= 0;) {
-                if (G.infos[i].getPaint() == PaintType.ALLY_SECONDARY) {
-                    cnt[(G.infos[i].getMapLocation().x + G.infos[i].getMapLocation().y) & 1]++;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                if (G.nearbyMapInfos[i].getPaint() == PaintType.ALLY_SECONDARY) {
+                    cnt[(G.nearbyMapInfos[i].getMapLocation().x + G.nearbyMapInfos[i].getMapLocation().y) & 1]++;
                 }
             }
             G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
@@ -241,18 +237,17 @@ public class Soldier {
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
-        MapInfo[] infos = nearbyMapInfos;
         int t = predictTowerType(ruinLocation);
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        for (int i = infos.length; --i >= 0;) {
-            MapLocation loc = infos[i].getMapLocation();
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
                     && loc.isWithinDistanceSquared(ruinLocation, 8)) {
                 int dx = loc.x - ruinLocation.x + 2;
                 int dy = loc.y - ruinLocation.y + 2;
                 if (dx != 2 || dy != 2) {
                     boolean paint = Robot.towerPatterns[t][dx][dy];
-                    PaintType exist = infos[i].getPaint();
+                    PaintType exist = G.nearbyMapInfos[i].getPaint();
                     if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
                             || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
                         G.rc.attack(loc, paint);
@@ -283,14 +278,13 @@ public class Soldier {
     public static void buildResource() throws Exception {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapInfo[] infos = nearbyMapInfos;
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        for (int i = infos.length; --i >= 0;) {
-            MapLocation loc = infos[i].getMapLocation();
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
                     && loc.isWithinDistanceSquared(resourceLocation, 8)) {
                 boolean paint = Robot.resourcePattern[loc.x - resourceLocation.x + 2][loc.y - resourceLocation.y + 2];
-                PaintType exist = infos[i].getPaint();
+                PaintType exist = G.nearbyMapInfos[i].getPaint();
                 if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
                         || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
                     G.rc.attack(loc, paint);
@@ -355,11 +349,16 @@ public class Soldier {
                     return false;
             }
         }
-        MapInfo[] infos = nearbyMapInfos;
-        for (int i = infos.length; --i >= 0;) {
+        // check for towers that could interfere
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            if (Math.abs(G.me.x - nearbyRuins[i].x) <= 4 && Math.abs(G.me.y - nearbyRuins[i].y) <= 4)
+                return false;
+        }
+        // check meshing with nearby SRPs
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             // can't have markers without spots but can have spots without markers
-            if ((infos[i].getMark() == PaintType.ALLY_SECONDARY)) {
-                MapLocation loc = infos[i].getMapLocation();
+            if ((G.nearbyMapInfos[i].getMark() == PaintType.ALLY_SECONDARY)) {
+                MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
                 if (!allowedSrpMarkerLocations[loc.y - me.y + 5][loc.x - me.x + 5])
                     return false;
             }

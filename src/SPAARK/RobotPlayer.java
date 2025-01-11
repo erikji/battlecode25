@@ -9,7 +9,7 @@ public class RobotPlayer {
         G.me = G.rc.getLocation();
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
-        G.infos = G.rc.senseNearbyMapInfos();
+        G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
     }
 
     public static void updateRound() throws Exception {

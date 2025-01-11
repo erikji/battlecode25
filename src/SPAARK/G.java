@@ -59,6 +59,6 @@ public class G {
     public static MapLocation me;
     public static RobotInfo[] allyRobots;
     public static RobotInfo[] opponentRobots;
-    public static MapInfo[] infos;
+    public static MapInfo[] nearbyMapInfos;
     public static int[][] lastVisited = new int[60][60];
 }
