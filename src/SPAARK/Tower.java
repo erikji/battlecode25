@@ -189,7 +189,7 @@ public class Tower {
         }
         if (numAttackableRobots > 2 && G.rc.canAttack(null)) {
             G.rc.attack(null);
-        } else if (numAttackableRobots > 0 && G.rc.canAttack(bestEnemyLoc)) {
+        } else if (G.rc.canAttack(bestEnemyLoc)) {
             G.rc.attack(bestEnemyLoc);
         }
     }
