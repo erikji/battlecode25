@@ -107,7 +107,7 @@ public class Soldier {
                     mode = ATTACK;
                     return;
                 }
-            } else if (G.rc.getNumberTowers() < 25 && G.lastVisited[loc.y][loc.x] > G.rc.getRoundNum() + VISIT_TIMEOUT) {
+            } else if (G.rc.getNumberTowers() < 25 && G.lastVisited[loc.y][loc.x] + VISIT_TIMEOUT < G.rc.getRoundNum()) {
                 ruinLocation = loc;
                 mode = BUILD_TOWER;
                 return;
@@ -183,7 +183,7 @@ public class Soldier {
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                        && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
+                        && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
@@ -192,7 +192,7 @@ public class Soldier {
                 // prioritize opponent towers more than neutral towers, so it has to be REALLY
                 // close
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
-                        && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
+                        && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
                     bestLoc = pos;
                 }
