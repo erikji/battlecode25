@@ -4,6 +4,7 @@ import battlecode.common.*;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
+    public static int buildTowerType = 0;
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
@@ -39,6 +40,7 @@ public class Soldier {
     public static int mode = EXPLORE;
     // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 75;
+    public static final int MIN_SRP_ROUND = 50;
 
     public static MapLocation[] nearbyRuins;
 
@@ -50,13 +52,13 @@ public class Soldier {
      * Explore:
      * Run around randomly while painting below self, maybe check sus POI stuff
      * If seeing opponent tower or ruin, go to attack/tower build mode
+     * - tower build mode then checks if actually needed, may switch back to explore
      * If can build SRP nearby (adjacent), queue location and enter SRP expand mode
      * - SRPs won't be built overlapping with tower 5x5 squares
      * Attempt to repair SRPs
      * 
      * Build tower:
-     * If lots of allied soldiers near ruin return to explore, they got it
-     * (2 bots - lowest and highest id, within range, build tower)
+     * If pattern is complete but tower not completed, leave lowest ID to complete
      * Place stuff
      * Complete tower, return to explore
      * 
@@ -99,6 +101,7 @@ public class Soldier {
     }
 
     public static void exploreCheckMode() throws Exception {
+        G.indicatorString.append("CHK_E ");
         // switch modes if seeing towers/ruins
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation loc = nearbyRuins[i];
@@ -111,10 +114,13 @@ public class Soldier {
                     mode = ATTACK;
                     return;
                 }
-            } else if (G.rc.getNumberTowers() < 25
-                    && G.lastVisited[loc.y][loc.x] + VISIT_TIMEOUT < G.rc.getRoundNum()) {
+            } else if (G.rc.getNumberTowers() < 25) {
                 ruinLocation = loc;
                 mode = BUILD_TOWER;
+                // if the tower doesn't need more help it'll return to explore mode
+                // need to do this because of lowest ID check - bot may leave if other bot with
+                // lower ID comes, but may not swap roles to build the tower
+                buildTowerCheckMode();
                 return;
             }
         }
@@ -129,11 +135,11 @@ public class Soldier {
         // if (canBuildSRPHere(loc)) {
         // // TOOD: prioritize lining up checkerboards
         // srpCheckLocations = new MapLocation[] { loc };
-        // mode = BUILD_RESOURCE;
+        // mode = EXPAND_RESOURCE;
         // break;
         // }
         // }
-        if (canBuildSRPHere(G.me)) {
+        if (G.rc.getRoundNum() > MIN_SRP_ROUND && canBuildSRPHere(G.me)) {
             // place markers
             resourceLocation = G.me;
             G.rc.mark(G.me.add(Direction.NORTHWEST), true);
@@ -146,47 +152,69 @@ public class Soldier {
     }
 
     public static void buildTowerCheckMode() throws Exception {
+        G.indicatorString.append("CHK_BTW ");
         G.lastVisited[ruinLocation.y][ruinLocation.x] = G.rc.getRoundNum();
-        // if lots of soldiers nearby or tower already built leave build tower mode
+        buildTowerType = predictTowerType(ruinLocation);
+        // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             ruinLocation = null;
             return;
         }
-        if (!G.me.isWithinDistanceSquared(ruinLocation, 2)) {
-            int existingSoldiers = 0;
-            for (int i = G.allyRobots.length; --i >= 0;) {
-                if (G.allyRobots[i].type == UnitType.SOLDIER
-                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
-                    existingSoldiers++;
+        // if pattern complete leave lowest bot ID to complete
+        boolean isPatternComplete = true;
+        // do this instead of iterating through nearby map infos
+        checkPattern: for (int dx = 0; dx++ < 4;) {
+            for (int dy = 0; dy++ < 4;) {
+                if (dx == 2 && dy == 2)
+                    continue;
+                MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
+                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // also guaranteed can be sensed if can action there
+                if (G.rc.canSenseLocation(loc)
+                        && (Robot.towerPatterns[buildTowerType][dx][dy] ? PaintType.ALLY_SECONDARY
+                                : PaintType.ALLY_PRIMARY) != G.rc.senseMapInfo(loc).getPaint()) {
+                    isPatternComplete = false;
+                    break checkPattern;
                 }
             }
-            if (existingSoldiers > 2) {
-                mode = EXPLORE;
-                ruinLocation = null;
+        }
+        if (isPatternComplete) {
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
+                    if (G.allyRobots[i].ID < G.rc.getID()) {
+                        // not lowest ID, leave
+                        mode = EXPLORE;
+                        ruinLocation = null;
+                        return;
+                    }
+                }
             }
         }
     }
 
     public static void buildResourceCheckMode() throws Exception {
+        G.indicatorString.append("CHK_BRP ");
         // POSSIBLY HAVE TO REMOVE MARKERS IF INTERFERING?
         // shouldn't happen though?
     }
 
     public static void expandResourceCheckMode() throws Exception {
+        G.indicatorString.append("CHK_ERP ");
         // if can see optimal queued location and can't build SRP set to go to next
         // location
         // if queue empty go back to explore mode
     }
 
     public static void attackCheckMode() throws Exception {
+        G.indicatorString.append("CHK_ATK ");
         // nothing for now
     }
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
-        // find towers to attack/build out of vision
+        // find towers from POI to attack/build out of vision
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
         for (int i = 144; --i >= 0;) {
@@ -194,13 +222,15 @@ public class Soldier {
                 break;
             }
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                // attack these
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
                         && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
-            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 // prioritize opponent towers more than neutral towers, so it has to be REALLY
                 // close
@@ -237,19 +267,19 @@ public class Soldier {
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
-        int t = predictTowerType(ruinLocation);
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        // spam paint
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-            if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
-                    && loc.isWithinDistanceSquared(ruinLocation, 8)) {
+            if (G.rc.canAttack(loc) && loc.isWithinDistanceSquared(ruinLocation, 8)) {
                 int dx = loc.x - ruinLocation.x + 2;
                 int dy = loc.y - ruinLocation.y + 2;
                 if (dx != 2 || dy != 2) {
-                    boolean paint = Robot.towerPatterns[t][dx][dy];
-                    PaintType exist = G.nearbyMapInfos[i].getPaint();
-                    if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
-                            || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
+                    boolean paint = Robot.towerPatterns[buildTowerType][dx][dy];
+                    PaintType exist = G.rc.senseMapInfo(loc).getPaint();
+                    // can't paint enemy paint
+                    // might need !exist.isEnemy()
+                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
@@ -257,10 +287,9 @@ public class Soldier {
                 }
             }
         }
-        if (G.rc.canCompleteTowerPattern(Robot.towers[t], ruinLocation) && G.rc.getPaint() > 50) {
-            G.rc.completeTowerPattern(Robot.towers[t], ruinLocation);
-            POI.addTower(-1,
-                    POI.intifyTower(G.team, Robot.towers[t]) | POI.intifyLocation(ruinLocation));
+        if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation) && G.rc.getPaint() > 50) {
+            G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
+            POI.addTower(-1, POI.intifyTower(G.team, Robot.towers[buildTowerType]) | POI.intifyLocation(ruinLocation));
             mode = EXPLORE;
             Motion.exploreRandomly();
             // dot to signal building complete
@@ -279,6 +308,26 @@ public class Soldier {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        // do this instead of iterating through nearby map infos
+        for (int dx = 0; dx++ < 4;) {
+            for (int dy = 0; dy++ < 4;) {
+                if (dx == 2 && dy == 2)
+                    continue;
+                MapLocation loc = resourceLocation.translate(dx - 2, dy - 2);
+                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // also guaranteed can be sensed if can action there
+                if (G.rc.canAttack(loc)) {
+                    boolean paint = Robot.resourcePattern[dx][dy];
+                    PaintType exist = G.rc.senseMapInfo(loc).getPaint();
+                    if (exist == PaintType.EMPTY
+                            || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY)) {
+                        G.rc.attack(loc, paint);
+                        paintLocation = loc;
+                        break;
+                    }
+                }
+            }
+        }
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)

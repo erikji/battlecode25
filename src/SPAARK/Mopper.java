@@ -44,6 +44,7 @@ public class Mopper {
     }
 
     public static void exploreCheckMode() throws Exception {
+        G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
         if (lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
@@ -59,6 +60,7 @@ public class Mopper {
     }
 
     public static void buildCheckMode() throws Exception {
+        G.indicatorString.append("CHK_B ");
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;

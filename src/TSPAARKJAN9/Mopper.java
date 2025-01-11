@@ -112,10 +112,10 @@ public class Mopper {
     public static void build() throws Exception {
         G.indicatorString.append("BUILD ");
         // clean enemy paint for ruin patterns
-        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
-        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
-        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
-        // TODO: FIND AND MOP ENEMY PAINT OFF SRP
+        // : FIND AND MOP ENEMY PAINT OFF SRP
+        // : FIND AND MOP ENEMY PAINT OFF SRP
+        // : FIND AND MOP ENEMY PAINT OFF SRP
+        // : FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
         MapInfo[] infos = G.rc.senseNearbyMapInfos();

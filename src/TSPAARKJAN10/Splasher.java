@@ -53,8 +53,8 @@ public class Splasher {
      * 
      * Explore:
      * Run around randomly painting stuff with some microstrategy
-     * TODO: AVOID PAINTING OVER SRP, TOWER PATTERNS, PAINT NEAR OWN PAINT TO AVOID
-     * TODO: DETACHED TERRITORY
+     * : AVOID PAINTING OVER SRP, TOWER PATTERNS, PAINT NEAR OWN PAINT TO AVOID
+     * : DETACHED TERRITORY
      * 
      * Attack:
      * Go to targeted POI location and throw paint everywhere
@@ -138,7 +138,7 @@ public class Splasher {
         }
         bestLoc = null;
         int bestDistanceSquared = 10000;
-        searchTowers: for (int i = 144; --i >= 0;) {
+        for (int i = 144; --i >= 0;) {
             if (POI.towers[i] == -1) {
                 break;
             }
@@ -251,8 +251,8 @@ public class Splasher {
                     attackTarget = new MapLocation(-1, -1);
                 }
             }
-            // TODO: make it change targets if it finds ruin with 24 empty/ally paint
-            // TODO: STOP CIRCLING AROUND OUR OWN TOWERS ALREADY
+            // : make it change targets if it finds ruin with 24 empty/ally paint
+            // : STOP CIRCLING AROUND OUR OWN TOWERS ALREADY
         }
         if (attackTarget.x == -1) {
             int best = -1;

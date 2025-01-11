@@ -1,7 +1,6 @@
 package TSPAARKJAN10;
 
 import battlecode.common.*;
-import java.util.Random;
 
 public class Soldier {
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
@@ -118,9 +117,9 @@ public class Soldier {
             }
         }
         // search for SRP markers
-        // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // TODO: ALSO REPAIRING
-        // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
+        // : BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
+        // : ALSO REPAIRING
+        // : EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP on current square is possible
         if (canBuildSRPHere(G.me)) {
@@ -223,7 +222,7 @@ public class Soldier {
         G.indicatorString.append("BUILD_TW ");
         MapInfo[] infos = nearbyMapInfos;
         int t = predictTowerType(ruinLocation);
-        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         for (int i = infos.length; --i >= 0;) {
             MapLocation loc = infos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
@@ -236,7 +235,7 @@ public class Soldier {
                     if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
                             || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }
@@ -263,7 +262,7 @@ public class Soldier {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
         MapInfo[] infos = nearbyMapInfos;
-        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         for (int i = infos.length; --i >= 0;) {
             MapLocation loc = infos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
@@ -273,14 +272,14 @@ public class Soldier {
                 if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
                         || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
                     G.rc.attack(loc, paint);
-                    paintLocation = loc;
+                    // paintLocation = loc;
                     break;
                 }
             }
         }
         if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
             G.rc.completeResourcePattern(resourceLocation);
-            // TODO: PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
+            // : PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
             // put the 4 optimal locations of next pattern into a queue
             // that the bot then pathfinds to and checks if can build pattern
             mode = EXPLORE;

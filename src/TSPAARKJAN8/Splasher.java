@@ -2,8 +2,6 @@ package TSPAARKJAN8;
 
 import battlecode.common.*;
 
-import java.util.*;
-
 public class Splasher {
     public static final int EXPLORE = 0;
     public static final int ATTACK = 1;
