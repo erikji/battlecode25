@@ -44,7 +44,7 @@ public class Robot {
 
     public static int getRetreatPaint() throws Exception {
         // TODO: this can be micro parameter
-        return Math.max(paintLost, G.rc.getType().paintCapacity / 5);
+        return Math.max(paintLost + 10, G.rc.getType().paintCapacity / 5);
     }
 
     public static void retreat() throws Exception {
