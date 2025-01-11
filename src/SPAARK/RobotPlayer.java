@@ -5,7 +5,7 @@ import java.util.*;
 
 public class RobotPlayer {
     public static void updateInfo() throws Exception {
-        //every time we move
+        // every time we move
         G.me = G.rc.getLocation();
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
@@ -13,7 +13,7 @@ public class RobotPlayer {
     }
 
     public static void updateRound() throws Exception {
-        //every round
+        // every round
         updateInfo();
         MapLocation[] visible = G.rc.getAllLocationsWithinRadiusSquared(G.me, 20);
         for (int i = visible.length; --i >= 0; --i) {

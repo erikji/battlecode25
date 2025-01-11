@@ -113,42 +113,43 @@ public class POI {
     // basically it takes tons of bytecode to update all map infos
     // so we only update the ones on the edge
     public static boolean firstUpdate = true;
-    public static MapLocation[] edgeLocations = new MapLocation[] {new MapLocation(-4, -2),
-        new MapLocation(-4, -1),
-        new MapLocation(-4, 0),
-        new MapLocation(-4, 1),
-        new MapLocation(-4, 2),
-        new MapLocation(-3, -3),
-        new MapLocation(-3, -2),
-        new MapLocation(-3, 2),
-        new MapLocation(-3, 3),
-        new MapLocation(-2, -4),
-        new MapLocation(-2, -3),
-        new MapLocation(-2, 3),
-        new MapLocation(-2, 4),
-        new MapLocation(-1, -4),
-        new MapLocation(-1, 4),
-        new MapLocation(0, -4),
-        new MapLocation(0, 4),
-        new MapLocation(1, -4),
-        new MapLocation(1, 4),
-        new MapLocation(2, -4),
-        new MapLocation(2, -3),
-        new MapLocation(2, 3),
-        new MapLocation(2, 4),
-        new MapLocation(3, -3),
-        new MapLocation(3, -2),
-        new MapLocation(3, 2),
-        new MapLocation(3, 3),
-        new MapLocation(4, -2),
-        new MapLocation(4, -1),
-        new MapLocation(4, 0),
-        new MapLocation(4, 1),
-        new MapLocation(4, 2),
+    public static MapLocation[] edgeLocations = new MapLocation[] { new MapLocation(-4, -2),
+            new MapLocation(-4, -1),
+            new MapLocation(-4, 0),
+            new MapLocation(-4, 1),
+            new MapLocation(-4, 2),
+            new MapLocation(-3, -3),
+            new MapLocation(-3, -2),
+            new MapLocation(-3, 2),
+            new MapLocation(-3, 3),
+            new MapLocation(-2, -4),
+            new MapLocation(-2, -3),
+            new MapLocation(-2, 3),
+            new MapLocation(-2, 4),
+            new MapLocation(-1, -4),
+            new MapLocation(-1, 4),
+            new MapLocation(0, -4),
+            new MapLocation(0, 4),
+            new MapLocation(1, -4),
+            new MapLocation(1, 4),
+            new MapLocation(2, -4),
+            new MapLocation(2, -3),
+            new MapLocation(2, 3),
+            new MapLocation(2, 4),
+            new MapLocation(3, -3),
+            new MapLocation(3, -2),
+            new MapLocation(3, 2),
+            new MapLocation(3, 3),
+            new MapLocation(4, -2),
+            new MapLocation(4, -1),
+            new MapLocation(4, 0),
+            new MapLocation(4, 1),
+            new MapLocation(4, 2),
     };
+
     public static void updateRound() throws Exception {
         readMessages();
-        
+
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
@@ -162,7 +163,7 @@ public class POI {
 
         drawIndicators();
 
-        int a = Clock.getBytecodeNum();
+        // int a = Clock.getBytecodeNum();
         // update symmetry array
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation xy = nearbyRuins[i];
@@ -177,8 +178,7 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
             firstUpdate = false;
-        }
-        else {
+        } else {
             for (int i = edgeLocations.length; --i >= 0;) {
                 MapLocation xy = edgeLocations[i].translate(G.me.x, G.me.y);
                 if (!G.rc.onTheMap(xy)) {
@@ -190,8 +190,9 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
         }
-        G.indicatorString.append("infos: " + (Clock.getBytecodeNum() - a) + " ");
-        if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0]) || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
+        // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
+                || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
             if (symmetry[0] && !symmetryValid(0)) {
                 removeValidSymmetry(-1, 0);
             }
@@ -202,7 +203,7 @@ public class POI {
                 removeValidSymmetry(-1, 2);
             }
         }
-        G.indicatorString.append("POI: " + (Clock.getBytecodeNum() - a) + " ");
+        // G.indicatorString.append("POI-BT " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
     };
 
@@ -439,13 +440,6 @@ public class POI {
         }
         return (message << 16) | a;
     }
-
-    // need to keep track of what info each tower has
-    // as well as what info is most important
-    // then send messages to tower
-
-    // for tower, recieve message = update stuff
-    // also send most important stuff to nearby robots
 
     public static void drawIndicators() {
         if (ENABLE_INDICATORS) {
