@@ -139,6 +139,7 @@ public class Soldier {
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             ruinLocation = null;
+            return;
         }
         // don't leave the tower if you're close to the tower
         if (!G.me.isWithinDistanceSquared(ruinLocation, 1)) {
