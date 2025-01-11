@@ -118,6 +118,8 @@ public class Soldier {
                 ruinLocation = loc;
                 mode = BUILD_TOWER;
                 // if the tower doesn't need more help it'll return to explore mode
+                // need to do this because of lowest ID check - bot may leave if other bot with
+                // lower ID comes, but may not swap roles to build the tower
                 buildTowerCheckMode();
                 return;
             }

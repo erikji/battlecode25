@@ -92,9 +92,9 @@ public class Soldier {
             }
         }
         // search for SRP markers
-        // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // TODO: ALSO REPAIRING
-        // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
+        // : BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
+        // : ALSO REPAIRING
+        // : EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP on current square is possible
         boolean canBuildSrpHere = true;

@@ -59,7 +59,7 @@ public class Splasher {
                     attackTarget = new MapLocation(-1, -1);
                 }
             }
-            // TODO: make it change targets if it finds ruin with 24 empty/ally paint
+            // : make it change targets if it finds ruin with 24 empty/ally paint
         }
         if (attackTarget.x == -1) {
             int best = -1;

@@ -118,9 +118,9 @@ public class Soldier {
             }
         }
         // search for SRP markers
-        // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // TODO: ALSO REPAIRING
-        // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
+        // : BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
+        // : ALSO REPAIRING
+        // : EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP on current square is possible
         if (canBuildSRPHere(G.me)) {
@@ -280,7 +280,7 @@ public class Soldier {
         }
         if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
             G.rc.completeResourcePattern(resourceLocation);
-            // TODO: PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
+            // : PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
             // put the 4 optimal locations of next pattern into a queue
             // that the bot then pathfinds to and checks if can build pattern
             mode = EXPLORE;
