@@ -107,19 +107,20 @@ public class Splasher {
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
                             int paintScore = 0;
-                            if (paint == PaintType.EMPTY)
+                            if (paint == PaintType.EMPTY) {
                                 paintScore = 1;
-                            if (paint.isEnemy()) {
+                            }
+                            else if (paint.isEnemy()) {
                                 paintScore = 2; // bonus points for deleting opponent paint
                             }
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
                             if (allyRobotsList.indexOf(nxt.toString()) != -1) {
-                                score += paintScore; // bonus points for painting self
+                                score += paintScore; // bonus points for painting allies
                             }
                             if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
-                                score += paintScore; // bonus points for painting self
+                                score += paintScore; // bonus points for painting opponents
                             }
                             score += paintScore;
                         }
