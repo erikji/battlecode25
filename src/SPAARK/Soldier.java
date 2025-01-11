@@ -150,6 +150,7 @@ public class Soldier {
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             ruinLocation = null;
+            return;
         }
         // bot with lowest id and bot with highest id builds tower
         int existingSoldiers = 0;
