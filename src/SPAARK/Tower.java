@@ -34,7 +34,7 @@ public class Tower {
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
-        if (spawnedRobots < 2) {
+        if (spawnedRobots < 1) {
             for (MapLocation loc : spawnLocs) {
                 if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
                     G.rc.buildRobot(UnitType.SOLDIER, loc);
@@ -43,7 +43,8 @@ public class Tower {
                     break;
                 }
             }
-        } else {
+        } else if (G.rc.getNumberTowers() > 2 || G.rc.getRoundNum() > 50) {
+            //don't suffocate money until we built a tower
             switch (spawnedRobots % 5) {
                 // make sure to subtract 2
                 case 0:
