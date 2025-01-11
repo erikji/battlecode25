@@ -207,7 +207,14 @@ public class Soldier {
         MapInfo me = G.rc.senseMapInfo(G.me);
         // place paint under self to avoid passive paint drain if possible
         if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
-            G.rc.attack(G.me);
+            //determine which checkerboard pattern to copy
+            int[] cnt = new int[]{0,0};
+            for (int i = G.infos.length; --i >= 0;) {
+                if (G.infos[i].getPaint() == PaintType.ALLY_SECONDARY) {
+                    cnt[(G.infos[i].getMapLocation().x+G.infos[i].getMapLocation().y)&1]++;
+                }
+            }
+            G.rc.attack(G.me, (cnt[(G.me.x+G.me.y)&1]>cnt[(1+G.me.x+G.me.y)&1]?true:false));
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
