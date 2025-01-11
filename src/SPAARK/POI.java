@@ -26,7 +26,7 @@ public class POI {
     // symmetry detection
     // set bit if its a wall, ruin, or we explored it, and use bit operators to
     // check symmetry
-    public static long[] wall = new long[60];
+    public static long[] wall = new long[60]; // wall[xy.y] |= 1L << xy.x;
     public static long[] ruin = new long[60];
     public static long[] explored = new long[60];
     public static boolean[] symmetry = new boolean[] { true, true, true };
@@ -116,7 +116,9 @@ public class POI {
     // bytecode optimize this later
     // bytecode optimize this later
     // uses a ton of bytecode wtf?
-    public static void updateInfo() throws Exception {
+    public static void updateRound() throws Exception {
+        readMessages();
+        
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {

@@ -9,9 +9,6 @@ public class Soldier {
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
     // if already lots of soldiers near a ruin that needs to be built
-    public static MapLocation[] excludedRuins = new MapLocation[] { G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc,
-            G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc, G.invalidLoc };
-    public static int excludedRuinIndex = 0; // rotating exclusion list
 
     // allowed marker locations
     // fills entire vision range
@@ -73,18 +70,6 @@ public class Soldier {
      */
     public static void run() throws Exception {
         // occasionally clear excluded build ruins
-        if (G.rc.getRoundNum() % 50 == 0) {
-            excludedRuins[0] = G.invalidLoc;
-            excludedRuins[1] = G.invalidLoc;
-            excludedRuins[2] = G.invalidLoc;
-            excludedRuins[3] = G.invalidLoc;
-            excludedRuins[4] = G.invalidLoc;
-            excludedRuins[5] = G.invalidLoc;
-            excludedRuins[6] = G.invalidLoc;
-            excludedRuins[7] = G.invalidLoc;
-            excludedRuins[8] = G.invalidLoc;
-            excludedRuins[9] = G.invalidLoc;
-        }
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
@@ -159,7 +144,6 @@ public class Soldier {
             }
             if (existingSoldiers > 4) {
                 mode = EXPLORE;
-                excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
                 ruinLocation = null;
                 return;
             }
@@ -167,7 +151,6 @@ public class Soldier {
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
-            excludedRuins[excludedRuinIndex = (excludedRuinIndex + 1) % excludedRuins.length] = ruinLocation;
             ruinLocation = null;
         }
     }
@@ -192,34 +175,20 @@ public class Soldier {
         // find towers to attack/build out of vision
         MapLocation bestLoc = null;
         int bestDistanceSquared = 10000;
-        searchTowers: for (int i = 144; --i >= 0;) {
+        for (int i = 144; --i >= 0;) {
             if (POI.towers[i] == -1) {
                 break;
             }
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)) {
-                    for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == G.invalidLoc)
-                            continue;
-                        if (pos.equals(excludedRuins[j])) {
-                            continue searchTowers;
-                        }
-                    }
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && G.lastVisited[pos.x][pos.y] + 50 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
             } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 //prioritize opponent towers more than neutral towers, so it has to be REALLY close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)) {
-                    for (int j = excludedRuins.length; --j >= 0;) {
-                        if (excludedRuins[j] == G.invalidLoc)
-                            continue;
-                        if (pos.equals(excludedRuins[j])) {
-                            continue searchTowers;
-                        }
-                    }
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && G.lastVisited[pos.x][pos.y] + 50 < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; //lol 
                     bestLoc = pos;
                 }
