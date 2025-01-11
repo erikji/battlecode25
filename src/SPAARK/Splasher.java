@@ -190,6 +190,8 @@ public class Splasher {
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 for (int dir = 9; --dir >= 0;) {
+                    // TODO: negative weight for painting SRP
+                    // TODO: extra weight based on # of enemy robots
                     // only care about sqrt(2) distance because bytecode restrictions
                     MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                     if (G.rc.canSenseLocation(nxt)) {
