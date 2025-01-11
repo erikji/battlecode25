@@ -171,9 +171,9 @@ public class POI {
             ruin[xy.y] |= 1L << xy.x;
         }
         if (firstUpdate) {
-            for (int i = G.infos.length; --i >= 0;) {
-                MapLocation xy = G.infos[i].getMapLocation();
-                if (G.infos[i].isWall()) {
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
+                if (G.nearbyMapInfos[i].isWall()) {
                     wall[xy.y] |= 1L << xy.x;
                 }
                 explored[xy.y] |= 1L << xy.x;
