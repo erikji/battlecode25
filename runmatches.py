@@ -25,6 +25,18 @@ maps += ['DefaultMedium']
 maps += ['DefaultLarge']
 maps += ['DefaultHuge']
 
+maps += ['[EDGE] microtest']
+maps += ['[SP] ChessBattleAdvanced']
+maps += ['[EDGE] srp spam']
+maps += ['[SP2] Duels']
+maps += ['[SP2] Boulders']
+maps += ['[SP2] Arena']
+maps += ['[SP2] CheckersFightIntermediate']
+maps += ['[EDGE] ruins']
+maps += ['[SP] ChessBattleUnadvanced']
+maps += ['[SP2] Geometric']
+maps += ['[SP] RoundAbout']
+
 matches = list(product(bots, maps))
 
 numWinsMapping = {
