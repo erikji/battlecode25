@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN10;
 
 import battlecode.common.*;
 import java.util.*;

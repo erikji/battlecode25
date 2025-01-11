@@ -1,6 +1,7 @@
 *.DS_Store
 Battlecode Client*
 __pycache__
+matches-summary.txt
 
 ###### BATTLECODE ######
 
