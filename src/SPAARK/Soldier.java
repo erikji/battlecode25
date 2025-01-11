@@ -33,8 +33,9 @@ public class Soldier {
     public static final int EXPLORE = 0;
     public static final int BUILD_TOWER = 1;
     public static final int BUILD_RESOURCE = 2;
-    public static final int ATTACK = 3;
-    public static final int RETREAT = 4;
+    public static final int EXPAND_RESOURCE = 3;
+    public static final int ATTACK = 4;
+    public static final int RETREAT = 5;
     public static int mode = EXPLORE;
     // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 75;
@@ -50,9 +51,11 @@ public class Soldier {
      * Run around randomly while painting below self, maybe check sus POI stuff
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * If can build SRP nearby (adjacent), queue location and enter SRP expand mode
+     * Attempt to repair SRPs
      * 
      * Build tower:
      * If lots of allied soldiers near ruin return to explore, they got it
+     * (2 bots - lowest and highest id, within range, build tower)
      * Place stuff
      * Complete tower, return to explore
      * 
@@ -67,6 +70,7 @@ public class Soldier {
      * 
      * Attack:
      * Attack tower until ded lmao
+     * Attempt to repair SRPs if not in range to attack tower
      */
     public static void run() throws Exception {
         if (G.rc.getPaint() < G.rc.getType().paintCapacity / 3) {
@@ -107,19 +111,26 @@ public class Soldier {
                     mode = ATTACK;
                     return;
                 }
-            } else if (G.rc.getNumberTowers() < 25 && G.lastVisited[loc.y][loc.x] > G.rc.getRoundNum() + VISIT_TIMEOUT) {
+            } else if (G.rc.getNumberTowers() < 25
+                    && G.lastVisited[loc.y][loc.x] > G.rc.getRoundNum() + VISIT_TIMEOUT) {
                 ruinLocation = loc;
                 mode = BUILD_TOWER;
                 return;
             }
         }
-        // search for SRP markers
+        // search for SRP markers for repairing/building/expanding
         // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
         // TODO: ALSO REPAIRING
         // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
-        // TODO: SEARCH ALL 9 DIRECTIONS
         // don't make it remove and rebuild patterns that interfere?
-        // see if SRP on current square is possible
+        // see if SRP is possible nearby
+        for (int i = 8; --i >= 0;) {
+            MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
+            if (canBuildSRPHere(loc)) {
+                srpCheckLocations = new MapLocation[] { loc };
+                mode = EXPAND_RESOURCE;
+            }
+        }
         if (canBuildSRPHere(G.me)) {
             // place markers
             resourceLocation = G.me;
@@ -140,19 +151,17 @@ public class Soldier {
             mode = EXPLORE;
             ruinLocation = null;
         }
-        // don't leave the tower if you're close to the tower
-        if (!G.me.isWithinDistanceSquared(ruinLocation, 1)) {
-            int existingSoldiers = 0;
-            for (int i = G.allyRobots.length; --i >= 0;) {
-                if (G.allyRobots[i].type == UnitType.SOLDIER
-                        && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
-                    existingSoldiers++;
-                }
+        // bot with lowest id and bot with highest id builds tower
+        int existingSoldiers = 0;
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            if (G.allyRobots[i].type == UnitType.SOLDIER
+                    && G.allyRobots[i].location.isWithinDistanceSquared(ruinLocation, 8)) {
+                existingSoldiers++;
             }
-            if (existingSoldiers > 2) {
-                mode = EXPLORE;
-                ruinLocation = null;
-            }
+        }
+        if (existingSoldiers > 4) {
+            mode = EXPLORE;
+            ruinLocation = null;
         }
     }
 
@@ -162,6 +171,10 @@ public class Soldier {
     }
 
     public static void expandResourceCheckMode() throws Exception {
+        // FOR NOW, JUST RE-ENTER EXPLORE
+        // CODE NOT DONE
+        mode = EXPLORE;
+        exploreCheckMode();
         // if can see optimal queued location and can't build SRP set to go to next
         // location
         // if queue empty go back to explore mode
@@ -214,7 +227,7 @@ public class Soldier {
                     cnt[(G.infos[i].getMapLocation().x + G.infos[i].getMapLocation().y) & 1]++;
                 }
             }
-            G.rc.attack(G.me, (cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1] ? true : false));
+            G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
@@ -248,6 +261,7 @@ public class Soldier {
                     POI.intifyTower(G.team, Robot.towers[t]) | POI.intifyLocation(ruinLocation));
             mode = EXPLORE;
             Motion.exploreRandomly();
+            // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             ruinLocation = null;
         } else {
@@ -283,8 +297,9 @@ public class Soldier {
             // TODO: PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
             // put the 4 optimal locations of next pattern into a queue
             // that the bot then pathfinds to and checks if can build pattern
-            mode = EXPLORE;
+            mode = EXPAND_RESOURCE;
             Motion.exploreRandomly();
+            // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
             resourceLocation = null;
         } else {
@@ -343,6 +358,10 @@ public class Soldier {
             }
         }
         return true;
+    }
+
+    public static void attemptRepairSRP() throws Exception {
+
     }
 
     public static Micro attackMicro = new Micro() {
