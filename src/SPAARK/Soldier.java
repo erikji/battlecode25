@@ -124,15 +124,15 @@ public class Soldier {
         // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
         // don't make it remove and rebuild patterns that interfere?
         // see if SRP is possible nearby
-        for (int i = 8; --i >= 0;) {
-            MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-            if (canBuildSRPHere(loc)) {
-                // TOOD: prioritize lining up checkerboards
-                srpCheckLocations = new MapLocation[] { loc };
-                mode = BUILD_RESOURCE;
-                break;
-            }
-        }
+        // for (int i = 8; --i >= 0;) {
+        //     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
+        //     if (canBuildSRPHere(loc)) {
+        //         // TOOD: prioritize lining up checkerboards
+        //         srpCheckLocations = new MapLocation[] { loc };
+        //         mode = BUILD_RESOURCE;
+        //         break;
+        //     }
+        // }
         if (canBuildSRPHere(G.me)) {
             // place markers
             resourceLocation = G.me;
