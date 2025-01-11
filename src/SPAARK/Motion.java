@@ -1,12 +1,6 @@
 package SPAARK;
 
-import java.util.concurrent.ExecutionException;
-
-import battlecode.common.Clock;
-import battlecode.common.Direction;
-import battlecode.common.MapInfo;
-import battlecode.common.MapLocation;
-import battlecode.common.PaintType;
+import battlecode.common.*;
 
 public class Motion {
     public static final boolean ENABLE_EXPLORE_INDICATORS = false;
@@ -201,10 +195,10 @@ public class Motion {
     }
 
     // bugnav helpers
-    
+
     public static MapLocation bugnavTarget;
     public static int bugnavMode = -1;
-    
+
     public static int minDistanceToTarget;
     public static int maxDistanceFromTarget;
     public static int minCircleDistance;
@@ -212,16 +206,17 @@ public class Motion {
     public static boolean obstacleOnRight;
     public static MapLocation currentObstacle;
     public static StringBuilder visitedList;
-    
-    public static Direction bug2Helper(MapLocation target, int mode, int minCircleDistance1, int maxCircleDistance1) throws Exception {
+
+    public static Direction bug2Helper(MapLocation target, int mode, int minCircleDistance1, int maxCircleDistance1)
+            throws Exception {
         boolean stuck = true;
-        for (int i = 8; --i >= 0; ) {
+        for (int i = 8; --i >= 0;) {
             if (G.rc.canMove(G.DIRECTIONS[i])) {
                 stuck = false;
                 break;
             }
         }
-    
+
         if (stuck) {
             return Direction.CENTER;
         }
@@ -233,7 +228,7 @@ public class Motion {
         bugnavMode = mode;
         minCircleDistance = minCircleDistance1;
         maxCircleDistance = maxCircleDistance1;
-        
+
         int distanceToTarget = getChebyshevDistance(G.me, target);
         switch (bugnavMode) {
             case TOWARDS:
@@ -257,8 +252,7 @@ public class Motion {
                         reset();
                         maxDistanceFromTarget = distanceToTarget;
                     }
-                }
-                else if (dist > maxCircleDistance) {
+                } else if (dist > maxCircleDistance) {
                     if (distanceToTarget < minDistanceToTarget) {
                         reset();
                         minDistanceToTarget = distanceToTarget;
@@ -266,18 +260,19 @@ public class Motion {
                 }
                 break;
         }
-    
-        if (currentObstacle != null && G.rc.canSenseLocation(currentObstacle) && G.rc.sensePassability(currentObstacle)) {
+
+        if (currentObstacle != null && G.rc.canSenseLocation(currentObstacle)
+                && G.rc.sensePassability(currentObstacle)) {
             reset();
         }
-    
+
         if (visitedList.toString().contains("" + getState())) {
             reset();
         }
         visitedList.append("" + getState());
 
         Direction targetDirection = getTargetDirection();
-    
+
         if (currentObstacle == null) {
             if (G.rc.canMove(targetDirection)) {
                 return targetDirection;
@@ -288,7 +283,7 @@ public class Motion {
 
         return followWall(true);
     }
-    
+
     public static void reset() {
         minDistanceToTarget = Integer.MAX_VALUE;
         maxDistanceFromTarget = 0;
@@ -301,8 +296,7 @@ public class Motion {
         if (G.me.equals(bugnavTarget)) {
             if (bugnavMode == AROUND) {
                 return Direction.EAST;
-            }
-            else {
+            } else {
                 return Direction.CENTER;
             }
         }
@@ -315,8 +309,7 @@ public class Motion {
                 int dist = G.me.distanceSquaredTo(bugnavTarget);
                 if (dist < minCircleDistance) {
                     direction = direction.opposite();
-                }
-                else if (dist <= maxCircleDistance) {
+                } else if (dist <= maxCircleDistance) {
                     direction = direction.rotateLeft().rotateLeft();
                     if (circleDirection == COUNTER_CLOCKWISE) {
                         direction = direction.opposite();
@@ -331,10 +324,10 @@ public class Motion {
         }
         return direction;
     }
-    
+
     public static void setInitialDirection(Direction forward) throws Exception {
         Direction left = forward.rotateLeft();
-        for (int i = 8; --i >= 0; ) {
+        for (int i = 8; --i >= 0;) {
             MapLocation location = G.rc.adjacentLocation(left);
             if (G.rc.onTheMap(location) && G.rc.sensePassability(location)) {
                 break;
@@ -344,7 +337,7 @@ public class Motion {
         }
 
         Direction right = forward.rotateRight();
-        for (int i = 8; --i >= 0; ) {
+        for (int i = 8; --i >= 0;) {
             MapLocation location = G.rc.adjacentLocation(right);
             if (G.rc.onTheMap(location) && G.rc.sensePassability(location)) {
                 break;
@@ -363,26 +356,23 @@ public class Motion {
 
         if (leftDistance < rightDistance) {
             obstacleOnRight = true;
-        }
-        else if (rightDistance < leftDistance) {
+        } else if (rightDistance < leftDistance) {
             obstacleOnRight = false;
-        }
-        else {
+        } else {
             obstacleOnRight = G.me.distanceSquaredTo(leftLocation) < G.me.distanceSquaredTo(rightLocation);
         }
 
         if (obstacleOnRight) {
             currentObstacle = G.rc.adjacentLocation(left.rotateRight());
-        }
-        else {
+        } else {
             currentObstacle = G.rc.adjacentLocation(right.rotateLeft());
         }
     }
-    
+
     public static Direction followWall(boolean canRotate) throws Exception {
         Direction direction = G.rc.getLocation().directionTo(currentObstacle);
 
-        for (int i = 8; --i >= 0; ) {
+        for (int i = 8; --i >= 0;) {
             direction = obstacleOnRight ? direction.rotateLeft() : direction.rotateRight();
             if (G.rc.canMove(direction)) {
                 return direction;
@@ -416,7 +406,7 @@ public class Motion {
         Direction counterClockwiseLastDir = lastDir;
         int counterClockwiseStuck = 0;
         search: for (int t = 0; t < 10; t++) {
-        // search: for (int t = 0; t < 2; t++) {
+            // search: for (int t = 0; t < 2; t++) {
             if (clockwiseLoc.equals(dest)) {
                 break;
             }
@@ -498,7 +488,6 @@ public class Motion {
             }
             lastDir = Direction.CENTER;
         }
-
 
         boolean stuck = true;
         for (int i = 4; --i >= 0;) {
@@ -597,9 +586,9 @@ public class Motion {
         // G.indicatorString.append("ROTATION=" + rotation + " ");
         if (rotation == NONE) {
             // if (G.rng.nextInt(2) == 0) {
-            //     rotation = CLOCKWISE;
+            // rotation = CLOCKWISE;
             // } else {
-            //     rotation = COUNTER_CLOCKWISE;
+            // rotation = COUNTER_CLOCKWISE;
             // }
             int[] simulated = simulateMovement(me, dest);
 
@@ -613,36 +602,36 @@ public class Motion {
             // + " ");
             int tempMode = mode;
             if (mode == AROUND) {
-            if (clockwiseDist < minRadiusSquared) {
-            if (counterClockwiseDist < minRadiusSquared) {
-            tempMode = AWAY;
-            } else {
-            tempMode = AWAY;
-            }
-            } else {
-            if (counterClockwiseDist < minRadiusSquared) {
-            tempMode = AWAY;
-            } else {
-            tempMode = TOWARDS;
-            }
-            }
+                if (clockwiseDist < minRadiusSquared) {
+                    if (counterClockwiseDist < minRadiusSquared) {
+                        tempMode = AWAY;
+                    } else {
+                        tempMode = AWAY;
+                    }
+                } else {
+                    if (counterClockwiseDist < minRadiusSquared) {
+                        tempMode = AWAY;
+                    } else {
+                        tempMode = TOWARDS;
+                    }
+                }
             }
             if (clockwiseStuck) {
-            rotation = COUNTER_CLOCKWISE;
+                rotation = COUNTER_CLOCKWISE;
             } else if (counterClockwiseStuck) {
-            rotation = CLOCKWISE;
+                rotation = CLOCKWISE;
             } else if (tempMode == TOWARDS) {
-            if (clockwiseDist < counterClockwiseDist) {
-            rotation = CLOCKWISE;
-            } else {
-            rotation = COUNTER_CLOCKWISE;
-            }
+                if (clockwiseDist < counterClockwiseDist) {
+                    rotation = CLOCKWISE;
+                } else {
+                    rotation = COUNTER_CLOCKWISE;
+                }
             } else if (tempMode == AWAY) {
-            if (clockwiseDist < counterClockwiseDist) {
-            rotation = COUNTER_CLOCKWISE;
-            } else {
-            rotation = CLOCKWISE;
-            }
+                if (clockwiseDist < counterClockwiseDist) {
+                    rotation = COUNTER_CLOCKWISE;
+                } else {
+                    rotation = CLOCKWISE;
+                }
             }
         }
 
@@ -687,12 +676,13 @@ public class Motion {
 
     static int total = 0;
     static int turns = 0;
+
     public static void bugnavTowards(MapLocation dest) throws Exception {
-        int a = Clock.getBytecodeNum();
+        // int a = Clock.getBytecodeNum();
         bugnavTowards(dest, defaultMicro);
-        total += Clock.getBytecodeNum() - a;
+        // total += Clock.getBytecodeNum() - a;
         turns++;
-        G.indicatorString.append("bug: " + (total / turns));
+        // G.indicatorString.append("BUG-BT" + (total / turns) + " ");
     }
 
     public static void bugnavTowards(MapLocation dest, Micro m) throws Exception {
@@ -742,7 +732,8 @@ public class Motion {
     public static void bugnavAround(MapLocation dest, int minRadiusSquared, int maxRadiusSquared, Micro m)
             throws Exception {
         if (G.rc.isMovementReady()) {
-            // Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared, maxRadiusSquared);
+            // Direction d = bug2Helper(G.rc.getLocation(), dest, AROUND, minRadiusSquared,
+            // maxRadiusSquared);
             Direction d = bug2Helper(dest, AROUND, minRadiusSquared, maxRadiusSquared);
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
@@ -1072,9 +1063,8 @@ public class Motion {
     }
 
     public static void bfsnav(MapLocation dest, Micro m) throws Exception {
-        G.indicatorString.append("BFS-BT: " + Clock.getBytecodesLeft() + "-");
+        int a = Clock.getBytecodesLeft();
         updateBfsTarget(dest);
-
         if (!G.rc.getLocation().equals(dest) && G.rc.isMovementReady()) {
             Direction d = getBfsDirection(dest);
             if (d == Direction.CENTER) {
@@ -1090,7 +1080,7 @@ public class Motion {
                 move(G.ALL_DIRECTIONS[best]);
         }
         bfs();
-        G.indicatorString.append(Clock.getBytecodesLeft() + " ");
+        G.indicatorString.append("BFS-BT: " + (Clock.getBytecodesLeft() - a) + "-");
     }
 
     public static void updateBfsTarget(MapLocation dest) throws Exception {

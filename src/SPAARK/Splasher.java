@@ -174,21 +174,22 @@ public class Splasher {
                 }
             }
             // else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
-            //     MapLocation pos = POI.parseLocation(POI.towers[i]);
-            //     // prioritize opponent towers more than neutral towers, so it has to be REALLY
-            //     // close
-            //     if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
-            //             && !G.me.isWithinDistanceSquared(pos, 20)) {
-            //         // for (int j = excludedRuins.length; --j >= 0;) {
-            //         // if (excludedRuins[j] == G.invalidLoc)
-            //         // continue;
-            //         // if (pos.equals(excludedRuins[j])) {
-            //         // continue searchTowers;
-            //         // }
-            //         // }
-            //         bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
-            //         bestLoc = pos;
-            //     }
+            // MapLocation pos = POI.parseLocation(POI.towers[i]);
+            // // prioritize opponent towers more than neutral towers, so it has to be
+            // REALLY
+            // // close
+            // if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
+            // && !G.me.isWithinDistanceSquared(pos, 20)) {
+            // // for (int j = excludedRuins.length; --j >= 0;) {
+            // // if (excludedRuins[j] == G.invalidLoc)
+            // // continue;
+            // // if (pos.equals(excludedRuins[j])) {
+            // // continue searchTowers;
+            // // }
+            // // }
+            // bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
+            // bestLoc = pos;
+            // }
             // }
         }
         if (bestLoc == null) {
@@ -265,7 +266,8 @@ public class Splasher {
     }
 
     /**
-     * Searches for towers/ruins in POI to attack, and enters ATTACK mode if found target
+     * Searches for towers/ruins in POI to attack, and enters ATTACK mode if found
+     * target
      */
     public static void updateAttackTarget() throws Exception {
         if (attackTargetTower != -1) {
