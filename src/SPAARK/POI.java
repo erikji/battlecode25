@@ -225,19 +225,19 @@ public class POI {
                 return true;
             case 1: // vert
                 for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
-                    long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[i];
-                    if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[i]) & exploredRow) != 0)
+                    long exploredRow = (Long.reverse(explored[i]) >> 64 - w) & explored[i];
+                    if ((((Long.reverse(wall[i]) >> 64 - w) ^ wall[i]) & exploredRow) != 0)
                         return false;
-                    if ((((Long.reverse(ruin[i]) << 64 - w) ^ ruin[i]) & exploredRow) != 0)
+                    if ((((Long.reverse(ruin[i]) >> 64 - w) ^ ruin[i]) & exploredRow) != 0)
                         return false;
                 }
                 return true;
             case 2: // rot
                 for (int i = Math.min(G.me.y + 5, h); --i >= Math.max(G.me.y - 4, 0);) {
-                    long exploredRow = (Long.reverse(explored[i]) << 64 - w) & explored[h - i - 1];
-                    if ((((Long.reverse(wall[i]) << 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
+                    long exploredRow = (Long.reverse(explored[i]) >> 64 - w) & explored[h - i - 1];
+                    if ((((Long.reverse(wall[i]) >> 64 - w) ^ wall[h - i - 1]) & exploredRow) != 0)
                         return false;
-                    if ((((Long.reverse(ruin[i]) << 64 - w) ^ ruin[h - i - 1]) & exploredRow) != 0)
+                    if ((((Long.reverse(ruin[i]) >> 64 - w) ^ ruin[h - i - 1]) & exploredRow) != 0)
                         return false;
                 }
                 return true;
