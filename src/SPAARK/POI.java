@@ -81,14 +81,14 @@ public class POI {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
                     towers[i] = data;
-                    robotsThatKnowInformation[i] = new StringBuilder(":" + source + ":");
+                    robotsThatKnowInformation[i] = new StringBuilder(":" + source);
                     if (source == -1) {
                         critical[i] = true;
                     } else {
                         critical[i] = false;
                     }
                 } else if (source != -1) {
-                    robotsThatKnowInformation[i].append(":" + source + ":");
+                    robotsThatKnowInformation[i].append(":" + source);
                     critical[i] = false;
                 }
                 break;
@@ -99,14 +99,14 @@ public class POI {
     public static void removeValidSymmetry(int source, int index) {
         if (symmetry[index]) {
             symmetry[index] = false;
-            robotsThatKnowInformation[144] = new StringBuilder(":" + source + ":");
+            robotsThatKnowInformation[144] = new StringBuilder(":" + source);
             if (source == -1) {
                 criticalSymmetry = true;
             } else {
                 criticalSymmetry = false;
             }
         } else if (source != -1) {
-            robotsThatKnowInformation[144].append(":" + source + ":");
+            robotsThatKnowInformation[144].append(":" + source);
         }
     };
 
@@ -132,6 +132,7 @@ public class POI {
 
         drawIndicators();
 
+        int a = Clock.getBytecodeNum();
         // update symmetry array
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation xy = nearbyRuins[i];
@@ -144,6 +145,7 @@ public class POI {
             }
             explored[xy.y] |= 1L << xy.x;
         }
+        G.indicatorString.append("infos: " + (Clock.getBytecodeNum() - a) + " ");
         if (symmetry[0] && !symmetryValid(0)) {
             removeValidSymmetry(-1, 0);
         }
@@ -153,6 +155,7 @@ public class POI {
         if (symmetry[2] && !symmetryValid(2)) {
             removeValidSymmetry(-1, 2);
         }
+        G.indicatorString.append("POI: " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
     };
 
@@ -207,19 +210,19 @@ public class POI {
                         return;
                     int message = -1;
                     int messages = 0;
-                    if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID() + ":")) {
+                    if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID())) {
                         message = intifySymmetry();
                         messages++;
-                        robotsThatKnowInformation[144].append(":" + r.getID() + ":");
+                        robotsThatKnowInformation[144].append(":" + r.getID());
                     }
                     for (int i = 144; --i >= 0;) {
                         if (towers[i] == -1) {
                             break;
                         }
-                        if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID() + ":")) {
+                        if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID())) {
                             message = appendToMessage(message, towers[i]);
                             messages++;
-                            robotsThatKnowInformation[i].append(":" + r.getID() + ":");
+                            robotsThatKnowInformation[i].append(":" + r.getID());
                             if (messages == 2) {
                                 break;
                             }
@@ -257,20 +260,20 @@ public class POI {
                                     }
                                 }
                             }
-                            if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID() + ":")) {
+                            if (!robotsThatKnowInformation[144].toString().contains(":" + r.getID())) {
                                 message = appendToMessage(message, intifySymmetry());
                                 messages += 1;
-                                robotsThatKnowInformation[144].append(":" + r.getID() + ":");
+                                robotsThatKnowInformation[144].append(":" + r.getID());
                             }
                             if (messages < 2) {
                                 for (int i = 144; --i >= 0;) {
                                     if (towers[i] == -1) {
                                         break;
                                     }
-                                    if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID() + ":")) {
+                                    if (!robotsThatKnowInformation[i].toString().contains(":" + r.getID())) {
                                         message = appendToMessage(message, towers[i]);
                                         messages++;
-                                        robotsThatKnowInformation[i].append(":" + r.getID() + ":");
+                                        robotsThatKnowInformation[i].append(":" + r.getID());
                                         if (messages == 2) {
                                             break;
                                         }

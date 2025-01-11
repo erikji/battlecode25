@@ -34,6 +34,7 @@ public class Tower {
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
+        // if (spawnedRobots < 1 || true) {
         if (spawnedRobots < 1) {
             for (MapLocation loc : spawnLocs) {
                 if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
