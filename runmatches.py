@@ -17,7 +17,7 @@ errors = []
 currentBot = 'SPAARK' #bot to test
 #SPAARK IS THE BASELINE
 
-bots = ['a']
+bots = ['TSPAARKJAN10']
 
 maps = []
 maps += ['DefaultSmall']
@@ -36,6 +36,19 @@ maps += ['[EDGE] ruins']
 maps += ['[SP] ChessBattleUnadvanced']
 maps += ['[SP2] Geometric']
 maps += ['[SP] RoundAbout']
+maps += ['[SP2] 2025']
+maps += ['[SP2] 5757']
+maps += ['[SP] Lingo']
+maps += ['[SP] MapIsNotReference']
+maps += ['[SP] ModernArt3']
+maps += ['[SP] Spirals']
+maps += ['[SP] Squiggles']
+maps += ['[SP] Stars']
+maps += ['[SP] unfinishedlabryinth']
+maps += ['[SP2] Piston']
+maps += ['[SP] Cornucopia']
+maps += ['[SP2] Buh']
+maps += ['[SP2] Arena2']
 
 matches = list(product(bots, maps))
 
