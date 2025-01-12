@@ -47,7 +47,8 @@ public class Robot {
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
     public static int getRetreatPaint() throws Exception {
-        return Math.max(paintLost + RETREAT_PAINT_OFFSET, G.rc.getType().paintCapacity / RETREAT_PAINT_RATIO);
+        // return Math.max(paintLost + RETREAT_PAINT_OFFSET, G.rc.getType().paintCapacity / RETREAT_PAINT_RATIO);
+        return Math.max(paintLost + 20, G.rc.getType().paintCapacity / 4);
     }
 
     public static void retreat() throws Exception {
