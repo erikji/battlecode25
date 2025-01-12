@@ -42,9 +42,11 @@ public class Soldier {
     public static final int ATTACK = 4;
     public static final int RETREAT = 5;
     public static int mode = EXPLORE;
+
     // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 75;
     public static final int MIN_SRP_ROUND = 10;
+    public static final int EXPLORE_OPP_WEIGHT = 5;
 
     public static MapLocation[] nearbyRuins;
 
@@ -152,6 +154,7 @@ public class Soldier {
                 seenSrpMarkers[loc.y - meY + 4][loc.x - meX + 4] = G.nearbyMapInfos[i]
                         .getMark() == PaintType.ALLY_SECONDARY;
             }
+            G.indicatorString.append((Clock.getBytecodeNum() - ohnoes) + " ");
             // don't check for SRP on edges of vision (from 1-7)
             searchExpansion: for (int i = 0; i++ < 7;) {
                 for (int j = 1; j++ < 7;) {
@@ -206,7 +209,7 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
-        G.lastVisited[ruinLocation.y][ruinLocation.x] = G.rc.getRoundNum();
+        G.setLastVisited(ruinLocation.x, ruinLocation.y, G.rc.getRoundNum());
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -311,18 +314,17 @@ public class Soldier {
                 // attack these
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                        && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
+                        && G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.rc.getRoundNum()) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
             } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
                 // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
-                // prioritize opponent towers more than neutral towers, so it has to be REALLY
-                // close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
-                        && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
+                // prioritize opponent towers more than ruins, so it has to be REALLY close
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
+                        && G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.rc.getRoundNum()) {
+                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
                     bestLoc = pos;
                 }
             }
