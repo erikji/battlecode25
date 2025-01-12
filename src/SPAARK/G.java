@@ -69,6 +69,6 @@ public class G {
         lastVisited[y / 2][x / 2] = n;
     }
     public static int getLastVisited(int x, int y) {
-        return lastVisited[y / 3][x / 3];
+        return lastVisited[y / 2][x / 2];
     }
 }
