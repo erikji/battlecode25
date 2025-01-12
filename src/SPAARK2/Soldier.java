@@ -208,9 +208,9 @@ public class Soldier {
         if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
             //determine which checkerboard pattern to copy
             int[] cnt = new int[]{0,0};
-            for (int i = G.infos.length; --i >= 0;) {
-                if (G.infos[i].getPaint() == PaintType.ALLY_SECONDARY) {
-                    cnt[(G.infos[i].getMapLocation().x+G.infos[i].getMapLocation().y)&1]++;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                if (G.nearbyMapInfos[i].getPaint() == PaintType.ALLY_SECONDARY) {
+                    cnt[(G.nearbyMapInfos[i].getMapLocation().x+G.nearbyMapInfos[i].getMapLocation().y)&1]++;
                 }
             }
             G.rc.attack(G.me, (cnt[(G.me.x+G.me.y)&1]>cnt[(1+G.me.x+G.me.y)&1]?true:false));
@@ -220,18 +220,18 @@ public class Soldier {
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
-        MapInfo[] infos = nearbyMapInfos;
+        MapInfo[] nearbyMapInfos = nearbyMapInfos;
         int t = predictTowerType(ruinLocation);
         // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        for (int i = infos.length; --i >= 0;) {
-            MapLocation loc = infos[i].getMapLocation();
+        for (int i = nearbyMapInfos.length; --i >= 0;) {
+            MapLocation loc = nearbyMapInfos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
                     && loc.isWithinDistanceSquared(ruinLocation, 8)) {
                 int dx = loc.x - ruinLocation.x + 2;
                 int dy = loc.y - ruinLocation.y + 2;
                 if (dx != 2 || dy != 2) {
                     boolean paint = Robot.towerPatterns[t][dx][dy];
-                    PaintType exist = infos[i].getPaint();
+                    PaintType exist = nearbyMapInfos[i].getPaint();
                     if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
                             || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
                         G.rc.attack(loc, paint);
@@ -261,14 +261,14 @@ public class Soldier {
     public static void buildResource() throws Exception {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapInfo[] infos = nearbyMapInfos;
+        MapInfo[] nearbyMapInfos = nearbyMapInfos;
         // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        for (int i = infos.length; --i >= 0;) {
-            MapLocation loc = infos[i].getMapLocation();
+        for (int i = nearbyMapInfos.length; --i >= 0;) {
+            MapLocation loc = nearbyMapInfos[i].getMapLocation();
             if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
                     && loc.isWithinDistanceSquared(resourceLocation, 8)) {
                 boolean paint = Robot.resourcePattern[loc.x - resourceLocation.x + 2][loc.y - resourceLocation.y + 2];
-                PaintType exist = infos[i].getPaint();
+                PaintType exist = nearbyMapInfos[i].getPaint();
                 if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
                         || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
                     G.rc.attack(loc, paint);
@@ -332,11 +332,11 @@ public class Soldier {
                     return false;
             }
         }
-        MapInfo[] infos = nearbyMapInfos;
-        for (int i = infos.length; --i >= 0;) {
+        MapInfo[] nearbyMapInfos = nearbyMapInfos;
+        for (int i = nearbyMapInfos.length; --i >= 0;) {
             // can't have markers without spots but can have spots without markers
-            if ((infos[i].getMark() == PaintType.ALLY_SECONDARY)) {
-                MapLocation loc = infos[i].getMapLocation();
+            if ((nearbyMapInfos[i].getMark() == PaintType.ALLY_SECONDARY)) {
+                MapLocation loc = nearbyMapInfos[i].getMapLocation();
                 if (!allowedSrpMarkerLocations[loc.y - me.y + 5][loc.x - me.x + 5])
                     return false;
             }
