@@ -48,7 +48,7 @@ public class Robot {
 
     public static int getRetreatPaint() throws Exception {
         // return Math.max(paintLost + RETREAT_PAINT_OFFSET, G.rc.getType().paintCapacity / RETREAT_PAINT_RATIO);
-        return Math.max(paintLost + 20, G.rc.getType().paintCapacity / 4);
+        return Math.max(paintLost + 30, G.rc.getType().paintCapacity / 4);
     }
 
     public static void retreat() throws Exception {
@@ -85,17 +85,21 @@ public class Robot {
                 int bestDistance = 0;
                 boolean bestPaint = false;
                 boolean bestCritical = false;
+                boolean hasCritical = false;
                 for (int i = 144; --i >= 0;) {
                     if (POI.towers[i] == -1)
                         break;
+                    if (POI.critical[i]) {
+                        hasCritical = true;
+                    }
                     if (POI.parseTowerTeam(POI.towers[i]) != G.team)
                         continue;
                     // this needs to change
                     boolean paint = POI.parseTowerType(POI.towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER;
-                    if (!paint) {
-                        // This is dumb but borks code for some reason
-                        continue;
-                    }
+                    // if (!paint) {
+                    //     // This is dumb but borks code for some reason
+                    //     continue;
+                    // }
                     if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
                         continue;
                     }
@@ -105,12 +109,12 @@ public class Robot {
                         bestDistance = distance;
                         bestCritical = POI.critical[i];
                         bestPaint = paint;
-                    } else if (bestCritical && !POI.critical[i]) {
+                    } else if (paint && !bestPaint) {
                         best = i;
                         bestDistance = distance;
                         bestCritical = POI.critical[i];
                         bestPaint = paint;
-                    } else if (paint && !bestPaint) {
+                    } else if (bestCritical && !POI.critical[i]) {
                         best = i;
                         bestDistance = distance;
                         bestCritical = POI.critical[i];
@@ -129,6 +133,10 @@ public class Robot {
                     }
                     triedRetreatTowers = new StringBuilder();
                     continue;
+                }
+                if (!hasCritical && !bestPaint) {
+                    retreatTower = -2;
+                    break;
                 }
                 retreatTower = best;
                 triedRetreatTowers.append((char) best);
