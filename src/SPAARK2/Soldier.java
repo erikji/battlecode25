@@ -220,7 +220,6 @@ public class Soldier {
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
-        MapInfo[] nearbyMapInfos = nearbyMapInfos;
         int t = predictTowerType(ruinLocation);
         // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         for (int i = nearbyMapInfos.length; --i >= 0;) {
@@ -261,7 +260,6 @@ public class Soldier {
     public static void buildResource() throws Exception {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapInfo[] nearbyMapInfos = nearbyMapInfos;
         // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         for (int i = nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = nearbyMapInfos[i].getMapLocation();
@@ -332,7 +330,6 @@ public class Soldier {
                     return false;
             }
         }
-        MapInfo[] nearbyMapInfos = nearbyMapInfos;
         for (int i = nearbyMapInfos.length; --i >= 0;) {
             // can't have markers without spots but can have spots without markers
             if ((nearbyMapInfos[i].getMark() == PaintType.ALLY_SECONDARY)) {
