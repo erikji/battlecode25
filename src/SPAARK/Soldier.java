@@ -13,19 +13,20 @@ public class Soldier {
     // fills entire vision range + buffer for checking when adjacent
     // we can set everything outside of 7x7 to true but may be bad for
     // checkerboarding (misaligned checkerboard blocks future SRPs)
-    public static final boolean[][] allowedSrpMarkerLocations = new boolean[][] {
-            { false, false, false, false, false, false, false, false, false, false, false },
-            { false, false, false, true, false, true, false, true, false, false, false },
-            { false, false, true, false, true, false, true, false, true, false, false },
-            { false, true, false, true, false, true, false, true, false, true, false },
-            { false, false, true, false, false, false, false, false, true, false, false },
-            { false, true, false, true, false, false, false, true, false, true, false },
-            { false, false, true, false, false, false, false, false, true, false, false },
-            { false, true, false, true, false, true, false, true, false, true, false },
-            { false, false, true, false, true, false, true, false, true, false, false },
-            { false, false, false, true, false, true, false, true, false, false, false },
-            { false, false, false, false, false, false, false, false, false, false, false },
-    };
+    // CURRENTLY UNUSED
+    // public static final boolean[][] allowedSrpMarkerLocations = new boolean[][] {
+    //         { false, false, false, false, false, false, false, false, false, false, false },
+    //         { false, false, false, true, false, true, false, true, false, false, false },
+    //         { false, false, true, false, true, false, true, false, true, false, false },
+    //         { false, true, false, true, false, true, false, true, false, true, false },
+    //         { false, false, true, false, true, false, true, false, true, false, false },
+    //         { false, true, false, true, false, false, false, true, false, true, false },
+    //         { false, false, true, false, true, false, true, false, true, false, false },
+    //         { false, true, false, true, false, true, false, true, false, true, false },
+    //         { false, false, true, false, true, false, true, false, true, false, false },
+    //         { false, false, false, true, false, true, false, true, false, false, false },
+    //         { false, false, false, false, false, false, false, false, false, false, false },
+    // };
 
     // queue of next locations to check for expanding SRP
     // used in explore mode to mark initial build since needs centered for markers
@@ -518,7 +519,7 @@ public class Soldier {
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             // dots guaranteed to be on map because of expandResourceCheckMode
-            G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+            // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
         }
         G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
@@ -576,9 +577,64 @@ public class Soldier {
             // can't have markers without spots but can have spots without markers
             if ((G.nearbyMapInfos[i].getMark() == PaintType.ALLY_SECONDARY)) {
                 MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-                if (!allowedSrpMarkerLocations[loc.y - me.y + 5][loc.x - me.x + 5])
+                // if (!allowedSrpMarkerLocations[loc.y - me.y + 5][loc.x - me.x + 5])
+                if ((loc.y - me.y + loc.x - me.x) % 2 == 1)
                     return false;
             }
+        }
+        // basically, if all 5 are marked, then that means there is an srp directly here, so its fine
+        // its also fine if all 5 are unmarked
+        // the only problem is when some are marked and some are unmarked, as that means that it is intersecting another srp
+        int total = 0;
+        int canSee = 0;
+        if (G.rc.canSenseLocation(me)) {
+            canSee++;
+            if (G.rc.senseMapInfo(me).getMark() == PaintType.ALLY_SECONDARY) {
+                total++;
+            }
+        }
+        else if (!G.rc.onTheMap(me)) {
+            canSee++;
+        }
+        if (G.rc.canSenseLocation(me.add(Direction.NORTHEAST))) {
+            canSee++;
+            if (G.rc.senseMapInfo(me.add(Direction.NORTHEAST)).getMark() == PaintType.ALLY_SECONDARY) {
+                total++;
+            }
+        }
+        else if (!G.rc.onTheMap(me.add(Direction.NORTHEAST))) {
+            canSee++;
+        }
+        if (G.rc.canSenseLocation(me.add(Direction.NORTHWEST))) {
+            canSee++;
+            if (G.rc.senseMapInfo(me.add(Direction.NORTHWEST)).getMark() == PaintType.ALLY_SECONDARY) {
+                total++;
+            }
+        }
+        else if (!G.rc.onTheMap(me.add(Direction.NORTHWEST))) {
+            canSee++;
+        }
+        if (G.rc.canSenseLocation(me.add(Direction.SOUTHEAST))) {
+            canSee++;
+            if (G.rc.senseMapInfo(me.add(Direction.SOUTHEAST)).getMark() == PaintType.ALLY_SECONDARY) {
+                total++;
+            }
+        }
+        else if (!G.rc.onTheMap(me.add(Direction.SOUTHEAST))) {
+            canSee++;
+        }
+        if (G.rc.canSenseLocation(me.add(Direction.SOUTHWEST))) {
+            canSee++;
+            if (G.rc.senseMapInfo(me.add(Direction.SOUTHWEST)).getMark() == PaintType.ALLY_SECONDARY) {
+                total++;
+            }
+        }
+        else if (!G.rc.onTheMap(me.add(Direction.SOUTHWEST))) {
+            canSee++;
+        }
+        G.indicatorString.append("TOTAL: " + total + "; CANSEE: " + canSee + ";");
+        if (total != 0 && total != canSee) {
+            return false;
         }
         return true;
     }
