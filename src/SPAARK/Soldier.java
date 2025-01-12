@@ -386,18 +386,18 @@ public class Soldier {
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        // spam paint
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-            if (G.rc.canAttack(loc) && loc.isWithinDistanceSquared(ruinLocation, 8)) {
-                int dx = loc.x - ruinLocation.x + 2;
-                int dy = loc.y - ruinLocation.y + 2;
-                if (dx != 2 || dy != 2) {
-                    boolean paint = Robot.towerPatterns[buildTowerType][dx][dy];
+        // do this instead of iterating through nearby map infos
+        boolean[][] towerPattern = Robot.towerPatterns[buildTowerType];
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
+                MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
+                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // also guaranteed can be sensed if can action there
+                if (G.rc.canAttack(loc)) {
+                    boolean paint = towerPattern[dx][dy];
                     PaintType exist = G.rc.senseMapInfo(loc).getPaint();
                     // can't paint enemy paint
-                    // might need !exist.isEnemy()
-                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
+                    if (!exist.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
@@ -430,13 +430,13 @@ public class Soldier {
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 MapLocation loc = resourceLocation.translate(dx - 2, dy - 2);
-                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // location guaranteed to be on the map by canBuildSrpHere calls
                 // also guaranteed can be sensed if can action there
                 if (G.rc.canAttack(loc)) {
                     boolean paint = Robot.resourcePattern[dx][dy];
                     PaintType exist = G.rc.senseMapInfo(loc).getPaint();
-                    if (exist == PaintType.EMPTY
-                            || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY)) {
+                    // can't paint enemy paint
+                    if (!exist.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
