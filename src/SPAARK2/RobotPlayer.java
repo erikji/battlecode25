@@ -16,6 +16,10 @@ public class RobotPlayer {
     public static void updateRound() throws Exception {
         // every round
         updateInfo();
+        MapLocation[] visible = G.rc.getAllLocationsWithinRadiusSquared(G.me, 20);
+        for (int i = visible.length; --i >= 0; --i) {
+            G.lastVisited[visible[i].x][visible[i].y] = G.rc.getRoundNum();
+        }
         POI.updateRound();
     }
 

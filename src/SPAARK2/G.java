@@ -64,12 +64,13 @@ public class G {
     public static int round;
     // divide all coordinates by 2, now 30x30
     // 1/4th the size of 60x60, don't need the resolution
-    public static int[][] lastVisited = new int[30][30];
+//     public static int[][] lastVisited = new int[30][30];
 
-    public static void setLastVisited(int x, int y, int n) {
-        lastVisited[y / 2][x / 2] = n;
-    }
-    public static int getLastVisited(int x, int y) {
-        return lastVisited[y / 2][x / 2];
-    }
+//     public static void setLastVisited(int x, int y, int n) {
+//         lastVisited[y / 2][x / 2] = n;
+//     }
+//     public static int getLastVisited(int x, int y) {
+//         return lastVisited[y / 2][x / 2];
+//     }
+    public static int[][] lastVisited = new int[60][60];
 }
