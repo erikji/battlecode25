@@ -10,6 +10,7 @@ public class RobotPlayer {
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
+        G.round = G.rc.getRoundNum();
     }
 
     public static void updateRound() throws Exception {

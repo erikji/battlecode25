@@ -50,7 +50,7 @@ public class Mopper {
     public static void exploreCheckMode() throws Exception {
         G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
-        if (lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
+        if (lastBuild + 10 < G.round && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
@@ -164,7 +164,7 @@ public class Mopper {
                     G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
                 } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                     mode = EXPLORE;
-                    lastBuild = G.rc.getRoundNum();
+                    lastBuild = G.round;
                     Motion.exploreRandomly();
                     G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
                     ruinLocation = null;
@@ -177,7 +177,7 @@ public class Mopper {
             G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
         } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
             mode = EXPLORE;
-            lastBuild = G.rc.getRoundNum();
+            lastBuild = G.round;
             Motion.exploreRandomly();
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;

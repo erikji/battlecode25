@@ -192,7 +192,7 @@ public class Soldier {
                 return;
             }
         }
-        if (G.rc.getRoundNum() > MIN_SRP_ROUND) {
+        if (G.round > MIN_SRP_ROUND) {
             // see if SRP is possible nearby
             for (int i = 8; --i >= 0;) {
                 MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
@@ -209,7 +209,7 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
-        G.setLastVisited(ruinLocation.x, ruinLocation.y, G.rc.getRoundNum());
+        G.setLastVisited(ruinLocation.x, ruinLocation.y, G.round);
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -314,7 +314,7 @@ public class Soldier {
                 // attack these
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                        && G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.rc.getRoundNum()) {
+                        && (G.round < VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
@@ -323,7 +323,7 @@ public class Soldier {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 // prioritize opponent towers more than ruins, so it has to be REALLY close
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
-                        && G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.rc.getRoundNum()) {
+                        && (G.round < VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
                     bestLoc = pos;
                 }
@@ -441,6 +441,7 @@ public class Soldier {
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
+            // dots guaranteed to be on map because of expandResourceCheckMode
             G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
         }
         G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
