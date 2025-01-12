@@ -138,11 +138,57 @@ public class Soldier {
                 return;
             }
         }
-        // search for SRP markers for repairing/building/expanding
-        // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // TODO: ALSO REPAIRING (enter build mode if is messed up)
-        // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
-        // don't make it remove and rebuild patterns that interfere?
+        // has bytecode checks because uses lots of bytecode
+        if (Clock.getBytecodesLeft() < 12000) {
+            G.indicatorString.append("!CHK-SRP1-BTCODE ");
+        } else {
+            // search for SRP markers for building/repairing/expanding
+            // big mapping very buh lots of bytecode
+            int ohnoes = Clock.getBytecodeNum();
+            int meX = G.me.x, meY = G.me.y;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
+                // stupid vscode formatting
+                seenSrpMarkers[loc.y - meY + 4][loc.x - meX + 4] = G.nearbyMapInfos[i]
+                        .getMark() == PaintType.ALLY_SECONDARY;
+            }
+            // don't check for SRP on edges of vision (from 1-7)
+            searchExpansion: for (int i = 0; i++ < 7;) {
+                for (int j = 1; j++ < 7;) {
+                    // middle + 4 box corners
+                    if (seenSrpMarkers[j][i] && seenSrpMarkers[j - 1][i - 1] && seenSrpMarkers[j - 1][i + 1]
+                            && seenSrpMarkers[j + 1][i + 1] && seenSrpMarkers[j + 1][i - 1]) {
+                        MapLocation loc = G.me.translate(meX + j - 4, meY + i - 4);
+                        if (G.rc.onTheMap(loc)) {
+                            // try to re-complete the pattern
+                            if (G.rc.canCompleteResourcePattern(loc)) {
+                                G.rc.completeResourcePattern(loc);
+                                // signal completion
+                                G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+                            }
+                            mode = EXPAND_RESOURCE;
+                            // SRP expand will enter SRP build, which may repair if needed before expanding
+                            srpCheckLocations = new MapLocation[] { loc };
+                            srpCheckIndex = 0;
+                            break searchExpansion;
+                        }
+                    }
+                }
+                if (Clock.getBytecodesLeft() < 8000) {
+                    G.indicatorString.append((Clock.getBytecodeNum() - ohnoes) + " ");
+                    System.out.println("srp2");
+                    G.indicatorString.append("!CHK-SRP2-BTCODE ");
+                    return;
+                }
+            }
+            G.indicatorString.append((Clock.getBytecodeNum() - ohnoes) + " ");
+            // only if can't expand SRP build nearby
+            if (Clock.getBytecodesLeft() < 8000) {
+                G.indicatorString.append("!CHK-SRP3-BTCODE ");
+                System.out.println("srp3");
+                return;
+            }
+        }
         if (G.rc.getRoundNum() > MIN_SRP_ROUND) {
             // see if SRP is possible nearby
             for (int i = 8; --i >= 0;) {
