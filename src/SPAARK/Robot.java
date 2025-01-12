@@ -50,13 +50,17 @@ public class Robot {
     public static void retreat() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
+        // if no paint towers found it should go to chip tower to update POI and find
+        // paint tower to retreat to
         paintLost = 0;
         if (retreatTower >= 0) {
+            // oopsies tower was replaced
             if (POI.parseTowerTeam(POI.towers[retreatTower]) != G.team) {
                 retreatTower = -1;
             }
         }
         if (retreatTower >= 0) {
+            // don't retreat to tower with lots of bots surrounding it
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 G.indicatorString.append("R: " + G.rc.senseNearbyRobots(loc, 2, G.team).length + " ");
@@ -78,12 +82,11 @@ public class Robot {
                 boolean bestPaint = false;
                 boolean bestCritical = false;
                 for (int i = 144; --i >= 0;) {
-                    if (POI.towers[i] == -1) {
+                    if (POI.towers[i] == -1)
                         break;
-                    }
-                    if (POI.parseTowerTeam(POI.towers[i]) != G.team) {
+                    if (POI.parseTowerTeam(POI.towers[i]) != G.team)
                         continue;
-                    }
+                    // this needs to change
                     boolean paint = POI.parseTowerType(POI.towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER;
                     if (!paint) {
                         // This is dumb but borks code for some reason
