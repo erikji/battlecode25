@@ -39,12 +39,15 @@ public class Robot {
     public static int lastPaint = 0;
     public static int paintLost = 0;
 
+    // retreat calculations
+    public static final int RETREAT_PAINT_OFFSET = 10;
+    public static final int RETREAT_PAINT_RATIO = 5;
+
     public static int retreatTower = -1;
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
     public static int getRetreatPaint() throws Exception {
-        // TODO: this can be micro parameter
-        return Math.max(paintLost + 10, G.rc.getType().paintCapacity / 5);
+        return Math.max(paintLost + RETREAT_PAINT_OFFSET, G.rc.getType().paintCapacity / RETREAT_PAINT_RATIO);
     }
 
     public static void retreat() throws Exception {

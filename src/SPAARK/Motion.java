@@ -720,7 +720,7 @@ public class Motion {
             }
             int[] weights = m.micro(d, dest);
             int best = 8;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 if (weights[i] > weights[best])
                     best = i;
             }
@@ -741,7 +741,7 @@ public class Motion {
             }
             int[] weights = m.micro(d, dest);
             int best = 8;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 if (weights[i] > weights[best])
                     best = i;
             }
@@ -765,7 +765,7 @@ public class Motion {
             }
             int[] weights = m.micro(d, dest);
             int best = 8;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 if (weights[i] > weights[best])
                     best = i;
             }
