@@ -146,9 +146,6 @@ public class Soldier {
                     mode = ATTACK;
                     return;
                 }
-            // } else if (G.rc.getNumberTowers() < 25) {
-            //     // TOWER_CEIL encourages building SRPs to help build more towers
-            //     ruinLocation = loc;
             } else if (G.rc.getNumberTowers() < 25
                     && (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL)) {
                 // TOWER_CEIL encourages building SRPs to help build more towers
@@ -161,22 +158,64 @@ public class Soldier {
                 return;
             }
         }
-        // search for SRP markers
-        // : BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // : ALSO REPAIRING
-        // : EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
-        // don't make it remove and rebuild patterns that interfere?
-        // see if SRP on current square is possible
-        // if (canBuildSRPHere(G.me)) {
-        //     // place markers
-        //     resourceLocation = G.me;
-        //     G.rc.mark(G.me.add(Direction.NORTHWEST), true);
-        //     G.rc.mark(G.me.add(Direction.NORTHEAST), true);
-        //     G.rc.mark(G.me.add(Direction.SOUTHWEST), true);
-        //     G.rc.mark(G.me.add(Direction.SOUTHEAST), true);
-        //     G.indicatorString.append("MK_SRP ");
-        //     mode = BUILD_RESOURCE;
-        // }
+        // has bytecode checks because uses lots of bytecode
+        if (Clock.getBytecodesLeft() < 12000) {
+            G.indicatorString.append("!CHK-SRP1-BTCODE ");
+        } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
+            // temp
+            int ohnoes = Clock.getBytecodeNum();
+            // search for SRP markers for building/repairing/expanding
+            // big mapping very buh lots of bytecode
+            int meX = G.me.x, meY = G.me.y;
+            // this block takes roughly 2.5k bytecde TEMP TEMP TEMP TEMP TEMP TEMP
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
+                // stupid vscode formatting
+                seenSrpMarkers[loc.y - meY + 4][loc.x - meX + 4] = G.nearbyMapInfos[i]
+                        .getMark() == PaintType.ALLY_SECONDARY;
+            }
+            // temp
+            G.indicatorString.append((Clock.getBytecodeNum() - ohnoes) + " ");
+            // don't check for SRP on edges of vision (from 1-7)
+            searchExpansion: for (int i = 0; i++ < 7;) {
+                // this block takes roughly 3k bytecde TEMP TEMP TEMP TEMP TEMP TEMP
+                for (int j = 1; j++ < 7;) {
+                    // middle + 4 box corners
+                    if (seenSrpMarkers[j][i] && seenSrpMarkers[j - 1][i - 1] && seenSrpMarkers[j - 1][i + 1]
+                            && seenSrpMarkers[j + 1][i + 1] && seenSrpMarkers[j + 1][i - 1]) {
+                        MapLocation loc = G.me.translate(i - 4, j - 4);
+                        if (G.rc.onTheMap(loc)) {
+                            // try to re-complete the pattern
+                            // if (G.rc.canCompleteResourcePattern(loc)) {
+                            // G.rc.completeResourcePattern(loc);
+                            // // signal completion
+                            // G.rc.setIndicatorDot(loc, 255, 200, 0);
+                            // }
+                            mode = EXPAND_RESOURCE;
+                            // SRP expand will enter SRP build, which may repair if needed before expanding
+                            srpCheckLocations = new MapLocation[] { loc };
+                            srpCheckIndex = 0;
+                            // we have to do this or may have bugs
+                            expandResourceCheckMode();
+                            break searchExpansion;
+                        }
+                    }
+                }
+                if (Clock.getBytecodesLeft() < 8000) {
+                    // temp
+                    G.indicatorString.append((Clock.getBytecodeNum() - ohnoes) + " ");
+                    G.indicatorString.append("!CHK-SRP2-BTCODE ");
+                    return;
+                }
+            }
+            // temp
+            G.indicatorString.append((Clock.getBytecodeNum() - ohnoes) + " ");
+            // only if can't expand SRP build nearby
+            if (Clock.getBytecodesLeft() < 8000) {
+                G.indicatorString.append("!CHK-SRP3-BTCODE ");
+                return;
+            }
+        }
         if (G.round > MIN_SRP_ROUND) {
             // see if SRP is possible nearby
             for (int i = 8; --i >= 0;) {
@@ -194,7 +233,7 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
-        // G.setLastVisited(ruinLocation.x, ruinLocation.y, G.round);
+        G.setLastVisited(ruinLocation.x, ruinLocation.y, G.round);
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -242,6 +281,7 @@ public class Soldier {
     }
 
     public static void buildResourceCheckMode() throws Exception {
+        G.indicatorString.append("CHK_BRP ");
         // POSSIBLY HAVE TO REMOVE MARKERS IF INTERFERING?
         // shouldn't happen though?
     }
@@ -287,6 +327,7 @@ public class Soldier {
     }
 
     public static void attackCheckMode() throws Exception {
+        G.indicatorString.append("CHK_ATK ");
         // nothing for now
     }
 
@@ -302,16 +343,20 @@ public class Soldier {
                     break;
                 }
                 if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                    // attack these
                     MapLocation pos = POI.parseLocation(POI.towers[i]);
-                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
+                            && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
                         bestDistanceSquared = G.me.distanceSquaredTo(pos);
                         bestLoc = pos;
                     }
-                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                    // having 25 towers otherwise just softlocks the bots
                     MapLocation pos = POI.parseLocation(POI.towers[i]);
-                    //prioritize opponent towers more than neutral towers, so it has to be REALLY close
-                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && G.lastVisited[pos.x][pos.y] + 75 < G.rc.getRoundNum()) {
-                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; //lol 
+                    // prioritize opponent towers more than ruins, so it has to be REALLY close
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
+                            && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
                         bestLoc = pos;
                     }
                 }
