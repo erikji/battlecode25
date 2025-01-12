@@ -41,10 +41,12 @@ public class Soldier {
     public static final int RETREAT = 5;
     public static int mode = EXPLORE;
 
-    // controls round between visiting ruins (G.lastVisited)
+    // controls rounds between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 40;
     // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 5;
+    // controls rounds between repairing/expanding SRP
+    public static final int SRP_VISIT_TIMEOUT = 20;
     // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
     public static final int TOWER_CEIL = 3;
     public static final int TOWER_CEIL_MAP_AREA = 1600;
@@ -211,7 +213,7 @@ public class Soldier {
                     if (seenSrpMarkers[j][i] && seenSrpMarkers[j - 1][i - 1] && seenSrpMarkers[j - 1][i + 1]
                             && seenSrpMarkers[j + 1][i + 1] && seenSrpMarkers[j + 1][i - 1]) {
                         MapLocation loc = G.me.translate(i - 4, j - 4);
-                        if (G.rc.onTheMap(loc)) {
+                        if (G.rc.onTheMap(loc) && G.getLastVisited(loc.x, loc.y) + SRP_VISIT_TIMEOUT < G.round) {
                             mode = EXPAND_RESOURCE;
                             // SRP expand will enter SRP build, which may repair if needed before expanding
                             srpCheckLocations = new MapLocation[] { loc };
@@ -315,8 +317,9 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
-        // IF BOT IS OUT OF BYTECODE, TRY REMOVING exploreCheckMode() CALLS
         MapLocation target = srpCheckLocations[srpCheckIndex];
+        // shouldn't interfere with towers, since SRP adjacent to ruin impossible
+        G.setLastVisited(target.x, target.y, G.round);
         while (!G.rc.onTheMap(target)) {
             srpCheckIndex++;
             if (srpCheckIndex >= srpCheckLocations.length) {
