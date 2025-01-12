@@ -446,7 +446,7 @@ public class Soldier {
                 }
             }
         }
-        if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
+        if (G.rc.canCompleteResourcePattern(resourceLocation)) {
             G.rc.completeResourcePattern(resourceLocation);
             if (G.rc.getPaint() < EXPAND_SRP_MIN_PAINT) {
                 // early retreat since painting more is very slow
