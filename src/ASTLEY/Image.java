@@ -1,4 +1,4 @@
-package rickroll;
+package ASTLEY;
 
 public class Image {
     public static int[][][] data = {

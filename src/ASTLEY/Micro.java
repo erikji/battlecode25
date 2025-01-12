@@ -1,4 +1,4 @@
-package rickroll;
+package ASTLEY;
 
 import battlecode.common.*;
 

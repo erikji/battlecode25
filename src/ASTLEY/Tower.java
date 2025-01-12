@@ -1,4 +1,4 @@
-package rickroll;
+package ASTLEY;
 
 import battlecode.common.*;
 import java.util.*;
@@ -31,7 +31,7 @@ public class Tower {
                 (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
     }
 
-    public static void run2() throws Exception {
+    public static void run() throws Exception {
         // general common code for all towers
         // spawning
         if (spawnedRobots == 0) {

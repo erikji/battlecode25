@@ -1,6 +1,6 @@
-package rickroll;
+package ASTLEY;
 
-public class MoneyTower {
+public class PaintTower {
 
     public static void run() throws Exception {
     }
