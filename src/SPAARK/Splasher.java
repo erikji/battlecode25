@@ -68,9 +68,12 @@ public class Splasher {
         if (mode != RETREAT) {
             updateAttackTarget();
         }
+        // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES
         // }
+        int b = Clock.getBytecodeNum();
+        // G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
             case ATTACK -> attack();
@@ -79,6 +82,7 @@ public class Splasher {
                 Robot.retreat();
             }
         }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void explore() throws Exception {

@@ -29,10 +29,13 @@ public class Mopper {
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
+        int a = Clock.getBytecodeNum();
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
             case BUILD -> buildCheckMode();
         }
+        int b = Clock.getBytecodeNum();
+        G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD -> build();
@@ -41,6 +44,7 @@ public class Mopper {
                 Robot.retreat();
             }
         }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {

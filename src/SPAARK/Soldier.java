@@ -27,6 +27,8 @@ public class Soldier {
             { false, false, false, false, false, false, false, false, false, false, false },
     };
 
+    public static final boolean[][] seenSrpMarkers = new boolean[9][9];
+
     // queue of next locations to check for expanding SRP
     // used in explore mode to mark initial build since needs centered for markers
     // (goes into expand mode, reaches the target location, and starts building)
@@ -55,9 +57,10 @@ public class Soldier {
      * Run around randomly while painting below self, maybe check sus POI stuff
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
-     * If can build SRP nearby (adjacent), queue location and enter SRP expand mode
+     * If sees SRP, queue location of SRP and enter SRP expand mode
+     * - Queue once, SRP build will repair if needed, otherwise switch to expand
+     * Else, if can build SRP adjacent, queue location and enter SRP expand mode
      * - SRPs won't be built overlapping with tower 5x5 squares
-     * Attempt to repair SRPs
      * 
      * Build tower:
      * If pattern is complete but tower not completed, leave lowest ID to complete
@@ -66,14 +69,15 @@ public class Soldier {
      * 
      * Build SRP:
      * Place SRP
-     * Complete SRP, queue 4 optimal expansion locations and enter SRP expand mode
+     * Complete SRP, queue 8 optimal expansion locations and enter SRP expand mode
+     * - 4 expansions for 2 chiralities (flipped pattern too)
      * 
      * Expand SRP:
-     * Go to queued locations of SRP expansion and see if can build (race condition
-     * thing)
+     * Go to queued locations of expansion and see if can build (fix race condition)
      * If can build
      * - Place 4 secondary markers in box around center and primary marker at center
      * - Enter SRP build mode
+     * CALLS exploreCheckMode() IF CAN'T BUILD, MAY RUN OUT OF BYTECODE?
      * 
      * Attack:
      * Attack tower until ded lmao
@@ -86,6 +90,7 @@ public class Soldier {
             mode = EXPLORE;
         }
         nearbyRuins = G.rc.senseNearbyRuins(-1);
+        int a = Clock.getBytecodeNum();
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
             case BUILD_TOWER -> buildTowerCheckMode();
@@ -93,6 +98,8 @@ public class Soldier {
             case EXPAND_RESOURCE -> expandResourceCheckMode();
             case ATTACK -> attackCheckMode();
         }
+        int b = Clock.getBytecodeNum();
+        G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD_TOWER -> buildTower();
@@ -104,6 +111,7 @@ public class Soldier {
                 Robot.retreat();
             }
         }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {
@@ -207,9 +215,8 @@ public class Soldier {
             srpCheckIndex++;
             if (srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
-                // COMMENT IF OUT OF BYTECODE
-                exploreCheckMode();
-                // COMMENT IF OUT OF BYTECODE
+                if (Clock.getBytecodesLeft() > 10000)
+                    exploreCheckMode();
                 return;
             }
             target = srpCheckLocations[srpCheckIndex];
@@ -221,9 +228,8 @@ public class Soldier {
                 srpCheckIndex++;
                 if (srpCheckIndex >= srpCheckLocations.length) {
                     mode = EXPLORE;
-                    // COMMENT IF OUT OF BYTECODE
-                    exploreCheckMode();
-                    // COMMENT IF OUT OF BYTECODE
+                    if (Clock.getBytecodesLeft() > 10000)
+                        exploreCheckMode();
                     return;
                 }
             }
@@ -235,6 +241,7 @@ public class Soldier {
             G.rc.mark(G.me.add(Direction.NORTHEAST), true);
             G.rc.mark(G.me.add(Direction.SOUTHWEST), true);
             G.rc.mark(G.me.add(Direction.SOUTHEAST), true);
+            G.rc.mark(G.me, true);
             G.indicatorString.append("MK_SRP ");
             mode = BUILD_RESOURCE;
         }
@@ -291,9 +298,6 @@ public class Soldier {
                 }
             }
             G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
-        } else {
-            // repair nearby SRP if possible (may use a lot of bytecode?)
-            attemptRepairSRP();
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
@@ -387,6 +391,10 @@ public class Soldier {
     public static void expandResource() throws Exception {
         G.indicatorString.append("EXPAND_RP ");
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
+        // show the queue and current target
+        for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
+            G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+        }
         G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
@@ -439,10 +447,6 @@ public class Soldier {
             }
         }
         return true;
-    }
-
-    public static void attemptRepairSRP() throws Exception {
-        // TODO: check nearbyMapInfos for SRP markers and repair
     }
 
     public static Micro attackMicro = new Micro() {
