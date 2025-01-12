@@ -47,8 +47,9 @@ public class Soldier {
     public static final int VISIT_TIMEOUT = 40;
     // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 5;
-    // have at most TOWER_CEIL for the first TOWER_CEIL rounds
+    // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
     public static final int TOWER_CEIL = 3;
+    public static final int TOWER_CEIL_MAP_AREA = 1600;
     public static final int TOWER_CEIL_ROUND = 75;
     // encourages building SRPs if waiting for chips on large maps initially
     public static final int INITIAL_SRP_ALT_MAP_AREA = 1600;

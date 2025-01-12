@@ -65,8 +65,9 @@ public class Soldier {
     public static final int VISIT_TIMEOUT = 40;
     // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 5;
-    // have at most TOWER_CEIL for the first TOWER_CEIL rounds
+    // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
     public static final int TOWER_CEIL = 3;
+    public static final int TOWER_CEIL_MAP_AREA = 1600;
     public static final int TOWER_CEIL_ROUND = 75;
     // encourages building SRPs if waiting for chips on large maps initially
     public static final int INITIAL_SRP_ALT_MAP_AREA = 1600;
@@ -361,7 +362,8 @@ public class Soldier {
         // find towers from POI to attack/build out of vision
         MapLocation bestLoc = null;
         // TOWER_CEIL encourages building SRPs to help build more towers
-        if (G.rc.getRoundNum() > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
+        if (G.mapArea > TOWER_CEIL_MAP_AREA
+                || G.rc.getRoundNum() > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
             int bestDistanceSquared = 10000;
             for (int i = 144; --i >= 0;) {
                 if (POI.towers[i] == -1) {
