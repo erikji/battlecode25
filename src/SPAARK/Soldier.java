@@ -10,7 +10,9 @@ public class Soldier {
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
 
     // allowed marker locations
-    // fills entire vision range
+    // fills entire vision range + buffer for checking when adjacent
+    // we can set everything outside of 7x7 to true but may be bad for
+    // checkerboarding (misaligned checkerboard blocks future SRPs)
     public static final boolean[][] allowedSrpMarkerLocations = new boolean[][] {
             { false, false, false, false, false, false, false, false, false, false, false },
             { false, false, false, true, false, true, false, true, false, false, false },
@@ -24,9 +26,9 @@ public class Soldier {
             { false, false, false, true, false, true, false, true, false, false, false },
             { false, false, false, false, false, false, false, false, false, false, false },
     };
+
     // queue of next locations to check for expanding SRP
-    // used in explore mode to mark initial build since has to be in center to place
-    // markers
+    // used in explore mode to mark initial build since needs centered for markers
     // (goes into expand mode, reaches the target location, and starts building)
     public static MapLocation[] srpCheckLocations = new MapLocation[] {};
     public static int srpCheckIndex = 0;
@@ -40,7 +42,7 @@ public class Soldier {
     public static int mode = EXPLORE;
     // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 75;
-    public static final int MIN_SRP_ROUND = 50;
+    public static final int MIN_SRP_ROUND = 10;
 
     public static MapLocation[] nearbyRuins;
 
@@ -69,7 +71,9 @@ public class Soldier {
      * Expand SRP:
      * Go to queued locations of SRP expansion and see if can build (race condition
      * thing)
-     * Enter SRP build mode
+     * If can build
+     * - Place 4 secondary markers in box around center and primary marker at center
+     * - Enter SRP build mode
      * 
      * Attack:
      * Attack tower until ded lmao
@@ -86,12 +90,14 @@ public class Soldier {
             case EXPLORE -> exploreCheckMode();
             case BUILD_TOWER -> buildTowerCheckMode();
             case BUILD_RESOURCE -> buildResourceCheckMode();
+            case EXPAND_RESOURCE -> expandResourceCheckMode();
             case ATTACK -> attackCheckMode();
         }
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD_TOWER -> buildTower();
             case BUILD_RESOURCE -> buildResource();
+            case EXPAND_RESOURCE -> expandResource();
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
@@ -129,25 +135,18 @@ public class Soldier {
         // TODO: ALSO REPAIRING (enter build mode if is messed up)
         // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
         // don't make it remove and rebuild patterns that interfere?
-        // see if SRP is possible nearby
-        // for (int i = 8; --i >= 0;) {
-        // MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-        // if (canBuildSRPHere(loc)) {
-        // // TOOD: prioritize lining up checkerboards
-        // srpCheckLocations = new MapLocation[] { loc };
-        // mode = EXPAND_RESOURCE;
-        // break;
-        // }
-        // }
-        if (G.rc.getRoundNum() > MIN_SRP_ROUND && canBuildSRPHere(G.me)) {
-            // place markers
-            resourceLocation = G.me;
-            G.rc.mark(G.me.add(Direction.NORTHWEST), true);
-            G.rc.mark(G.me.add(Direction.NORTHEAST), true);
-            G.rc.mark(G.me.add(Direction.SOUTHWEST), true);
-            G.rc.mark(G.me.add(Direction.SOUTHEAST), true);
-            G.indicatorString.append("MK_SRP ");
-            mode = BUILD_RESOURCE;
+        if (G.rc.getRoundNum() > MIN_SRP_ROUND) {
+            // see if SRP is possible nearby
+            for (int i = 8; --i >= 0;) {
+                MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
+                if (canBuildSRPHere(loc)) {
+                    // TOOD: prioritize lining up checkerboards
+                    srpCheckLocations = new MapLocation[] { loc };
+                    srpCheckIndex = 0;
+                    mode = EXPAND_RESOURCE;
+                    break;
+                }
+            }
         }
     }
 
@@ -202,9 +201,43 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
-        // if can see optimal queued location and can't build SRP set to go to next
-        // location
-        // if queue empty go back to explore mode
+        // IF BOT IS OUT OF BYTECODE, TRY REMOVING exploreCheckMode() CALLS
+        MapLocation target = srpCheckLocations[srpCheckIndex];
+        while (!G.rc.onTheMap(target)) {
+            srpCheckIndex++;
+            if (srpCheckIndex >= srpCheckLocations.length) {
+                mode = EXPLORE;
+                // COMMENT IF OUT OF BYTECODE
+                exploreCheckMode();
+                // COMMENT IF OUT OF BYTECODE
+                return;
+            }
+            target = srpCheckLocations[srpCheckIndex];
+        }
+        // tiny optimization, saves like 1 turn
+        if (G.me.isWithinDistanceSquared(target, 1)) {
+            // have to be within 1 tile lmao
+            if (!canBuildSRPHere(target)) {
+                srpCheckIndex++;
+                if (srpCheckIndex >= srpCheckLocations.length) {
+                    mode = EXPLORE;
+                    // COMMENT IF OUT OF BYTECODE
+                    exploreCheckMode();
+                    // COMMENT IF OUT OF BYTECODE
+                    return;
+                }
+            }
+        }
+        if (G.me.equals(target) && canBuildSRPHere(G.me)) {
+            resourceLocation = G.me;
+            // markers
+            G.rc.mark(G.me.add(Direction.NORTHWEST), true);
+            G.rc.mark(G.me.add(Direction.NORTHEAST), true);
+            G.rc.mark(G.me.add(Direction.SOUTHWEST), true);
+            G.rc.mark(G.me.add(Direction.SOUTHEAST), true);
+            G.indicatorString.append("MK_SRP ");
+            mode = BUILD_RESOURCE;
+        }
     }
 
     public static void attackCheckMode() throws Exception {
@@ -311,8 +344,6 @@ public class Soldier {
         // do this instead of iterating through nearby map infos
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
-                if (dx == 2 && dy == 2)
-                    continue;
                 MapLocation loc = resourceLocation.translate(dx - 2, dy - 2);
                 // location guaranteed to be on the map, unless ruinLocation isn't a ruin
                 // also guaranteed can be sensed if can action there
@@ -328,26 +359,18 @@ public class Soldier {
                 }
             }
         }
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-            if (G.me.isWithinDistanceSquared(loc, UnitType.SOLDIER.actionRadiusSquared)
-                    && loc.isWithinDistanceSquared(resourceLocation, 8)) {
-                boolean paint = Robot.resourcePattern[loc.x - resourceLocation.x + 2][loc.y - resourceLocation.y + 2];
-                PaintType exist = G.nearbyMapInfos[i].getPaint();
-                if (G.rc.canAttack(loc) && (exist == PaintType.EMPTY
-                        || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY))) {
-                    G.rc.attack(loc, paint);
-                    paintLocation = loc;
-                    break;
-                }
-            }
-        }
         if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
             G.rc.completeResourcePattern(resourceLocation);
             // TODO: PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
             // put the 4 optimal locations of next pattern into a queue
             // that the bot then pathfinds to and checks if can build pattern
-            mode = EXPLORE;
+            mode = EXPAND_RESOURCE;
+            // only checks one chirality of pattern
+            srpCheckLocations = new MapLocation[] {
+                    resourceLocation.translate(3, 1), resourceLocation.translate(1, -3),
+                    resourceLocation.translate(-3, -1), resourceLocation.translate(-1, 3)
+            };
+            srpCheckIndex = 0;
             Motion.exploreRandomly();
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
@@ -362,7 +385,10 @@ public class Soldier {
     }
 
     public static void expandResource() throws Exception {
-        // go to queued optimal locations
+        G.indicatorString.append("EXPAND_RP ");
+        Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
+        G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
+        G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void attack() throws Exception {
