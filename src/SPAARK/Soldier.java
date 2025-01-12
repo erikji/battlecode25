@@ -221,6 +221,7 @@ public class Soldier {
         // maybe dont build SRP if near explore target?
         if (G.round > MIN_SRP_ROUND) {
             // see if SRP is possible nearby
+            // TODO: THIS MAKES SPAARK OP????????????
             for (int i = 9; --i >= 8;) { // CHANGE THIS BACK TO 9-0!!
                 MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                 if (canBuildSRPHere(loc)) {
