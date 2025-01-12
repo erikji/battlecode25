@@ -45,6 +45,7 @@ public class Soldier {
 
     // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 40;
+    // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 5;
     // have at most TOWER_CEIL for the first TOWER_CEIL rounds
     public static final int TOWER_CEIL = 3;
@@ -160,7 +161,7 @@ public class Soldier {
         // has bytecode checks because uses lots of bytecode
         if (Clock.getBytecodesLeft() < 12000) {
             G.indicatorString.append("!CHK-SRP1-BTCODE ");
-        } else {
+        } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
             // temp
             int ohnoes = Clock.getBytecodeNum();
             // search for SRP markers for building/repairing/expanding
@@ -186,9 +187,9 @@ public class Soldier {
                         if (G.rc.onTheMap(loc)) {
                             // try to re-complete the pattern
                             // if (G.rc.canCompleteResourcePattern(loc)) {
-                            //     G.rc.completeResourcePattern(loc);
-                            //     // signal completion
-                            //     G.rc.setIndicatorDot(loc, 255, 200, 0);
+                            // G.rc.completeResourcePattern(loc);
+                            // // signal completion
+                            // G.rc.setIndicatorDot(loc, 255, 200, 0);
                             // }
                             mode = EXPAND_RESOURCE;
                             // SRP expand will enter SRP build, which may repair if needed before expanding
@@ -385,18 +386,20 @@ public class Soldier {
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        // spam paint
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-            if (G.rc.canAttack(loc) && loc.isWithinDistanceSquared(ruinLocation, 8)) {
-                int dx = loc.x - ruinLocation.x + 2;
-                int dy = loc.y - ruinLocation.y + 2;
-                if (dx != 2 || dy != 2) {
-                    boolean paint = Robot.towerPatterns[buildTowerType][dx][dy];
+        // do this instead of iterating through nearby map infos
+        boolean[][] towerPattern = Robot.towerPatterns[buildTowerType];
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
+                if (dx == 2 && dy == 2)
+                    continue;
+                MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
+                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // also guaranteed can be sensed if can action there
+                if (G.rc.canAttack(loc)) {
+                    boolean paint = towerPattern[dx][dy];
                     PaintType exist = G.rc.senseMapInfo(loc).getPaint();
                     // can't paint enemy paint
-                    // might need !exist.isEnemy()
-                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
+                    if (!exist.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
@@ -429,13 +432,13 @@ public class Soldier {
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 MapLocation loc = resourceLocation.translate(dx - 2, dy - 2);
-                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // location guaranteed to be on the map by canBuildSrpHere calls
                 // also guaranteed can be sensed if can action there
                 if (G.rc.canAttack(loc)) {
                     boolean paint = Robot.resourcePattern[dx][dy];
                     PaintType exist = G.rc.senseMapInfo(loc).getPaint();
-                    if (exist == PaintType.EMPTY
-                            || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY)) {
+                    // can't paint enemy paint
+                    if (!exist.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
@@ -452,10 +455,12 @@ public class Soldier {
                 // put the 4 optimal locations of next pattern into a queue
                 // that the bot then pathfinds to and checks if can build pattern
                 mode = EXPAND_RESOURCE;
-                // only checks one chirality of pattern
+                // checks both chiralities
                 srpCheckLocations = new MapLocation[] {
-                        resourceLocation.translate(3, 1), resourceLocation.translate(1, -3),
-                        resourceLocation.translate(-3, -1), resourceLocation.translate(-1, 3)
+                        resourceLocation.translate(3, 1), resourceLocation.translate(3, -1),
+                        resourceLocation.translate(1, -3), resourceLocation.translate(-1, -3),
+                        resourceLocation.translate(-3, -1), resourceLocation.translate(-3, 1),
+                        resourceLocation.translate(-1, 3), resourceLocation.translate(1, 3)
                 };
                 srpCheckIndex = 0;
             }
