@@ -8,7 +8,10 @@ public class Mopper {
     public static final int BUILD = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-    public static int lastBuild = -10; // last time we are in BUILD mode to prevent
+    public static int BUILD_TIMEOUT = 10;
+    public static int lastBuild = -BUILD_TIMEOUT;
+
+    static int[] microWeights = new int[8];
 
     /**
      * Always:
@@ -36,6 +39,12 @@ public class Mopper {
         }
         int b = Clock.getBytecodeNum();
         G.indicatorString.append((b - a) + " ");
+        // grab directions for micro
+        for (int i = 8; --i >= 0;) {
+            MapLocation m = G.me.add(G.DIRECTIONS[i]);
+            if (G.rc.onTheMap(m))
+                microWeights[i] = G.rc.senseMapInfo(m).getPaint().isEnemy() ? -10 : 0;
+        }
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD -> build();
@@ -50,7 +59,7 @@ public class Mopper {
     public static void exploreCheckMode() throws Exception {
         G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
-        if (lastBuild + 10 < G.round && G.rc.getNumberTowers() < 25) {
+        if (lastBuild + BUILD_TIMEOUT < G.round && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
@@ -110,7 +119,7 @@ public class Mopper {
         }
         if (bestEmpty == null && bestBot == null) {
             if (G.me.distanceSquaredTo(microDir) >= 2) {
-                Motion.bugnavTowards(microDir);
+                Motion.bugnavTowards(microDir, avoidPaintMicro);
             } else {
                 G.indicatorString.append("RAND ");
                 Motion.exploreRandomly();
@@ -120,7 +129,7 @@ public class Mopper {
                 bestEmpty = bestBot;
             if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
-            Motion.bugnavAround(bestEmpty, 1, 1);
+            Motion.bugnavAround(bestEmpty, 1, 1, avoidPaintMicro);
             G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
         if (G.rc.onTheMap(microDir))
@@ -160,7 +169,7 @@ public class Mopper {
             if (G.rc.canAttack(bestLoc)) {
                 G.rc.attack(bestLoc);
                 if (bestLoc2 != null) {
-                    Motion.bugnavTowards(bestLoc2);
+                    Motion.bugnavTowards(bestLoc2, avoidPaintMicro);
                     G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
                 } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                     mode = EXPLORE;
@@ -169,10 +178,10 @@ public class Mopper {
                     G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
                     ruinLocation = null;
                 } else {
-                    Motion.bugnavTowards(ruinLocation);
+                    Motion.bugnavTowards(ruinLocation, avoidPaintMicro);
                 }
             } else {
-                Motion.bugnavTowards(bestLoc);
+                Motion.bugnavTowards(bestLoc, avoidPaintMicro);
             }
             G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
         } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
@@ -182,7 +191,7 @@ public class Mopper {
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;
         } else {
-            Motion.bugnavTowards(ruinLocation);
+            Motion.bugnavTowards(ruinLocation, avoidPaintMicro);
         }
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
@@ -254,4 +263,16 @@ public class Mopper {
             return false;
         return true;
     }
+
+    public static Micro avoidPaintMicro = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            // REALLY avoid being on enemy paint
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            for (int i = 8; --i >= 0;) {
+                scores[i] += microWeights[i];
+            }
+            return scores;
+        }
+    };
 }
