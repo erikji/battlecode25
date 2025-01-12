@@ -183,9 +183,6 @@ public class Soldier {
                     if (seenSrpMarkers[j][i] && seenSrpMarkers[j - 1][i - 1] && seenSrpMarkers[j - 1][i + 1]
                             && seenSrpMarkers[j + 1][i + 1] && seenSrpMarkers[j + 1][i - 1]) {
                         MapLocation loc = G.me.translate(i - 4, j - 4);
-                        System.out.println(loc);
-                        System.out.println(G.me);
-                        System.out.println((i - 4) + " " + (j - 4));
                         if (G.rc.onTheMap(loc)) {
                             // try to re-complete the pattern
                             // if (G.rc.canCompleteResourcePattern(loc)) {
