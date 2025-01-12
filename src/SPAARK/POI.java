@@ -344,7 +344,7 @@ public class POI {
 
     public static void readMessages() throws Exception {
         // what hapepns if message is sent in same round?? oof oof oof
-        Message[] messages = G.rc.readMessages(G.rc.getRoundNum() - 1);
+        Message[] messages = G.rc.readMessages(G.round - 1);
         for (Message m : messages) {
             read16BitMessage(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             if ((m.getBytes() >> 16) != 0) {

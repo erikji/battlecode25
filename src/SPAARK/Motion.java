@@ -133,7 +133,7 @@ public class Motion {
             }
             if (target.equals(G.me)) {
                 // just keep moving in the same direction as before if there's no robots nearby
-                if (G.rc.getRoundNum() % 3 == 0 || lastRandomSpread == null) {
+                if (G.round % 3 == 0 || lastRandomSpread == null) {
                     moveRandomly(); // occasionally move randomly to avoid getting stuck
                 } else if (G.rng.nextInt(20) == 1) {
                     // don't get stuck in corners
@@ -720,7 +720,7 @@ public class Motion {
             }
             int[] weights = m.micro(d, dest);
             int best = 8;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 if (weights[i] > weights[best])
                     best = i;
             }
@@ -741,7 +741,7 @@ public class Motion {
             }
             int[] weights = m.micro(d, dest);
             int best = 8;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 if (weights[i] > weights[best])
                     best = i;
             }
@@ -765,7 +765,7 @@ public class Motion {
             }
             int[] weights = m.micro(d, dest);
             int best = 8;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 if (weights[i] > weights[best])
                     best = i;
             }
@@ -987,14 +987,14 @@ public class Motion {
             step += 1;
         }
 
-        // int b = G.rc.getRoundNum() % width;
-        // if (G.rc.getRoundNum() == 201) {
+        // int b = G.round % width;
+        // if (G.round == 201) {
         // for (int i = 0; i < width; i++) {
         // b = i;
         // for (int j = 0; j < height; j++) {
-        // // if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> i) &
+        // // if (((bfsDist[(G.round % 100) * (height + 2) + j + 1] >> i) &
         // 1) == 0) {
-        // if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> b) & 1)
+        // if (((bfsDist[(G.round % 100) * (height + 2) + j + 1] >> b) & 1)
         // == 0) {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
         // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);

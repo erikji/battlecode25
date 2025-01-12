@@ -10,6 +10,7 @@ public class RobotPlayer {
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
+        G.round = G.rc.getRoundNum();
     }
 
     public static void updateRound() throws Exception {
@@ -23,6 +24,7 @@ public class RobotPlayer {
             G.rc = rc;
             G.rng = new Random(G.rc.getID() + 2025);
             G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
+            G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
             G.indicatorString = new StringBuilder();
@@ -31,15 +33,17 @@ public class RobotPlayer {
                 case MOPPER, SOLDIER, SPLASHER -> Robot.init();
                 default -> Tower.init();
             }
+            // init bytecode count
+            G.indicatorString.append("INIT " + Clock.getBytecodeNum() + " ");
             while (true) {
                 try {
-                    G.indicatorString = new StringBuilder();
                     updateRound();
                     switch (G.rc.getType()) {
                         case MOPPER, SOLDIER, SPLASHER -> Robot.run();
                         default -> Tower.run();
                     }
                     G.rc.setIndicatorString(G.indicatorString.toString());
+                    G.indicatorString = new StringBuilder();
                     Clock.yield();
                 } catch (GameActionException e) {
                     System.out.println("Unexpected GameActionException");

@@ -52,7 +52,7 @@ public class Tower {
                     break;
                 }
             }
-        } else if (G.rc.getNumberTowers() > 2 || G.rc.getRoundNum() > 50) {
+        } else if (G.rc.getNumberTowers() > 2 || G.round > 50) {
             //don't suffocate money until we built a tower
             switch (spawnedRobots % 5) {
                 // make sure to subtract 2

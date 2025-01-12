@@ -68,9 +68,12 @@ public class Splasher {
         if (mode != RETREAT) {
             updateAttackTarget();
         }
+        // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES
         // }
+        int b = Clock.getBytecodeNum();
+        // G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
             case ATTACK -> attack();
@@ -79,6 +82,7 @@ public class Splasher {
                 Robot.retreat();
             }
         }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void explore() throws Exception {
@@ -109,8 +113,7 @@ public class Splasher {
                             int paintScore = 0;
                             if (paint == PaintType.EMPTY) {
                                 paintScore = 1;
-                            }
-                            else if (paint.isEnemy()) {
+                            } else if (paint.isEnemy()) {
                                 paintScore = 2; // bonus points for deleting opponent paint
                             }
                             if (!paint.isAlly() && nxt == G.me) {
@@ -149,7 +152,7 @@ public class Splasher {
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)
-                        && G.lastVisited[pos.y][pos.x] > G.rc.getRoundNum() + VISIT_TIMEOUT) {
+                        && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
@@ -158,7 +161,7 @@ public class Splasher {
                 // prioritize opponent towers more than ruins
                 // so it has to be REALLY close
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)
-                        && G.lastVisited[pos.y][pos.x] > G.rc.getRoundNum() + VISIT_TIMEOUT) {
+                        && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
                     bestLoc = pos;
                 }
@@ -306,7 +309,7 @@ public class Splasher {
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
             triedAttackTargets.append((char) best);
-            G.lastVisited[attackTarget.y][attackTarget.x] = G.rc.getRoundNum();
+            G.setLastVisited(attackTarget.x, attackTarget.y, G.round);
             mode = ATTACK;
         }
     }
