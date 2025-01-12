@@ -47,8 +47,9 @@ public class Soldier {
     public static final int VISIT_TIMEOUT = 40;
     // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 5;
-    // have at most TOWER_CEIL for the first TOWER_CEIL rounds
+    // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
     public static final int TOWER_CEIL = 3;
+    public static final int TOWER_CEIL_MAP_AREA = 1600;
     public static final int TOWER_CEIL_ROUND = 75;
     // encourages building SRPs if waiting for chips on large maps initially
     public static final int INITIAL_SRP_ALT_MAP_AREA = 1600;
@@ -216,15 +217,19 @@ public class Soldier {
                 return;
             }
         }
+        // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
+        // maybe dont build SRP if near explore target?
         if (G.round > MIN_SRP_ROUND) {
             // see if SRP is possible nearby
-            for (int i = 8; --i >= 0;) {
+            // TODO: THIS MAKES SPAARK OP????????????
+            for (int i = 9; --i >= 8;) { // CHANGE THIS BACK TO 9-0!!
                 MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                 if (canBuildSRPHere(loc)) {
-                    // TOOD: prioritize lining up checkerboards
+                    // TODO: prioritize lining up checkerboards
                     srpCheckLocations = new MapLocation[] { loc };
                     srpCheckIndex = 0;
                     mode = EXPAND_RESOURCE;
+                    expandResourceCheckMode();
                     break;
                 }
             }
