@@ -42,6 +42,10 @@ public class Soldier {
     public static final int RETREAT = 5;
     public static int mode = EXPLORE;
 
+    // ratio of paint necessary to exit retreat mode
+    public static final float RETREAT_PAINT_RATIO = 0.75f;
+    // exploration weight multiplier
+    public static final int EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 40;
     // don't build SRP for first few rounds, prioritize towers
@@ -60,8 +64,6 @@ public class Soldier {
     public static final int INITIAL_SRP_RUIN_IGNORE = 50;
     // don't expand SRP if low on paint, since very slow
     public static final int EXPAND_SRP_MIN_PAINT = 75;
-    // exploration weight multiplier
-    public static final int EXPLORE_OPP_WEIGHT = 5;
 
     public static MapLocation[] nearbyRuins;
     // map nearby map infos into 2d array in (y, x) form
@@ -118,7 +120,7 @@ public class Soldier {
     public static void run() throws Exception {
         if (G.rc.getPaint() < Robot.getRetreatPaint()) {
             mode = RETREAT;
-        } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
+        } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
             mode = EXPLORE;
         }
         nearbyRuins = G.rc.senseNearbyRuins(-1);
@@ -341,6 +343,16 @@ public class Soldier {
                     if (Clock.getBytecodesLeft() > 10000)
                         exploreCheckMode();
                     return;
+                }
+                while (!G.rc.onTheMap(target)) {
+                    srpCheckIndex++;
+                    if (srpCheckIndex >= srpCheckLocations.length) {
+                        mode = EXPLORE;
+                        if (Clock.getBytecodesLeft() > 10000)
+                            exploreCheckMode();
+                        return;
+                    }
+                    target = srpCheckLocations[srpCheckIndex];
                 }
             }
         }
