@@ -531,7 +531,7 @@ public class Soldier {
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             // dots guaranteed to be on map because of expandResourceCheckMode
-            // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+            G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
         }
         G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
