@@ -217,9 +217,11 @@ public class Soldier {
                 return;
             }
         }
+        // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
+        // maybe dont build SRP if near explore target?
         if (G.round > MIN_SRP_ROUND) {
             // see if SRP is possible nearby
-            for (int i = 9; --i >= 0;) {
+            for (int i = 9; --i >= 8;) { // CHANGE THIS BACK TO 9-0!!
                 MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                 if (canBuildSRPHere(loc)) {
                     // TODO: prioritize lining up checkerboards
