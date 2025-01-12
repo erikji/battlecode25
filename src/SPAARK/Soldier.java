@@ -165,8 +165,8 @@ public class Soldier {
         // if pattern complete leave lowest bot ID to complete
         boolean isPatternComplete = true;
         // do this instead of iterating through nearby map infos
-        checkPattern: for (int dx = 0; dx++ < 4;) {
-            for (int dy = 0; dy++ < 4;) {
+        checkPattern: for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
                 if (dx == 2 && dy == 2)
                     continue;
                 MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
@@ -309,8 +309,8 @@ public class Soldier {
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
         MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         // do this instead of iterating through nearby map infos
-        for (int dx = 0; dx++ < 4;) {
-            for (int dy = 0; dy++ < 4;) {
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
                 if (dx == 2 && dy == 2)
                     continue;
                 MapLocation loc = resourceLocation.translate(dx - 2, dy - 2);
