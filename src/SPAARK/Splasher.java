@@ -109,8 +109,7 @@ public class Splasher {
                             int paintScore = 0;
                             if (paint == PaintType.EMPTY) {
                                 paintScore = 1;
-                            }
-                            else if (paint.isEnemy()) {
+                            } else if (paint.isEnemy()) {
                                 paintScore = 2; // bonus points for deleting opponent paint
                             }
                             if (!paint.isAlly() && nxt == G.me) {
