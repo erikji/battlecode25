@@ -390,6 +390,8 @@ public class Soldier {
         boolean[][] towerPattern = Robot.towerPatterns[buildTowerType];
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
+                if (dx == 2 && dy == 2)
+                    continue;
                 MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
                 // location guaranteed to be on the map, unless ruinLocation isn't a ruin
                 // also guaranteed can be sensed if can action there
