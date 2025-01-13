@@ -1,4 +1,4 @@
-package SPAARK;
+package RICKROLL;
 
 import battlecode.common.*;
 import java.util.*;
@@ -22,7 +22,7 @@ public class RobotPlayer {
     public static void run(RobotController rc) throws Exception {
         try {
             G.rc = rc;
-            Random.state = G.rc.getID() * 0x2bda6bc + 0x9734e9;
+            G.rng = new Random(G.rc.getID() + 2025);
             G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
             G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
             G.team = G.rc.getTeam();

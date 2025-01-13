@@ -1,18 +1,17 @@
-package SPAARK;
+package TSPAARKJAN11;
 
 import battlecode.common.*;
 
 public class Mopper {
+    public static MapLocation ruinLocation = null; // BUILD mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-
-    public static final int BUILD_TIMEOUT = 10;
-
-    public static MapLocation ruinLocation = null; // BUILD mode
-
+    public static int BUILD_TIMEOUT = 10;
     public static int lastBuild = -BUILD_TIMEOUT;
+
+    static int[] microWeights = new int[8];
 
     /**
      * Always:
@@ -41,6 +40,11 @@ public class Mopper {
         int b = Clock.getBytecodeNum();
         G.indicatorString.append((b - a) + " ");
         // grab directions for micro
+        for (int i = 8; --i >= 0;) {
+            MapLocation m = G.me.add(G.DIRECTIONS[i]);
+            if (G.rc.onTheMap(m))
+                microWeights[i] = G.rc.senseMapInfo(m).getPaint().isEnemy() ? -10 : 0;
+        }
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD -> build();
@@ -118,7 +122,7 @@ public class Mopper {
                 Motion.bugnavTowards(microDir, avoidPaintMicro);
             } else {
                 G.indicatorString.append("RAND ");
-                Motion.exploreRandomly(avoidPaintMicro);
+                Motion.exploreRandomly();
             }
         } else {
             if (bestBot != null)
@@ -126,11 +130,11 @@ public class Mopper {
             if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
             Motion.bugnavAround(bestEmpty, 1, 1, avoidPaintMicro);
-            G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+            // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
-        if (G.rc.onTheMap(microDir))
-            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        // if (G.rc.onTheMap(microDir))
+            // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void build() throws Exception {
@@ -166,12 +170,12 @@ public class Mopper {
                 G.rc.attack(bestLoc);
                 if (bestLoc2 != null) {
                     Motion.bugnavTowards(bestLoc2, avoidPaintMicro);
-                    G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
+                    // G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
                 } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                     mode = EXPLORE;
                     lastBuild = G.round;
-                    Motion.exploreRandomly(avoidPaintMicro);
-                    G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+                    Motion.exploreRandomly();
+                    // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
                     ruinLocation = null;
                 } else {
                     Motion.bugnavTowards(ruinLocation, avoidPaintMicro);
@@ -179,17 +183,17 @@ public class Mopper {
             } else {
                 Motion.bugnavTowards(bestLoc, avoidPaintMicro);
             }
-            G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
+            // G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
         } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
             mode = EXPLORE;
             lastBuild = G.round;
-            Motion.exploreRandomly(avoidPaintMicro);
-            G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+            Motion.exploreRandomly();
+            // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;
         } else {
             Motion.bugnavTowards(ruinLocation, avoidPaintMicro);
         }
-        G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     /**
@@ -266,12 +270,7 @@ public class Mopper {
             // REALLY avoid being on enemy paint
             int[] scores = Motion.defaultMicro.micro(d, dest);
             for (int i = 8; --i >= 0;) {
-                if (G.rc.canMove(G.DIRECTIONS[i])) {
-                    MapLocation m = G.me.add(G.DIRECTIONS[i]);
-                    PaintType paint = G.rc.senseMapInfo(m).getPaint();
-                    if (paint.isEnemy()) scores[i] -= 10;
-                    if (paint == PaintType.EMPTY) scores[i] -= 5;
-                }
+                scores[i] += microWeights[i];
             }
             return scores;
         }

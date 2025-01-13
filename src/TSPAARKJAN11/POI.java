@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN11;
 
 import battlecode.common.*;
 
@@ -252,7 +252,7 @@ public class POI {
         if (G.rc.getType().isTowerType() && G.allyRobots.length > 0) {
             // we just send all info that the robots dont have
             for (int j = G.allyRobots.length; --j >= 0;) {
-                RobotInfo r = G.allyRobots[Random.rand() % G.allyRobots.length];
+                RobotInfo r = G.allyRobots[G.rng.nextInt(G.allyRobots.length)];
                 while (G.rc.canSendMessage(r.getLocation())) {
                     if (Clock.getBytecodesLeft() < 3000)
                         return;
@@ -453,14 +453,14 @@ public class POI {
                 try {
                     if (parseTowerTeam(towers[i]) == G.team) {
                         if (parseTowerType(towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                            G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                            // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
                         } else {
-                            G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
+                            // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
                         }
                     } else if (parseTowerTeam(towers[i]) == G.opponentTeam) {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
+                        // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
                     } else {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
+                        // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
                     }
                 } catch (Exception e) {
                 }

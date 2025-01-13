@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN11;
 
 import battlecode.common.*;
 
@@ -89,7 +89,7 @@ public class Motion {
     public static void moveRandomly() throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
-            for (int i = 8; --i >= 0;) {
+            for (int i = G.DIRECTIONS.length; --i >= 0;) {
                 if (G.rc.canMove(G.DIRECTIONS[i])) {
                     stuck = false;
                 }
@@ -99,7 +99,7 @@ public class Motion {
             }
             // move in a random direction but minimize making useless moves back to where
             // you came from
-            Direction direction = G.DIRECTIONS[Random.rand()&7];
+            Direction direction = G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)];
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
@@ -135,9 +135,9 @@ public class Motion {
                 // just keep moving in the same direction as before if there's no robots nearby
                 if (G.round % 3 == 0 || lastRandomSpread == null) {
                     moveRandomly(); // occasionally move randomly to avoid getting stuck
-                } else if (Random.rand() % 20 == 0) {
+                } else if (G.rng.nextInt(20) == 1) {
                     // don't get stuck in corners
-                    lastRandomSpread = G.me.add(G.DIRECTIONS[Random.rand()&7]);
+                    lastRandomSpread = G.me.add(G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)]);
                     moveRandomly();
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
@@ -167,15 +167,12 @@ public class Motion {
     public static MapLocation exploreLoc;
 
     public static void exploreRandomly() throws Exception {
-        exploreRandomly(defaultMicro);
-    }
-    public static void exploreRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             if (exploreLoc != null) {
                 if (G.rc.canSenseLocation(exploreLoc)) {
                     exploreLoc = null;
                 }
-                if (Random.rand() % 25 == 0) {
+                if (G.rng.nextInt(25) == 0) {
                     exploreLoc = null;
                 }
             }
@@ -194,7 +191,7 @@ public class Motion {
                 for (int i = G.rc.getMapHeight(); --i >= 0;) {
                     sum -= Long.bitCount(POI.explored[i]);
                 }
-                int rand = Random.rand() % sum;
+                int rand = G.rng.nextInt(sum);
                 int cur = 0;
                 for (int i = G.rc.getMapHeight(); --i >= 0;) {
                     cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
@@ -213,9 +210,9 @@ public class Motion {
                     }
                 }
             }
-            bugnavTowards(exploreLoc, m);
-            if (ENABLE_EXPLORE_INDICATORS)
-                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+            bugnavTowards(exploreLoc);
+            // if (ENABLE_EXPLORE_INDICATORS)
+                // G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
 
@@ -809,7 +806,7 @@ public class Motion {
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
-                    G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
+                    // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
                     for (int j = step - 1; j >= 0; j--) {
                         if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
                             recalculationNeeded = Math.min(j, recalculationNeeded);
@@ -999,18 +996,18 @@ public class Motion {
         // if (((bfsDist[(G.round % 100) * (height + 2) + j + 1] >> b) & 1)
         // == 0) {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
         // }
         // else {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
         // }
         // }
         // else {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
         // }
         // else {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
         // }
         // }
         // }

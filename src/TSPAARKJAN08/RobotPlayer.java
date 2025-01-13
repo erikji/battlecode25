@@ -1,49 +1,50 @@
-package SPAARK;
+package TSPAARKJAN08;
 
 import battlecode.common.*;
+
 import java.util.*;
 
 public class RobotPlayer {
     public static void updateInfo() throws Exception {
-        // every time we move
         G.me = G.rc.getLocation();
-        G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
-        G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
-        G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
-        G.round = G.rc.getRoundNum();
-    }
-
-    public static void updateRound() throws Exception {
-        // every round
-        updateInfo();
-        POI.updateRound();
+        G.allyRobots = G.rc.senseNearbyRobots(-1, G.rc.getTeam());
+        G.opponentRobots = G.rc.senseNearbyRobots(-1, POI.opponentTeam);
+        G.infos = G.rc.senseNearbyMapInfos();
+        POI.updateInfo();
     }
 
     public static void run(RobotController rc) throws Exception {
         try {
             G.rc = rc;
-            Random.state = G.rc.getID() * 0x2bda6bc + 0x9734e9;
+            G.rng = new Random(G.rc.getID() + 2025);
             G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
-            G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
-            G.team = G.rc.getTeam();
-            G.opponentTeam = G.team.opponent();
-            G.indicatorString = new StringBuilder();
+            G.opponentTeam = G.rc.getTeam().opponent();
             updateInfo();
             switch (G.rc.getType()) {
-                case MOPPER, SOLDIER, SPLASHER -> Robot.init();
-                default -> Tower.init();
+                case MOPPER:
+                case SOLDIER:
+                case SPLASHER:
+                    Robot.init();
+                    break;
+                default:
+                    Tower.init();
+                    break;
             }
-            // init bytecode count
-            G.indicatorString.append("INIT " + Clock.getBytecodeNum() + " ");
             while (true) {
                 try {
-                    updateRound();
+                    G.indicatorString = new StringBuilder();
+                    updateInfo();
                     switch (G.rc.getType()) {
-                        case MOPPER, SOLDIER, SPLASHER -> Robot.run();
-                        default -> Tower.run();
+                        case MOPPER:
+                        case SOLDIER:
+                        case SPLASHER:
+                            Robot.run();
+                            break;
+                        default:
+                            Tower.run();
+                            break;
                     }
                     G.rc.setIndicatorString(G.indicatorString.toString());
-                    G.indicatorString = new StringBuilder();
                     Clock.yield();
                 } catch (GameActionException e) {
                     System.out.println("Unexpected GameActionException");

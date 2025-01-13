@@ -17,7 +17,11 @@ errors = []
 currentBot = 'SPAARK' #bot to test
 #SPAARK IS THE BASELINE
 
+<<<<<<< HEAD
 bots = ['MASON']
+=======
+bots = [chr(ord('a')+i) for i in range(1)]
+>>>>>>> 40aae48f1f51f4bad54d06ce3c20caa046e74744
 
 maps = []
 maps += ['DefaultSmall']
@@ -28,7 +32,7 @@ maps += ['DefaultHuge']
 maps += ['[EDGE] microtest']
 maps += ['[SP] ChessBattleAdvanced']
 maps += ['[EDGE] srp spam']
-maps += ['[SP2] Duels']
+# maps += ['[SP2] Duels']
 maps += ['[SP2] Boulders']
 maps += ['[SP2] Arena']
 maps += ['[SP2] CheckersFightIntermediate']
@@ -43,8 +47,8 @@ maps += ['[SP] MapIsNotReference']
 maps += ['[SP] ModernArt3']
 maps += ['[SP] Spirals']
 maps += ['[SP] Squiggles']
-maps += ['[SP] Stars']
-maps += ['[SP] unfinishedlabryinth']
+# maps += ['[SP] Stars']
+# maps += ['[SP] unfinishedlabryinth']
 maps += ['[SP2] Piston']
 maps += ['[SP] Cornucopia']
 maps += ['[SP2] Buh']

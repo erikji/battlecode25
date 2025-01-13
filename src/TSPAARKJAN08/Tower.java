@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN08;
 
 import battlecode.common.*;
 import java.util.*;
@@ -27,123 +27,122 @@ public class Tower {
                 G.me.add(Direction.WEST).add(Direction.WEST),
                 G.me.add(Direction.NORTHWEST)
         };
-        Arrays.sort(spawnLocs,
-                (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
-    }
-
-    public static void spawnBot(UnitType t) throws Exception {
-        switch (t) {
-            case UnitType.MOPPER:
-                for (MapLocation loc : spawnLocs) {
-                    if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
-                        G.rc.buildRobot(UnitType.MOPPER, loc);
-                        spawnedRobots++;
-                        spawnedMoppers++;
-                        break;
-                    }
-                }
-                break;
-            case UnitType.SPLASHER:
-                for (MapLocation loc : spawnLocs) {
-                    if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
-                        G.rc.buildRobot(UnitType.SPLASHER, loc);
-                        spawnedRobots++;
-                        spawnedSplashers++;
-                        break;
-                    }
-                }
-                break;
-            case UnitType.SOLDIER:
-                for (MapLocation loc : spawnLocs) {
-                    if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                        G.rc.buildRobot(UnitType.SOLDIER, loc);
-                        spawnedRobots++;
-                        spawnedSoldiers++;
-                        break;
-                    }
-                }
-                break;
-            default:
-                throw new Exception("what are you spawning?? a tower???");
-        }
+        Arrays.sort(spawnLocs, new Comparator<MapLocation>() {
+            public int compare(MapLocation a, MapLocation b) {
+                return a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter);
+            };
+        });
     }
 
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
-        if (spawnedRobots == 0) {
-            spawnBot(UnitType.SOLDIER);
-        } else if (spawnedRobots == 1) {
-            spawnBot(UnitType.SPLASHER);
-        } else if (G.rc.getNumberTowers() > 2 || G.round > 50) {
-            //don't suffocate money until we built a tower
-            switch ((spawnedRobots - 2) % 7) {
-                // make sure to subtract 2
+        if (spawnedRobots < 1) {
+            for (MapLocation loc : spawnLocs) {
+                if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                    G.rc.buildRobot(UnitType.SOLDIER, loc);
+                    spawnedRobots++;
+                    spawnedSoldiers++;
+                    break;
+                }
+            }
+        } else if (spawnedRobots < G.rc.getRoundNum() / 40) {
+            switch (spawnedRobots % 5) {
+                //make sure to subtract 2
                 case 0:
-                    spawnBot(UnitType.MOPPER);
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            G.rc.buildRobot(UnitType.MOPPER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
                     break;
                 case 1:
-                    spawnBot(UnitType.SOLDIER);
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                            G.rc.buildRobot(UnitType.SPLASHER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
                     break;
                 case 2:
-                    spawnBot(UnitType.SPLASHER);
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                            G.rc.buildRobot(UnitType.MOPPER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
                     break;
                 case 3:
-                    spawnBot(UnitType.SOLDIER);
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                            G.rc.buildRobot(UnitType.SPLASHER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
                     break;
-                case 4:
-                    spawnBot(UnitType.SPLASHER);
-                    break;
-                case 5:
-                    // spawnBot(UnitType.SOLDIER);
-                    spawnBot(UnitType.SPLASHER);
-                    break;
-                case 6:
-                    spawnBot(UnitType.SPLASHER);
+                default:
+                    for (MapLocation loc : spawnLocs) {
+                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                            G.rc.buildRobot(UnitType.SOLDIER, loc);
+                            spawnedRobots++;
+                            spawnedMoppers++;
+                            break;
+                        }
+                    }
                     break;
             }
         }
         // more specialized here
         switch (G.rc.getType()) {
-            case LEVEL_ONE_DEFENSE_TOWER -> {
+            case LEVEL_ONE_DEFENSE_TOWER:
                 level = 0;
                 DefenseTower.run();
-            }
-            case LEVEL_TWO_DEFENSE_TOWER -> {
+                break;
+            case LEVEL_TWO_DEFENSE_TOWER:
                 level = 1;
                 DefenseTower.run();
-            }
-            case LEVEL_THREE_DEFENSE_TOWER -> {
+                break;
+            case LEVEL_THREE_DEFENSE_TOWER:
                 level = 2;
                 DefenseTower.run();
-            }
-            case LEVEL_ONE_MONEY_TOWER -> {
+                break;
+            case LEVEL_ONE_MONEY_TOWER:
                 level = 0;
                 MoneyTower.run();
-            }
-            case LEVEL_TWO_MONEY_TOWER -> {
+                break;
+            case LEVEL_TWO_MONEY_TOWER:
                 level = 1;
                 MoneyTower.run();
-            }
-            case LEVEL_THREE_MONEY_TOWER -> {
+                break;
+            case LEVEL_THREE_MONEY_TOWER:
                 level = 2;
                 MoneyTower.run();
-            }
-            case LEVEL_ONE_PAINT_TOWER -> {
+                break;
+            case LEVEL_ONE_PAINT_TOWER:
                 level = 0;
                 PaintTower.run();
-            }
-            case LEVEL_TWO_PAINT_TOWER -> {
+                break;
+            case LEVEL_TWO_PAINT_TOWER:
                 level = 1;
                 PaintTower.run();
-            }
-            case LEVEL_THREE_PAINT_TOWER -> {
+                break;
+            case LEVEL_THREE_PAINT_TOWER:
                 level = 2;
                 PaintTower.run();
-            }
-            default -> throw new Exception("Challenge Complete! How Did We Get Here?");
+                break;
+            default:
+                throw new Exception("Challenge Complete! How Did We Get Here?");
         }
-        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level==0?2500:5000) >= 5000) {
+        while (G.rc.canUpgradeTower(G.me) && (G.rc.getRoundNum() > 100 || G.rc.getMoney() - G.rc.getType().moneyCost >= 1000)) {
             G.rc.upgradeTower(G.me);
         }
         // attack AFTER run (in case we get an upgrade)
@@ -184,7 +183,7 @@ public class Tower {
         }
         if (numAttackableRobots > 2 && G.rc.canAttack(null)) {
             G.rc.attack(null);
-        } else if (G.rc.canAttack(bestEnemyLoc)) {
+        } else if (numAttackableRobots > 0 && G.rc.canAttack(bestEnemyLoc)) {
             G.rc.attack(bestEnemyLoc);
         }
     }

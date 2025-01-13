@@ -1,4 +1,4 @@
-package SPAARK;
+package RICKROLL;
 
 import battlecode.common.*;
 
@@ -7,15 +7,36 @@ public class Splasher {
     public static final int ATTACK = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-    // controls round between visiting ruins
+    // controls round between visiting ruins (G.lastVisited)
     public static final int VISIT_TIMEOUT = 75;
 
     // every tile in attack range
-    public static int[] attackRangeX = new int[] {
-        0,0,0,0,0,1,1,1,2,-1,-1,-1,-2
-    };
-    public static int[] attackRangeY = new int[] {
-        2,1,0,-1,-2,1,0,-1,0,1,0,-1,0
+    public static MapLocation[] attackRange = new MapLocation[] {
+            new MapLocation(0, 0),
+            new MapLocation(1, 0),
+            new MapLocation(0, 1),
+            new MapLocation(-1, 0),
+            new MapLocation(0, -1),
+            new MapLocation(1, 1),
+            new MapLocation(1, -1),
+            new MapLocation(-1, 1),
+            new MapLocation(-1, -1),
+            new MapLocation(2, 0),
+            new MapLocation(0, 2),
+            new MapLocation(-2, 0),
+            new MapLocation(0, -2),
+            new MapLocation(2, 1),
+            new MapLocation(2, -1),
+            new MapLocation(-2, 1),
+            new MapLocation(-2, -1),
+            new MapLocation(1, 2),
+            new MapLocation(-1, 2),
+            new MapLocation(1, -2),
+            new MapLocation(-1, -2),
+            new MapLocation(2, 2),
+            new MapLocation(2, -2),
+            new MapLocation(-2, 2),
+            new MapLocation(-2, -2)
     };
 
     public static MapLocation attackTarget = new MapLocation(-1, -1);
@@ -78,10 +99,8 @@ public class Splasher {
         for (RobotInfo i : G.opponentRobots) {
             opponentRobotsList.append(i.getLocation().toString());
         }
-        int r = Random.rand() % 13;
-        for (int j = 13; --j >= 0;) {
-            int i = (j + r) % 13;
-            MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
+        for (int i = attackRange.length; --i >= 0;) {
+            MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 for (int dir = 9; --dir >= 0;) {
@@ -115,13 +134,13 @@ public class Splasher {
                     bestScore = score;
                 }
                 // very easy fix
-                if (Clock.getBytecodesLeft() < 2500) {
+                if (Clock.getBytecodesLeft() < 3500) {
                     break;
                 }
             }
         }
         if (bestScore > 4 && bestLoc != null) {
-            G.rc.attack(bestLoc, Random.rand() % 2 == 0);
+            G.rc.attack(bestLoc, G.rng.nextBoolean());
         }
         // find towers to go to from POI
         bestLoc = null;
@@ -173,10 +192,8 @@ public class Splasher {
         for (RobotInfo i : G.opponentRobots) {
             opponentRobotsList.append(i.getLocation().toString());
         }
-        int r = Random.rand() % 13;
-        for (int j = 13; --j >= 0;) {
-            int i = (j + r) % 13;
-            MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
+        for (int i = attackRange.length; --i >= 0;) {
+            MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 int opponentRobotsPaintedScore = 0;
@@ -225,7 +242,7 @@ public class Splasher {
             }
         }
         if (bestScore > 4 && bestLoc != null) {
-            G.rc.attack(bestLoc, Random.rand() % 2 == 0);
+            G.rc.attack(bestLoc, G.rng.nextBoolean());
         }
         Motion.bugnavTowards(attackTarget);
         G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);

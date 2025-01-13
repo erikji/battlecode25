@@ -1,15 +1,11 @@
-package SPAARK;
+package TSPAARKJAN08;
 
-import battlecode.common.*;
+import battlecode.common.MapLocation;
+import battlecode.common.UnitType;
 
 public class Robot {
     public static boolean[][] resourcePattern;
     public static boolean[][][] towerPatterns;
-    public static UnitType[] towers = new UnitType[] {
-            UnitType.LEVEL_ONE_DEFENSE_TOWER,
-            UnitType.LEVEL_ONE_MONEY_TOWER,
-            UnitType.LEVEL_ONE_PAINT_TOWER
-    };
 
     public static void init() throws Exception {
         resourcePattern = G.rc.getResourcePattern();
@@ -21,60 +17,32 @@ public class Robot {
     }
 
     public static void run() throws Exception {
-        paintLost += Math.max(lastPaint - G.rc.getPaint(), 0);
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
             case SPLASHER -> Splasher.run();
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
-        lastPaint = G.rc.getPaint();
         G.indicatorString.append("SYM="
-                + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
-        POI.drawIndicators();
+                + (POI.symmetry[0] ? "0" : "1") + (POI.symmetry[1] ? "0" : "1") + (POI.symmetry[2] ? "0 " : "1 "));
     }
-
-    // lastPaint stores how much paint has been lost to neutral/opponent territory
-    // used to determine how much paint until retreating
-    public static int lastPaint = 0;
-    public static int paintLost = 0;
 
     public static int retreatTower = -1;
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
-    // retreat calculations
-    public static final int RETREAT_PAINT_OFFSET = 30;
-    public static final int RETREAT_PAINT_RATIO = 4;
-
-    public static int getRetreatPaint() throws Exception {
-        return Math.max(paintLost + RETREAT_PAINT_OFFSET, G.rc.getType().paintCapacity / RETREAT_PAINT_RATIO);
-    }
-
     public static void retreat() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
-        // if no paint towers found it should go to chip tower to update POI and find
-        // paint tower to retreat to
-        paintLost = 0;
-        if (retreatTower >= 0) {
-            // oopsies tower was replaced
-            if (POI.parseTowerTeam(POI.towers[retreatTower]) != G.team) {
+        if (retreatTower != -1) {
+            if (POI.parseTowerTeam(POI.towers[retreatTower]) != G.rc.getTeam()) {
                 retreatTower = -1;
             }
         }
-        if (retreatTower >= 0) {
-            // don't retreat to tower with lots of bots surrounding it
+        if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             if (G.rc.canSenseRobotAtLocation(loc)) {
-                G.indicatorString.append("R: " + G.rc.senseNearbyRobots(loc, 2, G.team).length + " ");
-                if (G.me.distanceSquaredTo(loc) > 2 && G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
+                if (G.rc.senseNearbyRobots(loc, 2, G.rc.getTeam()).length > 4) {
                     retreatTower = -1;
-                } else {
-                    RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
-                    if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER
-                            && robotInfo.getPaintAmount() == 0) {
-                        retreatTower = -1;
-                    }
                 }
             }
         }
@@ -84,22 +52,20 @@ public class Robot {
                 int bestDistance = 0;
                 boolean bestPaint = false;
                 boolean bestCritical = false;
-                boolean hasCritical = false;
-                for (int i = 144; --i >= 0;) {
-                    if (POI.towers[i] == -1)
+                String tried = triedRetreatTowers.toString();
+                for (int i = 49; --i >= 0; ) {
+                    if (POI.towers[i] == -1) {
                         break;
-                    if (POI.critical[i]) {
-                        hasCritical = true;
                     }
-                    if (POI.parseTowerTeam(POI.towers[i]) != G.team)
+                    if (POI.parseTowerTeam(POI.towers[i]) != G.rc.getTeam()) {
                         continue;
-                    // this needs to change
+                    }
                     boolean paint = POI.parseTowerType(POI.towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER;
-                    // if (!paint) {
-                    //     // This is dumb but borks code for some reason
-                    //     continue;
-                    // }
-                    if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
+                    if (!paint) {
+                        // This is dumb but borks code for some reason
+                        continue;
+                    }
+                    if (tried.contains("-" + i + "-")) {
                         continue;
                     }
                     int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
@@ -108,12 +74,12 @@ public class Robot {
                         bestDistance = distance;
                         bestCritical = POI.critical[i];
                         bestPaint = paint;
-                    } else if (paint && !bestPaint) {
+                    } else if (bestCritical && !POI.critical[i]) {
                         best = i;
                         bestDistance = distance;
                         bestCritical = POI.critical[i];
                         bestPaint = paint;
-                    } else if (bestCritical && !POI.critical[i]) {
+                    } else if (paint && !bestPaint) {
                         best = i;
                         bestDistance = distance;
                         bestCritical = POI.critical[i];
@@ -126,30 +92,18 @@ public class Robot {
                     }
                 }
                 if (best == -1) {
-                    if (triedRetreatTowers.length() == 0) {
-                        retreatTower = -2;
-                        break;
-                    }
                     triedRetreatTowers = new StringBuilder();
                     continue;
                 }
-                if (!hasCritical && !bestPaint) {
-                    retreatTower = -2;
-                    break;
-                }
                 retreatTower = best;
-                triedRetreatTowers.append((char) best);
+                triedRetreatTowers.append(":" + best + ":");
                 break;
             }
         }
-        if (retreatTower == -2) {
-            // oof no tower
-            Motion.exploreRandomly();
-            retreatTower = -1;
-        } else if (retreatTower != -1) {
+        if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
+            // G.rc.setIndicatorLine(G.me, loc, 255, 0, 255);
             Motion.bugnavTowards(loc);
-            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
                         G.rc.senseRobotAtLocation(loc).getPaintAmount());
@@ -158,6 +112,5 @@ public class Robot {
                 }
             }
         }
-        G.rc.setIndicatorDot(G.me, 255, 0, 255);
     }
 }
