@@ -17,7 +17,7 @@ errors = []
 currentBot = 'SPAARK' #bot to test
 #SPAARK IS THE BASELINE
 
-bots = ['TSPAARKJAN10']
+bots = ['MASON']
 
 maps = []
 maps += ['DefaultSmall']
@@ -36,8 +36,8 @@ maps += ['[EDGE] ruins']
 maps += ['[SP] ChessBattleUnadvanced']
 maps += ['[SP2] Geometric']
 maps += ['[SP] RoundAbout']
-maps += ['[SP2] 2025']
-maps += ['[SP2] 5757']
+maps += ['[SP] 2025']
+maps += ['[SP] 5757']
 maps += ['[SP] Lingo']
 maps += ['[SP] MapIsNotReference']
 maps += ['[SP] ModernArt3']
