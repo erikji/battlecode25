@@ -3,36 +3,6 @@ package MASON;
 import battlecode.common.*;
 
 public class Soldier {
-    public static MapLocation ruinLocation = null; // BUILD_TOWER mode
-    public static int buildTowerType = 0;
-    public static UnitType towerType = null; // ATTACK mode
-    public static MapLocation towerLocation = null; // ATTACK mode
-    public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
-
-    // allowed marker locations
-    // fills entire vision range + buffer for checking when adjacent
-    // we can set everything outside of 7x7 to true but may be bad for
-    // checkerboarding (misaligned checkerboard blocks future SRPs)
-    public static final boolean[][] allowedSrpMarkerLocations = new boolean[][] {
-            { false, false, false, false, false, false, false, false, false, false, false },
-            { false, false, false, true, false, true, false, true, false, false, false },
-            { false, false, true, false, true, false, true, false, true, false, false },
-            { false, true, false, true, false, true, false, true, false, true, false },
-            { false, false, true, false, false, false, false, false, true, false, false },
-            { false, true, false, true, false, false, false, true, false, true, false },
-            { false, false, true, false, false, false, false, false, true, false, false },
-            { false, true, false, true, false, true, false, true, false, true, false },
-            { false, false, true, false, true, false, true, false, true, false, false },
-            { false, false, false, true, false, true, false, true, false, false, false },
-            { false, false, false, false, false, false, false, false, false, false, false },
-    };
-
-    // queue of next locations to check for expanding SRP
-    // used in explore mode to mark initial build since needs centered for markers
-    // (goes into expand mode, reaches the target location, and starts building)
-    public static MapLocation[] srpCheckLocations = new MapLocation[] {};
-    public static int srpCheckIndex = 0;
-
     public static final int EXPLORE = 0;
     public static final int BUILD_TOWER = 1;
     public static final int BUILD_RESOURCE = 2;
@@ -40,37 +10,86 @@ public class Soldier {
     public static final int ATTACK = 4;
     public static final int RETREAT = 5;
     public static int mode = EXPLORE;
-    // controls round between visiting ruins (G.lastVisited)
-    public static final int VISIT_TIMEOUT = 75;
-    public static final int MIN_SRP_ROUND = 10;
 
+    // ratio of paint necessary to exit retreat mode
+    public static final float RETREAT_PAINT_RATIO = 0.75f;
+    // exploration weight multiplier
+    public static final int EXPLORE_OPP_WEIGHT = 5;
+    // controls rounds between visiting ruins
+    public static final int VISIT_TIMEOUT = 40;
+    // don't build SRP for first few rounds, prioritize towers
+    public static final int MIN_SRP_ROUND = 5;
+    // controls rounds between repairing/expanding SRP
+    public static final int SRP_VISIT_TIMEOUT = 20;
+    // balance exploring and building SRPs (don't SRP if near target)
+    public static final int SRP_EXPAND_TIMEOUT = 50;
+    public static final int SRP_EXP_OVERRIDE_DIST = 64;
+    // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
+    public static final int TOWER_CEIL = 3;
+    public static final int TOWER_CEIL_MAP_AREA = 1600;
+    public static final int TOWER_CEIL_ROUND = 75;
+    // encourages building SRPs if waiting for chips on large maps initially
+    public static final int INITIAL_SRP_ALT_MAP_AREA = 1600;
+    public static final int INITIAL_SRP_ALT_TOWER_CAP = 6;
+    public static final int INITIAL_SRP_ALT_CHIPS = 300;
+    // ignore being near ruins for SRPs for some rounds, sometimes necessary
+    public static final int INITIAL_SRP_RUIN_IGNORE = 50;
+    // don't expand SRP if low on paint, since very slow
+    public static final int EXPAND_SRP_MIN_PAINT = 75;
+
+    public static MapLocation exploreLocation = null; // EXPLORE mode
+    public static MapLocation ruinLocation = null; // BUILD_TOWER mode
+    public static int buildTowerType = 0;
+    public static UnitType towerType = null; // ATTACK mode
+    public static MapLocation towerLocation = null; // ATTACK mode
+    public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
+
+    public static boolean avoidRetreating = false;
+
+    // queue of next locations to check for expanding SRP
+    // used in explore mode to mark initial build since needs centered for markers
+    // (goes into expand mode, reaches the target location, and starts building)
+    public static MapLocation[] srpCheckLocations = new MapLocation[] {};
+    public static int srpCheckIndex = 0;
+    public static int lastSrpExpansion = -SRP_EXPAND_TIMEOUT;
+
+    // commonly used stuff
     public static MapLocation[] nearbyRuins;
+    // map nearby map infos into 2d array in (y, x) form
+    // used for tower building, SRP detection, expansion, building
+    public static MapInfo[][] mapInfos = new MapInfo[9][9];
 
     /**
      * Always:
-     * If low on paint, retreat
+     * If low on paint and not avoidRetreating, retreat
      * Default to explore mode
      * 
      * Explore:
-     * Run around randomly while painting below self, maybe check sus POI stuff
+     * Run around randomly while painting below self, pick towers from POI
+     * TODO: finish the summary
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
-     * If can build SRP nearby (adjacent), queue location and enter SRP expand mode
+     * - exception for tower ceiling, to place SRPs to help build towers later
+     * If sees SRP, queue location of SRP and enter SRP expand mode
+     * - Queue once, SRP build will repair if needed, otherwise switch to expand
+     * Else, if can build SRP adjacent, queue location and enter SRP expand mode
      * - SRPs won't be built overlapping with tower 5x5 squares
-     * Attempt to repair SRPs
      * 
      * Build tower:
      * If pattern is complete but tower not completed, leave lowest ID to complete
+     * - avoidRetreating true if is lowest ID, don't abandon the tower
      * Place stuff
+     * If can't complete tower, low coins, few towers, large map, return to explore,
+     * other bot will finish tower later (see if SRP is possible)
      * Complete tower, return to explore
      * 
      * Build SRP:
      * Place SRP
-     * Complete SRP, queue 4 optimal expansion locations and enter SRP expand mode
+     * Complete SRP, queue 8 optimal expansion locations and enter SRP expand mode
+     * - 4 expansions for 2 chiralities (flipped pattern too)
      * 
      * Expand SRP:
-     * Go to queued locations of SRP expansion and see if can build (race condition
-     * thing)
+     * Go to queued locations of expansion and see if can build (fix race condition)
      * If can build
      * - Place 4 secondary markers in box around center and primary marker at center
      * - Enter SRP build mode
@@ -80,12 +99,20 @@ public class Soldier {
      * Attempt to repair SRPs if not in range to attack tower
      */
     public static void run() throws Exception {
-        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
+        if (!avoidRetreating && G.rc.getPaint() < Robot.getRetreatPaint()) {
             mode = RETREAT;
-        } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4) {
+        } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
             mode = EXPLORE;
         }
         nearbyRuins = G.rc.senseNearbyRuins(-1);
+        // map
+        int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
+            mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
+        }
+        int a = Clock.getBytecodeNum();
+        avoidRetreating = false;
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
             case BUILD_TOWER -> buildTowerCheckMode();
@@ -93,6 +120,8 @@ public class Soldier {
             case EXPAND_RESOURCE -> expandResourceCheckMode();
             case ATTACK -> attackCheckMode();
         }
+        int b = Clock.getBytecodeNum();
+        G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD_TOWER -> buildTower();
@@ -104,6 +133,7 @@ public class Soldier {
                 Robot.retreat();
             }
         }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {
@@ -120,7 +150,9 @@ public class Soldier {
                     mode = ATTACK;
                     return;
                 }
-            } else if (G.rc.getNumberTowers() < 25) {
+            } else if (G.rc.getNumberTowers() < 25
+                    && (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL)) {
+                // TOWER_CEIL encourages building SRPs to help build more towers
                 ruinLocation = loc;
                 mode = BUILD_TOWER;
                 // if the tower doesn't need more help it'll return to explore mode
@@ -130,21 +162,36 @@ public class Soldier {
                 return;
             }
         }
-        // search for SRP markers for repairing/building/expanding
-        // TODO: BOT SEARCHES FOR MARKERS AND HELPS BUILD IF NO OTHER BOTS BUILDING
-        // TODO: ALSO REPAIRING (enter build mode if is messed up)
-        // TODO: EXTRAPOLATE EXISTING PATTERNS TO PERFECTLY TILE - MORE EFFICIENT
-        // don't make it remove and rebuild patterns that interfere?
-        if (G.rc.getRoundNum() > MIN_SRP_ROUND) {
+        if (lastSrpExpansion + SRP_EXPAND_TIMEOUT >= G.round
+                || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
+            G.indicatorString.append("SKIP_CHK_RP ");
+        } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
+            // search for SRP markers for building/repairing/expanding
+            // TODO: detect SRP expansion only within a certain range of soldiers, otherwise
+            // TODO: soldiers too eager to build SRPs
+
+            // mode = EXPAND_RESOURCE;
+            // // SRP expand will enter SRP build, which may repair if needed before
+
+            // expanding
+            // srpCheckLocations = new MapLocation[] { };
+            // srpCheckIndex = 0;
+            // // we have to do this or may have bugs
+            // expandResourceCheckMode();
+
             // see if SRP is possible nearby
-            for (int i = 8; --i >= 0;) {
-                MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-                if (canBuildSRPHere(loc)) {
-                    // TOOD: prioritize lining up checkerboards
-                    srpCheckLocations = new MapLocation[] { loc };
-                    srpCheckIndex = 0;
-                    mode = EXPAND_RESOURCE;
-                    break;
+            // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
+            // TODO: maybe dont build SRP if near explore target?
+            if (G.round > MIN_SRP_ROUND) {
+                for (int i = 4; --i >= 0;) {
+                    MapLocation loc = G.me.add(G.ALL_DIRECTIONS[Random.rand() % 9]);
+                    if (canBuildSRPAtLocation(loc)) {
+                        srpCheckLocations = new MapLocation[] { loc };
+                        srpCheckIndex = 0;
+                        mode = EXPAND_RESOURCE;
+                        expandResourceCheckMode();
+                        break;
+                    }
                 }
             }
         }
@@ -152,7 +199,7 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
-        G.lastVisited[ruinLocation.y][ruinLocation.x] = G.rc.getRoundNum();
+        G.setLastVisited(ruinLocation.x, ruinLocation.y, G.round);
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -163,17 +210,18 @@ public class Soldier {
         }
         // if pattern complete leave lowest bot ID to complete
         boolean isPatternComplete = true;
-        // do this instead of iterating through nearby map infos
+        int ox = ruinLocation.x - G.me.x + 2;
+        int oy = ruinLocation.y - G.me.y + 2;
+        boolean[][] pattern = Robot.towerPatterns[buildTowerType];
+        PaintType paint;
         checkPattern: for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 if (dx == 2 && dy == 2)
                     continue;
-                MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
-                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                // also guaranteed can be sensed if can action there
-                if (G.rc.canSenseLocation(loc)
-                        && (Robot.towerPatterns[buildTowerType][dx][dy] ? PaintType.ALLY_SECONDARY
-                                : PaintType.ALLY_PRIMARY) != G.rc.senseMapInfo(loc).getPaint()) {
+                paint = pattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY;
+                // make sure not out of vision radius
+                if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))
+                        && paint != mapInfos[oy + dy][ox + dx].getPaint()) {
                     isPatternComplete = false;
                     break checkPattern;
                 }
@@ -190,6 +238,14 @@ public class Soldier {
                     }
                 }
             }
+            // is lowest id
+            avoidRetreating = true;
+            // maybe try later if chips low, towers few, and map large
+            if (G.rc.getChips() <= INITIAL_SRP_ALT_CHIPS && G.rc.getNumberTowers() <= INITIAL_SRP_ALT_TOWER_CAP
+                    && G.mapArea >= INITIAL_SRP_ALT_MAP_AREA) {
+                mode = EXPLORE;
+                ruinLocation = null;
+            }
         }
     }
 
@@ -201,40 +257,34 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
-        // IF BOT IS OUT OF BYTECODE, TRY REMOVING exploreCheckMode() CALLS
+        lastSrpExpansion = G.round;
         MapLocation target = srpCheckLocations[srpCheckIndex];
-        while (!G.rc.onTheMap(target)) {
+        // keep disqualifying locations in a loop
+        // done ASAP, don't waste time going to SRPs that can be disqualified
+        while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)) {
             srpCheckIndex++;
             if (srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
-                // COMMENT IF OUT OF BYTECODE
-                exploreCheckMode();
-                // COMMENT IF OUT OF BYTECODE
+                // don't waste turns
+                if (Clock.getBytecodesLeft() > 10000)
+                    exploreCheckMode();
                 return;
             }
             target = srpCheckLocations[srpCheckIndex];
+            G.setLastVisited(target.x, target.y, G.round);
         }
-        // tiny optimization, saves like 1 turn
-        if (G.me.isWithinDistanceSquared(target, 1)) {
-            // have to be within 1 tile lmao
-            if (!canBuildSRPHere(target)) {
-                srpCheckIndex++;
-                if (srpCheckIndex >= srpCheckLocations.length) {
-                    mode = EXPLORE;
-                    // COMMENT IF OUT OF BYTECODE
-                    exploreCheckMode();
-                    // COMMENT IF OUT OF BYTECODE
-                    return;
-                }
-            }
-        }
-        if (G.me.equals(target) && canBuildSRPHere(G.me)) {
+        // shouldn't interfere with towers, since SRP adjacent to ruin impossible
+        // done down here to keep it on the map
+        G.setLastVisited(target.x, target.y, G.round);
+        // markers
+        if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
             resourceLocation = G.me;
-            // markers
+            // secondary used for detection, primary marks center
             G.rc.mark(G.me.add(Direction.NORTHWEST), true);
             G.rc.mark(G.me.add(Direction.NORTHEAST), true);
             G.rc.mark(G.me.add(Direction.SOUTHWEST), true);
             G.rc.mark(G.me.add(Direction.SOUTHEAST), true);
+            G.rc.mark(G.me, false);
             G.indicatorString.append("MK_SRP ");
             mode = BUILD_RESOURCE;
         }
@@ -248,71 +298,91 @@ public class Soldier {
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
         // find towers from POI to attack/build out of vision
-        MapLocation bestLoc = null;
-        int bestDistanceSquared = 10000;
-        for (int i = 144; --i >= 0;) {
-            if (POI.towers[i] == -1) {
-                break;
-            }
-            if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
-                // attack these
-                MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                        && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos);
-                    bestLoc = pos;
+        exploreLocation = null;
+        // TODO: EXPLORE BLANK AREAS AWAY FROM TOWERS AND POI
+        // TODO: we leave too much map empty
+        // TODO: try using random explore more
+        // TODO: maybe even edit random explore to avoid known POI
+        // TODO: since POI will be checked on without random
+        // TOWER_CEIL encourages building SRPs to help build more towers
+        if (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
+            int bestDistanceSquared = 10000;
+            for (int i = 144; --i >= 0;) {
+                if (POI.towers[i] == -1) {
+                    break;
                 }
-            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
-                // having 25 towers otherwise just softlocks the bots
-                MapLocation pos = POI.parseLocation(POI.towers[i]);
-                // prioritize opponent towers more than neutral towers, so it has to be REALLY
-                // close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5)
-                        && G.lastVisited[pos.y][pos.x] + 75 < G.rc.getRoundNum()) {
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
-                    bestLoc = pos;
+                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                    // attack these
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
+                            && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos);
+                        exploreLocation = pos;
+                    }
+                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                    // having 25 towers otherwise just softlocks the bots
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    // prioritize opponent towers more than ruins, so it has to be REALLY close
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
+                            && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
+                        exploreLocation = pos;
+                    }
                 }
             }
         }
-        if (bestLoc == null) {
+        if (exploreLocation == null) {
             Motion.exploreRandomly();
+            // int area = G.rc.getMapWidth() * G.rc.getMapHeight();
+            // if (area >= 800 || G.rc.getRoundNum() < 300) {
+            //     Motion.exploreRandomly();
+            // }
+            // else {
+            //     Motion.bugnavAround(G.mapCenter, 1, 64);
+            // }
         } else {
-            Motion.bugnavTowards(bestLoc);
-            G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+            Motion.bugnavTowards(exploreLocation);
+            G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
+        // have to sense since moved
         MapInfo me = G.rc.senseMapInfo(G.me);
         // place paint under self to avoid passive paint drain if possible
         if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
             // determine which checkerboard pattern to copy
             int[] cnt = new int[] { 0, 0 };
+            MapLocation loc;
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 if (G.nearbyMapInfos[i].getPaint() == PaintType.ALLY_SECONDARY) {
-                    cnt[(G.nearbyMapInfos[i].getMapLocation().x + G.nearbyMapInfos[i].getMapLocation().y) & 1]++;
+                    loc = G.nearbyMapInfos[i].getMapLocation();
+                    cnt[(loc.x + loc.y) & 1]++;
                 }
             }
             G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
-        } else {
-            // repair nearby SRP if possible (may use a lot of bytecode?)
-            attemptRepairSRP();
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
-        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        // spam paint
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-            if (G.rc.canAttack(loc) && loc.isWithinDistanceSquared(ruinLocation, 8)) {
-                int dx = loc.x - ruinLocation.x + 2;
-                int dy = loc.y - ruinLocation.y + 2;
-                if (dx != 2 || dy != 2) {
-                    boolean paint = Robot.towerPatterns[buildTowerType][dx][dy];
-                    PaintType exist = G.rc.senseMapInfo(loc).getPaint();
+        MapLocation paintLocation = null;
+        int ox = ruinLocation.x - G.me.x + 2;
+        int oy = ruinLocation.y - G.me.y + 2;
+        boolean[][] pattern = Robot.towerPatterns[buildTowerType];
+        boolean paint;
+        PaintType exists;
+        MapLocation loc;
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
+                if (dx == 2 && dy == 2)
+                    continue;
+                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // guaranteed within vision radius if can attack there
+                loc = ruinLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canAttack(loc)) {
+                    paint = pattern[dx][dy];
+                    exists = mapInfos[oy + dy][ox + dx].getPaint();
                     // can't paint enemy paint
-                    // might need !exist.isEnemy()
-                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
+                    if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
@@ -340,18 +410,22 @@ public class Soldier {
     public static void buildResource() throws Exception {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
-        // do this instead of iterating through nearby map infos
+        MapLocation paintLocation = null;
+        int ox = resourceLocation.x - G.me.x + 2;
+        int oy = resourceLocation.y - G.me.y + 2;
+        boolean paint;
+        PaintType exists;
+        MapLocation loc;
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
-                MapLocation loc = resourceLocation.translate(dx - 2, dy - 2);
-                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                // also guaranteed can be sensed if can action there
+                // location guaranteed to be on the map by canBuildSrpHere
+                // guaranteed within vision radius if can attack there
+                loc = resourceLocation.translate(dx - 2, dy - 2);
                 if (G.rc.canAttack(loc)) {
-                    boolean paint = Robot.resourcePattern[dx][dy];
-                    PaintType exist = G.rc.senseMapInfo(loc).getPaint();
-                    if (exist == PaintType.EMPTY
-                            || exist == (paint ? PaintType.ALLY_PRIMARY : PaintType.ALLY_SECONDARY)) {
+                    paint = Robot.resourcePattern[dx][dy];
+                    exists = mapInfos[oy + dy][ox + dx].getPaint();
+                    // can't paint enemy paint
+                    if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                         G.rc.attack(loc, paint);
                         paintLocation = loc;
                         break;
@@ -359,18 +433,24 @@ public class Soldier {
                 }
             }
         }
-        if (G.rc.canCompleteResourcePattern(resourceLocation) && G.rc.getPaint() > 50) {
+        if (G.rc.canCompleteResourcePattern(resourceLocation)) {
             G.rc.completeResourcePattern(resourceLocation);
-            // TODO: PUT BOT INTO "EXPAND_RP" MODE THAT TRIES TO EXPAND PATTERN
-            // put the 4 optimal locations of next pattern into a queue
-            // that the bot then pathfinds to and checks if can build pattern
-            mode = EXPAND_RESOURCE;
-            // only checks one chirality of pattern
-            srpCheckLocations = new MapLocation[] {
-                    resourceLocation.translate(3, 1), resourceLocation.translate(1, -3),
-                    resourceLocation.translate(-3, -1), resourceLocation.translate(-1, 3)
-            };
-            srpCheckIndex = 0;
+            if (G.rc.getPaint() < EXPAND_SRP_MIN_PAINT) {
+                // early retreat since painting more is very slow
+                mode = RETREAT;
+            } else {
+                // put the 4 optimal locations of next pattern into a queue
+                // that the bot then pathfinds to and checks if can build pattern
+                mode = EXPAND_RESOURCE;
+                // checks both chiralities
+                srpCheckLocations = new MapLocation[] {
+                        resourceLocation.translate(3, 1), resourceLocation.translate(3, -1),
+                        resourceLocation.translate(1, -3), resourceLocation.translate(-1, -3),
+                        resourceLocation.translate(-3, -1), resourceLocation.translate(-3, 1),
+                        resourceLocation.translate(-1, 3), resourceLocation.translate(1, 3)
+                };
+                srpCheckIndex = 0;
+            }
             Motion.exploreRandomly();
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
@@ -387,6 +467,11 @@ public class Soldier {
     public static void expandResource() throws Exception {
         G.indicatorString.append("EXPAND_RP ");
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
+        // show the queue and current target
+        for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
+            // dots guaranteed to be on map because of expandResourceCheckMode
+            G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+        }
         G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
@@ -412,37 +497,78 @@ public class Soldier {
     }
 
     /**
-     * Can build map at location - DOES NOT CHECK IF SENSE LOCATIONS ARE VALID!!!
-     * Only call this with adjacent locations to bot!!! (any 8 cardinal directions)
+     * Checks if an SRP cannot be built at a location. If `false`, doesn't
+     * necessarily mean *can* build, only *can't not* build. Allows non-aligned
+     * checkerboarding if not overlapping.
      */
-    public static boolean canBuildSRPHere(MapLocation me) throws Exception {
-        // make sure 5x5 square clear first
-        for (int i = -3; ++i <= 2;) {
-            for (int j = -3; ++j <= 2;) {
-                MapLocation loc = me.translate(j, i);
-                if (!G.rc.onTheMap(loc) || !G.rc.sensePassability(loc))
-                    return false;
-            }
-        }
+    public static boolean cannotBuildSRPAtLocation(MapLocation center) throws Exception {
         // check for towers that could interfere
-        for (int i = nearbyRuins.length; --i >= 0;) {
-            if (Math.abs(G.me.x - nearbyRuins[i].x) <= 4 && Math.abs(G.me.y - nearbyRuins[i].y) <= 4)
-                return false;
-        }
-        // check meshing with nearby SRPs
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            // can't have markers without spots but can have spots without markers
-            if ((G.nearbyMapInfos[i].getMark() == PaintType.ALLY_SECONDARY)) {
-                MapLocation loc = G.nearbyMapInfos[i].getMapLocation();
-                if (!allowedSrpMarkerLocations[loc.y - me.y + 5][loc.x - me.x + 5])
-                    return false;
+        // ignore at first for better SRPs, then only avoid ruins (built towers ok)
+        if (G.round > INITIAL_SRP_RUIN_IGNORE) {
+            for (int i = nearbyRuins.length; --i >= 0;) {
+                if (!G.rc.canSenseRobotAtLocation(nearbyRuins[i])
+                        && Math.abs(G.me.x - nearbyRuins[i].x) <= 4 && Math.abs(G.me.y - nearbyRuins[i].y) <= 4) {
+                    return true;
+                }
             }
         }
-        return true;
+        // only checks 7x7 square for markers, since any with markers outside can't
+        // interfere (non-aligned checkerboards ignored if not overlapping)
+        // any collision in 5x5 area means can't build
+        // any SRP centers in 5x5 area means too much overlap
+        // misaligned checkerboard within 7x7 means interference
+        int ox = center.x - G.me.x + 4;
+        int oy = center.y - G.me.y + 4;
+        MapLocation loc;
+        PaintType mark;
+        // check 5x5
+        for (int dy = -3; ++dy <= 2;) {
+            for (int dx = -3; ++dx <= 2;) {
+                loc = center.translate(dx, dy);
+                if (G.rc.canSenseLocation(loc)) {
+                    mark = mapInfos[dy + oy][dx + ox].getMark();
+                    if (!G.rc.sensePassability(loc) || mark == PaintType.ALLY_PRIMARY) {
+                        return true;
+                    }
+                    if (mark == PaintType.ALLY_SECONDARY && Math.abs(dy + dx) % 2 == 1)
+                        return true;
+                }
+            }
+        }
+        // check edges of 7x7
+        for (int dy = -4; ++dy <= 3;) {
+            if (G.rc.canSenseLocation(center.translate(-3, dy))) {
+                if (mapInfos[dy + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(dy + -3) % 2 == 1)
+                    return true;
+            }
+            if (G.rc.canSenseLocation(center.translate(3, dy))) {
+                if (mapInfos[dy + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(dy + 3) % 2 == 1)
+                    return true;
+            }
+        }
+        for (int dx = -3; ++dx <= 2;) {
+            if (G.rc.canSenseLocation(center.translate(dx, -3))) {
+                if (mapInfos[-3 + oy][dx + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(-3 + dx) % 2 == 1)
+                    return true;
+            }
+            if (G.rc.canSenseLocation(center.translate(dx, 3))) {
+                if (mapInfos[3 + oy][dx + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(3 + dx) % 2 == 1)
+                    return true;
+            }
+        }
+        return false;
     }
 
-    public static void attemptRepairSRP() throws Exception {
-        // TODO: check nearbyMapInfos for SRP markers and repair
+    /**
+     * Check if an SRP can be built or repaired at location.
+     * MUST be called while at or adjacent (distance^2 <= 1) to location!
+     */
+    public static boolean canBuildSRPAtLocation(MapLocation center) throws Exception {
+        // if on top of a current SRP, yes
+        if (mapInfos[4][4].getMark() == PaintType.ALLY_PRIMARY)
+            return true;
+        else
+            return !cannotBuildSRPAtLocation(center);
     }
 
     public static Micro attackMicro = new Micro() {
