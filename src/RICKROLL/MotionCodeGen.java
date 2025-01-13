@@ -1,4 +1,4 @@
-package ASTLEY;
+package RICKROLL;
 
 public class MotionCodeGen {
     public static void bfs20() {

@@ -1,6 +1,6 @@
-package ASTLEY;
+package RICKROLL;
 
-public class DefenseTower {
+public class MoneyTower {
 
     public static void run() throws Exception {
     }
