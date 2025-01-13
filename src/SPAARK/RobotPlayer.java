@@ -10,16 +10,6 @@ public class RobotPlayer {
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
-        //shuffle moment
-        // int start = Clock.getBytecodeNum();
-        // int t = Random.rand();
-        // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            // int s = G.rng.nextInt(100+1);
-            // MapInfo a = G.nearbyMapInfos[s];
-            // G.nearbyMapInfos[s] = G.nearbyMapInfos[i];
-            // G.nearbyMapInfos[i] = a;
-        // }
-        // System.out.println(G.nearbyMapInfos.length+" "+(Clock.getBytecodeNum()-start));
         G.round = G.rc.getRoundNum();
     }
 

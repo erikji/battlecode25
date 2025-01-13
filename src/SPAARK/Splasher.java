@@ -11,32 +11,11 @@ public class Splasher {
     public static final int VISIT_TIMEOUT = 75;
 
     // every tile in attack range
-    public static MapLocation[] attackRange = new MapLocation[] {
-            new MapLocation(0, 0),
-            new MapLocation(1, 0),
-            new MapLocation(0, 1),
-            new MapLocation(-1, 0),
-            new MapLocation(0, -1),
-            new MapLocation(1, 1),
-            new MapLocation(1, -1),
-            new MapLocation(-1, 1),
-            new MapLocation(-1, -1),
-            new MapLocation(2, 0),
-            new MapLocation(0, 2),
-            new MapLocation(-2, 0),
-            new MapLocation(0, -2),
-            new MapLocation(2, 1),
-            new MapLocation(2, -1),
-            new MapLocation(-2, 1),
-            new MapLocation(-2, -1),
-            new MapLocation(1, 2),
-            new MapLocation(-1, 2),
-            new MapLocation(1, -2),
-            new MapLocation(-1, -2),
-            new MapLocation(2, 2),
-            new MapLocation(2, -2),
-            new MapLocation(-2, 2),
-            new MapLocation(-2, -2)
+    public static int[] attackRangeX = new int[] {
+        0,0,0,0,0,1,1,1,2,-1,-1,-1,-2
+    };
+    public static int[] attackRangeY = new int[] {
+        2,1,0,-1,-2,1,0,-1,0,1,0,-1,0
     };
 
     public static MapLocation attackTarget = new MapLocation(-1, -1);
@@ -99,8 +78,10 @@ public class Splasher {
         for (RobotInfo i : G.opponentRobots) {
             opponentRobotsList.append(i.getLocation().toString());
         }
-        for (int i = attackRange.length; --i >= 0;) {
-            MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
+        int r = Random.rand() % 13;
+        for (int j = 13; --j >= 0;) {
+            int i = (j + r) % 13;
+            MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 for (int dir = 9; --dir >= 0;) {
@@ -134,7 +115,7 @@ public class Splasher {
                     bestScore = score;
                 }
                 // very easy fix
-                if (Clock.getBytecodesLeft() < 3500) {
+                if (Clock.getBytecodesLeft() < 2500) {
                     break;
                 }
             }
@@ -192,8 +173,10 @@ public class Splasher {
         for (RobotInfo i : G.opponentRobots) {
             opponentRobotsList.append(i.getLocation().toString());
         }
-        for (int i = attackRange.length; --i >= 0;) {
-            MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
+        int r = Random.rand() % 13;
+        for (int j = 13; --j >= 0;) {
+            int i = (j + r) % 13;
+            MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 int opponentRobotsPaintedScore = 0;
