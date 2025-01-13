@@ -140,7 +140,7 @@ public class Splasher {
             }
         }
         if (bestScore > 4 && bestLoc != null) {
-            G.rc.attack(bestLoc, G.rng.nextBoolean());
+            G.rc.attack(bestLoc, Random.rand() % 2 == 0);
         }
         // find towers to go to from POI
         bestLoc = null;
@@ -242,7 +242,7 @@ public class Splasher {
             }
         }
         if (bestScore > 4 && bestLoc != null) {
-            G.rc.attack(bestLoc, G.rng.nextBoolean());
+            G.rc.attack(bestLoc, Random.rand() % 2 == 0);
         }
         Motion.bugnavTowards(attackTarget);
         G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);

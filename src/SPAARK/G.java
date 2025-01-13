@@ -7,7 +7,6 @@ import java.util.*;
 //and doesnt fit anywhere else
 public class G {
     public static RobotController rc;
-    public static Random rng;
     public static MapLocation mapCenter;
     public static int mapArea;
     public static Team team;

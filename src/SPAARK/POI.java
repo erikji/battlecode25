@@ -252,7 +252,7 @@ public class POI {
         if (G.rc.getType().isTowerType() && G.allyRobots.length > 0) {
             // we just send all info that the robots dont have
             for (int j = G.allyRobots.length; --j >= 0;) {
-                RobotInfo r = G.allyRobots[G.rng.nextInt(G.allyRobots.length)];
+                RobotInfo r = G.allyRobots[Random.rand() % G.allyRobots.length];
                 while (G.rc.canSendMessage(r.getLocation())) {
                     if (Clock.getBytecodesLeft() < 3000)
                         return;

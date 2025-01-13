@@ -89,7 +89,7 @@ public class Motion {
     public static void moveRandomly() throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
-            for (int i = G.DIRECTIONS.length; --i >= 0;) {
+            for (int i = 8; --i >= 0;) {
                 if (G.rc.canMove(G.DIRECTIONS[i])) {
                     stuck = false;
                 }
@@ -99,7 +99,7 @@ public class Motion {
             }
             // move in a random direction but minimize making useless moves back to where
             // you came from
-            Direction direction = G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)];
+            Direction direction = G.DIRECTIONS[Random.rand()&7];
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
@@ -135,9 +135,9 @@ public class Motion {
                 // just keep moving in the same direction as before if there's no robots nearby
                 if (G.round % 3 == 0 || lastRandomSpread == null) {
                     moveRandomly(); // occasionally move randomly to avoid getting stuck
-                } else if (G.rng.nextInt(20) == 1) {
+                } else if (Random.rand() % 20 == 0) {
                     // don't get stuck in corners
-                    lastRandomSpread = G.me.add(G.DIRECTIONS[G.rng.nextInt(G.DIRECTIONS.length)]);
+                    lastRandomSpread = G.me.add(G.DIRECTIONS[Random.rand()&7]);
                     moveRandomly();
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
@@ -175,7 +175,7 @@ public class Motion {
                 if (G.rc.canSenseLocation(exploreLoc)) {
                     exploreLoc = null;
                 }
-                if (G.rng.nextInt(25) == 0) {
+                if (Random.rand() % 25 == 0) {
                     exploreLoc = null;
                 }
             }
@@ -194,7 +194,7 @@ public class Motion {
                 for (int i = G.rc.getMapHeight(); --i >= 0;) {
                     sum -= Long.bitCount(POI.explored[i]);
                 }
-                int rand = G.rng.nextInt(sum);
+                int rand = Random.rand() % sum;
                 int cur = 0;
                 for (int i = G.rc.getMapHeight(); --i >= 0;) {
                     cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
