@@ -14,10 +14,10 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'betterspawning' #bot to test
+currentBot = 'SPAARK' #bot to test
 #SPAARK IS THE BASELINE
 
-bots = ['SPAARK']
+bots = [chr(ord('a')+i) for i in range(1)]
 
 maps = []
 maps += ['DefaultSmall']

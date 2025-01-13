@@ -184,7 +184,7 @@ public class Soldier {
             // TODO: maybe dont build SRP if near explore target?
             if (G.round > MIN_SRP_ROUND) {
                 for (int i = 4; --i >= 0;) {
-                    MapLocation loc = G.me.add(G.ALL_DIRECTIONS[G.rng.nextInt(9)]);
+                    MapLocation loc = G.me.add(G.ALL_DIRECTIONS[Random.rand() % 9]);
                     if (canBuildSRPAtLocation(loc)) {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
