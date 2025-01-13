@@ -1,4 +1,4 @@
-package MASON;
+package sporks;
 
 import battlecode.common.*;
 import java.util.*;
@@ -77,29 +77,26 @@ public class Tower {
             spawnBot(UnitType.SPLASHER);
         } else if (G.rc.getNumberTowers() > 2 || G.round > 50) {
             //don't suffocate money until we built a tower
-            int mod = 7;
-            int area = G.rc.getMapHeight() * G.rc.getMapWidth();
-            mod = 5;
             switch ((spawnedRobots - 2) % 7) {
                 // make sure to subtract 2
                 case 0:
-                    spawnBot(UnitType.SPLASHER);
+                    spawnBot(UnitType.MOPPER);
                     break;
                 case 1:
-                    spawnBot(UnitType.MOPPER);
+                    spawnBot(UnitType.SOLDIER);
                     break;
                 case 2:
-                    spawnBot(UnitType.MOPPER);
-                    break;
-                case 3:
-                    // spawnBot(UnitType.SOLDIER);
                     spawnBot(UnitType.SPLASHER);
                     break;
-                case 4:
+                case 3:
                     spawnBot(UnitType.SOLDIER);
                     break;
+                case 4:
+                    spawnBot(UnitType.SPLASHER);
+                    break;
                 case 5:
-                    spawnBot(UnitType.SOLDIER);
+                    // spawnBot(UnitType.SOLDIER);
+                    spawnBot(UnitType.SPLASHER);
                     break;
                 case 6:
                     spawnBot(UnitType.SPLASHER);
