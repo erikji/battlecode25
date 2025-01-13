@@ -71,12 +71,12 @@ public class Splasher {
         // painting heuristic
         // remove opponent paint, paint under enemy bots, paint under allied bots
         StringBuilder allyRobotsList = new StringBuilder();
-        for (RobotInfo i : G.allyRobots) {
-            allyRobotsList.append(i.getLocation().toString());
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
-        for (RobotInfo i : G.opponentRobots) {
-            opponentRobotsList.append(i.getLocation().toString());
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
         }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
@@ -170,7 +170,7 @@ public class Splasher {
             allyRobotsList.append(G.allyRobots[i].getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
-        for (int i = G.allyRobots.length; --i >= 0;) {
+        for (int i = G.opponentRobots.length; --i >= 0;) {
             opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
         }
         int r = Random.rand() % 13;
