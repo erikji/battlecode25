@@ -35,7 +35,7 @@ public class RobotPlayer {
             // init bytecode count
             G.indicatorString.append("INIT " + Clock.getBytecodeNum() + " ");
             while (true) {
-                int r = G.round;
+                int r = G.rc.getRoundNum();
                 try {
                     updateRound();
                     switch (G.rc.getType()) {
