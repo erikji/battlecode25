@@ -19,6 +19,7 @@ currentBot = 'sporks' #bot to test
 
 # bots = [chr(ord('a')+i) for i in range(1)]
 bots = ["SPAARK"]
+# bots = ['MASON']
 
 maps = []
 maps += ['DefaultSmall']

@@ -1,4 +1,4 @@
-package RICKROLL;
+package MASON;
 
 public class PaintTower {
 
