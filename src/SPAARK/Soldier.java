@@ -573,10 +573,6 @@ public class Soldier {
             return false;
         // not disqualified, so check if exists SRP already
         return mapInfos[4][4].getMark() == PaintType.ALLY_PRIMARY;
-        if ()
-            return true;
-        else
-            return !cannotBuildSRPAtLocation(center);
     }
 
     // paint neutral tiles if bugnav says to go to it
