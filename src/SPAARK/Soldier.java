@@ -34,6 +34,9 @@ public class Soldier {
     public static final int INITIAL_SRP_ALT_CHIPS = 300;
     // ignore being near ruins for SRPs for some rounds, sometimes necessary
     public static final int INITIAL_SRP_RUIN_IGNORE = 50;
+    // stop building SRP if enemy paint interferes too much
+    public static final int MAX_SRP_ENEMY_PAINT = 4;
+    public static final int MAX_SRP_BLOCKED_TIME = 20;
     // don't expand SRP if low on paint, since very slow
     public static final int EXPAND_SRP_MIN_PAINT = 75;
 
@@ -52,6 +55,7 @@ public class Soldier {
     public static MapLocation[] srpCheckLocations = new MapLocation[] {};
     public static int srpCheckIndex = 0;
     public static int lastSrpExpansion = -SRP_EXPAND_TIMEOUT;
+    public static int buildSrpBlockedTime = 0;
 
     // commonly used stuff
     public static MapLocation[] nearbyRuins;
@@ -63,6 +67,9 @@ public class Soldier {
      * Always:
      * If low on paint and not avoidRetreating, retreat
      * Default to explore mode
+     * - All movement not in attack mode uses special movement micro that
+     * paints neutral tiles if the micro weights it high - always attack
+     * BEFORE moving or may interfere
      * 
      * Explore:
      * Run around randomly while painting below self, pick towers from POI
@@ -205,7 +212,6 @@ public class Soldier {
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
                 || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
-            ruinLocation = null;
             return;
         }
         // if pattern complete leave lowest bot ID to complete
@@ -233,7 +239,6 @@ public class Soldier {
                     if (G.allyRobots[i].ID < G.rc.getID()) {
                         // not lowest ID, leave
                         mode = EXPLORE;
-                        ruinLocation = null;
                         return;
                     }
                 }
@@ -244,13 +249,36 @@ public class Soldier {
             if (G.rc.getChips() <= INITIAL_SRP_ALT_CHIPS && G.rc.getNumberTowers() <= INITIAL_SRP_ALT_TOWER_CAP
                     && G.mapArea >= INITIAL_SRP_ALT_MAP_AREA) {
                 mode = EXPLORE;
-                ruinLocation = null;
             }
         }
     }
 
     public static void buildResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_BRP ");
+        // shouldn't interfere with towers here either, same as expand RP
+        G.setLastVisited(resourceLocation.x, resourceLocation.y, G.round);
+        // if the SRP has been blocked for a long time just give up
+        buildSrpBlockedTime++;
+        if (buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
+            mode = EXPLORE;
+            return;
+        }
+        // stop building if there's lots of enemy paint within the SRP
+        int enemyPaint = 0;
+        int ox = resourceLocation.x - G.me.x + 2;
+        int oy = resourceLocation.y - G.me.y + 2;
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
+                // make sure not out of vision radius
+                if (G.rc.canSenseLocation(resourceLocation.translate(dx - 2, dy - 2))
+                        && mapInfos[oy + dy][ox + dx].getPaint().isEnemy()
+                        && ++enemyPaint > MAX_SRP_ENEMY_PAINT) {
+                    mode = EXPLORE;
+                    return;
+                }
+            }
+        }
+        buildSrpBlockedTime = 0;
         // POSSIBLY HAVE TO REMOVE MARKERS IF INTERFERING?
         // shouldn't happen though?
     }
@@ -334,23 +362,8 @@ public class Soldier {
         if (exploreLocation == null) {
             Motion.exploreRandomly();
         } else {
-            Motion.bugnavTowards(exploreLocation);
+            Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
-        }
-        // have to sense since moved
-        MapInfo me = G.rc.senseMapInfo(G.me);
-        // place paint under self to avoid passive paint drain if possible
-        if (me.getPaint() == PaintType.EMPTY && G.rc.canAttack(G.me)) {
-            // determine which checkerboard pattern to copy
-            int[] cnt = new int[] { 0, 0 };
-            MapLocation loc;
-            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                if (G.nearbyMapInfos[i].getPaint() == PaintType.ALLY_SECONDARY) {
-                    loc = G.nearbyMapInfos[i].getMapLocation();
-                    cnt[(loc.x + loc.y) & 1]++;
-                }
-            }
-            G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
@@ -390,9 +403,8 @@ public class Soldier {
             Motion.exploreRandomly();
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
-            ruinLocation = null;
         } else {
-            Motion.bugnavAround(ruinLocation, 1, 2);
+            Motion.bugnavAround(ruinLocation, 1, 2, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         if (paintLocation != null)
@@ -447,9 +459,8 @@ public class Soldier {
             Motion.exploreRandomly();
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
-            resourceLocation = null;
         } else {
-            Motion.bugnavAround(resourceLocation, 0, 2);
+            Motion.bugnavAround(resourceLocation, 0, 2, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         if (paintLocation != null)
@@ -459,7 +470,7 @@ public class Soldier {
 
     public static void expandResource() throws Exception {
         G.indicatorString.append("EXPAND_RP ");
-        Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
+        Motion.bugnavTowards(srpCheckLocations[srpCheckIndex], moveWithPaintMicro);
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             // dots guaranteed to be on map because of expandResourceCheckMode
@@ -483,7 +494,7 @@ public class Soldier {
                     G.rc.attack(towerLocation);
             } else {
                 Motion.bugnavAround(towerLocation, towerType.actionRadiusSquared + 1,
-                        towerType.actionRadiusSquared + 1);
+                        towerType.actionRadiusSquared + 1, moveWithPaintMicro);
             }
         }
         G.rc.setIndicatorDot(G.me, 255, 0, 0);
@@ -557,12 +568,70 @@ public class Soldier {
      * MUST be called while at or adjacent (distance^2 <= 1) to location!
      */
     public static boolean canBuildSRPAtLocation(MapLocation center) throws Exception {
-        // if on top of a current SRP, yes
-        if (mapInfos[4][4].getMark() == PaintType.ALLY_PRIMARY)
+        // if you can't you can't
+        if (cannotBuildSRPAtLocation(center))
+            return false;
+        // not disqualified, so check if exists SRP already
+        return mapInfos[4][4].getMark() == PaintType.ALLY_PRIMARY;
+        if ()
             return true;
         else
             return !cannotBuildSRPAtLocation(center);
     }
+
+    // paint neutral tiles if bugnav says to go to it
+    // prevents bots taking dumb paths without painting
+    // also preserves nearby checkerboards
+    public static Micro moveWithPaintMicro = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            int[] scores = new int[9];
+            int score, best = 0;
+            MapLocation nxt, bestLoc = null;
+            PaintType p;
+            boolean canPaint, canPaintBest = false;
+            for (int i = 8; --i >= 0;) {
+                if (!G.rc.canMove(G.DIRECTIONS[i]))
+                    continue;
+                score = 0;
+                canPaint = false;
+                nxt = G.me.add(G.DIRECTIONS[i]);
+                p = G.rc.senseMapInfo(nxt).getPaint();
+                if (p.isEnemy()) {
+                    score -= 10;
+                } else if (p == PaintType.EMPTY) {
+                    if (G.rc.canAttack(nxt))
+                        canPaint = true;
+                    else
+                        score -= 5;
+                }
+                if (G.DIRECTIONS[i] == d) {
+                    score += 20;
+                } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
+                    score += 16;
+                }
+                scores[i] = score;
+                if (score > best || bestLoc == null) {
+                    best = score;
+                    bestLoc = nxt;
+                    canPaintBest = canPaint;
+                }
+            }
+            if (canPaintBest) {
+                // determine which checkerboard pattern to copy
+                int[] cnt = new int[] { 0, 0 };
+                MapLocation loc;
+                for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                    if (G.nearbyMapInfos[i].getPaint() == PaintType.ALLY_SECONDARY) {
+                        loc = G.nearbyMapInfos[i].getMapLocation();
+                        cnt[(loc.x + loc.y) & 1]++;
+                    }
+                }
+                G.rc.attack(bestLoc, cnt[(bestLoc.x + bestLoc.y) & 1] > cnt[(1 + bestLoc.x + bestLoc.y) & 1]);
+            }
+            return scores;
+        }
+    };
 
     public static Micro attackMicro = new Micro() {
         @Override
