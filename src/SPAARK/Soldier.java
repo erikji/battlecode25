@@ -22,8 +22,8 @@ public class Soldier {
     // controls rounds between repairing/expanding SRP
     public static final int SRP_VISIT_TIMEOUT = 20;
     // balance exploring and building SRPs (don't SRP if near target)
-    public static final int SRP_EXPAND_TIMEOUT = 50;
-    public static final int SRP_EXP_OVERRIDE_DIST = 64;
+    public static final int SRP_EXPAND_TIMEOUT = 20;
+    public static final int SRP_EXP_OVERRIDE_DIST = 100;
     // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
     public static final int TOWER_CEIL = 3;
     public static final int TOWER_CEIL_MAP_AREA = 1600;
@@ -192,7 +192,7 @@ public class Soldier {
             if (G.round > MIN_SRP_ROUND) {
                 for (int i = 4; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[Random.rand() % 9]);
-                    if (canBuildSRPAtLocation(loc)) {
+                    if (canBuildSRPAtLocation(loc) && G.getLastVisited(loc) + SRP_VISIT_TIMEOUT < G.round) {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
                         mode = EXPAND_RESOURCE;
@@ -206,7 +206,7 @@ public class Soldier {
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
-        G.setLastVisited(ruinLocation.x, ruinLocation.y, G.round);
+        G.setLastVisited(ruinLocation, G.round);
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -256,7 +256,7 @@ public class Soldier {
     public static void buildResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_BRP ");
         // shouldn't interfere with towers here either, same as expand RP
-        G.setLastVisited(resourceLocation.x, resourceLocation.y, G.round);
+        G.setLastVisited(resourceLocation, G.round);
         // if the SRP has been blocked for a long time just give up
         buildSrpBlockedTime++;
         if (buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
@@ -289,7 +289,8 @@ public class Soldier {
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
-        while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)) {
+        while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)
+                || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round) {
             srpCheckIndex++;
             if (srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
@@ -299,11 +300,10 @@ public class Soldier {
                 return;
             }
             target = srpCheckLocations[srpCheckIndex];
-            G.setLastVisited(target.x, target.y, G.round);
         }
         // shouldn't interfere with towers, since SRP adjacent to ruin impossible
         // done down here to keep it on the map
-        G.setLastVisited(target.x, target.y, G.round);
+        G.setLastVisited(target, G.round);
         // markers
         if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
             resourceLocation = G.me;
@@ -343,7 +343,7 @@ public class Soldier {
                     // attack these
                     MapLocation pos = POI.parseLocation(POI.towers[i]);
                     if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                            && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
                         bestDistanceSquared = G.me.distanceSquaredTo(pos);
                         exploreLocation = pos;
                     }
@@ -352,7 +352,7 @@ public class Soldier {
                     MapLocation pos = POI.parseLocation(POI.towers[i]);
                     // prioritize opponent towers more than ruins, so it has to be REALLY close
                     if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
-                            && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
                         bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
                         exploreLocation = pos;
                     }

@@ -133,7 +133,7 @@ public class Splasher {
             if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
                 MapLocation pos = POI.parseLocation(POI.towers[i]);
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)
-                        && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                        && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     bestLoc = pos;
                 }
@@ -142,7 +142,7 @@ public class Splasher {
                 // prioritize opponent towers more than ruins
                 // so it has to be REALLY close
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)
-                        && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+                        && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
                     bestLoc = pos;
                 }
@@ -292,7 +292,7 @@ public class Splasher {
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
             triedAttackTargets.append((char) best);
-            G.setLastVisited(attackTarget.x, attackTarget.y, G.round);
+            G.setLastVisited(attackTarget, G.round);
             mode = ATTACK;
         }
     }
