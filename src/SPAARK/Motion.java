@@ -167,6 +167,9 @@ public class Motion {
     public static MapLocation exploreLoc;
 
     public static void exploreRandomly() throws Exception {
+        exploreRandomly(defaultMicro);
+    }
+    public static void exploreRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             if (exploreLoc != null) {
                 if (G.rc.canSenseLocation(exploreLoc)) {
@@ -210,7 +213,7 @@ public class Motion {
                     }
                 }
             }
-            bugnavTowards(exploreLoc);
+            bugnavTowards(exploreLoc, m);
             if (ENABLE_EXPLORE_INDICATORS)
                 G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
