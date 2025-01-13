@@ -79,30 +79,30 @@ public class Tower {
             //don't suffocate money until we built a tower
             int mod = 7;
             int area = G.rc.getMapHeight() * G.rc.getMapWidth();
-            if (area <= 1225 && G.rc.getRoundNum() < 500) mod = 5;
+            mod = 5;
             switch ((spawnedRobots - 2) % 7) {
                 // make sure to subtract 2
                 case 0:
                     spawnBot(UnitType.SPLASHER);
                     break;
                 case 1:
-                    spawnBot(UnitType.SOLDIER);
+                    spawnBot(UnitType.MOPPER);
                     break;
                 case 2:
                     spawnBot(UnitType.MOPPER);
                     break;
                 case 3:
                     // spawnBot(UnitType.SOLDIER);
-                    spawnBot(UnitType.SOLDIER);
-                    break;
-                case 4:
                     spawnBot(UnitType.SPLASHER);
                     break;
+                case 4:
+                    spawnBot(UnitType.SOLDIER);
+                    break;
                 case 5:
-                    spawnBot(UnitType.MOPPER);
+                    spawnBot(UnitType.SOLDIER);
                     break;
                 case 6:
-                    spawnBot(UnitType.MOPPER);
+                    spawnBot(UnitType.SPLASHER);
                     break;
             }
         }
