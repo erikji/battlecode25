@@ -1,6 +1,7 @@
 package MASON;
 
-import battlecode.common.*;
+import battlecode.common.Direction;
+import battlecode.common.MapLocation;
 
 @FunctionalInterface
 public interface Micro {
