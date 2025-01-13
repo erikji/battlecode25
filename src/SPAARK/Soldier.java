@@ -259,8 +259,6 @@ public class Soldier {
         G.indicatorString.append("CHK_ERP ");
         lastSrpExpansion = G.round;
         MapLocation target = srpCheckLocations[srpCheckIndex];
-        // shouldn't interfere with towers, since SRP adjacent to ruin impossible
-        G.setLastVisited(target.x, target.y, G.round);
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
         while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)) {
@@ -275,9 +273,12 @@ public class Soldier {
             target = srpCheckLocations[srpCheckIndex];
             G.setLastVisited(target.x, target.y, G.round);
         }
+        // shouldn't interfere with towers, since SRP adjacent to ruin impossible
+        // done down here to keep it on the map
+        G.setLastVisited(target.x, target.y, G.round);
+        // markers
         if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
             resourceLocation = G.me;
-            // markers
             // secondary used for detection, primary marks center
             G.rc.mark(G.me.add(Direction.NORTHWEST), true);
             G.rc.mark(G.me.add(Direction.NORTHEAST), true);
