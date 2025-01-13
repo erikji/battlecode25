@@ -14,25 +14,25 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'SPAARK4' #bot to test
+currentBot = 'betterspawning' #bot to test
 #SPAARK IS THE BASELINE
 
-bots = ['TSPAARKJAN10']
+bots = ['SPAARK']
 
 maps = []
 maps += ['DefaultSmall']
 maps += ['DefaultMedium']
 maps += ['DefaultLarge']
-# maps += ['DefaultHuge']
+maps += ['DefaultHuge']
 
 maps += ['[EDGE] microtest']
 maps += ['[SP] ChessBattleAdvanced']
-# maps += ['[EDGE] srp spam']
+maps += ['[EDGE] srp spam']
 # maps += ['[SP2] Duels']
 maps += ['[SP2] Boulders']
 maps += ['[SP2] Arena']
 maps += ['[SP2] CheckersFightIntermediate']
-# maps += ['[EDGE] ruins']
+maps += ['[EDGE] ruins']
 maps += ['[SP] ChessBattleUnadvanced']
 maps += ['[SP2] Geometric']
 maps += ['[SP] RoundAbout']
