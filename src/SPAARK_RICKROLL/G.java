@@ -1,4 +1,4 @@
-package RICKROLL;
+package SPAARK_RICKROLL;
 
 import battlecode.common.*;
 import java.util.*;

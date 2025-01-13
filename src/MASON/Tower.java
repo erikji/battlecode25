@@ -82,7 +82,7 @@ public class Tower {
             switch ((spawnedRobots - 2) % mod) {
                 // make sure to subtract 2
                 case 0:
-                    spawnBot(UnitType.SOLDIER);
+                    spawnBot(UnitType.MOPPER);
                     break;
                 case 1:
                     spawnBot(UnitType.SPLASHER);
@@ -91,17 +91,17 @@ public class Tower {
                     spawnBot(UnitType.SPLASHER);
                     break;
                 case 3:
-                    spawnBot(UnitType.MOPPER);
+                    spawnBot(UnitType.SOLDIER);
                     break;
                 case 4:
-                    spawnBot(UnitType.SOLDIER);
+                    spawnBot(UnitType.MOPPER);
                     break;
                 case 5:
                     // spawnBot(UnitType.SOLDIER);
-                    spawnBot(UnitType.SPLASHER);
+                    spawnBot(UnitType.SOLDIER);
                     break;
                 case 6:
-                    spawnBot(UnitType.MOPPER);
+                    spawnBot(UnitType.SPLASHER);
                     break;
             }
         }
