@@ -404,7 +404,7 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
-            Motion.bugnavAround(ruinLocation, 1, 2, moveWithPaintMicro);
+            Motion.bugnavAround(ruinLocation, 1, 1, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         if (paintLocation != null)
@@ -460,7 +460,7 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
-            Motion.bugnavAround(resourceLocation, 0, 2, moveWithPaintMicro);
+            Motion.bugnavAround(resourceLocation, 0, 1, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         if (paintLocation != null)
@@ -568,11 +568,11 @@ public class Soldier {
      * MUST be called while at or adjacent (distance^2 <= 1) to location!
      */
     public static boolean canBuildSRPAtLocation(MapLocation center) throws Exception {
-        // if you can't you can't
-        if (cannotBuildSRPAtLocation(center))
-            return false;
-        // not disqualified, so check if exists SRP already
-        return mapInfos[4][4].getMark() == PaintType.ALLY_PRIMARY;
+        // if on top of a current SRP, yes
+        if (mapInfos[4][4].getMark() == PaintType.ALLY_PRIMARY)
+            return true;
+        else
+            return !cannotBuildSRPAtLocation(center);
     }
 
     // paint neutral tiles if bugnav says to go to it
