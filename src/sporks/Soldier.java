@@ -1,4 +1,4 @@
-package SPAARK;
+package sporks;
 
 import battlecode.common.*;
 
