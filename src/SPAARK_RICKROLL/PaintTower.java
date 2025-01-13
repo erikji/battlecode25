@@ -1,6 +1,6 @@
-package RICKROLL;
+package SPAARK_RICKROLL;
 
-public class DefenseTower {
+public class PaintTower {
 
     public static void run() throws Exception {
     }
