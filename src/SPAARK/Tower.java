@@ -143,7 +143,7 @@ public class Tower {
             }
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
-        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - G.rc.getType().moneyCost >= 5000) {
+        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level==0?2500:5000) >= 5000) {
             G.rc.upgradeTower(G.me);
         }
         // attack AFTER run (in case we get an upgrade)
