@@ -1,4 +1,4 @@
-package TSPAARKJAN9;
+package TSPAARKJAN09;
 
 public class MoneyTower {
 

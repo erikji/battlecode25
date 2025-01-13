@@ -14,7 +14,7 @@ richard.onload = async () => {
         let y = ~~((i / 4) / oof.width);
         guh[y][x] = `{ ${oof.data[i]}, ${oof.data[i + 1]}, ${oof.data[i + 2]} }`;
     }
-    const str = '{\n    { ' + guh.map((r) => r.join(', ')).join(' },\n            { ') + ' }\n    }';
+    const str = '{\n    { ' + guh.reverse().map((r) => r.join(', ')).join(' },\n            { ') + ' }\n    }';
     const a = document.createElement('a');
     a.onclick = () => navigator.clipboard.writeText(str);
     a.innerText = 'CLIcK ME!!!!';

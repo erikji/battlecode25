@@ -1,6 +1,6 @@
-package TSPAARKJAN9;
+package TSPAARKJAN09;
 
-public class DefenseTower {
+public class PaintTower {
 
     public static void run() throws Exception {
     }

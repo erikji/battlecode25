@@ -1,4 +1,4 @@
-package TSPAARKJAN8;
+package TSPAARKJAN08;
 
 import battlecode.common.Clock;
 import battlecode.common.MapLocation;
