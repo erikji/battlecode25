@@ -529,6 +529,8 @@ public class Soldier {
         for (int dy = -3; ++dy <= 2;) {
             for (int dx = -3; ++dx <= 2;) {
                 loc = center.translate(dx, dy);
+                if (!G.rc.onTheMap(loc))
+                    return true;
                 if (G.rc.canSenseLocation(loc)) {
                     mark = mapInfos[dy + oy][dx + ox].getMark();
                     if (!G.rc.sensePassability(loc) || mark == PaintType.ALLY_PRIMARY) {
