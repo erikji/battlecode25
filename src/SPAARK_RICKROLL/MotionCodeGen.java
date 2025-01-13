@@ -1,4 +1,4 @@
-package RICKROLL;
+package SPAARK_RICKROLL;
 
 public class MotionCodeGen {
     public static void bfs20() {

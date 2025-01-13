@@ -1,4 +1,4 @@
-package RICKROLL;
+package SPAARK_RICKROLL;
 
 public class MoneyTower {
 
