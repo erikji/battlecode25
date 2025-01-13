@@ -3,12 +3,15 @@ package SPAARK;
 import battlecode.common.*;
 
 public class Mopper {
-    public static MapLocation ruinLocation = null; // BUILD mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-    public static int BUILD_TIMEOUT = 10;
+
+    public static final int BUILD_TIMEOUT = 10;
+
+    public static MapLocation ruinLocation = null; // BUILD mode
+
     public static int lastBuild = -BUILD_TIMEOUT;
 
     static int[] microWeights = new int[8];
