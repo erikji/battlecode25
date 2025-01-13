@@ -3,12 +3,16 @@ package MASON;
 import battlecode.common.*;
 
 public class Mopper {
-    public static MapLocation ruinLocation = null; // BUILD mode
     public static final int EXPLORE = 0;
     public static final int BUILD = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-    public static int lastBuild = -10; // last time we are in BUILD mode to prevent
+
+    public static final int BUILD_TIMEOUT = 10;
+
+    public static MapLocation ruinLocation = null; // BUILD mode
+
+    public static int lastBuild = -BUILD_TIMEOUT;
 
     /**
      * Always:
@@ -29,10 +33,14 @@ public class Mopper {
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
+        int a = Clock.getBytecodeNum();
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
             case BUILD -> buildCheckMode();
         }
+        int b = Clock.getBytecodeNum();
+        G.indicatorString.append((b - a) + " ");
+        // grab directions for micro
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD -> build();
@@ -41,12 +49,13 @@ public class Mopper {
                 Robot.retreat();
             }
         }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {
         G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
-        if (lastBuild + 10 < G.rc.getRoundNum() && G.rc.getNumberTowers() < 25) {
+        if (lastBuild + BUILD_TIMEOUT < G.round && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (MapLocation loc : locs) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
@@ -106,17 +115,17 @@ public class Mopper {
         }
         if (bestEmpty == null && bestBot == null) {
             if (G.me.distanceSquaredTo(microDir) >= 2) {
-                Motion.bugnavTowards(microDir);
+                Motion.bugnavTowards(microDir, avoidPaintMicro);
             } else {
                 G.indicatorString.append("RAND ");
-                Motion.exploreRandomly();
+                Motion.exploreRandomly(avoidPaintMicro);
             }
         } else {
             if (bestBot != null)
                 bestEmpty = bestBot;
             if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
-            Motion.bugnavAround(bestEmpty, 1, 1);
+            Motion.bugnavAround(bestEmpty, 1, 1, avoidPaintMicro);
             G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
         if (G.rc.onTheMap(microDir))
@@ -156,29 +165,29 @@ public class Mopper {
             if (G.rc.canAttack(bestLoc)) {
                 G.rc.attack(bestLoc);
                 if (bestLoc2 != null) {
-                    Motion.bugnavTowards(bestLoc2);
+                    Motion.bugnavTowards(bestLoc2, avoidPaintMicro);
                     G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
                 } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                     mode = EXPLORE;
-                    lastBuild = G.rc.getRoundNum();
-                    Motion.exploreRandomly();
+                    lastBuild = G.round;
+                    Motion.exploreRandomly(avoidPaintMicro);
                     G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
                     ruinLocation = null;
                 } else {
-                    Motion.bugnavTowards(ruinLocation);
+                    Motion.bugnavTowards(ruinLocation, avoidPaintMicro);
                 }
             } else {
-                Motion.bugnavTowards(bestLoc);
+                Motion.bugnavTowards(bestLoc, avoidPaintMicro);
             }
             G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
         } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
             mode = EXPLORE;
-            lastBuild = G.rc.getRoundNum();
-            Motion.exploreRandomly();
+            lastBuild = G.round;
+            Motion.exploreRandomly(avoidPaintMicro);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;
         } else {
-            Motion.bugnavTowards(ruinLocation);
+            Motion.bugnavTowards(ruinLocation, avoidPaintMicro);
         }
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
@@ -250,4 +259,21 @@ public class Mopper {
             return false;
         return true;
     }
+
+    public static Micro avoidPaintMicro = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            // REALLY avoid being on enemy paint
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            for (int i = 8; --i >= 0;) {
+                if (G.rc.canMove(G.DIRECTIONS[i])) {
+                    MapLocation m = G.me.add(G.DIRECTIONS[i]);
+                    PaintType paint = G.rc.senseMapInfo(m).getPaint();
+                    if (paint.isEnemy()) scores[i] -= 10;
+                    if (paint == PaintType.EMPTY) scores[i] -= 5;
+                }
+            }
+            return scores;
+        }
+    };
 }

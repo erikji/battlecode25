@@ -31,81 +31,77 @@ public class Tower {
                 (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
     }
 
+    public static void spawnBot(UnitType t) throws Exception {
+        switch (t) {
+            case UnitType.MOPPER:
+                for (MapLocation loc : spawnLocs) {
+                    if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                        G.rc.buildRobot(UnitType.MOPPER, loc);
+                        spawnedRobots++;
+                        spawnedMoppers++;
+                        break;
+                    }
+                }
+                break;
+            case UnitType.SPLASHER:
+                for (MapLocation loc : spawnLocs) {
+                    if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                        G.rc.buildRobot(UnitType.SPLASHER, loc);
+                        spawnedRobots++;
+                        spawnedSplashers++;
+                        break;
+                    }
+                }
+                break;
+            case UnitType.SOLDIER:
+                for (MapLocation loc : spawnLocs) {
+                    if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                        G.rc.buildRobot(UnitType.SOLDIER, loc);
+                        spawnedRobots++;
+                        spawnedSoldiers++;
+                        break;
+                    }
+                }
+                break;
+            default:
+                throw new Exception("what are you spawning?? a tower???");
+        }
+    }
+
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
         if (spawnedRobots == 0) {
-            for (MapLocation loc : spawnLocs) {
-                if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                    G.rc.buildRobot(UnitType.SOLDIER, loc);
-                    spawnedRobots++;
-                    spawnedSoldiers++;
-                    break;
-                }
-            }
+            spawnBot(UnitType.SOLDIER);
         } else if (spawnedRobots == 1) {
-            for (MapLocation loc : spawnLocs) {
-                if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
-                    G.rc.buildRobot(UnitType.MOPPER, loc);
-                    spawnedRobots++;
-                    spawnedMoppers++;
-                    break;
-                }
-            }
-        } else if (G.rc.getNumberTowers() > 2 || G.rc.getRoundNum() > 50) {
+            spawnBot(UnitType.SPLASHER);
+        } else if (G.rc.getNumberTowers() > 2 || G.round > 50) {
             int mod = 5;
             int area = G.rc.getMapHeight() * G.rc.getMapWidth();
-            if (area <= 1225) mod = 4;
-            switch (spawnedRobots % mod) {
+            if (area <= 1225 && G.rc.getRoundNum() <= 400) mod = 4;
+            switch ((spawnedRobots - 2) % mod) {
+                // make sure to subtract 2
                 case 0:
-                    for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
-                            G.rc.buildRobot(UnitType.SPLASHER, loc);
-                            spawnedRobots++;
-                            spawnedSplashers++;
-                            break;
-                        }
-                    }
+                    spawnBot(UnitType.SOLDIER);
                     break;
                 case 1:
-                    for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                            G.rc.buildRobot(UnitType.SOLDIER, loc);
-                            spawnedRobots++;
-                            spawnedSoldiers++;
-                            break;
-                        }
-                    }
+                    spawnBot(UnitType.MOPPER);
                     break;
                 case 2:
-                    for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
-                            G.rc.buildRobot(UnitType.SPLASHER, loc);
-                            spawnedRobots++;
-                            spawnedSplashers++;
-                            break;
-                        }
-                    }
+                    spawnBot(UnitType.SOLDIER);
                     break;
                 case 3:
-                    for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
-                            G.rc.buildRobot(UnitType.MOPPER, loc);
-                            spawnedRobots++;
-                            spawnedMoppers++;
-                            break;
-                        }
-                    }
+                    spawnBot(UnitType.SPLASHER);
                     break;
-                default:
-                    for (MapLocation loc : spawnLocs) {
-                        if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
-                            G.rc.buildRobot(UnitType.SOLDIER, loc);
-                            spawnedRobots++;
-                            spawnedSoldiers++;
-                            break;
-                        }
-                    }
+                case 4:
+                    spawnBot(UnitType.SPLASHER);
+                    break;
+                case 5:
+                    // spawnBot(UnitType.SOLDIER);
+                    spawnBot(UnitType.MOPPER);
+                    break;
+                case 6:
+                    spawnBot(UnitType.SPLASHER);
                     break;
             }
         }
@@ -149,7 +145,7 @@ public class Tower {
             }
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
-        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - G.rc.getType().moneyCost >= 5000) {
+        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level==0?2500:5000) >= 5000) {
             G.rc.upgradeTower(G.me);
         }
         // attack AFTER run (in case we get an upgrade)

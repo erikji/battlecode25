@@ -17,11 +17,7 @@ errors = []
 currentBot = 'SPAARK' #bot to test
 #SPAARK IS THE BASELINE
 
-<<<<<<< HEAD
 bots = ['MASON']
-=======
-bots = [chr(ord('a')+i) for i in range(1)]
->>>>>>> 40aae48f1f51f4bad54d06ce3c20caa046e74744
 
 maps = []
 maps += ['DefaultSmall']
