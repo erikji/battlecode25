@@ -95,8 +95,8 @@ public class Tower {
                     spawnBot(UnitType.SPLASHER);
                     break;
                 case 5:
-                    spawnBot(UnitType.SOLDIER);
-                    // spawnBot(UnitType.SPLASHER);
+                    // spawnBot(UnitType.SOLDIER);
+                    spawnBot(UnitType.SPLASHER);
                     break;
                 case 6:
                     spawnBot(UnitType.SPLASHER);
