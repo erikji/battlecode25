@@ -1,4 +1,4 @@
-package ASTLEY;
+package RICKROLL;
 
 import battlecode.common.*;
 import java.util.*;
@@ -234,6 +234,7 @@ public class Tower {
                 G.rc.setIndicatorLine(loc, loc.add(Direction.NORTH), r, g, b);
                 G.rc.setIndicatorLine(loc, loc.add(Direction.NORTHEAST), r, g, b);
                 G.rc.setIndicatorLine(loc, loc.add(Direction.EAST), r, g, b);
+                G.rc.setIndicatorLine(loc.add(Direction.NORTH), loc.add(Direction.EAST), r, g, b);
             }
         }
     }

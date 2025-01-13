@@ -7,7 +7,7 @@ public class Splasher {
     public static final int ATTACK = 1;
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
-    // controls round between visiting ruins (G.lastVisited)
+    // controls round between visiting ruins
     public static final int VISIT_TIMEOUT = 75;
 
     // every tile in attack range
