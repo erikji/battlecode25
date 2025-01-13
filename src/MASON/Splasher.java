@@ -100,12 +100,12 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            // if (allyRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting allies
-                            // }
-                            // if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting opponents
-                            // }
+                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting allies
+                            }
+                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting opponents
+                            }
                             score += paintScore;
                         }
                     }
@@ -166,12 +166,12 @@ public class Splasher {
         G.indicatorString.append("ATTACK ");
         // painting heuristic
         StringBuilder allyRobotsList = new StringBuilder();
-        for (RobotInfo i : G.allyRobots) {
-            allyRobotsList.append(i.getLocation().toString());
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
-        for (RobotInfo i : G.opponentRobots) {
-            opponentRobotsList.append(i.getLocation().toString());
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
         }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
@@ -201,15 +201,15 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            // if (allyRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting self
-                            // }
-                            // if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting self
-                            //     if (!paint.isAlly()) {
-                            //         opponentRobotsPaintedScore++;
-                            //     }
-                            // }
+                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting self
+                            }
+                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting self
+                                // if (!paint.isAlly()) {
+                                //     opponentRobotsPaintedScore++;
+                                // }
+                            }
                             score += paintScore;
                         }
                     }
