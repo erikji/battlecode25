@@ -125,7 +125,7 @@ public class Mopper {
                 bestEmpty = bestBot;
             if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
-            Motion.bugnavAround(bestEmpty, 1, 1, avoidPaintMicro);
+            Motion.bugnavAround(bestEmpty, 1, 2, avoidPaintMicro);
             G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
         if (G.rc.onTheMap(microDir))
@@ -271,6 +271,21 @@ public class Mopper {
                     PaintType paint = G.rc.senseMapInfo(m).getPaint();
                     if (paint.isEnemy()) scores[i] -= 10;
                     if (paint == PaintType.EMPTY) scores[i] -= 5;
+                }
+            }
+            //run away from towers
+            MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
+            MapLocation a = G.me;
+            for (int i = ruins.length; --i >= 0;) {
+                if (G.rc.canSenseRobotAtLocation(ruins[i]) && G.rc.senseRobotAtLocation(ruins[i]).team == G.opponentTeam) {
+                    a = a.add(ruins[i].directionTo(G.me));
+                }
+            }
+            Direction ruinDir = G.me.directionTo(a);
+            for (int i = 8; --i >= 0;) {
+                if (G.DIRECTIONS[i] == ruinDir) {
+                    scores[i] += 10;
+                    break;
                 }
             }
             return scores;
