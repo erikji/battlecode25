@@ -342,12 +342,11 @@ public class Soldier {
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
-        while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)
-                || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round) {
+        while (!G.rc.onTheMap(target) || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round
+                || cannotBuildSRPAtLocation(target)) {
             if (G.rc.onTheMap(target))
                 G.rc.setIndicatorDot(target, 255, 100, 0);
-            srpCheckIndex++;
-            if (srpCheckIndex >= srpCheckLocations.length) {
+            if (++srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
                 // don't waste turns
                 if (Clock.getBytecodesLeft() > 10000)
