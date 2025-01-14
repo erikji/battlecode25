@@ -14,6 +14,13 @@ public class Mopper {
 
     public static int lastBuild = -BUILD_TIMEOUT;
 
+    public static int[] attackRangeX = new int[] {
+        0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,-1,-1,-1,-1,-1,-2,-2,-2,-2,-2
+    };
+    public static int[] attackRangeY = new int[] {
+        2,1,0,-1,-2,2,1,0,-1,-2,2,1,0,-1,-2,2,1,0,-1,-2,2,1,0,-1,-2
+    };
+
     /**
      * Always:
      * If low on paint, retreat
@@ -57,11 +64,11 @@ public class Mopper {
         // make sure not stuck between exploring and building
         if (lastBuild + BUILD_TIMEOUT < G.round && G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-            for (MapLocation loc : locs) {
-                if (G.rc.canSenseRobotAtLocation(loc)) {
-                    continue; // tower already there
+            for (int i = locs.length; --i >= 0;) {
+                if (G.rc.canSenseRobotAtLocation(locs[i])) {
+                    continue;
                 }
-                ruinLocation = loc;
+                ruinLocation = locs[i];
                 mode = BUILD;
                 break;
             }
@@ -80,7 +87,6 @@ public class Mopper {
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
         mopSwingWithMicro();
-        MapInfo[] mapInfos = G.rc.senseNearbyMapInfos();
         // will try to unpaint squares under opponent bots
         // but if no opponents, just move to paint and attack
         // store both the best empty tile and the best opponent bot tile
@@ -89,8 +95,8 @@ public class Mopper {
         double bestPaint = -1;
         int bestDist = -1;
         MapLocation microDir = G.me;
-        for (int i = mapInfos.length; --i >= 0;) {
-            MapInfo info = mapInfos[i];
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapInfo info = G.nearbyMapInfos[i];
             MapLocation loc = info.getMapLocation();
             PaintType p = info.getPaint();
             if (p.isEnemy()) {
@@ -142,22 +148,21 @@ public class Mopper {
         // TODO: FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-        MapInfo[] infos = G.rc.senseNearbyMapInfos();
         MapLocation bestLoc = null;
         MapLocation bestLoc2 = null;
         int bestDistanceSquared = 10000;
         int bestDistanceSquared2 = 10001;
-        for (MapInfo info : infos) {
-            if (info.getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && info.getPaint().isEnemy()) {
-                int distanceSquared = info.getMapLocation().distanceSquaredTo(G.me);
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            if (G.nearbyMapInfos[i].getPaint().isEnemy() && G.nearbyMapInfos[i].getMapLocation().distanceSquaredTo(ruinLocation) <= 8) {
+                int distanceSquared = G.nearbyMapInfos[i].getMapLocation().distanceSquaredTo(G.me);
                 if (distanceSquared < bestDistanceSquared) {
                     bestDistanceSquared2 = bestDistanceSquared;
                     bestLoc2 = bestLoc;
                     bestDistanceSquared = distanceSquared;
-                    bestLoc = info.getMapLocation();
+                    bestLoc = G.nearbyMapInfos[i].getMapLocation();
                 } else if (distanceSquared < bestDistanceSquared2) {
                     bestDistanceSquared2 = distanceSquared;
-                    bestLoc2 = info.getMapLocation();
+                    bestLoc2 = G.nearbyMapInfos[i].getMapLocation();
                 }
             }
         }
