@@ -351,6 +351,10 @@ public class Soldier {
                 mode = EXPLORE;
                 // don't waste turns
                 if (Clock.getBytecodesLeft() > 10000)
+                    exploreCheckMode();
+                return;
+            }
+            target = srpCheckLocations[srpCheckIndex];
         }
         // markers
         if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
