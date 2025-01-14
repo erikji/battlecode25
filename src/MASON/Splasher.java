@@ -47,6 +47,9 @@ public class Splasher {
         if (mode != RETREAT) {
             updateAttackTarget();
         }
+        else {
+            triedAttackTargets = new StringBuilder();
+        }
         // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES
@@ -71,12 +74,12 @@ public class Splasher {
         // painting heuristic
         // remove opponent paint, paint under enemy bots, paint under allied bots
         StringBuilder allyRobotsList = new StringBuilder();
-        for (RobotInfo i : G.allyRobots) {
-            allyRobotsList.append(i.getLocation().toString());
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
-        for (RobotInfo i : G.opponentRobots) {
-            opponentRobotsList.append(i.getLocation().toString());
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
         }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
@@ -124,39 +127,40 @@ public class Splasher {
             G.rc.attack(bestLoc, Random.rand() % 2 == 0);
         }
         // find towers to go to from POI
-        bestLoc = null;
-        int bestDistanceSquared = 10000;
-        for (int i = 144; --i >= 0;) {
-            if (POI.towers[i] == -1) {
-                break;
-            }
-            if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
-                MapLocation pos = POI.parseLocation(POI.towers[i]);
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)
-                        && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos);
-                    bestLoc = pos;
-                }
-            } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
-                MapLocation pos = POI.parseLocation(POI.towers[i]);
-                // prioritize opponent towers more than ruins
-                // so it has to be REALLY close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)
-                        && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
-                    bestLoc = pos;
-                }
-            }
-            if (Clock.getBytecodesLeft() < 1500) {
-                break;
-            }
-        }
-        if (bestLoc == null) {
-            Motion.exploreRandomly();
-        } else {
-            Motion.bugnavTowards(bestLoc);
-            G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
-        }
+        Motion.exploreRandomly();
+        // bestLoc = null;
+        // int bestDistanceSquared = 10000;
+        // for (int i = 144; --i >= 0;) {
+        //     if (POI.towers[i] == -1) {
+        //         break;
+        //     }
+        //     if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+        //         MapLocation pos = POI.parseLocation(POI.towers[i]);
+        //         if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)
+        //                 && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
+        //             bestDistanceSquared = G.me.distanceSquaredTo(pos);
+        //             bestLoc = pos;
+        //         }
+        //     } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+        //         MapLocation pos = POI.parseLocation(POI.towers[i]);
+        //         // prioritize opponent towers more than ruins
+        //         // so it has to be REALLY close
+        //         if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)
+        //                 && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
+        //             bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
+        //             bestLoc = pos;
+        //         }
+        //     }
+        //     if (Clock.getBytecodesLeft() < 1500) {
+        //         break;
+        //     }
+        // }
+        // if (bestLoc == null) {
+        //     Motion.exploreRandomly();
+        // } else {
+        //     Motion.bugnavTowards(bestLoc);
+        //     G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+        // }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
@@ -170,7 +174,7 @@ public class Splasher {
             allyRobotsList.append(G.allyRobots[i].getLocation().toString());
         }
         StringBuilder opponentRobotsList = new StringBuilder();
-        for (int i = G.allyRobots.length; --i >= 0;) {
+        for (int i = G.opponentRobots.length; --i >= 0;) {
             opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
         }
         int r = Random.rand() % 13;
@@ -245,7 +249,7 @@ public class Splasher {
                 search: if (G.me.distanceSquaredTo(loc) <= 4) {
                     for (int y = -2; y <= 2; y++) {
                         for (int x = -2; x <= 2; x++) {
-                            if (G.rc.senseMapInfo(new MapLocation(loc.x + x, loc.y + y)).getPaint().isEnemy()) {
+                            if (G.rc.senseMapInfo(loc.translate(x, y)).getPaint().isEnemy()) {
                                 break search;
                             }
                         }
@@ -269,9 +273,11 @@ public class Splasher {
                 if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() == 25) {
                     continue;
                 }
-                int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
+                MapLocation loc = POI.parseLocation(POI.towers[i]);
+                int distance = Motion.getChebyshevDistance(G.me, loc);
                 int weight = -distance;
                 if (triedAttackTargets.indexOf("" + (char) i) != -1) {
+                // if (!(G.round <= VISIT_TIMEOUT || G.getLastVisited(loc.x, loc.y) + VISIT_TIMEOUT < G.round)) {
                     weight -= 1000;
                     if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
                         continue;
@@ -292,7 +298,7 @@ public class Splasher {
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
             triedAttackTargets.append((char) best);
-            G.setLastVisited(attackTarget.x, attackTarget.y, G.round);
+            // G.setLastVisited(attackTarget, G.round);
             mode = ATTACK;
         }
     }

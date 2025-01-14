@@ -1,4 +1,4 @@
-package sporks;
+package TSPAARKSP1;
 
 public class MoneyTower {
 

@@ -1,4 +1,4 @@
-package sporks;
+package TSPAARKSP1;
 
 import battlecode.common.*;
 
@@ -73,14 +73,14 @@ public class Splasher {
         int bestScore = 0;
         // painting heuristic
         // remove opponent paint, paint under enemy bots, paint under allied bots
-        // StringBuilder allyRobotsList = new StringBuilder();
-        // for (RobotInfo i : G.allyRobots) {
-        //     allyRobotsList.append(i.getLocation().toString());
-        // }
-        // StringBuilder opponentRobotsList = new StringBuilder();
-        // for (RobotInfo i : G.opponentRobots) {
-        //     opponentRobotsList.append(i.getLocation().toString());
-        // }
+        StringBuilder allyRobotsList = new StringBuilder();
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
+        }
+        StringBuilder opponentRobotsList = new StringBuilder();
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
+        }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
             int i = (j + r) % 13;
@@ -103,12 +103,12 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            // if (allyRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting allies
-                            // }
-                            // if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting opponents
-                            // }
+                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting allies
+                            }
+                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting opponents
+                            }
                             score += paintScore;
                         }
                     }
@@ -137,7 +137,7 @@ public class Splasher {
         //     if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
         //         MapLocation pos = POI.parseLocation(POI.towers[i]);
         //         if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared) && !G.me.isWithinDistanceSquared(pos, 20)
-        //                 && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+        //                 && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
         //             bestDistanceSquared = G.me.distanceSquaredTo(pos);
         //             bestLoc = pos;
         //         }
@@ -146,7 +146,7 @@ public class Splasher {
         //         // prioritize opponent towers more than ruins
         //         // so it has to be REALLY close
         //         if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / 5) && !G.me.isWithinDistanceSquared(pos, 20)
-        //                 && (G.round <= VISIT_TIMEOUT || G.getLastVisited(pos.x, pos.y) + VISIT_TIMEOUT < G.round)) {
+        //                 && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
         //             bestDistanceSquared = G.me.distanceSquaredTo(pos) * 5; // lol
         //             bestLoc = pos;
         //         }
@@ -169,21 +169,21 @@ public class Splasher {
         int bestScore = 0;
         G.indicatorString.append("ATTACK ");
         // painting heuristic
-        // StringBuilder allyRobotsList = new StringBuilder();
-        // for (RobotInfo i : G.allyRobots) {
-        //     allyRobotsList.append(i.getLocation().toString());
-        // }
-        // StringBuilder opponentRobotsList = new StringBuilder();
-        // for (RobotInfo i : G.opponentRobots) {
-        //     opponentRobotsList.append(i.getLocation().toString());
-        // }
+        StringBuilder allyRobotsList = new StringBuilder();
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
+        }
+        StringBuilder opponentRobotsList = new StringBuilder();
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
+        }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
             int i = (j + r) % 13;
             MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
-                int opponentRobotsPaintedScore = 0;
+                // int opponentRobotsPaintedScore = 0;
                 for (int dir = 9; --dir >= 0;) {
                     // TODO: negative weight for painting SRP
                     // only care about sqrt(2) distance because bytecode restrictions
@@ -205,15 +205,15 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            // if (allyRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting self
-                            // }
-                            // if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
-                            //     score += paintScore; // bonus points for painting self
-                            //     if (!paint.isAlly()) {
-                            //         opponentRobotsPaintedScore++;
-                            //     }
-                            // }
+                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting self
+                            }
+                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
+                                score += paintScore; // bonus points for painting self
+                                // if (!paint.isAlly()) {
+                                //     opponentRobotsPaintedScore++;
+                                // }
+                            }
                             score += paintScore;
                         }
                     }
@@ -298,7 +298,7 @@ public class Splasher {
             attackTargetTower = best;
             attackTarget = POI.parseLocation(POI.towers[best]);
             triedAttackTargets.append((char) best);
-            // G.setLastVisited(attackTarget.x, attackTarget.y, G.round);
+            // G.setLastVisited(attackTarget, G.round);
             mode = ATTACK;
         }
     }
