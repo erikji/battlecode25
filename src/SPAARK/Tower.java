@@ -77,29 +77,32 @@ public class Tower {
             spawnBot(UnitType.SPLASHER);
         } else if (G.rc.getNumberTowers() > 2 || G.round > 50) {
             //don't suffocate money until we built a tower
+            int mod = 7;
+            int area = G.rc.getMapHeight() * G.rc.getMapWidth();
+            
             switch ((spawnedRobots - 2) % 7) {
                 // make sure to subtract 2
                 case 0:
                     spawnBot(UnitType.MOPPER);
                     break;
                 case 1:
-                    spawnBot(UnitType.SOLDIER);
-                    break;
-                case 2:
                     spawnBot(UnitType.SPLASHER);
                     break;
+                case 2:
+                    spawnBot(UnitType.SOLDIER);
+                    break;
                 case 3:
+                    // spawnBot(UnitType.SOLDIER);
                     spawnBot(UnitType.SOLDIER);
                     break;
                 case 4:
                     spawnBot(UnitType.SPLASHER);
                     break;
                 case 5:
-                    // spawnBot(UnitType.SOLDIER);
                     spawnBot(UnitType.SPLASHER);
                     break;
                 case 6:
-                    spawnBot(UnitType.SPLASHER);
+                    spawnBot(UnitType.MOPPER);
                     break;
             }
         }
