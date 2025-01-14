@@ -348,6 +348,7 @@ public class Soldier {
         // done ASAP, don't waste time going to SRPs that can be disqualified
         while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)
                 || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round) {
+            G.rc.setIndicatorDot(target, 255, 100, 0);
             srpCheckIndex++;
             if (srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
@@ -358,9 +359,6 @@ public class Soldier {
             }
             target = srpCheckLocations[srpCheckIndex];
         }
-        // shouldn't interfere with towers, since SRP adjacent to ruin impossible
-        // done down here to keep it on the map
-        G.setLastVisited(target, G.round);
         // markers
         if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
             resourceLocation = G.me;
@@ -383,7 +381,7 @@ public class Soldier {
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
         if (exploreLocation == null) {
-            Motion.exploreRandomly();
+            Motion.exploreRandomly(moveWithPaintMicro);
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
@@ -424,7 +422,7 @@ public class Soldier {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
             POI.addTower(-1, POI.intifyTower(G.team, Robot.towers[buildTowerType]) | POI.intifyLocation(ruinLocation));
             mode = EXPLORE;
-            Motion.exploreRandomly();
+            Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
@@ -480,7 +478,7 @@ public class Soldier {
                 };
                 srpCheckIndex = 0;
             }
-            Motion.exploreRandomly();
+            Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
@@ -557,9 +555,8 @@ public class Soldier {
                     return true;
                 if (G.rc.canSenseLocation(loc)) {
                     mark = mapInfos[dy + oy][dx + ox].getMark();
-                    if (!G.rc.sensePassability(loc) || mark == PaintType.ALLY_PRIMARY) {
+                    if (!G.rc.sensePassability(loc) || mark == PaintType.ALLY_PRIMARY)
                         return true;
-                    }
                     if (mark == PaintType.ALLY_SECONDARY && Math.abs(dy + dx) % 2 == 1)
                         return true;
                 }
@@ -567,23 +564,23 @@ public class Soldier {
         }
         // check edges of 7x7
         for (int dy = -4; ++dy <= 3;) {
-            if (G.rc.canSenseLocation(center.translate(-3, dy))) {
-                if (mapInfos[dy + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(dy + -3) % 2 == 1)
-                    return true;
+            if (G.rc.canSenseLocation(center.translate(-3, dy))
+                    && mapInfos[dy + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(dy + -3) % 2 == 1) {
+                return true;
             }
-            if (G.rc.canSenseLocation(center.translate(3, dy))) {
-                if (mapInfos[dy + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(dy + 3) % 2 == 1)
-                    return true;
+            if (G.rc.canSenseLocation(center.translate(3, dy))
+                    && mapInfos[dy + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(dy + 3) % 2 == 1) {
+                return true;
             }
         }
         for (int dx = -3; ++dx <= 2;) {
-            if (G.rc.canSenseLocation(center.translate(dx, -3))) {
-                if (mapInfos[-3 + oy][dx + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(-3 + dx) % 2 == 1)
-                    return true;
+            if (G.rc.canSenseLocation(center.translate(dx, -3))
+                    && mapInfos[-3 + oy][dx + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(-3 + dx) % 2 == 1) {
+                return true;
             }
-            if (G.rc.canSenseLocation(center.translate(dx, 3))) {
-                if (mapInfos[3 + oy][dx + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(3 + dx) % 2 == 1)
-                    return true;
+            if (G.rc.canSenseLocation(center.translate(dx, 3))
+                    && mapInfos[3 + oy][dx + ox].getMark() == PaintType.ALLY_SECONDARY && Math.abs(3 + dx) % 2 == 1) {
+                return true;
             }
         }
         return false;
