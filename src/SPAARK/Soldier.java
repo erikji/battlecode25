@@ -196,7 +196,7 @@ public class Soldier {
             // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
             // TODO: maybe dont build SRP if near explore target?
             if (G.round > MIN_SRP_ROUND) {
-                for (int i = 8; --i >= 0 && Clock.getBytecodesLeft() >= 5000;) {
+                for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                     if (canBuildSRPAtLocation(loc) && G.getLastVisited(loc) + SRP_VISIT_TIMEOUT < G.round) {
                         srpCheckLocations = new MapLocation[] { loc };
