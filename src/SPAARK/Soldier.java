@@ -288,6 +288,8 @@ public class Soldier {
                 }
             }
         }
+        // not blocked
+        buildTowerBlockedTime = 0;
         if (isPatternComplete) {
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
