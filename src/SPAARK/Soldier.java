@@ -315,8 +315,7 @@ public class Soldier {
         // shouldn't interfere with towers here either, same as expand RP
         G.setLastVisited(resourceLocation, G.round);
         // if the SRP has been blocked for a long time just give up
-        buildSrpBlockedTime++;
-        if (buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
+        if (++buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
             mode = EXPLORE;
             return;
         }
@@ -349,8 +348,7 @@ public class Soldier {
         while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)
                 || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round) {
             G.rc.setIndicatorDot(target, 255, 100, 0);
-            srpCheckIndex++;
-            if (srpCheckIndex >= srpCheckLocations.length) {
+            if (++srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
                 // don't waste turns
                 if (Clock.getBytecodesLeft() > 10000)
