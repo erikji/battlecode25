@@ -30,10 +30,11 @@ for i in range(25):
                 //in both cases we gain 1 paint
                 //can't be a tower because it has to be painted
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                mopScores["""+str(i)+"""] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                // mopScores["""+str(i)+"""] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                mopScores["""+str(i)+"""] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
                 if (bot.getType() == UnitType.MOPPER) {
-                    //double paint loss on moppers
-                    mopScores["""+str(i)+"""] *= 2;
+                    //double passive paint loss on moppers
+                    mopScores["""+str(i)+"""]++;
                 }
             }
             mopScores["""+str(i)+"""] += 5;
