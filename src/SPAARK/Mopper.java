@@ -80,515 +80,516 @@ public class Mopper {
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
         int[] mopScores = new int[25];
-        //consider all possible mop locations
-        //TODO: add swingScores
-        int start = Clock.getBytecodeNum();
-        MapLocation bestBot = null;
-        MapLocation bestEmpty = null;
-        double bestPaint = -1;
-        int bestDist = -1;
-        MapLocation microDir = G.me;
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            MapInfo info = G.nearbyMapInfos[i];
-            MapLocation loc = info.getMapLocation();
-            PaintType p = info.getPaint();
-            if (p.isEnemy()) {
-                microDir = microDir.add(G.me.directionTo(loc));
-                if (G.rc.canSenseRobotAtLocation(loc)) {
-                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
-                    if (r.team == G.opponentTeam) {
-                        double paint = r.paintAmount / (double) r.type.paintCapacity;
-                        if (paint > bestPaint) {
-                            bestPaint = paint;
-                            bestBot = loc;
+        int[] moveScores = new int[8];
+        if (G.rc.isMovementReady()) {
+            MapLocation bestBot = null;
+            MapLocation bestEmpty = null;
+            double bestPaint = -1;
+            int bestDist = -1;
+            MapLocation microDir = G.me;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                MapInfo info = G.nearbyMapInfos[i];
+                MapLocation loc = info.getMapLocation();
+                PaintType p = info.getPaint();
+                if (p.isEnemy()) {
+                    microDir = microDir.add(G.me.directionTo(loc));
+                    if (G.rc.canSenseRobotAtLocation(loc)) {
+                        RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                        if (r.team == G.opponentTeam) {
+                            double paint = r.paintAmount / (double) r.type.paintCapacity;
+                            if (paint > bestPaint) {
+                                bestPaint = paint;
+                                bestBot = loc;
+                            }
+                        }
+                    } else {
+                        int dist = G.me.distanceSquaredTo(loc);
+                        if (bestEmpty == null || G.rc.canAttack(loc) && dist < bestDist) {
+                            bestEmpty = loc;
+                            bestDist = dist;
                         }
                     }
+                }
+            }
+            Direction dir = Direction.CENTER;
+            if (bestEmpty == null && bestBot == null) {
+                if (G.me.distanceSquaredTo(microDir) >= 2) {
+                    dir = Motion.bug2Helper(G.me, microDir, Motion.TOWARDS, 0, 0);
                 } else {
-                    int dist = G.me.distanceSquaredTo(loc);
-                    if (bestEmpty == null || G.rc.canAttack(loc) && dist < bestDist) {
-                        bestEmpty = loc;
-                        bestDist = dist;
+                    G.indicatorString.append("RAND ");
+                    dir = Motion.exploreRandomlyLoc();
+                }
+            } else {
+                if (bestBot != null)
+                    bestEmpty = bestBot;
+                if (G.rc.canAttack(bestEmpty))
+                    G.rc.attack(bestEmpty);
+                dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
+                G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+            }
+            if (G.rc.onTheMap(microDir))
+                G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+            G.rc.setIndicatorDot(G.me, 0, 255, 0);
+            for (int i = 8; --i >= 0;) {
+                if (!G.rc.canMove(G.DIRECTIONS[i])) {
+                    moveScores[i] = -1000000000;
+                }
+                if (G.DIRECTIONS[i] == dir) {
+                    moveScores[i] += 2;
+                } else if (G.DIRECTIONS[i] == dir.rotateLeft() || G.DIRECTIONS[i] == dir.rotateRight()) {
+                    moveScores[i] += 1;
+                }
+            }
+            if (bestBot != null) {
+                bestEmpty = bestBot;
+            }
+        }
+        if (G.rc.isActionReady()) {
+            // for (int i = 25; --i >= 0;) {
+            //     MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
+            //     if (G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            //         if (G.rc.canSenseRobotAtLocation(loc)) {
+            //             //if it's an opponent, they get -1 paint
+            //             //if it's an ally, they go from -2 to -1 paint
+            //             //in both cases we gain 1 paint
+            //             //can't be a tower because it has to be painted
+            //             RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            //             // mopScores[i] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+            //             mopScores[i] += 10 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+            //             if (bot.getType() == UnitType.MOPPER) {
+            //                 //double paint loss on moppers
+            //                 mopScores[i] *= 2;
+            //             }
+            //         }
+            //         mopScores[i] += 5;
+            //     }
+            // }
+            MapLocation loc;
+            loc = G.me.translate(0, 0);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[0] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[0] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[0]++;
                     }
                 }
+                mopScores[0] += 5;
             }
-        }
-        int[] moveScores = new int[8];
-        Direction dir = Direction.CENTER;
-        if (bestEmpty == null && bestBot == null) {
-            if (G.me.distanceSquaredTo(microDir) >= 2) {
-                dir = Motion.bug2Helper(G.me, microDir, Motion.TOWARDS, 0, 0);
-            } else {
-                G.indicatorString.append("RAND ");
-                dir = Motion.exploreRandomlyLoc();
-            }
-        } else {
-            if (bestBot != null)
-                bestEmpty = bestBot;
-            if (G.rc.canAttack(bestEmpty))
-                G.rc.attack(bestEmpty);
-            dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-            G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
-        }
-        if (G.rc.onTheMap(microDir))
-            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
-        for (int i = 8; --i >= 0;) {
-            if (!G.rc.canMove(G.DIRECTIONS[i])) {
-                moveScores[i] = -1000000000;
-            }
-            if (G.DIRECTIONS[i] == dir) {
-                moveScores[i] += 2;
-            } else if (G.DIRECTIONS[i] == dir.rotateLeft() || G.DIRECTIONS[i] == dir.rotateRight()) {
-                moveScores[i] += 1;
-            }
-        }
-        if (bestBot != null) {
-            bestEmpty = bestBot;
-        }
-        // for (int i = 25; --i >= 0;) {
-        //     MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
-        //     if (G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-        //         if (G.rc.canSenseRobotAtLocation(loc)) {
-        //             //if it's an opponent, they get -1 paint
-        //             //if it's an ally, they go from -2 to -1 paint
-        //             //in both cases we gain 1 paint
-        //             //can't be a tower because it has to be painted
-        //             RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-        //             // mopScores[i] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-        //             mopScores[i] += 10 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-        //             if (bot.getType() == UnitType.MOPPER) {
-        //                 //double paint loss on moppers
-        //                 mopScores[i] *= 2;
-        //             }
-        //         }
-        //         mopScores[i] += 5;
-        //     }
-        // }
-        MapLocation loc;
-        loc = G.me.translate(0, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[0] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[0] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[0]++;
+            loc = G.me.translate(-1, 0);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[1] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[1] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[1]++;
+                    }
                 }
+                mopScores[1] += 5;
             }
-            mopScores[0] += 5;
-        }
-		loc = G.me.translate(-1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[1] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[1] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[1]++;
+            loc = G.me.translate(0, -1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[2] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[2] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[2]++;
+                    }
                 }
+                mopScores[2] += 5;
             }
-            mopScores[1] += 5;
-        }
-		loc = G.me.translate(0, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[2] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[2] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[2]++;
+            loc = G.me.translate(0, 1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[3] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[3] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[3]++;
+                    }
                 }
+                mopScores[3] += 5;
             }
-            mopScores[2] += 5;
-        }
-		loc = G.me.translate(0, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[3] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[3] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[3]++;
+            loc = G.me.translate(1, 0);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[4] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[4] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[4]++;
+                    }
                 }
+                mopScores[4] += 5;
             }
-            mopScores[3] += 5;
-        }
-		loc = G.me.translate(1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[4] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[4] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[4]++;
+            loc = G.me.translate(-1, -1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[5] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[5] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[5]++;
+                    }
                 }
+                mopScores[5] += 5;
             }
-            mopScores[4] += 5;
-        }
-		loc = G.me.translate(-1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[5] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[5] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[5]++;
+            loc = G.me.translate(-1, 1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[6] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[6] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[6]++;
+                    }
                 }
+                mopScores[6] += 5;
             }
-            mopScores[5] += 5;
-        }
-		loc = G.me.translate(-1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[6] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[6] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[6]++;
+            loc = G.me.translate(1, -1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[7] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[7] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[7]++;
+                    }
                 }
+                mopScores[7] += 5;
             }
-            mopScores[6] += 5;
-        }
-		loc = G.me.translate(1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[7] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[7] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[7]++;
+            loc = G.me.translate(1, 1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[8] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[8] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[8]++;
+                    }
                 }
+                mopScores[8] += 5;
             }
-            mopScores[7] += 5;
-        }
-		loc = G.me.translate(1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[8] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[8] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[8]++;
+            loc = G.me.translate(-2, 0);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[9] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[9] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[9]++;
+                    }
                 }
+                mopScores[9] += 5;
             }
-            mopScores[8] += 5;
-        }
-		loc = G.me.translate(-2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[9] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[9] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[9]++;
+            loc = G.me.translate(0, -2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[10] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[10] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[10]++;
+                    }
                 }
+                mopScores[10] += 5;
             }
-            mopScores[9] += 5;
-        }
-		loc = G.me.translate(0, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[10] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[10] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[10]++;
+            loc = G.me.translate(0, 2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[11] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[11] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[11]++;
+                    }
                 }
+                mopScores[11] += 5;
             }
-            mopScores[10] += 5;
-        }
-		loc = G.me.translate(0, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[11] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[11] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[11]++;
+            loc = G.me.translate(2, 0);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[12] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[12] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[12]++;
+                    }
                 }
+                mopScores[12] += 5;
             }
-            mopScores[11] += 5;
-        }
-		loc = G.me.translate(2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[12] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[12] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[12]++;
+            loc = G.me.translate(-2, -1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[13] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[13] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[13]++;
+                    }
                 }
+                mopScores[13] += 5;
             }
-            mopScores[12] += 5;
-        }
-		loc = G.me.translate(-2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[13] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[13] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[13]++;
+            loc = G.me.translate(-2, 1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[14] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[14] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[14]++;
+                    }
                 }
+                mopScores[14] += 5;
             }
-            mopScores[13] += 5;
-        }
-		loc = G.me.translate(-2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[14] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[14] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[14]++;
+            loc = G.me.translate(-1, -2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[15] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[15] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[15]++;
+                    }
                 }
+                mopScores[15] += 5;
             }
-            mopScores[14] += 5;
-        }
-		loc = G.me.translate(-1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[15] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[15] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[15]++;
+            loc = G.me.translate(-1, 2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[16] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[16] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[16]++;
+                    }
                 }
+                mopScores[16] += 5;
             }
-            mopScores[15] += 5;
-        }
-		loc = G.me.translate(-1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[16] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[16] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[16]++;
+            loc = G.me.translate(1, -2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[17] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[17] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[17]++;
+                    }
                 }
+                mopScores[17] += 5;
             }
-            mopScores[16] += 5;
-        }
-		loc = G.me.translate(1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[17] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[17] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[17]++;
+            loc = G.me.translate(1, 2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[18] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[18] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[18]++;
+                    }
                 }
+                mopScores[18] += 5;
             }
-            mopScores[17] += 5;
-        }
-		loc = G.me.translate(1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[18] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[18] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[18]++;
+            loc = G.me.translate(2, -1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[19] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[19] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[19]++;
+                    }
                 }
+                mopScores[19] += 5;
             }
-            mopScores[18] += 5;
-        }
-		loc = G.me.translate(2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[19] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[19] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[19]++;
+            loc = G.me.translate(2, 1);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[20] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[20] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[20]++;
+                    }
                 }
+                mopScores[20] += 5;
             }
-            mopScores[19] += 5;
-        }
-		loc = G.me.translate(2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[20] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[20] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[20]++;
+            loc = G.me.translate(-2, -2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[21] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[21] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[21]++;
+                    }
                 }
+                mopScores[21] += 5;
             }
-            mopScores[20] += 5;
-        }
-		loc = G.me.translate(-2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[21] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[21] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[21]++;
+            loc = G.me.translate(-2, 2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[22] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[22] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[22]++;
+                    }
                 }
+                mopScores[22] += 5;
             }
-            mopScores[21] += 5;
-        }
-		loc = G.me.translate(-2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[22] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[22] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[22]++;
+            loc = G.me.translate(2, -2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[23] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[23] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[23]++;
+                    }
                 }
+                mopScores[23] += 5;
             }
-            mopScores[22] += 5;
-        }
-		loc = G.me.translate(2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[23] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[23] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[23]++;
+            loc = G.me.translate(2, 2);
+            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    //if it's an opponent, they get -1 paint
+                    //if it's an ally, they go from -2 to -1 paint
+                    //in both cases we gain 1 paint
+                    //can't be a tower because it has to be painted
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    // mopScores[24] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
+                    mopScores[24] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+                    if (bot.getType() == UnitType.MOPPER) {
+                        //double passive paint loss on moppers
+                        mopScores[24]++;
+                    }
                 }
+                mopScores[24] += 5;
             }
-            mopScores[23] += 5;
-        }
-		loc = G.me.translate(2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                //if it's an opponent, they get -1 paint
-                //if it's an ally, they go from -2 to -1 paint
-                //in both cases we gain 1 paint
-                //can't be a tower because it has to be painted
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                // mopScores[24] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-                mopScores[24] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    mopScores[24]++;
-                }
-            }
-            mopScores[24] += 5;
         }
 
 
@@ -806,8 +807,13 @@ public class Mopper {
 			ally[7] = 2;
 		}
         int best = 8;
+        int numBest = 1;
         for (int i = 8; --i >= 0;) {
-            if (allmax[i]>allmax[best]) {
+            if (allmax[i] > allmax[best]) {
+                best = i;
+                numBest = 1;
+            }
+            else if (allmax[i] == best && Random.rand() % ++numBest == 0) {
                 best = i;
             }
         }
