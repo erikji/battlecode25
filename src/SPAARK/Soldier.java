@@ -279,8 +279,9 @@ public class Soldier {
                 }
             }
         }
-        // pattern not blocked
-        buildTowerBlockedTime = 0;
+        // pattern not blocked (no return above)
+        if (enemyPaint < MAX_TOWER_ENEMY_PAINT)
+            buildTowerBlockedTime = 0;
         // leave only the lowest ID robot to complete the pattern
         if (isPatternComplete) {
             for (int i = G.allyRobots.length; --i >= 0;) {
@@ -324,8 +325,8 @@ public class Soldier {
                         if (buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
                             mode = EXPLORE;
                             buildSrpBlockedTime = 0; // forgot to reset
-                            return;
                         }
+                        return;
                     }
                 }
             }
