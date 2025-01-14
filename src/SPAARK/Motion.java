@@ -219,6 +219,58 @@ public class Motion {
                 G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
+    
+    //exploreRandomly but it doesnt move
+    public static Direction exploreRandomlyLoc() throws Exception {
+        if (G.rc.isMovementReady()) {
+            if (exploreLoc != null) {
+                if (G.rc.canSenseLocation(exploreLoc)) {
+                    exploreLoc = null;
+                }
+                if (Random.rand() % 25 == 0) {
+                    exploreLoc = null;
+                }
+            }
+            // don't explore in direction of a lot of allied bots
+            MapLocation otherBots = G.me;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
+            }
+            if (!G.me.isWithinDistanceSquared(otherBots, 36)
+                    && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+                exploreLoc = null;
+            }
+            if (exploreLoc == null) {
+                // pick a random location that we haven't seen before
+                int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                int rand = Random.rand() % sum;
+                int cur = 0;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            if (ENABLE_EXPLORE_INDICATORS)
+                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+            return G.me.directionTo(exploreLoc);
+        }
+        return Direction.CENTER;
+    }
 
     // bugnav helpers
 

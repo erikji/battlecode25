@@ -166,44 +166,44 @@ public class POI {
 
         // int a = Clock.getBytecodeNum();
         // update symmetry array
-        for (int i = nearbyRuins.length; --i >= 0;) {
-            MapLocation xy = nearbyRuins[i];
-            ruin[xy.y] |= 1L << xy.x;
-        }
-        if (firstUpdate) {
-            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
-                if (G.nearbyMapInfos[i].isWall()) {
-                    wall[xy.y] |= 1L << xy.x;
-                }
-                explored[xy.y] |= 1L << xy.x;
-            }
-            firstUpdate = false;
-        } else {
-            for (int i = edgeLocations.length; --i >= 0;) {
-                MapLocation xy = edgeLocations[i].translate(G.me.x, G.me.y);
-                if (!G.rc.onTheMap(xy)) {
-                    continue;
-                }
-                if (G.rc.senseMapInfo(xy).isWall()) {
-                    wall[xy.y] |= 1L << xy.x;
-                }
-                explored[xy.y] |= 1L << xy.x;
-            }
-        }
-        // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
-        if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
-                || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
-            if (symmetry[0] && !symmetryValid(0)) {
-                removeValidSymmetry(-1, 0);
-            }
-            if (symmetry[1] && !symmetryValid(1)) {
-                removeValidSymmetry(-1, 1);
-            }
-            if (symmetry[2] && !symmetryValid(2)) {
-                removeValidSymmetry(-1, 2);
-            }
-        }
+        // for (int i = nearbyRuins.length; --i >= 0;) {
+        //     MapLocation xy = nearbyRuins[i];
+        //     ruin[xy.y] |= 1L << xy.x;
+        // }
+        // if (firstUpdate) {
+        //     for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+        //         MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
+        //         if (G.nearbyMapInfos[i].isWall()) {
+        //             wall[xy.y] |= 1L << xy.x;
+        //         }
+        //         explored[xy.y] |= 1L << xy.x;
+        //     }
+        //     firstUpdate = false;
+        // } else {
+        //     for (int i = edgeLocations.length; --i >= 0;) {
+        //         MapLocation xy = edgeLocations[i].translate(G.me.x, G.me.y);
+        //         if (!G.rc.onTheMap(xy)) {
+        //             continue;
+        //         }
+        //         if (G.rc.senseMapInfo(xy).isWall()) {
+        //             wall[xy.y] |= 1L << xy.x;
+        //         }
+        //         explored[xy.y] |= 1L << xy.x;
+        //     }
+        // }
+        // // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
+        //         || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
+        //     if (symmetry[0] && !symmetryValid(0)) {
+        //         removeValidSymmetry(-1, 0);
+        //     }
+        //     if (symmetry[1] && !symmetryValid(1)) {
+        //         removeValidSymmetry(-1, 1);
+        //     }
+        //     if (symmetry[2] && !symmetryValid(2)) {
+        //         removeValidSymmetry(-1, 2);
+        //     }
+        // }
         // G.indicatorString.append("POI-BT " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
     };
