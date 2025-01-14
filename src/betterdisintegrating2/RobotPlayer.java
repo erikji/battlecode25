@@ -1,4 +1,4 @@
-package SPAARK;
+package betterdisintegrating2;
 
 import battlecode.common.*;
 
