@@ -123,7 +123,7 @@ public class Splasher {
                 }
             }
         }
-        if (bestScore > 4 && bestLoc != null) {
+        if (bestScore > 8 && bestLoc != null) {
             G.rc.attack(bestLoc, Random.rand() % 2 == 0);
         }
         // find towers to go to from POI
@@ -228,7 +228,7 @@ public class Splasher {
                 }
             }
         }
-        if (bestScore > 4 && bestLoc != null) {
+        if (bestScore > 8 && bestLoc != null) {
             G.rc.attack(bestLoc, Random.rand() % 2 == 0);
         }
         Motion.bugnavTowards(attackTarget);
@@ -243,7 +243,7 @@ public class Splasher {
     public static void updateAttackTarget() throws Exception {
         if (attackTargetTower != -1) {
             if (POI.parseTowerTeam(POI.towers[attackTargetTower]) != G.opponentTeam) {
-                attackTarget = new MapLocation(-1, -1);
+                attackTarget = G.invalidLoc;
             } else {
                 MapLocation loc = POI.parseLocation(POI.towers[attackTargetTower]);
                 search: if (G.me.distanceSquaredTo(loc) <= 4) {
@@ -254,7 +254,7 @@ public class Splasher {
                             }
                         }
                     }
-                    attackTarget = new MapLocation(-1, -1);
+                    attackTarget = G.invalidLoc;
                 }
             }
             // TODO: make it change targets if it finds ruin with 24 empty/ally paint
