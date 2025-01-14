@@ -1,7 +1,6 @@
-package sporks;
+package TSPAARKSP1;
 
 import battlecode.common.*;
-import java.util.*;
 
 public class RobotPlayer {
     public static void updateInfo() throws Exception {
@@ -36,6 +35,7 @@ public class RobotPlayer {
             // init bytecode count
             G.indicatorString.append("INIT " + Clock.getBytecodeNum() + " ");
             while (true) {
+                int r = G.rc.getRoundNum();
                 try {
                     updateRound();
                     switch (G.rc.getType()) {
@@ -44,7 +44,6 @@ public class RobotPlayer {
                     }
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
-                    Clock.yield();
                 } catch (GameActionException e) {
                     System.out.println("Unexpected GameActionException");
                     e.printStackTrace();
@@ -52,6 +51,11 @@ public class RobotPlayer {
                     System.out.println("Unexpected Exception");
                     e.printStackTrace();
                 }
+                if (G.rc.getRoundNum() != r) {
+                    System.err.println("Bytecode overflow! (Round " + r + ")");
+                    G.indicatorString.append("BTC-ERR: " + r + " ");
+                }
+                Clock.yield();
             }
         } catch (GameActionException e) {
             System.out.println("Unexpected GameActionException");

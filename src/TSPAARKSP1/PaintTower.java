@@ -1,6 +1,6 @@
-package sporks;
+package TSPAARKSP1;
 
-public class DefenseTower {
+public class PaintTower {
 
     public static void run() throws Exception {
     }

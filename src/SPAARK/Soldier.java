@@ -190,14 +190,49 @@ public class Soldier {
             // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
             // TODO: maybe dont build SRP if near explore target?
             if (G.round > MIN_SRP_ROUND) {
-                for (int i = 4; --i >= 0;) {
+                for (int i = 3; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[Random.rand() % 9]);
                     if (canBuildSRPAtLocation(loc) && G.getLastVisited(loc) + SRP_VISIT_TIMEOUT < G.round) {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
                         mode = EXPAND_RESOURCE;
                         expandResourceCheckMode();
-                        break;
+                        return;
+                    }
+                }
+            }
+        }
+        // NOTHING TO DO, keep exploring
+        // find towers from POI to attack/build out of vision
+        exploreLocation = null;
+        // TODO: EXPLORE BLANK AREAS AWAY FROM TOWERS AND POI
+        // TODO: we leave too much map empty
+        // TODO: try using random explore more
+        // TODO: maybe even edit random explore to avoid known POI
+        // TODO: since POI will be checked on without random
+        // TOWER_CEIL encourages building SRPs to help build more towers
+        if (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
+            int bestDistanceSquared = 10000;
+            for (int i = 144; --i >= 0;) {
+                if (POI.towers[i] == -1) {
+                    break;
+                }
+                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                    // attack these
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
+                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos);
+                        exploreLocation = pos;
+                    }
+                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                    // having 25 towers otherwise just softlocks the bots
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    // prioritize opponent towers more than ruins, so it has to be REALLY close
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
+                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
+                        exploreLocation = pos;
                     }
                 }
             }
@@ -325,40 +360,6 @@ public class Soldier {
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
-        // find towers from POI to attack/build out of vision
-        exploreLocation = null;
-        // TODO: EXPLORE BLANK AREAS AWAY FROM TOWERS AND POI
-        // TODO: we leave too much map empty
-        // TODO: try using random explore more
-        // TODO: maybe even edit random explore to avoid known POI
-        // TODO: since POI will be checked on without random
-        // TOWER_CEIL encourages building SRPs to help build more towers
-        if (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
-            int bestDistanceSquared = 10000;
-            for (int i = 144; --i >= 0;) {
-                if (POI.towers[i] == -1) {
-                    break;
-                }
-                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
-                    // attack these
-                    MapLocation pos = POI.parseLocation(POI.towers[i]);
-                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
-                        bestDistanceSquared = G.me.distanceSquaredTo(pos);
-                        exploreLocation = pos;
-                    }
-                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
-                    // having 25 towers otherwise just softlocks the bots
-                    MapLocation pos = POI.parseLocation(POI.towers[i]);
-                    // prioritize opponent towers more than ruins, so it has to be REALLY close
-                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
-                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
-                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
-                        exploreLocation = pos;
-                    }
-                }
-            }
-        }
         if (exploreLocation == null) {
             Motion.exploreRandomly();
         } else {
@@ -374,7 +375,7 @@ public class Soldier {
         int ox = ruinLocation.x - G.me.x + 2;
         int oy = ruinLocation.y - G.me.y + 2;
         boolean[][] pattern = Robot.towerPatterns[buildTowerType];
-        G.indicatorString.append("BUILDING: " + buildTowerType + ";");
+        G.indicatorString.append("TYPE=" + buildTowerType + " ");
         boolean paint;
         PaintType exists;
         MapLocation loc;
@@ -657,147 +658,6 @@ public class Soldier {
     };
 
     public static int predictTowerType(MapLocation xy) {
-        // int paint = 0;
-        // int money = 0;
-        // if (G.me.isWithinDistanceSquared(xy, 4)) {
-            
-        //     if (mapInfos[xy.y + 2 - G.me.y][xy.x + 2 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //         money++;
-        //         }
-        //         else {
-        //         paint++;
-        //         }
-        //         if (mapInfos[xy.y + 2 - G.me.y][xy.x + 6 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //         money++;
-        //         }
-        //         else {
-        //         paint++;
-        //         }
-        //         if (mapInfos[xy.y + 6 - G.me.y][xy.x + 2 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //         money++;
-        //         }
-        //         else {
-        //         paint++;
-        //         }
-        //         if (mapInfos[xy.y + 6 - G.me.y][xy.x + 6 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //         money++;
-        //         }
-        //         else {
-        //         paint++;
-        //         }
-        // }
-        // if (G.me.isWithinDistanceSquared(xy, 5)) {
-        //     if (mapInfos[xy.y + 2 - G.me.y][xy.x + 3 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 2 - G.me.y][xy.x + 4 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 2 - G.me.y][xy.x + 5 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 3 - G.me.y][xy.x + 2 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 3 - G.me.y][xy.x + 6 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 4 - G.me.y][xy.x + 2 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 4 - G.me.y][xy.x + 6 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 5 - G.me.y][xy.x + 2 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 5 - G.me.y][xy.x + 6 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 6 - G.me.y][xy.x + 3 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 6 - G.me.y][xy.x + 4 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (mapInfos[xy.y + 6 - G.me.y][xy.x + 5 - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {
-        //     paint++;
-        //     }
-        //     else {
-        //     money++;
-        //     }
-        //     if (paint > money) {
-        //         if (paint >= 5) {
-        //             return 2;
-        //         }
-        //     }
-        //     else {
-        //         if (money >= 5) {
-        //             return 1;
-        //         }
-        //     }
-        // }
-        if (G.rc.getNumberTowers() % 2 == 1)
-            return 2;
-        return 1;
+        return (G.rc.getNumberTowers() % 2) + 1;
     }
 }
-
-/*
- * var s = "";
-var tiles1 = [
-    [1, 0, 0, 0, 1],
-    [0, 1, 0, 1, 0],
-    [0, 0, 0, 0, 0],
-    [0, 1, 0, 1, 0],
-    [1, 0, 0, 0, 1],
-];
-var tiles2 = [
-    [0, 1, 1, 1, 0],
-    [1, 1, 0, 1, 1],
-    [1, 0, 0, 0, 1],
-    [1, 1, 0, 1, 1],
-    [0, 1, 1, 1, 0],
-];
-for (var y = -2; y <= 2; y++) {
-    for (var x = -2; x <= 2; x++) {
-        if (tiles1[y + 2][x + 2] != tiles2[y + 2][x + 2]) {
-            s += "if (mapInfos[xy.y + " + y + " - G.me.y][xy.x + " + x + " - G.me.x].getPaint() == PaintType.ALLY_PRIMARY) {\n" + (tiles1[y + 2][x + 2] ? "money" : "paint") + "++;\n}\nelse {\n" + (tiles1[y + 2][x + 2] ? "paint" : "money") + "++;\n}\n";
-        }
-    }
-}
-console.log(s);
- */

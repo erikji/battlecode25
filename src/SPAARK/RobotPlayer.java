@@ -44,7 +44,6 @@ public class RobotPlayer {
                     }
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
-                    Clock.yield();
                 } catch (GameActionException e) {
                     System.out.println("Unexpected GameActionException");
                     e.printStackTrace();
@@ -54,7 +53,9 @@ public class RobotPlayer {
                 }
                 if (G.rc.getRoundNum() != r) {
                     System.err.println("Bytecode overflow! (Round " + r + ")");
+                    G.indicatorString.append("BTC-ERR: " + r + " ");
                 }
+                Clock.yield();
             }
         } catch (GameActionException e) {
             System.out.println("Unexpected GameActionException");

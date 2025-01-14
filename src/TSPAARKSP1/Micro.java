@@ -1,6 +1,7 @@
-package sporks;
+package TSPAARKSP1;
 
-import battlecode.common.*;
+import battlecode.common.Direction;
+import battlecode.common.MapLocation;
 
 @FunctionalInterface
 public interface Micro {

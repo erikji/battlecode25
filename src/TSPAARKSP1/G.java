@@ -1,7 +1,6 @@
-package sporks;
+package TSPAARKSP1;
 
 import battlecode.common.*;
-import java.util.*;
 
 //store global stuff that you dont want to pass around
 //and doesnt fit anywhere else
@@ -66,9 +65,18 @@ public class G {
     public static int[][] lastVisited = new int[30][30];
 
     public static void setLastVisited(int x, int y, int n) {
-        lastVisited[y / 2][x / 2] = n;
+        lastVisited[y / 2][x / 2] = n + 2000;
     }
+
+    public static void setLastVisited(MapLocation loc, int n) {
+        lastVisited[loc.y / 2][loc.x / 2] = n + 2000;
+    }
+
     public static int getLastVisited(int x, int y) {
-        return lastVisited[y / 2][x / 2];
+        return lastVisited[y / 2][x / 2] - 2000;
+    }
+
+    public static int getLastVisited(MapLocation loc) {
+        return lastVisited[loc.y / 2][loc.x / 2] - 2000;
     }
 }
