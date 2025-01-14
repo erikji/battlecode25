@@ -92,6 +92,8 @@ public class Splasher {
                     MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                     if (G.rc.canSenseLocation(nxt)) {
                         MapInfo info = G.rc.senseMapInfo(nxt);
+                        //bonus points for hit opponent tower
+                        if (info.hasRuin() && opponentRobotsList.indexOf(nxt.toString()) != -1) score += 2;
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
                             int paintScore = 0;
@@ -190,6 +192,8 @@ public class Splasher {
                     MapLocation nxt = loc.add(G.ALL_DIRECTIONS[dir]);
                     if (G.rc.canSenseLocation(nxt)) {
                         MapInfo info = G.rc.senseMapInfo(nxt);
+                        //bonus points for hit opponent tower
+                        if (info.hasRuin() && opponentRobotsList.indexOf(nxt.toString()) != -1) score += 2;
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
                             int paintScore = 0;
