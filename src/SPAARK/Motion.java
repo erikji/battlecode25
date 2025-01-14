@@ -219,6 +219,58 @@ public class Motion {
                 G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
+    
+    //exploreRandomly but it doesnt move
+    public static Direction exploreRandomlyLoc() throws Exception {
+        if (G.rc.isMovementReady()) {
+            if (exploreLoc != null) {
+                if (G.rc.canSenseLocation(exploreLoc)) {
+                    exploreLoc = null;
+                }
+                if (Random.rand() % 25 == 0) {
+                    exploreLoc = null;
+                }
+            }
+            // don't explore in direction of a lot of allied bots
+            MapLocation otherBots = G.me;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
+            }
+            if (!G.me.isWithinDistanceSquared(otherBots, 36)
+                    && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+                exploreLoc = null;
+            }
+            if (exploreLoc == null) {
+                // pick a random location that we haven't seen before
+                int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                int rand = Random.rand() % sum;
+                int cur = 0;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            if (ENABLE_EXPLORE_INDICATORS)
+                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+            return G.me.directionTo(exploreLoc);
+        }
+        return Direction.CENTER;
+    }
 
     // bugnav helpers
 
@@ -728,14 +780,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 9; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
     }
 
@@ -749,14 +794,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 9; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
     }
 
@@ -772,14 +810,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 9; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
     }
 
@@ -1104,14 +1135,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 8; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
         bfs();
         G.indicatorString.append("BFS-BT: " + (Clock.getBytecodesLeft() - a) + "-");
@@ -1131,7 +1155,7 @@ public class Motion {
     }
 
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
-        int[] scores = new int[9];
+        int[] scores = new int[8];
         int score;
         MapLocation nxt;
         PaintType p;
@@ -1149,12 +1173,30 @@ public class Motion {
             if (G.DIRECTIONS[i] == d) {
                 score += 20;
             } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                score += 16;
+                score += 15;
             }
             scores[i] = score;
         }
         return scores;
     };
+
+    public static boolean microMove(int[] scores) throws Exception {
+        int best = 0;
+        int numBest = 1;
+        for (int i = 8; --i >= 1;) {
+            if (scores[i] > scores[best]) {
+                best = i;
+                numBest = 1;
+            }
+            else if (scores[i] == best && Random.rand() % ++numBest == 0) {
+                best = i;
+            }
+        }
+        if (scores[best] > 0) {
+            return move(G.DIRECTIONS[best]);
+        }
+        return false;
+    }
 
     // false if it didn't move
     public static boolean move(Direction dir) throws Exception {

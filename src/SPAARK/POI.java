@@ -191,19 +191,19 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
         }
-        // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
-        if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
-                || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
-            if (symmetry[0] && !symmetryValid(0)) {
-                removeValidSymmetry(-1, 0);
-            }
-            if (symmetry[1] && !symmetryValid(1)) {
-                removeValidSymmetry(-1, 1);
-            }
-            if (symmetry[2] && !symmetryValid(2)) {
-                removeValidSymmetry(-1, 2);
-            }
-        }
+        // // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
+        //         || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
+        //     if (symmetry[0] && !symmetryValid(0)) {
+        //         removeValidSymmetry(-1, 0);
+        //     }
+        //     if (symmetry[1] && !symmetryValid(1)) {
+        //         removeValidSymmetry(-1, 1);
+        //     }
+        //     if (symmetry[2] && !symmetryValid(2)) {
+        //         removeValidSymmetry(-1, 2);
+        //     }
+        // }
         // G.indicatorString.append("POI-BT " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
     };
