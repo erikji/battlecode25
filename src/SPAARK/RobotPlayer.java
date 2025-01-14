@@ -52,7 +52,7 @@ public class RobotPlayer {
                     e.printStackTrace();
                 }
                 if (G.rc.getRoundNum() != r) {
-                    System.err.println("Bytecode overflow! (Round " + r + ")");
+                    System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
                     G.indicatorString.append("BTC-ERR: " + r + " ");
                 }
                 Clock.yield();
