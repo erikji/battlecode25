@@ -19,7 +19,7 @@ public class Soldier {
     public static final int VISIT_TIMEOUT = 40;
     // stop building towers if enemy paint interferes too much (more persistent than
     // SRP)
-    public static final int MAX_TOWER_ENEMY_PAINT = 6;
+    public static final int MAX_TOWER_ENEMY_PAINT = 10;
     public static final int MAX_TOWER_BLOCKED_TIME = 40;
     // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 10;
@@ -179,22 +179,9 @@ public class Soldier {
                 || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP ");
         } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
-            // search for SRP markers for building/repairing/expanding
-            // TODO: detect SRP expansion only within a certain range of soldiers, otherwise
-            // TODO: soldiers too eager to build SRPs
-
-            // mode = EXPAND_RESOURCE;
-            // // SRP expand will enter SRP build, which may repair if needed before
-
-            // expanding
-            // srpCheckLocations = new MapLocation[] { };
-            // srpCheckIndex = 0;
-            // // we have to do this or may have bugs
-            // expandResourceCheckMode();
+            // TODO: detect nearby SRPs? might not be needed
 
             // see if SRP is possible nearby
-            // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
-            // TODO: maybe dont build SRP if near explore target?
             if (G.round > MIN_SRP_ROUND) {
                 for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
@@ -202,6 +189,7 @@ public class Soldier {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
                         mode = EXPAND_RESOURCE;
+                        // do this or bugs
                         expandResourceCheckMode();
                         return;
                     }
@@ -255,12 +243,6 @@ public class Soldier {
             mode = EXPLORE;
             return;
         }
-        // if pattern has been blocked for a long time just give up
-        buildTowerBlockedTime++;
-        if (buildTowerBlockedTime > MAX_TOWER_BLOCKED_TIME) {
-            mode = EXPLORE;
-            return;
-        }
         // if pattern complete leave lowest bot ID to complete
         int enemyPaint = 0;
         boolean isPatternComplete = true;
@@ -280,16 +262,26 @@ public class Soldier {
                     if (curr != paint)
                         isPatternComplete = false;
                     // stop building if there's lots of enemy paint within the SRP
-                    if (curr.isEnemy() && ++enemyPaint >= MAX_TOWER_ENEMY_PAINT) {
-                        mode = EXPLORE;
-                        return;
+                    if (curr.isEnemy()) {
+                        enemyPaint++;
+                        if (enemyPaint >= MAX_TOWER_ENEMY_PAINT) {
+                            buildTowerBlockedTime++;
+                            G.indicatorString.append("BLOCK ");
+                            // if pattern has been blocked for a long time just give up
+                            if (buildTowerBlockedTime > MAX_TOWER_BLOCKED_TIME) {
+                                mode = EXPLORE;
+                                buildTowerBlockedTime = 0; // forgot to reset
+                                return;
+                            }
+                        }
+                        break checkPattern;
                     }
-                    break checkPattern;
                 }
             }
         }
-        // not blocked
+        // pattern not blocked
         buildTowerBlockedTime = 0;
+        // leave only the lowest ID robot to complete the pattern
         if (isPatternComplete) {
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
@@ -315,10 +307,6 @@ public class Soldier {
         // shouldn't interfere with towers here either, same as expand RP
         G.setLastVisited(resourceLocation, G.round);
         // if the SRP has been blocked for a long time just give up
-        if (++buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
-            mode = EXPLORE;
-            return;
-        }
         // stop building if there's lots of enemy paint within the SRP
         int enemyPaint = 0;
         int ox = resourceLocation.x - G.me.x + 2;
@@ -327,13 +315,22 @@ public class Soldier {
             for (int dy = -1; dy++ < 4;) {
                 // make sure not out of vision radius
                 if (G.rc.canSenseLocation(resourceLocation.translate(dx - 2, dy - 2))
-                        && mapInfos[oy + dy][ox + dx].getPaint().isEnemy()
-                        && ++enemyPaint > MAX_SRP_ENEMY_PAINT) {
-                    mode = EXPLORE;
-                    return;
+                        && mapInfos[oy + dy][ox + dx].getPaint().isEnemy()) {
+                    enemyPaint++;
+                    if (enemyPaint >= MAX_SRP_ENEMY_PAINT) {
+                        buildSrpBlockedTime++;
+                        G.indicatorString.append("BLOCK ");
+                        // if pattern has been blocked for a long time just give up
+                        if (buildSrpBlockedTime > MAX_SRP_BLOCKED_TIME) {
+                            mode = EXPLORE;
+                            buildSrpBlockedTime = 0; // forgot to reset
+                            return;
+                        }
+                    }
                 }
             }
         }
+        // SRP not blocked
         buildSrpBlockedTime = 0;
         // POSSIBLY HAVE TO REMOVE MARKERS IF INTERFERING?
         // shouldn't happen though?
@@ -347,8 +344,10 @@ public class Soldier {
         // done ASAP, don't waste time going to SRPs that can be disqualified
         while (!G.rc.onTheMap(target) || cannotBuildSRPAtLocation(target)
                 || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round) {
-            G.rc.setIndicatorDot(target, 255, 100, 0);
-            if (++srpCheckIndex >= srpCheckLocations.length) {
+            if (G.rc.onTheMap(target))
+                G.rc.setIndicatorDot(target, 255, 100, 0);
+            srpCheckIndex++;
+            if (srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
                 // don't waste turns
                 if (Clock.getBytecodesLeft() > 10000)
