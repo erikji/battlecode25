@@ -728,14 +728,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 9; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
     }
 
@@ -749,14 +742,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 9; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
     }
 
@@ -772,14 +758,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 9; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
     }
 
@@ -1104,14 +1083,7 @@ public class Motion {
             if (d == Direction.CENTER) {
                 d = G.rc.getLocation().directionTo(dest);
             }
-            int[] weights = m.micro(d, dest);
-            int best = 8;
-            for (int i = 8; --i >= 0;) {
-                if (weights[i] > weights[best])
-                    best = i;
-            }
-            if (best != 8)
-                move(G.ALL_DIRECTIONS[best]);
+            microMove(m.micro(d, dest));
         }
         bfs();
         G.indicatorString.append("BFS-BT: " + (Clock.getBytecodesLeft() - a) + "-");
@@ -1131,7 +1103,7 @@ public class Motion {
     }
 
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
-        int[] scores = new int[9];
+        int[] scores = new int[8];
         int score;
         MapLocation nxt;
         PaintType p;
@@ -1149,12 +1121,30 @@ public class Motion {
             if (G.DIRECTIONS[i] == d) {
                 score += 20;
             } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
-                score += 16;
+                score += 15;
             }
             scores[i] = score;
         }
         return scores;
     };
+
+    public static boolean microMove(int[] scores) throws Exception {
+        int best = 0;
+        int numBest = 1;
+        for (int i = 8; --i >= 1;) {
+            if (scores[i] > scores[best]) {
+                best = i;
+                numBest = 1;
+            }
+            else if (scores[i] == best && Random.rand() % ++numBest == 0) {
+                best = i;
+            }
+        }
+        if (scores[best] > 0) {
+            return move(G.DIRECTIONS[best]);
+        }
+        return false;
+    }
 
     // false if it didn't move
     public static boolean move(Direction dir) throws Exception {

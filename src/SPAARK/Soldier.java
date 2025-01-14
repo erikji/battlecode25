@@ -604,7 +604,7 @@ public class Soldier {
     public static Micro moveWithPaintMicro = new Micro() {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
-            int[] scores = new int[9];
+            int[] scores = new int[8];
             int score, best = 0;
             MapLocation nxt, bestLoc = null;
             PaintType p;

@@ -8,10 +8,11 @@ public interface Micro {
     /**
      * Micro function - returns weights of moving each direction, where highest
      * weight is movement direction. Can be chained using the weights.
+     * if none of the weights are above 0, then don't move
      * 
      * @param d    Pathfinding direction
      * @param dest Destination location
-     * @return Length-9 array of weights for moving in each direction, mapped the
+     * @return Length-8 array of weights for moving in each direction, mapped the
      *         same as G.ALL_DIRECTIONS
      * @throws Exception
      */
