@@ -112,7 +112,7 @@ public class Motion {
     public static void spreadRandomly() throws Exception {
         boolean stuck = true;
         for (int i = G.DIRECTIONS.length; --i >= 0;) {
-            if (canMove(G.DIRECTIONS[i])) {
+            if (G.rc.canMove(G.DIRECTIONS[i])) {
                 stuck = false;
             }
         }
@@ -1113,11 +1113,11 @@ public class Motion {
             optimalDirection = bug2Helper(G.me, dest, TOWARDS, 0, 0);
             G.indicatorString.append("BFS-BUG ");
 
-            if (canMove(optimalDirection)) {
+            if (G.rc.canMove(optimalDirection)) {
                 return optimalDirection;
             }
         }
-        if (canMove(optimalDirection)) {
+        if (G.rc.canMove(optimalDirection)) {
             return optimalDirection;
         }
         return Direction.CENTER;
@@ -1207,9 +1207,5 @@ public class Motion {
             return true;
         }
         return false;
-    }
-
-    public static boolean canMove(Direction dir) throws Exception {
-        return G.rc.canMove(dir);
     }
 }
