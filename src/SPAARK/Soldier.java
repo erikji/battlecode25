@@ -17,13 +17,17 @@ public class Soldier {
     public static final int EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
     public static final int VISIT_TIMEOUT = 40;
+    // stop building towers if enemy paint interferes too much (more persistent than
+    // SRP)
+    public static final int MAX_TOWER_ENEMY_PAINT = 6;
+    public static final int MAX_TOWER_BLOCKED_TIME = 40;
     // don't build SRP for first few rounds, prioritize towers
-    public static final int MIN_SRP_ROUND = 5;
+    public static final int MIN_SRP_ROUND = 10;
     // controls rounds between repairing/expanding SRP
     public static final int SRP_VISIT_TIMEOUT = 20;
     // balance exploring and building SRPs (don't SRP if near target)
     public static final int SRP_EXPAND_TIMEOUT = 20;
-    public static final int SRP_EXP_OVERRIDE_DIST = 100;
+    public static final int SRP_EXP_OVERRIDE_DIST = 36;
     // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
     public static final int TOWER_CEIL = 3;
     public static final int TOWER_CEIL_MAP_AREA = 1600;
@@ -48,6 +52,8 @@ public class Soldier {
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
 
     public static boolean avoidRetreating = false;
+
+    public static int buildTowerBlockedTime = 0;
 
     // queue of next locations to check for expanding SRP
     // used in explore mode to mark initial build since needs centered for markers
@@ -190,8 +196,8 @@ public class Soldier {
             // TODO: FIND WAY TO RUN THIS WITHOUT UNDERMINING TOWER BUILD LOGIC
             // TODO: maybe dont build SRP if near explore target?
             if (G.round > MIN_SRP_ROUND) {
-                for (int i = 3; --i >= 0;) {
-                    MapLocation loc = G.me.add(G.ALL_DIRECTIONS[Random.rand() % 9]);
+                for (int i = 8; --i >= 0 && Clock.getBytecodesLeft() >= 5000;) {
+                    MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                     if (canBuildSRPAtLocation(loc) && G.getLastVisited(loc) + SRP_VISIT_TIMEOUT < G.round) {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
@@ -249,21 +255,35 @@ public class Soldier {
             mode = EXPLORE;
             return;
         }
+        // if pattern has been blocked for a long time just give up
+        buildTowerBlockedTime++;
+        if (buildTowerBlockedTime > MAX_TOWER_BLOCKED_TIME) {
+            mode = EXPLORE;
+            return;
+        }
         // if pattern complete leave lowest bot ID to complete
+        int enemyPaint = 0;
         boolean isPatternComplete = true;
         int ox = ruinLocation.x - G.me.x + 2;
         int oy = ruinLocation.y - G.me.y + 2;
         boolean[][] pattern = Robot.towerPatterns[buildTowerType];
         PaintType paint;
+        PaintType curr;
         checkPattern: for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 if (dx == 2 && dy == 2)
                     continue;
                 paint = pattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY;
                 // make sure not out of vision radius
-                if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))
-                        && paint != mapInfos[oy + dy][ox + dx].getPaint()) {
-                    isPatternComplete = false;
+                if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))) {
+                    curr = mapInfos[oy + dy][ox + dx].getPaint();
+                    if (curr != paint)
+                        isPatternComplete = false;
+                    // stop building if there's lots of enemy paint within the SRP
+                    if (curr.isEnemy() && ++enemyPaint >= MAX_TOWER_ENEMY_PAINT) {
+                        mode = EXPLORE;
+                        return;
+                    }
                     break checkPattern;
                 }
             }
