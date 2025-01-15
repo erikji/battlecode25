@@ -12,7 +12,9 @@ public class Soldier {
     public static int mode = EXPLORE;
 
     // ratio of paint necessary to exit retreat mode
-    public static final float RETREAT_PAINT_RATIO = 0.75f;
+    public static final double RETREAT_PAINT_RATIO = 0.85;
+    // ratio to reduce retreat requirement by if building tower/srp
+    public static final double RETREAT_REDUCED_RATIO = 0.5;
     // exploration weight multiplier
     public static final int EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
@@ -55,6 +57,7 @@ public class Soldier {
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
 
+    public static boolean reducedRetreating = false;
     public static boolean avoidRetreating = false;
 
     public static int buildTowerBlockedTime = 0;
@@ -75,7 +78,7 @@ public class Soldier {
 
     /**
      * Always:
-     * If low on paint and not avoidRetreating, retreat
+     * If low on paint (reduceRetreating halves paint), retreat
      * Default to explore mode
      * - All movement not in attack mode uses special movement micro that
      * paints neutral tiles if the micro weights it high - always attack
@@ -92,6 +95,7 @@ public class Soldier {
      * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
      * 
      * Build tower:
+     * Automatically make reducedRetreating true
      * If pattern is complete but tower not completed, leave lowest ID to complete
      * - avoidRetreating true if is lowest ID, don't abandon the tower
      * Place stuff
@@ -101,6 +105,7 @@ public class Soldier {
      * Complete tower, return to explore
      * 
      * Build SRP:
+     * Automatically make reducedRetreating true
      * Place SRP
      * If SRP obstructed by enemy paint long enougn, return to explore
      * Complete SRP, queue 8 optimal expansion locations and enter SRP expand mode
@@ -121,7 +126,8 @@ public class Soldier {
      * Try to paint under self when near tower
      */
     public static void run() throws Exception {
-        if (!avoidRetreating && G.rc.getPaint() < Robot.getRetreatPaint()) {
+        if (!avoidRetreating
+                && G.rc.getPaint() < Robot.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1)) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
             mode = EXPLORE;
@@ -134,6 +140,7 @@ public class Soldier {
             mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
         }
         int a = Clock.getBytecodeNum();
+        reducedRetreating = false;
         avoidRetreating = false;
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
@@ -212,46 +219,12 @@ public class Soldier {
                 }
             }
         }
-        // NOTHING TO DO, keep exploring
-        // find towers from POI to attack/build out of vision
-        exploreLocation = null;
-        // TODO: EXPLORE BLANK AREAS AWAY FROM TOWERS AND POI
-        // TODO: we leave too much map empty
-        // TODO: try using random explore more
-        // TODO: maybe even edit random explore to avoid known POI
-        // TODO: since POI will be checked on without random
-        // TOWER_CEIL encourages building SRPs to help build more towers
-        if (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
-            int bestDistanceSquared = 10000;
-            for (int i = 144; --i >= 0;) {
-                if (POI.towers[i] == -1) {
-                    break;
-                }
-                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
-                    // attack these
-                    MapLocation pos = POI.parseLocation(POI.towers[i]);
-                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
-                        bestDistanceSquared = G.me.distanceSquaredTo(pos);
-                        exploreLocation = pos;
-                    }
-                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
-                    // having 25 towers otherwise just softlocks the bots
-                    MapLocation pos = POI.parseLocation(POI.towers[i]);
-                    // prioritize opponent towers more than ruins, so it has to be REALLY close
-                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
-                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
-                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
-                        exploreLocation = pos;
-                    }
-                }
-            }
-        }
     }
 
     public static void buildTowerCheckMode() throws Exception {
         G.indicatorString.append("CHK_BTW ");
         G.setLastVisited(ruinLocation, G.round);
+        reducedRetreating = true;
         buildTowerType = predictTowerType(ruinLocation);
         // if tower already built leave tower build mode
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)
@@ -289,8 +262,8 @@ public class Soldier {
                                 buildTowerBlockedTime = 0; // forgot to reset
                                 return;
                             }
+                            break checkPattern;
                         }
-                        break checkPattern;
                     }
                 }
             }
@@ -321,6 +294,7 @@ public class Soldier {
 
     public static void buildResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_BRP ");
+        reducedRetreating = true;
         // shouldn't interfere with towers here either, same as expand RP
         G.setLastVisited(resourceLocation, G.round);
         // if the SRP has been blocked for a long time just give up
@@ -393,6 +367,41 @@ public class Soldier {
 
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
+        // here instead of checkMode since checkMode may skip this if tower/SRP checked
+        // find towers from POI to attack/build out of vision
+        exploreLocation = null;
+        // TODO: EXPLORE BLANK AREAS AWAY FROM TOWERS AND POI
+        // TODO: we leave too much map empty
+        // TODO: try using random explore more
+        // TODO: maybe even edit random explore to avoid known POI
+        // TODO: since POI will be checked on without random
+        // TOWER_CEIL encourages building SRPs to help build more towers
+        if (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
+            int bestDistanceSquared = 10000;
+            for (int i = 144; --i >= 0;) {
+                if (POI.towers[i] == -1) {
+                    break;
+                }
+                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                    // attack these
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
+                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos);
+                        exploreLocation = pos;
+                    }
+                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                    // having 25 towers otherwise just softlocks the bots
+                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    // prioritize opponent towers more than ruins, so it has to be REALLY close
+                    if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
+                            && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
+                        bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
+                        exploreLocation = pos;
+                    }
+                }
+            }
+        }
         if (exploreLocation == null) {
             Motion.exploreRandomly(moveWithPaintMicro);
         } else {
@@ -859,7 +868,7 @@ public class Soldier {
         // }
         // }
         // if (POI.moneyTowers > POI.paintTowers * 2) {
-        G.indicatorString.append("M_TWR=" + POI.moneyTowers + " P_TWR=" + POI.paintTowers + " ");
+        G.indicatorString.append("(M=" + POI.moneyTowers + ", P=" + POI.paintTowers + ") ");
         if (POI.moneyTowers > POI.paintTowers) {
             return 2;
         }
