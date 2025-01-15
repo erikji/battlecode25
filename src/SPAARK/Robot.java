@@ -51,6 +51,10 @@ public class Robot {
     }
 
     public static void retreat() throws Exception {
+        retreat(Motion.defaultMicro);
+    }
+
+    public static void retreat(Micro micro) throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
         // if no paint towers found it should go to chip tower to update POI and find

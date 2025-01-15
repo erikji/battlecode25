@@ -80,17 +80,16 @@ public class Soldier {
      * - All movement not in attack mode uses special movement micro that
      * paints neutral tiles if the micro weights it high - always attack
      * BEFORE moving or may interfere
+     * - Movement micro also attempts to paint empty squares to help with territory
+     * expansion (just painting wherever)
      * 
      * Explore:
      * Run around randomly while painting below self, pick towers from POI
-     * TODO: finish the summary
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
      * - exception for tower ceiling, to place SRPs to help build towers later
-     * If sees SRP, queue location of SRP and enter SRP expand mode
-     * - Queue once, SRP build will repair if needed, otherwise switch to expand
-     * Else, if can build SRP adjacent, queue location and enter SRP expand mode
-     * - SRPs won't be built overlapping with tower 5x5 squares
+     * If can build or repair SRP, queue location and enter SRP expand mode
+     * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
      * 
      * Build tower:
      * If pattern is complete but tower not completed, leave lowest ID to complete
@@ -98,15 +97,17 @@ public class Soldier {
      * Place stuff
      * If can't complete tower, low coins, few towers, large map, return to explore,
      * other bot will finish tower later (see if SRP is possible)
+     * If tower pattern obstructed by enemy paint long enougn, return to explore
      * Complete tower, return to explore
      * 
      * Build SRP:
      * Place SRP
+     * If SRP obstructed by enemy paint long enougn, return to explore
      * Complete SRP, queue 8 optimal expansion locations and enter SRP expand mode
      * - 4 expansions for 2 chiralities (flipped pattern too)
      * 
      * Expand SRP:
-     * Go to queued locations of expansion and see if can build (fix race condition)
+     * Go to queued locations of expansion and see if can build (race conditions)
      * If can build
      * - Place 4 secondary markers in box around center and primary marker at center
      * - Enter SRP build mode
@@ -114,6 +115,10 @@ public class Soldier {
      * Attack:
      * Attack tower until ded lmao
      * Attempt to repair SRPs if not in range to attack tower
+     * 
+     * Retreat:
+     * Use Robot retreat
+     * Try to paint under self when near tower
      */
     public static void run() throws Exception {
         if (!avoidRetreating && G.rc.getPaint() < Robot.getRetreatPaint()) {
@@ -147,7 +152,14 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                Robot.retreat();
+                if (Robot.retreatTower != -1) {
+                    if (G.me.isWithinDistanceSquared(POI.parseLocation(POI.towers[Robot.retreatTower]), 8))
+                        Robot.retreat(moveWithPaintMicro);
+                    else
+                        Robot.retreat();
+                } else {
+                    Robot.retreat();
+                }
             }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
@@ -603,6 +615,7 @@ public class Soldier {
     // paint neutral tiles if bugnav says to go to it
     // prevents bots taking dumb paths without painting
     // also preserves nearby checkerboards
+    MapLocation mapInfoCenter = new MapLocation(4, 4);
     public static Micro moveWithPaintMicro = new Micro() {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
@@ -649,6 +662,43 @@ public class Soldier {
                     }
                 }
                 G.rc.attack(bestLoc, cnt[(bestLoc.x + bestLoc.y) & 1] > cnt[(1 + bestLoc.x + bestLoc.y) & 1]);
+            } else if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT) {
+                // try to paint nearby
+                MapLocation loc;
+                for (int dx = -2; ++dx <= 2;) {
+                    for (int dy = -2; ++dy <= 2;) {
+                        if (mapInfos[dy + 4][dx + 4].getPaint() == PaintType.EMPTY) {
+                            loc = G.me.translate(dx, dy);
+                            // still have to check if on map
+                            if (G.rc.canAttack(loc))
+                                G.rc.attack(loc);
+                        }
+                    }
+                }
+                if (mapInfos[4][1].getPaint() == PaintType.EMPTY) {
+                    loc = G.me.translate(-3, 0);
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+                if (mapInfos[7][4].getPaint() == PaintType.EMPTY) {
+                    loc = G.me.translate(0, 3);
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+                if (mapInfos[7][4].getPaint() == PaintType.EMPTY) {
+                    loc = G.me.translate(3, 0);
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+                if (mapInfos[1][4].getPaint() == PaintType.EMPTY) {
+                    loc = G.me.translate(0, -3);
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
             }
             return scores;
         }
