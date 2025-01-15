@@ -21,6 +21,16 @@ public class Mopper {
      * Always:
      * If low on paint, retreat
      * Default to explore mode
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
+     * TODO: DOCUMENT WTF THE CODEGEN DOING
      * 
      * Explore:
      * Run around randomly deleting enemy paint if it sees it
