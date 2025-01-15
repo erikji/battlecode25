@@ -44,10 +44,10 @@ public class Robot {
 
     // retreat calculations
     public static final int RETREAT_PAINT_OFFSET = 30;
-    public static final int RETREAT_PAINT_RATIO = 4;
+    public static final double RETREAT_PAINT_RATIO = 0.25;
 
     public static int getRetreatPaint() throws Exception {
-        return Math.max(paintLost + RETREAT_PAINT_OFFSET, G.rc.getType().paintCapacity / RETREAT_PAINT_RATIO);
+        return Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
     }
 
     public static void retreat() throws Exception {
