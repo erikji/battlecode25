@@ -62,13 +62,13 @@ public class Robot {
         paintLost = 0;
         if (retreatTower >= 0) {
             // oopsies tower was replaced
-            if (POI.parseTowerTeam(POI.towers[retreatTower]) != G.team) {
+            if (POI.towerTeams[retreatTower] != G.team) {
                 retreatTower = -1;
             }
         }
         if (retreatTower >= 0) {
             // don't retreat to tower with lots of bots surrounding it
-            MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
+            MapLocation loc = POI.towerLocs[retreatTower];
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 G.indicatorString.append("R: " + G.rc.senseNearbyRobots(loc, 2, G.team).length + " ");
                 if (G.me.distanceSquaredTo(loc) > 2 && G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
@@ -89,16 +89,14 @@ public class Robot {
                 boolean bestPaint = false;
                 boolean bestCritical = false;
                 boolean hasCritical = false;
-                for (int i = 144; --i >= 0;) {
-                    if (POI.towers[i] == -1)
-                        break;
+                for (int i = POI.numberOfTowers; --i >= 0;) {
                     if (POI.critical[i]) {
                         hasCritical = true;
                     }
-                    if (POI.parseTowerTeam(POI.towers[i]) != G.team)
+                    if (POI.towerTeams[i] != G.team)
                         continue;
                     // this needs to change
-                    boolean paint = POI.parseTowerType(POI.towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER;
+                    boolean paint = POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER;
                     // if (!paint) {
                     //     // This is dumb but borks code for some reason
                     //     continue;
@@ -106,7 +104,7 @@ public class Robot {
                     if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
                         continue;
                     }
-                    int distance = Motion.getChebyshevDistance(G.me, POI.parseLocation(POI.towers[i]));
+                    int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
                     if (best == -1) {
                         best = i;
                         bestDistance = distance;
@@ -151,7 +149,7 @@ public class Robot {
             Motion.exploreRandomly();
             retreatTower = -1;
         } else if (retreatTower != -1) {
-            MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
+            MapLocation loc = POI.towerLocs[retreatTower];
             Motion.bugnavTowards(loc);
             G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
             if (G.rc.canSenseRobotAtLocation(loc)) {
