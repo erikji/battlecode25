@@ -684,30 +684,30 @@ public class Soldier {
                         }
                     }
                 }
-                if (mapInfos[4][1].getPaint() == PaintType.EMPTY) {
-                    loc = G.me.translate(-3, 0);
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                if (mapInfos[7][4].getPaint() == PaintType.EMPTY) {
-                    loc = G.me.translate(0, 3);
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                if (mapInfos[7][4].getPaint() == PaintType.EMPTY) {
-                    loc = G.me.translate(3, 0);
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                if (mapInfos[1][4].getPaint() == PaintType.EMPTY) {
-                    loc = G.me.translate(0, -3);
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
+                // if (mapInfos[4][1].getPaint() == PaintType.EMPTY) {
+                //     loc = G.me.translate(-3, 0);
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // if (mapInfos[7][4].getPaint() == PaintType.EMPTY) {
+                //     loc = G.me.translate(0, 3);
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // if (mapInfos[4][7].getPaint() == PaintType.EMPTY) {
+                //     loc = G.me.translate(3, 0);
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // if (mapInfos[1][4].getPaint() == PaintType.EMPTY) {
+                //     loc = G.me.translate(0, -3);
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
             }
             return scores;
         }
