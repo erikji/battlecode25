@@ -397,6 +397,32 @@ public class POI {
                 if (Clock.getBytecodesLeft() < 3000)
                     return;
             }
+            // if (totalMessages < 20) {
+            //     int offset = Random.rand();
+            //     int message = -1;
+            //     int messages = 0;
+            //     for (int i = numberOfTowers; --i >= 0;) {
+            //         int j = (i + offset) % numberOfTowers;
+            //         message = appendToMessage(message, intifyTower(towerTeams[j], towerTypes[j]) | intifyLocation(towerLocs[j]));
+            //         messages++;
+            //         if (messages == 2) {
+            //             G.rc.broadcastMessage(message);
+            //             totalMessages++;
+            //             if (totalMessages == 20) {
+            //                 return;
+            //             }
+            //             message = -1;
+            //             messages = 0;
+            //         }
+            //     }
+            //     if (messages != 0) {
+            //         G.rc.broadcastMessage(message);
+            //         totalMessages++;
+            //         if (totalMessages == 20) {
+            //             return;
+            //         }
+            //     }
+            // }
         } else {
             int message = -1;
             int messages = 0;
