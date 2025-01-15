@@ -55,6 +55,27 @@ public class G {
 
     //all dx/dy within 20 distanceSquared, sorted in ascending distanceSquared
     //Don't change the order it will break mopper code!
+    //for everything <=0 radiusSquared use [0, 1)
+    //for everything <=1 radiusSquared use [0, 5)
+    //for everything <=2 radiusSquared use [0, 9)
+    //for everything <=3 radiusSquared use [0, 9)
+    //for everything <=4 radiusSquared use [0, 13)
+    //for everything <=5 radiusSquared use [0, 21)
+    //for everything <=6 radiusSquared use [0, 21)
+    //for everything <=7 radiusSquared use [0, 21)
+    //for everything <=8 radiusSquared use [0, 25)
+    //for everything <=9 radiusSquared use [0, 29)
+    //for everything <=10 radiusSquared use [0, 37)
+    //for everything <=11 radiusSquared use [0, 37)
+    //for everything <=12 radiusSquared use [0, 37)
+    //for everything <=13 radiusSquared use [0, 45)
+    //for everything <=14 radiusSquared use [0, 45)
+    //for everything <=15 radiusSquared use [0, 45)
+    //for everything <=16 radiusSquared use [0, 49)
+    //for everything <=17 radiusSquared use [0, 57)
+    //for everything <=18 radiusSquared use [0, 61)
+    //for everything <=19 radiusSquared use [0, 61)
+    //for everything <=20 radiusSquared use [0, 69)
     public static final int[] range20X = {
         0, -1, 0, 0, 1, -1, -1, 1, 1, -2, 0, 0, 2, -2, -2, -1, -1, 1, 1, 2, 2, -2, -2, 2, 2, -3, 0, 0, 3, -3, -3, -1, -1, 1, 1, 3, 3, -3, -3, -2, -2, 2, 2, 3, 3, -4, 0, 0, 4, -4, -4, -1, -1, 1, 1, 4, 4, -3, -3, 3, 3, -4, -4, -2, -2, 2, 2, 4, 4
     };
