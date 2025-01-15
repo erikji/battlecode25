@@ -17,10 +17,12 @@ public class Soldier {
     public static final int EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
     public static final int VISIT_TIMEOUT = 40;
-    // stop building towers if enemy paint interferes too much (more persistent than
-    // SRP)
+    // stop building towers if enemy paint interferes too much
     public static final int MAX_TOWER_ENEMY_PAINT = 10;
-    public static final int MAX_TOWER_BLOCKED_TIME = 40;
+    public static final int MAX_TOWER_BLOCKED_TIME = 30;
+    // max build time, max build time if no moppers/splashers to remove paint
+    public static final int MAX_TOWER_TIME = 200;
+    public static final int MAX_TOWER_TIME_NO_HELP = 80;
     // don't build SRP for first few rounds, prioritize towers
     public static final int MIN_SRP_ROUND = 10;
     // controls rounds between repairing/expanding SRP
@@ -39,8 +41,10 @@ public class Soldier {
     // ignore being near ruins for SRPs for some rounds, sometimes necessary
     public static final int INITIAL_SRP_RUIN_IGNORE = 50;
     // stop building SRP if enemy paint interferes too much
-    public static final int MAX_SRP_ENEMY_PAINT = 4;
-    public static final int MAX_SRP_BLOCKED_TIME = 20;
+    public static final int MAX_SRP_ENEMY_PAINT = 2;
+    public static final int MAX_SRP_BLOCKED_TIME = 10;
+    // max build time
+    public static final int MAX_SRP_TIME = 50;
     // don't expand SRP if low on paint, since very slow
     public static final int EXPAND_SRP_MIN_PAINT = 75;
 
@@ -479,7 +483,8 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
-            Motion.bugnavAround(resourceLocation, 0, 1, moveWithPaintMicro);
+            // just sit in the middle of the SRP
+            Motion.bugnavTowards(resourceLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         if (paintLocation != null)
