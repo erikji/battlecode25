@@ -248,7 +248,7 @@ public class POI {
     public static void updateRound() throws Exception {
         int a = Clock.getBytecodeNum();
         readMessages();
-        G.indicatorString.append("read:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         a = Clock.getBytecodeNum();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
@@ -262,7 +262,7 @@ public class POI {
                 addTower(-1, nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
-        G.indicatorString.append("towers:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
 
         drawIndicators();
@@ -293,7 +293,7 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
         }
-        G.indicatorString.append("symmetry:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
         // // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
         // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
@@ -309,7 +309,7 @@ public class POI {
         //     }
         // }
         sendMessages();
-        G.indicatorString.append("send:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
