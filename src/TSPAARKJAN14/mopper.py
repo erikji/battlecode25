@@ -13,15 +13,15 @@ for d in a:
         for dy in range(-1, 2):
             if (dx+d[0])**2 + (dy+d[1])**2 > 2:
                 ind = works.index((dx+d[0],dy+d[1]))
-                # s += f'\t\t//if we move to [{d[0]}, {d[1]}] (index {a.index(d)}), then we will be able to attack [{dx+d[0]}, {dy+d[1]}] (index {ind}), so check that too\n'
+                s += f'\t\t//if we move to [{d[0]}, {d[1]}] (index {a.index(d)}), then we will be able to attack [{dx+d[0]}, {dy+d[1]}] (index {ind}), so check that too\n'
                 s += f'\t\tif (mopScores[{ind}] > allmax[{a.index(d)}])' + ' {\n'
-                s += f'\t\t\tallmax[{a.index(d)}] = \nmopScores\n[{ind}];\n'
+                s += f'\t\t\tallmax[{a.index(d)}] = mopScores[{ind}];\n'
                 s += f'\t\t\tallx[{a.index(d)}] = {dx+d[0]};\n'
                 s += f'\t\t\tally[{a.index(d)}] = {dy+d[1]};\n'
                 s += '\t\t}\n'
                 # asdf += [works.index((dx+d[0],dy+d[1]))]
     # print(d,asdf)
-    print(s.replace('\n','').replace('\t','').replace(' ',''),end='')
+    print(s,end='')
 # for i in range(25):
 #     print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
 #         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {

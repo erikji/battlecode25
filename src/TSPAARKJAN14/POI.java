@@ -1,9 +1,9 @@
-package newpoi;
+package TSPAARKJAN14;
 
 import battlecode.common.*;
 
 public class POI {
-    public static final boolean ENABLE_INDICATORS = false;
+    public static final boolean ENABLE_INDICATORS = true;
 
     // 144 towers (including ruins)
     // filled in backwards cuz for loop bytecode optimization
@@ -94,6 +94,7 @@ public class POI {
 
     public static int paintTowers = 0;
     public static int moneyTowers = 0;
+    public static int defenseTowers = 0;
 
     public static void addTower(int source, MapLocation loc, Team team, UnitType type) {
         // IMPORTANT: make sure to call addTower right after tower is built
@@ -108,6 +109,13 @@ public class POI {
                         case LEVEL_ONE_MONEY_TOWER:
                             moneyTowers--;
                             break;
+                        case LEVEL_ONE_DEFENSE_TOWER:
+                            defenseTowers--;
+                            break;
+                        default:
+                            // throw new Exception("what are you building??? defense tower???");
+                            G.rc.resign();
+                            break;
                     }
                 }
                 if (team == G.team) {
@@ -117,6 +125,11 @@ public class POI {
                             break;
                         case LEVEL_ONE_MONEY_TOWER:
                             moneyTowers++;
+                            break;
+                        case LEVEL_ONE_DEFENSE_TOWER:
+                            defenseTowers++;
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -235,7 +248,7 @@ public class POI {
     public static void updateRound() throws Exception {
         int a = Clock.getBytecodeNum();
         readMessages();
-        G.indicatorString.append("read:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         a = Clock.getBytecodeNum();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
@@ -249,7 +262,7 @@ public class POI {
                 addTower(-1, nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
-        G.indicatorString.append("towers:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
 
         drawIndicators();
@@ -280,7 +293,7 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
         }
-        G.indicatorString.append("symmetry:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
         // // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
         // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
@@ -296,7 +309,7 @@ public class POI {
         //     }
         // }
         sendMessages();
-        G.indicatorString.append("send:" + (Clock.getBytecodeNum() - a) + " ");
+        G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
@@ -571,12 +584,16 @@ public class POI {
                     if (towerTeams[i] == G.team) {
                         if (towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER) {
                             G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 100, 0);
-                            // MapLocation loc = parseLocation(towers[i]);
-                            // for (int j = 8; --j >= 0;) {
-                            //     G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 0);
-                            // }
+                            MapLocation loc = towerLocs[i];
+                            for (int j = 8; --j >= 0;) {
+                                G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 255, 0);
+                            }
                         } else {
                             G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 150, 0);
+                            MapLocation loc = towerLocs[i];
+                            for (int j = 8; --j >= 0;) {
+                                G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 100, 0);
+                            }
                             // MapLocation loc = parseLocation(towers[i]);
                             // for (int j = 8; --j >= 0;) {
                             //     G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 255);
@@ -584,12 +601,20 @@ public class POI {
                         }
                     } else if (towerTeams[i] == G.opponentTeam) {
                         G.rc.setIndicatorLine(G.me, towerLocs[i], 150, 0, 0);
+                        MapLocation loc = towerLocs[i];
+                        for (int j = 8; --j >= 0;) {
+                            G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 255, 0, 0);
+                        }
                         // MapLocation loc = parseLocation(towers[i]);
                         // for (int j = 8; --j >= 0;) {
                         //     G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 255, 0, 0);
                         // }
                     } else {
                         G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 0, 150);
+                        MapLocation loc = towerLocs[i];
+                        for (int j = 8; --j >= 0;) {
+                            G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 0, 255);
+                        }
                         // MapLocation loc = parseLocation(towers[i]);
                         // for (int j = 8; --j >= 0;) {
                         //     G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 0, 255);

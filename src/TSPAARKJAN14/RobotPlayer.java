@@ -1,4 +1,4 @@
-package newpoi;
+package TSPAARKJAN14;
 
 import battlecode.common.*;
 
@@ -10,6 +10,17 @@ public class RobotPlayer {
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
         G.round = G.rc.getRoundNum();
+
+        String s = G.me.toString();
+        Motion.lastVisitedLocations.append(s);
+        switch (s.length()) {
+            case 6:
+                Motion.lastVisitedLocations.append("  ");
+                break;
+            case 7:
+                Motion.lastVisitedLocations.append(" ");
+                break;
+        }
     }
 
     public static void updateRound() throws Exception {
@@ -26,8 +37,8 @@ public class RobotPlayer {
             G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
-            G.indicatorString = new StringBuilder();
             POI.init();
+            G.indicatorString = new StringBuilder();
             updateInfo();
             switch (G.rc.getType()) {
                 case MOPPER, SOLDIER, SPLASHER -> Robot.init();
@@ -54,8 +65,12 @@ public class RobotPlayer {
                 }
                 if (G.rc.getRoundNum() != r) {
                     System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
-                    G.indicatorString.append("BTC-ERR: " + r + " ");
+                    G.indicatorString.append("BYTE=" + r + " ");
                 }
+                // for (int i = 0; i <= 50; i++) {
+                //     int a=Random.rand()%G.rc.getMapHeight(),b=Random.rand()%G.rc.getMapWidth(),c=Random.rand()%G.rc.getMapHeight(),d=Random.rand()%G.rc.getMapWidth();
+                //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
+                // }
                 Clock.yield();
             }
         } catch (GameActionException e) {

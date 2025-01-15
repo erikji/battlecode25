@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN14;
 
 import battlecode.common.*;
 import java.util.*;
@@ -153,81 +153,70 @@ public class Tower {
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level==0?2500:5000) >= 5000) {
-            attack();
             G.rc.upgradeTower(G.me);
         }
         // attack after upgrading
-        attack();
-    }
-
-    public static void attack() throws Exception {
         //prioritize bots with low hp, unless they have less hp then our attack power
-        if (G.rc.canAttack(null)) {
-            G.rc.attack(null);
-        }
-        //check cooldown on single target attack
-        if (G.rc.canAttack(G.me)) {
-            MapLocation bestEnemyLoc = null;
-            int bestEnemyHp = 1000000;
-            int attackStrength = G.rc.getType().attackStrength;
-            UnitType bestEnemyType = UnitType.MOPPER;
-            // priority: soldier, splasher, mopper
-            for (int i = G.opponentRobots.length; --i >= 0;) {
-                RobotInfo r = G.opponentRobots[i];
-                //check if it's still alive
-                if (G.rc.canSenseRobotAtLocation(r.location) && G.me.isWithinDistanceSquared(r.location, G.rc.getType().actionRadiusSquared)) {
-                    switch (bestEnemyType) {
-                        case UnitType.MOPPER:
-                            if (bestEnemyHp > attackStrength) {
-                                if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || r.health < bestEnemyHp) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
-                            } else {
-                                if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || (r.health > bestEnemyHp && r.health <= attackStrength)) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
+        G.rc.attack(null);
+        MapLocation bestEnemyLoc = null;
+        int bestEnemyHp = 1000000;
+        int attackStrength = G.rc.getType().attackStrength;
+        UnitType bestEnemyType = UnitType.MOPPER;
+        // priority: soldier, splasher, mopper
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            RobotInfo r = G.opponentRobots[i];
+            if (G.rc.canSenseRobotAtLocation(r.location)) {
+                switch (bestEnemyType) {
+                    case UnitType.MOPPER:
+                        if (bestEnemyHp > attackStrength) {
+                            if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || r.health < bestEnemyHp) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                                bestEnemyType = r.type;
                             }
-                            break;
-                        case UnitType.SPLASHER:
-                            if (bestEnemyHp > attackStrength) {
-                                if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health < bestEnemyHp)) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
-                            } else {
-                                if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health > bestEnemyHp && r.health <= attackStrength)) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
+                        } else {
+                            if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || (r.health > bestEnemyHp && r.health <= attackStrength)) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                                bestEnemyType = r.type;
                             }
-                            break;
-                        case UnitType.SOLDIER:
-                            if (bestEnemyHp > attackStrength) {
-                                if (r.type == UnitType.SOLDIER && r.health < bestEnemyHp) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                }
-                            } else {
-                                if (r.type == UnitType.SOLDIER && r.health > bestEnemyHp && r.health <= attackStrength) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                }
+                        }
+                        break;
+                    case UnitType.SPLASHER:
+                        if (bestEnemyHp > attackStrength) {
+                            if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health < bestEnemyHp)) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                                bestEnemyType = r.type;
                             }
-                            break;
-                        default:
-                            break;
-                    }
+                        } else {
+                            if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health > bestEnemyHp && r.health <= attackStrength)) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                                bestEnemyType = r.type;
+                            }
+                        }
+                        break;
+                    case UnitType.SOLDIER:
+                        if (bestEnemyHp > attackStrength) {
+                            if (r.type == UnitType.SOLDIER && r.health < bestEnemyHp) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                            }
+                        } else {
+                            if (r.type == UnitType.SOLDIER && r.health > bestEnemyHp && r.health <= attackStrength) {
+                                bestEnemyHp = r.health;
+                                bestEnemyLoc = r.location;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
-            if (bestEnemyLoc != null) {
-                G.rc.attack(bestEnemyLoc);
-            }
+        }
+        if (G.rc.canAttack(bestEnemyLoc)) {
+            G.rc.attack(bestEnemyLoc);
         }
     }
 }

@@ -37,6 +37,7 @@ public class RobotPlayer {
             G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
+            POI.init();
             G.indicatorString = new StringBuilder();
             updateInfo();
             switch (G.rc.getType()) {
@@ -64,8 +65,12 @@ public class RobotPlayer {
                 }
                 if (G.rc.getRoundNum() != r) {
                     System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
-                    G.indicatorString.append("BTC-ERR: " + r + " ");
+                    G.indicatorString.append("BYTE=" + r + " ");
                 }
+                // for (int i = 0; i <= 50; i++) {
+                //     int a=Random.rand()%G.rc.getMapHeight(),b=Random.rand()%G.rc.getMapWidth(),c=Random.rand()%G.rc.getMapHeight(),d=Random.rand()%G.rc.getMapWidth();
+                //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
+                // }
                 Clock.yield();
             }
         } catch (GameActionException e) {
