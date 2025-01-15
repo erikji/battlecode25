@@ -859,7 +859,7 @@ public class Soldier {
         // }
         // }
         // if (POI.moneyTowers > POI.paintTowers * 2) {
-        G.indicatorString.append("M: " + POI.moneyTowers + " P: " + POI.paintTowers + " ");
+        G.indicatorString.append("M_TWR=" + POI.moneyTowers + " P_TWR=" + POI.paintTowers + " ");
         if (POI.moneyTowers > POI.paintTowers) {
             return 2;
         }
