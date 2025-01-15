@@ -106,7 +106,7 @@ public class Tower {
                     break;
             }
 
-            if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 1000) {
+            if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 1000 || G.rc.getPaint() == 1000) {
                 spawnBot(trying);
             }
         }

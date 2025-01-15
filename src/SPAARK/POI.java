@@ -75,12 +75,35 @@ public class POI {
     // robot prioritizes critical informatoin to be sent first
     public static boolean[] critical = new boolean[144];
 
+    public static int paintTowers = 0;
+    public static int moneyTowers = 0;
+
     public static void addTower(int source, int data) {
         // IMPORTANT: make sure to call addTower right after tower is built
         for (int i = 144; --i >= 0;) {
             if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
                 if (towers[i] != data) {
+                    if (parseTowerTeam(towers[i]) == G.team) {
+                        switch (parseTowerType(towers[i])) {
+                            case LEVEL_ONE_PAINT_TOWER:
+                                paintTowers--;
+                                break;
+                            case LEVEL_ONE_MONEY_TOWER:
+                                moneyTowers--;
+                                break;
+                        }
+                    }
                     towers[i] = data;
+                    if (parseTowerTeam(data) == G.team) {
+                        switch (parseTowerType(data)) {
+                            case LEVEL_ONE_PAINT_TOWER:
+                                paintTowers--;
+                                break;
+                            case LEVEL_ONE_MONEY_TOWER:
+                                moneyTowers--;
+                                break;
+                        }
+                    }
                     robotsThatKnowInformation[i] = new StringBuilder(":" + source);
                     if (source == -1) {
                         critical[i] = true;
@@ -157,8 +180,7 @@ public class POI {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
                 addTower(-1, intifyTower(info.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]));
             } else {
-                addTower(-1,
-                        intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
+                addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
             }
         }
 
@@ -453,14 +475,30 @@ public class POI {
                 try {
                     if (parseTowerTeam(towers[i]) == G.team) {
                         if (parseTowerType(towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                            G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                            // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                            MapLocation loc = parseLocation(towers[i]);
+                            for (int j = 8; --j >= 0;) {
+                                G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 0);
+                            }
                         } else {
-                            G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
+                            // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
+                            MapLocation loc = parseLocation(towers[i]);
+                            for (int j = 8; --j >= 0;) {
+                                G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 255);
+                            }
                         }
                     } else if (parseTowerTeam(towers[i]) == G.opponentTeam) {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
+                        // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
+                        MapLocation loc = parseLocation(towers[i]);
+                        for (int j = 8; --j >= 0;) {
+                            G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 255, 0, 0);
+                        }
                     } else {
-                        G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
+                        // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
+                        MapLocation loc = parseLocation(towers[i]);
+                        for (int j = 8; --j >= 0;) {
+                            G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 0, 255);
+                        }
                     }
                 } catch (Exception e) {
                 }
