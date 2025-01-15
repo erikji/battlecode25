@@ -215,9 +215,6 @@ public class Tower {
                 }
             }
         }
-        if (G.rc.getID() < 5) {
-            System.out.println(++cnt);
-        }
         if (G.rc.canAttack(bestEnemyLoc)) {
             G.rc.attack(bestEnemyLoc);
         }
