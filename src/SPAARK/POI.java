@@ -99,10 +99,10 @@ public class POI {
                     if (parseTowerTeam(data) == G.team) {
                         switch (parseTowerType(data)) {
                             case LEVEL_ONE_PAINT_TOWER:
-                                paintTowers--;
+                                paintTowers++;
                                 break;
                             case LEVEL_ONE_MONEY_TOWER:
-                                moneyTowers--;
+                                moneyTowers++;
                                 break;
                         }
                     }
