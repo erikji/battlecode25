@@ -10,7 +10,7 @@ public class Mopper {
 
     public static final int BUILD_TIMEOUT = 10;
 
-    public static MapLocation ruinLocation = null; // BUILD mode
+    public static MapLocation target = null;
 
     public static int lastBuild = -BUILD_TIMEOUT;
 
@@ -305,7 +305,7 @@ public class Mopper {
                 if (G.rc.canSenseRobotAtLocation(locs[i])) {
                     continue;
                 }
-                ruinLocation = locs[i];
+                target = locs[i];
                 mode = BUILD;
                 break;
             }
@@ -314,17 +314,17 @@ public class Mopper {
 
     public static void buildCheckMode() throws Exception {
         G.indicatorString.append("CHK_B ");
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
+        if (!G.rc.canSenseLocation(target) || G.rc.canSenseRobotAtLocation(target) || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
-            ruinLocation = null;
+            target = null;
             return;
         }
         //if we don't see anything to mop, then leave 
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            if (G.nearbyMapInfos[i].getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && G.nearbyMapInfos[i].getPaint().isEnemy()) return;
+            if (G.nearbyMapInfos[i].getMapLocation().distanceSquaredTo(target) <= 8 && G.nearbyMapInfos[i].getPaint().isEnemy()) return;
         }
         mode = EXPLORE;
-        ruinLocation = null;
+        target = null;
     }
 
     public static void explore() throws Exception {
@@ -353,7 +353,7 @@ public class Mopper {
             Direction dir = Direction.CENTER;
             if (bestEmpty == null && bestBot == null) {
                 G.indicatorString.append("RAND ");
-                dir = Motion.exploreRandomlyLoc();
+                dir = G.me.directionTo(Motion.exploreRandomlyLoc());
             } else {
                 if (bestBot != null)
                     bestEmpty = bestBot;
@@ -414,7 +414,7 @@ public class Mopper {
                             attackScores[i]++;
                         }
                     }
-                    if (ruinLocation.distanceSquaredTo(loc) <= 8) {
+                    if (target.distanceSquaredTo(loc) <= 8) {
                         attackScores[i] += 10;
                     }
                     attackScores[i] += 5;
@@ -424,11 +424,11 @@ public class Mopper {
         }
         if (G.rc.isMovementReady()) {
             for (int i = 8; --i >= 0;) {
-                if (G.me.directionTo(ruinLocation) == G.DIRECTIONS[i]) {
-                    moveScores = avoidPaintMicro.micro(G.DIRECTIONS[i], ruinLocation);
+                if (G.me.directionTo(target) == G.DIRECTIONS[i]) {
+                    moveScores = avoidPaintMicro.micro(G.DIRECTIONS[i], target);
                     moveScores[i] -= 19; //yes only 1 paint
                 }
-                else if (G.me.directionTo(ruinLocation).rotateLeft() == G.DIRECTIONS[i] || G.me.directionTo(ruinLocation).rotateRight() == G.DIRECTIONS[i]) {
+                else if (G.me.directionTo(target).rotateLeft() == G.DIRECTIONS[i] || G.me.directionTo(target).rotateRight() == G.DIRECTIONS[i]) {
                     moveScores[i] -= 15;
                 }
             }
@@ -457,11 +457,13 @@ public class Mopper {
                     a = a.add(ruins[i].directionTo(G.me));
                 }
             }
-            Direction ruinDir = G.me.directionTo(a);
-            for (int i = 8; --i >= 0;) {
-                if (G.ALL_DIRECTIONS[i] == ruinDir) {
-                    scores[i] -= 10;
-                    break;
+            if (a != G.me) {
+                Direction towerDir = G.me.directionTo(a);
+                for (int i = 8; --i >= 0;) {
+                    if (G.ALL_DIRECTIONS[i] == towerDir) {
+                        scores[i] -= 10;
+                        break;
+                    }
                 }
             }
             return scores;
