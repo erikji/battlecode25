@@ -153,9 +153,14 @@ public class Tower {
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level==0?2500:5000) >= 5000) {
+            attack();
             G.rc.upgradeTower(G.me);
         }
         // attack after upgrading
+        attack();
+    }
+
+    public static void attack() throws Exception {
         //prioritize bots with low hp, unless they have less hp then our attack power
         G.rc.attack(null);
         MapLocation bestEnemyLoc = null;
