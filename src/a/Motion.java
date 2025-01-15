@@ -1,4 +1,4 @@
-package SPAARK;
+package a;
 
 import battlecode.common.*;
 
@@ -1154,31 +1154,28 @@ public class Motion {
         }
     }
 
-    //weighting moving in the correct direction == 4 paint, adj direction == 3 paint
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
-        int[] scores = new int[9];
+        int[] scores = new int[8];
         int score;
         MapLocation nxt;
         PaintType p;
-        for (int i = 9; --i >= 0;) {
-            if (!G.rc.canMove(G.ALL_DIRECTIONS[i])){
-                scores[i] = -1000000000;
-            } else {
-                score = 0;
-                nxt = G.me.add(G.ALL_DIRECTIONS[i]);
-                p = G.rc.senseMapInfo(nxt).getPaint();
-                if (p.isEnemy()) {
-                    score -= 10;
-                } else if (p == PaintType.EMPTY) {
-                    score -= 5;
-                }
-                if (G.ALL_DIRECTIONS[i] == d) {
-                    score += 20;
-                } else if (G.ALL_DIRECTIONS[i].rotateLeft() == d || G.ALL_DIRECTIONS[i].rotateRight() == d) {
-                    score += 15;
-                }
-                scores[i] = score;
+        for (int i = 8; --i >= 0;) {
+            if (!G.rc.canMove(G.DIRECTIONS[i]))
+                continue;
+            score = 0;
+            nxt = G.me.add(G.DIRECTIONS[i]);
+            p = G.rc.senseMapInfo(nxt).getPaint();
+            if (p.isEnemy()) {
+                score -= 10;
+            } else if (p == PaintType.EMPTY) {
+                score -= 5;
             }
+            if (G.DIRECTIONS[i] == d) {
+                score += 20;
+            } else if (G.DIRECTIONS[i].rotateLeft() == d || G.DIRECTIONS[i].rotateRight() == d) {
+                score += 15;
+            }
+            scores[i] = score;
         }
         return scores;
     };
@@ -1186,7 +1183,7 @@ public class Motion {
     public static boolean microMove(int[] scores) throws Exception {
         int best = 0;
         int numBest = 1;
-        for (int i = scores.length; --i >= 1;) {
+        for (int i = 8; --i >= 1;) {
             if (scores[i] > scores[best]) {
                 best = i;
                 numBest = 1;
@@ -1196,7 +1193,7 @@ public class Motion {
             }
         }
         if (scores[best] > 0) {
-            return move(G.ALL_DIRECTIONS[best]);
+            return move(G.DIRECTIONS[best]);
         }
         return false;
     }
