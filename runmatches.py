@@ -14,7 +14,11 @@ emojiMap = {
 }
 errors = []
 
+<<<<<<< HEAD
 currentBot = 'SPAARK' #bot to test
+=======
+currentBot = 'betterexplore' #bot to test
+>>>>>>> refs/remotes/origin/main
 #SPAARK IS THE BASELINE
 
 # bots = [chr(ord('a')+i) for i in range(1)]
@@ -42,30 +46,35 @@ maps += ['Thirds']
 maps += ['UglySweater']
 maps += ['UnderTheSea']
 
-# maps += ['[EDGE] microtest']
-# maps += ['[SP] ChessBattleAdvanced']
-# maps += ['[EDGE] srp spam']
-# # maps += ['[SP2] Duels']
-# maps += ['[SP2] Boulders']
-# maps += ['[SP2] Arena']
-# maps += ['[SP2] CheckersFightIntermediate']
-# maps += ['[EDGE] ruins']
-# maps += ['[SP] ChessBattleUnadvanced']
-# maps += ['[SP2] Geometric']
-# maps += ['[SP] RoundAbout']
-# maps += ['[SP] 2025']
-# maps += ['[SP] 5757']
-# maps += ['[SP] Lingo']
-# maps += ['[SP] Longo']
-# maps += ['[SP] MapIsNotReference']
-# maps += ['[SP] ModernArt3']
-# maps += ['[SP] Spirals']
-# maps += ['[SP] Squiggles']
-# # maps += ['[SP] Stars']
-# maps += ['[SP2] Piston']
-# maps += ['[SP] Cornucopia']
-# maps += ['[SP2] Buh']
-# maps += ['[SP2] Arena2']
+maps += ['[EDGE] microtest']
+maps += ['[SP] ChessBattleAdvanced']
+maps += ['[EDGE] srp spam']
+# maps += ['[SP2] Duels']
+maps += ['[SP2] Boulders']
+maps += ['[SP2] Arena']
+maps += ['[SP2] CheckersFightIntermediate']
+maps += ['[EDGE] ruins']
+maps += ['[SP] ChessBattleUnadvanced']
+maps += ['[SP2] Geometric']
+maps += ['[SP] RoundAbout']
+maps += ['[SP] 2025']
+maps += ['[SP] 5757']
+maps += ['[SP] Lingo']
+maps += ['[SP] Longo']
+maps += ['[SP] MapIsNotReference']
+maps += ['[SP] ModernArt3']
+maps += ['[SP] Spirals']
+maps += ['[SP] Squiggles']
+# maps += ['[SP] Stars']
+maps += ['[SP2] Piston']
+maps += ['[SP] Cornucopia']
+maps += ['[SP2] Buh']
+maps += ['[SP2] Arena2']
+maps += ['[SP2] CenterExtreme']
+maps += ['[SP2] Corners']
+maps += ['[SP2] Duolingo']
+maps += ['[SP2] Narrow']
+maps += ['[SP2] NotMyMap']
 
 matches = list(product(bots, maps))
 
