@@ -9,6 +9,8 @@ public class Tower {
     public static int spawnedMoppers = 0;
     public static int spawnedRobots = 0;
 
+    public static int cnt = 0;
+
     public static MapLocation[] spawnLocs;
     public static int level;
 
@@ -78,8 +80,8 @@ public class Tower {
         }
         else {
             UnitType trying = UnitType.SPLASHER;
-            int mod = 7;
-            int area = G.rc.getMapHeight() * G.rc.getMapWidth();
+            // int mod = 7;
+            // int area = G.rc.getMapHeight() * G.rc.getMapWidth();
             
             switch ((spawnedRobots - 2) % 7) {
                 // make sure to subtract 2
@@ -212,6 +214,9 @@ public class Tower {
                         break;
                 }
             }
+        }
+        if (G.rc.getID() < 5) {
+            System.out.println(++cnt);
         }
         if (G.rc.canAttack(bestEnemyLoc)) {
             G.rc.attack(bestEnemyLoc);
