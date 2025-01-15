@@ -10,6 +10,17 @@ public class RobotPlayer {
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
         G.round = G.rc.getRoundNum();
+
+        String s = G.me.toString();
+        Motion.lastVisitedLocations.append(s);
+        switch (s.length()) {
+            case 6:
+                Motion.lastVisitedLocations.append("  ");
+                break;
+            case 7:
+                Motion.lastVisitedLocations.append(" ");
+                break;
+        }
     }
 
     public static void updateRound() throws Exception {

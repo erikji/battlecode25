@@ -10,7 +10,7 @@ public class Mopper {
 
     public static final int BUILD_TIMEOUT = 10;
 
-    public static MapLocation ruinLocation = null; // BUILD mode
+    public static MapLocation target = null;
 
     public static int lastBuild = -BUILD_TIMEOUT;
 
@@ -18,14 +18,14 @@ public class Mopper {
     public static int[] attackScores = new int[25]; //mopping
 
     /**
-     * Always:
      * If low on paint, retreat
      * Default to explore mode
      * 
      * Explore:
-     * Run around randomly deleting enemy paint if it sees it
+     * Use exploreRandomly, deleting enemy paint if it sees it
+     * Prefers to delete paint in the following importance: enemy/ally moppers, enemies/allies, no bots
      * If near a ruin, go to BUILD mode
-     * If mop swing works, do it
+     * Mop swings are only better if there are very few nearby enemy bots, they are all standing in a line, and there is no enemy standing on enemy paint
      * 
      * Build:
      * Help soldiers mop enemy paint around ruins
@@ -65,6 +65,7 @@ public class Mopper {
         int cmax = attackScores[0];
         int cx = 0;
         int cy = 0;
+        //check every tile within sqrt2 radius
 		if (attackScores[1] > cmax) {
 			cmax = attackScores[1];
 			cx = -1;
@@ -105,6 +106,7 @@ public class Mopper {
 			cx = 1;
 			cy = 1;
 		}
+        //store total score and best attack location for each direction (incl Direction.CENTER)
         int[] allmax = new int[]{
             cmax,cmax,cmax,cmax,cmax,cmax,cmax,cmax,cmax
         };
@@ -114,166 +116,199 @@ public class Mopper {
         int[] ally = new int[]{
             cy,cy,cy,cy,cy,cy,cy,cy,cy
         };
-        if (attackScores[21] > allmax[0]) {
+        //if we move to [-1, -1] (index 0), then we will be able to attack [-2, -2] (index 21), so check that too
+		if (attackScores[21] > allmax[0]) {
 			allmax[0] = attackScores[21];
 			allx[0] = -2;
 			ally[0] = -2;
 		}
+		//if we move to [-1, -1] (index 0), then we will be able to attack [-2, -1] (index 13), so check that too
 		if (attackScores[13] > allmax[0]) {
 			allmax[0] = attackScores[13];
 			allx[0] = -2;
 			ally[0] = -1;
 		}
+		//if we move to [-1, -1] (index 0), then we will be able to attack [-2, 0] (index 9), so check that too
 		if (attackScores[9] > allmax[0]) {
 			allmax[0] = attackScores[9];
 			allx[0] = -2;
 			ally[0] = 0;
 		}
+		//if we move to [-1, -1] (index 0), then we will be able to attack [-1, -2] (index 15), so check that too
 		if (attackScores[15] > allmax[0]) {
 			allmax[0] = attackScores[15];
 			allx[0] = -1;
 			ally[0] = -2;
 		}
+		//if we move to [-1, -1] (index 0), then we will be able to attack [0, -2] (index 10), so check that too
 		if (attackScores[10] > allmax[0]) {
 			allmax[0] = attackScores[10];
 			allx[0] = 0;
 			ally[0] = -2;
 		}
+		//if we move to [0, -1] (index 1), then we will be able to attack [-1, -2] (index 15), so check that too
 		if (attackScores[15] > allmax[1]) {
 			allmax[1] = attackScores[15];
 			allx[1] = -1;
 			ally[1] = -2;
 		}
+		//if we move to [0, -1] (index 1), then we will be able to attack [0, -2] (index 10), so check that too
 		if (attackScores[10] > allmax[1]) {
 			allmax[1] = attackScores[10];
 			allx[1] = 0;
 			ally[1] = -2;
 		}
+		//if we move to [0, -1] (index 1), then we will be able to attack [1, -2] (index 17), so check that too
 		if (attackScores[17] > allmax[1]) {
 			allmax[1] = attackScores[17];
 			allx[1] = 1;
 			ally[1] = -2;
 		}
+		//if we move to [1, -1] (index 2), then we will be able to attack [0, -2] (index 10), so check that too
 		if (attackScores[10] > allmax[2]) {
 			allmax[2] = attackScores[10];
 			allx[2] = 0;
 			ally[2] = -2;
 		}
+		//if we move to [1, -1] (index 2), then we will be able to attack [1, -2] (index 17), so check that too
 		if (attackScores[17] > allmax[2]) {
 			allmax[2] = attackScores[17];
 			allx[2] = 1;
 			ally[2] = -2;
 		}
+		//if we move to [1, -1] (index 2), then we will be able to attack [2, -2] (index 23), so check that too
 		if (attackScores[23] > allmax[2]) {
 			allmax[2] = attackScores[23];
 			allx[2] = 2;
 			ally[2] = -2;
 		}
+		//if we move to [1, -1] (index 2), then we will be able to attack [2, -1] (index 19), so check that too
 		if (attackScores[19] > allmax[2]) {
 			allmax[2] = attackScores[19];
 			allx[2] = 2;
 			ally[2] = -1;
 		}
+		//if we move to [1, -1] (index 2), then we will be able to attack [2, 0] (index 12), so check that too
 		if (attackScores[12] > allmax[2]) {
 			allmax[2] = attackScores[12];
 			allx[2] = 2;
 			ally[2] = 0;
 		}
+		//if we move to [-1, 0] (index 3), then we will be able to attack [-2, -1] (index 13), so check that too
 		if (attackScores[13] > allmax[3]) {
 			allmax[3] = attackScores[13];
 			allx[3] = -2;
 			ally[3] = -1;
 		}
+		//if we move to [-1, 0] (index 3), then we will be able to attack [-2, 0] (index 9), so check that too
 		if (attackScores[9] > allmax[3]) {
 			allmax[3] = attackScores[9];
 			allx[3] = -2;
 			ally[3] = 0;
 		}
+		//if we move to [-1, 0] (index 3), then we will be able to attack [-2, 1] (index 14), so check that too
 		if (attackScores[14] > allmax[3]) {
 			allmax[3] = attackScores[14];
 			allx[3] = -2;
 			ally[3] = 1;
 		}
+		//if we move to [1, 0] (index 4), then we will be able to attack [2, -1] (index 19), so check that too
 		if (attackScores[19] > allmax[4]) {
 			allmax[4] = attackScores[19];
 			allx[4] = 2;
 			ally[4] = -1;
 		}
+		//if we move to [1, 0] (index 4), then we will be able to attack [2, 0] (index 12), so check that too
 		if (attackScores[12] > allmax[4]) {
 			allmax[4] = attackScores[12];
 			allx[4] = 2;
 			ally[4] = 0;
 		}
+		//if we move to [1, 0] (index 4), then we will be able to attack [2, 1] (index 20), so check that too
 		if (attackScores[20] > allmax[4]) {
 			allmax[4] = attackScores[20];
 			allx[4] = 2;
 			ally[4] = 1;
 		}
+		//if we move to [-1, 1] (index 5), then we will be able to attack [-2, 0] (index 9), so check that too
 		if (attackScores[9] > allmax[5]) {
 			allmax[5] = attackScores[9];
 			allx[5] = -2;
 			ally[5] = 0;
 		}
+		//if we move to [-1, 1] (index 5), then we will be able to attack [-2, 1] (index 14), so check that too
 		if (attackScores[14] > allmax[5]) {
 			allmax[5] = attackScores[14];
 			allx[5] = -2;
 			ally[5] = 1;
 		}
+		//if we move to [-1, 1] (index 5), then we will be able to attack [-2, 2] (index 22), so check that too
 		if (attackScores[22] > allmax[5]) {
 			allmax[5] = attackScores[22];
 			allx[5] = -2;
 			ally[5] = 2;
 		}
+		//if we move to [-1, 1] (index 5), then we will be able to attack [-1, 2] (index 16), so check that too
 		if (attackScores[16] > allmax[5]) {
 			allmax[5] = attackScores[16];
 			allx[5] = -1;
 			ally[5] = 2;
 		}
+		//if we move to [-1, 1] (index 5), then we will be able to attack [0, 2] (index 11), so check that too
 		if (attackScores[11] > allmax[5]) {
 			allmax[5] = attackScores[11];
 			allx[5] = 0;
 			ally[5] = 2;
 		}
+		//if we move to [0, 1] (index 6), then we will be able to attack [-1, 2] (index 16), so check that too
 		if (attackScores[16] > allmax[6]) {
 			allmax[6] = attackScores[16];
 			allx[6] = -1;
 			ally[6] = 2;
 		}
+		//if we move to [0, 1] (index 6), then we will be able to attack [0, 2] (index 11), so check that too
 		if (attackScores[11] > allmax[6]) {
 			allmax[6] = attackScores[11];
 			allx[6] = 0;
 			ally[6] = 2;
 		}
+		//if we move to [0, 1] (index 6), then we will be able to attack [1, 2] (index 18), so check that too
 		if (attackScores[18] > allmax[6]) {
 			allmax[6] = attackScores[18];
 			allx[6] = 1;
 			ally[6] = 2;
 		}
+		//if we move to [1, 1] (index 7), then we will be able to attack [0, 2] (index 11), so check that too
 		if (attackScores[11] > allmax[7]) {
 			allmax[7] = attackScores[11];
 			allx[7] = 0;
 			ally[7] = 2;
 		}
+		//if we move to [1, 1] (index 7), then we will be able to attack [1, 2] (index 18), so check that too
 		if (attackScores[18] > allmax[7]) {
 			allmax[7] = attackScores[18];
 			allx[7] = 1;
 			ally[7] = 2;
 		}
+		//if we move to [1, 1] (index 7), then we will be able to attack [2, 0] (index 12), so check that too
 		if (attackScores[12] > allmax[7]) {
 			allmax[7] = attackScores[12];
 			allx[7] = 2;
 			ally[7] = 0;
 		}
+		//if we move to [1, 1] (index 7), then we will be able to attack [2, 1] (index 20), so check that too
 		if (attackScores[20] > allmax[7]) {
 			allmax[7] = attackScores[20];
 			allx[7] = 2;
 			ally[7] = 1;
 		}
+		//if we move to [1, 1] (index 7), then we will be able to attack [2, 2] (index 24), so check that too
 		if (attackScores[24] > allmax[7]) {
 			allmax[7] = attackScores[24];
 			allx[7] = 2;
 			ally[7] = 2;
 		}
+        //copyspaghetti from Motion.microMove but whatever
         int best = 8;
         int numBest = 1;
         for (int i = 8; --i >= 0;) {
@@ -285,6 +320,7 @@ public class Mopper {
                 best = i;
             }
         }
+        //try attack then move then attack again
         MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
         if (G.rc.canAttack(attackLoc)) {
             G.rc.attack(attackLoc);
@@ -305,7 +341,7 @@ public class Mopper {
                 if (G.rc.canSenseRobotAtLocation(locs[i])) {
                     continue;
                 }
-                ruinLocation = locs[i];
+                target = locs[i];
                 mode = BUILD;
                 break;
             }
@@ -314,17 +350,17 @@ public class Mopper {
 
     public static void buildCheckMode() throws Exception {
         G.indicatorString.append("CHK_B ");
-        if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation) || G.rc.getNumberTowers() == 25) {
+        if (!G.rc.canSenseLocation(target) || G.rc.canSenseRobotAtLocation(target) || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
-            ruinLocation = null;
+            target = null;
             return;
         }
         //if we don't see anything to mop, then leave 
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            if (G.nearbyMapInfos[i].getMapLocation().distanceSquaredTo(ruinLocation) <= 8 && G.nearbyMapInfos[i].getPaint().isEnemy()) return;
+            if (G.nearbyMapInfos[i].getMapLocation().distanceSquaredTo(target) <= 8 && G.nearbyMapInfos[i].getPaint().isEnemy()) return;
         }
         mode = EXPLORE;
-        ruinLocation = null;
+        target = null;
     }
 
     public static void explore() throws Exception {
@@ -353,7 +389,7 @@ public class Mopper {
             Direction dir = Direction.CENTER;
             if (bestEmpty == null && bestBot == null) {
                 G.indicatorString.append("RAND ");
-                dir = Motion.exploreRandomlyLoc();
+                dir = G.me.directionTo(Motion.exploreRandomlyLoc());
             } else {
                 if (bestBot != null)
                     bestEmpty = bestBot;
@@ -414,7 +450,7 @@ public class Mopper {
                             attackScores[i]++;
                         }
                     }
-                    if (ruinLocation.distanceSquaredTo(loc) <= 8) {
+                    if (target.distanceSquaredTo(loc) <= 8) {
                         attackScores[i] += 10;
                     }
                     attackScores[i] += 5;
@@ -424,11 +460,11 @@ public class Mopper {
         }
         if (G.rc.isMovementReady()) {
             for (int i = 8; --i >= 0;) {
-                if (G.me.directionTo(ruinLocation) == G.DIRECTIONS[i]) {
-                    moveScores = avoidPaintMicro.micro(G.DIRECTIONS[i], ruinLocation);
+                if (G.me.directionTo(target) == G.DIRECTIONS[i]) {
+                    moveScores = avoidPaintMicro.micro(G.DIRECTIONS[i], target);
                     moveScores[i] -= 19; //yes only 1 paint
                 }
-                else if (G.me.directionTo(ruinLocation).rotateLeft() == G.DIRECTIONS[i] || G.me.directionTo(ruinLocation).rotateRight() == G.DIRECTIONS[i]) {
+                else if (G.me.directionTo(target).rotateLeft() == G.DIRECTIONS[i] || G.me.directionTo(target).rotateRight() == G.DIRECTIONS[i]) {
                     moveScores[i] -= 15;
                 }
             }
@@ -457,11 +493,13 @@ public class Mopper {
                     a = a.add(ruins[i].directionTo(G.me));
                 }
             }
-            Direction ruinDir = G.me.directionTo(a);
-            for (int i = 8; --i >= 0;) {
-                if (G.ALL_DIRECTIONS[i] == ruinDir) {
-                    scores[i] -= 10;
-                    break;
+            if (a != G.me) {
+                Direction towerDir = G.me.directionTo(a);
+                for (int i = 8; --i >= 0;) {
+                    if (G.ALL_DIRECTIONS[i] == towerDir) {
+                        scores[i] -= 10;
+                        break;
+                    }
                 }
             }
             return scores;
