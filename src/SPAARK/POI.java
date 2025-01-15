@@ -5,15 +5,17 @@ import battlecode.common.*;
 public class POI {
     public static final boolean ENABLE_INDICATORS = false;
 
-    // 144 towers (including ruins)
-    // filled in backwards cuz for loop bytecode optimization
-
-    // each tower contains a location and tower type
-    // bits 0-11 store location
-    // bits 12-15 store tower type
-    // - 0 for neutral (ruin)
-    // - 1-3 for paint, money, defense (team a)
-    // - 4-6 for paint, money, defense (team b)
+    /**
+     * 144 towers (including ruins)
+     * filled in backwards cuz for loop bytecode optimization
+     * 
+     * each tower contains a location and tower type
+     * bits 0-11 store location
+     * bits 12-15 store tower type
+     * - 0 for neutral (ruin)
+     * - 1-3 for paint, money, defense (team a)
+     * - 4-6 for paint, money, defense (team b)
+     */
     public static int[] towers = new int[] {
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -137,38 +139,38 @@ public class POI {
     // so we only update the ones on the edge
     public static boolean firstUpdate = true;
     public static MapLocation[] edgeLocations = new MapLocation[] {
-        new MapLocation(-4, -2),
-        new MapLocation(-4, -1),
-        new MapLocation(-4, 0),
-        new MapLocation(-4, 1),
-        new MapLocation(-4, 2),
-        new MapLocation(-3, -3),
-        new MapLocation(-3, -2),
-        new MapLocation(-3, 2),
-        new MapLocation(-3, 3),
-        new MapLocation(-2, -4),
-        new MapLocation(-2, -3),
-        new MapLocation(-2, 3),
-        new MapLocation(-2, 4),
-        new MapLocation(-1, -4),
-        new MapLocation(-1, 4),
-        new MapLocation(0, -4),
-        new MapLocation(0, 4),
-        new MapLocation(1, -4),
-        new MapLocation(1, 4),
-        new MapLocation(2, -4),
-        new MapLocation(2, -3),
-        new MapLocation(2, 3),
-        new MapLocation(2, 4),
-        new MapLocation(3, -3),
-        new MapLocation(3, -2),
-        new MapLocation(3, 2),
-        new MapLocation(3, 3),
-        new MapLocation(4, -2),
-        new MapLocation(4, -1),
-        new MapLocation(4, 0),
-        new MapLocation(4, 1),
-        new MapLocation(4, 2),
+            new MapLocation(-4, -2),
+            new MapLocation(-4, -1),
+            new MapLocation(-4, 0),
+            new MapLocation(-4, 1),
+            new MapLocation(-4, 2),
+            new MapLocation(-3, -3),
+            new MapLocation(-3, -2),
+            new MapLocation(-3, 2),
+            new MapLocation(-3, 3),
+            new MapLocation(-2, -4),
+            new MapLocation(-2, -3),
+            new MapLocation(-2, 3),
+            new MapLocation(-2, 4),
+            new MapLocation(-1, -4),
+            new MapLocation(-1, 4),
+            new MapLocation(0, -4),
+            new MapLocation(0, 4),
+            new MapLocation(1, -4),
+            new MapLocation(1, 4),
+            new MapLocation(2, -4),
+            new MapLocation(2, -3),
+            new MapLocation(2, 3),
+            new MapLocation(2, 4),
+            new MapLocation(3, -3),
+            new MapLocation(3, -2),
+            new MapLocation(3, 2),
+            new MapLocation(3, 3),
+            new MapLocation(4, -2),
+            new MapLocation(4, -1),
+            new MapLocation(4, 0),
+            new MapLocation(4, 1),
+            new MapLocation(4, 2),
     };
 
     public static void updateRound() throws Exception {
@@ -180,7 +182,8 @@ public class POI {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
                 addTower(-1, intifyTower(info.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]));
             } else {
-                addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
+                addTower(-1,
+                        intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
             }
         }
 
@@ -214,17 +217,18 @@ public class POI {
             }
         }
         // // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
-        // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
-        //         || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
-        //     if (symmetry[0] && !symmetryValid(0)) {
-        //         removeValidSymmetry(-1, 0);
-        //     }
-        //     if (symmetry[1] && !symmetryValid(1)) {
-        //         removeValidSymmetry(-1, 1);
-        //     }
-        //     if (symmetry[2] && !symmetryValid(2)) {
-        //         removeValidSymmetry(-1, 2);
-        //     }
+        // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] &&
+        // !symmetry[2] && !symmetry[0])
+        // || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
+        // if (symmetry[0] && !symmetryValid(0)) {
+        // removeValidSymmetry(-1, 0);
+        // }
+        // if (symmetry[1] && !symmetryValid(1)) {
+        // removeValidSymmetry(-1, 1);
+        // }
+        // if (symmetry[2] && !symmetryValid(2)) {
+        // removeValidSymmetry(-1, 2);
+        // }
         // }
         // G.indicatorString.append("POI-BT " + (Clock.getBytecodeNum() - a) + " ");
         sendMessages();
