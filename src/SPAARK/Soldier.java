@@ -160,7 +160,7 @@ public class Soldier {
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 if (Robot.retreatTower != -1) {
-                    if (G.me.isWithinDistanceSquared(POI.parseLocation(POI.towers[Robot.retreatTower]), 8))
+                    if (G.me.isWithinDistanceSquared(POI.towerLocs[Robot.retreatTower], 8))
                         Robot.retreat(moveWithPaintMicro);
                     else
                         Robot.retreat();
@@ -378,21 +378,18 @@ public class Soldier {
         // TOWER_CEIL encourages building SRPs to help build more towers
         if (G.round > TOWER_CEIL_ROUND || G.rc.getNumberTowers() <= TOWER_CEIL) {
             int bestDistanceSquared = 10000;
-            for (int i = 144; --i >= 0;) {
-                if (POI.towers[i] == -1) {
-                    break;
-                }
-                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+            for (int i = POI.numberOfTowers; --i >= 0;) {
+                if (POI.towerTeams[i] == G.opponentTeam) {
                     // attack these
-                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    MapLocation pos = POI.towerLocs[i];
                     if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
                             && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
                         bestDistanceSquared = G.me.distanceSquaredTo(pos);
                         exploreLocation = pos;
                     }
-                } else if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+                } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
                     // having 25 towers otherwise just softlocks the bots
-                    MapLocation pos = POI.parseLocation(POI.towers[i]);
+                    MapLocation pos = POI.towerLocs[i];
                     // prioritize opponent towers more than ruins, so it has to be REALLY close
                     if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
                             && G.getLastVisited(pos) + VISIT_TIMEOUT < G.round) {
@@ -442,7 +439,7 @@ public class Soldier {
         }
         if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation) && G.rc.getPaint() > 50) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
-            POI.addTower(-1, POI.intifyTower(G.team, Robot.towers[buildTowerType]) | POI.intifyLocation(ruinLocation));
+            POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
             mode = EXPLORE;
             Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete

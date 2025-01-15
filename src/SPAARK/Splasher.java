@@ -10,14 +10,6 @@ public class Splasher {
     // controls round between visiting ruins
     public static final int VISIT_TIMEOUT = 75;
 
-    // every tile in attack range
-    public static int[] attackRangeX = new int[] {
-        0,0,0,0,0,1,1,1,2,-1,-1,-1,-2
-    };
-    public static int[] attackRangeY = new int[] {
-        2,1,0,-1,-2,1,0,-1,0,1,0,-1,0
-    };
-
     public static MapLocation attackTarget = new MapLocation(-1, -1);
     public static int attackTargetTower;
     public static StringBuilder triedAttackTargets = new StringBuilder();
@@ -84,7 +76,7 @@ public class Splasher {
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
             int i = (j + r) % 13;
-            MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
+            MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 for (int dir = 9; --dir >= 0;) {
@@ -182,7 +174,7 @@ public class Splasher {
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
             int i = (j + r) % 13;
-            MapLocation loc = G.me.translate(attackRangeX[i], attackRangeY[i]);
+            MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
                 // int opponentRobotsPaintedScore = 0;
@@ -246,10 +238,10 @@ public class Splasher {
      */
     public static void updateAttackTarget() throws Exception {
         if (attackTargetTower != -1) {
-            if (POI.parseTowerTeam(POI.towers[attackTargetTower]) != G.opponentTeam) {
+            if (POI.towerTeams[attackTargetTower] != G.opponentTeam) {
                 attackTarget = G.invalidLoc;
             } else {
-                MapLocation loc = POI.parseLocation(POI.towers[attackTargetTower]);
+                MapLocation loc = POI.towerLocs[attackTargetTower];
                 search: if (G.me.distanceSquaredTo(loc) <= 4) {
                     for (int y = -2; y <= 2; y++) {
                         for (int x = -2; x <= 2; x++) {
@@ -267,27 +259,24 @@ public class Splasher {
         if (attackTarget.x == -1) {
             int best = -1;
             int bestWeight = 0;
-            for (int i = 144; --i >= 0;) {
-                if (POI.towers[i] == -1) {
-                    break;
-                }
-                if (POI.parseTowerTeam(POI.towers[i]) == G.team) {
+            for (int i = POI.numberOfTowers; --i >= 0;) {
+                if (POI.towerTeams[i] == G.team) {
                     continue;
                 }
-                if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL && G.rc.getNumberTowers() == 25) {
+                if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() == 25) {
                     continue;
                 }
-                MapLocation loc = POI.parseLocation(POI.towers[i]);
+                MapLocation loc = POI.towerLocs[i];
                 int distance = Motion.getChebyshevDistance(G.me, loc);
                 int weight = -distance;
                 if (triedAttackTargets.indexOf("" + (char) i) != -1) {
                 // if (!(G.round <= VISIT_TIMEOUT || G.getLastVisited(loc.x, loc.y) + VISIT_TIMEOUT < G.round)) {
                     weight -= 1000;
-                    if (POI.parseTowerTeam(POI.towers[i]) == Team.NEUTRAL) {
+                    if (POI.towerTeams[i] == Team.NEUTRAL) {
                         continue;
                     }
                 }
-                if (POI.parseTowerTeam(POI.towers[i]) == G.opponentTeam) {
+                if (POI.towerTeams[i] == G.opponentTeam) {
                     weight += 100;
                 }
                 if (best == -1 || weight > bestWeight) {
@@ -300,7 +289,7 @@ public class Splasher {
                 return;
             }
             attackTargetTower = best;
-            attackTarget = POI.parseLocation(POI.towers[best]);
+            attackTarget = POI.towerLocs[best];
             triedAttackTargets.append((char) best);
             // G.setLastVisited(attackTarget, G.round);
             mode = ATTACK;

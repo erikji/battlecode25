@@ -37,6 +37,7 @@ public class RobotPlayer {
             G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
+            POI.init();
             G.indicatorString = new StringBuilder();
             updateInfo();
             switch (G.rc.getType()) {
