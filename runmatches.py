@@ -14,7 +14,7 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'a' #bot to test
+currentBot = 'betterexplore' #bot to test
 #SPAARK IS THE BASELINE
 
 # bots = [chr(ord('a')+i) for i in range(1)]
@@ -26,6 +26,22 @@ maps += ['DefaultSmall']
 maps += ['DefaultMedium']
 maps += ['DefaultLarge']
 maps += ['DefaultHuge']
+
+# Sprint 1 Maps
+maps += ['Fossil']
+maps += ['Gears']
+maps += ['Justice']
+maps += ['Mirage']
+maps += ['Money']
+maps += ['MoneyTower']
+maps += ['Racetrack']
+maps += ['Restart']
+maps += ['SMILE']
+maps += ['SaltyPepper']
+maps += ['TargetPractice']
+maps += ['Thirds']
+maps += ['UglySweater']
+maps += ['UnderTheSea']
 
 maps += ['[EDGE] microtest']
 maps += ['[SP] ChessBattleAdvanced']
@@ -51,6 +67,11 @@ maps += ['[SP2] Piston']
 maps += ['[SP] Cornucopia']
 maps += ['[SP2] Buh']
 maps += ['[SP2] Arena2']
+maps += ['[SP2] CenterExtreme']
+maps += ['[SP2] Corners']
+maps += ['[SP2] Duolingo']
+maps += ['[SP2] Narrow']
+maps += ['[SP2] NotMyMap']
 
 matches = list(product(bots, maps))
 
