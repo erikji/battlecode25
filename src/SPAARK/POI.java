@@ -3,7 +3,7 @@ package SPAARK;
 import battlecode.common.*;
 
 public class POI {
-    public static final boolean ENABLE_INDICATORS = true;
+    public static final boolean ENABLE_INDICATORS = false;
 
     // 144 towers (including ruins)
     // filled in backwards cuz for loop bytecode optimization
@@ -265,7 +265,7 @@ public class POI {
         G.indicatorString.append("towers:" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
 
-        drawIndicators();
+        drawIndicators(); // uses 5000 bytecode somehow
 
         // update symmetry array
         for (int i = nearbyRuins.length; --i >= 0;) {
@@ -282,8 +282,8 @@ public class POI {
             }
             firstUpdate = false;
         } else {
-            for (int i = edgeLocations.length; --i >= 0;) {
-                MapLocation xy = edgeLocations[i].translate(G.me.x, G.me.y);
+            for (int i = 69; --i >= 37;) {
+                MapLocation xy = G.me.translate(G.range20X[i], G.range20Y[i]);
                 if (!G.rc.onTheMap(xy)) {
                     continue;
                 }
