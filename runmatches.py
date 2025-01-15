@@ -14,12 +14,11 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'a' #bot to test
+currentBot = 'MASON' #bot to test
 #SPAARK IS THE BASELINE
 
 # bots = [chr(ord('a')+i) for i in range(1)]
 bots = ["SPAARK"]
-# bots = ['MASON']
 
 maps = []
 maps += ['DefaultSmall']
@@ -52,6 +51,7 @@ maps += ['[SP] Cornucopia']
 maps += ['[SP2] Buh']
 maps += ['[SP2] Arena2']
 
+#maps.reverse()
 matches = list(product(bots, maps))
 
 numWinsMapping = {
