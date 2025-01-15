@@ -266,8 +266,16 @@ task verify(type: JavaExec) {
 
 //////// Running ////////
 
+def truncateString(String input, int maxLength) {
+  if (input.length() > maxLength) {
+    return input.substring(0, maxLength)
+  }
+  return input
+}
+
 def defaultClassLocation = sourceSets.main.output.classesDirs.getAsPath()
-def defaultReplay = 'matches/' + project.property('teamA') + '-vs-' + project.property('teamB') + '-on-' + project.property('maps') + '.bc25'
+def defaultReplayName = truncateString(project.property('teamA') + '-vs-' + project.property('teamB') + '-on-' + project.property('maps'), 80)
+def defaultReplayFile = 'matches/' + defaultReplayName + '.bc25'
 
 task run(type: JavaExec) {
   description 'Runs a match without starting the client.'
@@ -289,6 +297,7 @@ task run(type: JavaExec) {
     '-Dbc.server.robot-player-to-system-out=' + (project.findProperty('outputVerbose') ?: 'true'),
     '-Dbc.server.debug=false',
     '-Dbc.engine.debug-methods=' + (project.findProperty('debug') ?: 'false'),
+    '-Dbc.engine.enable-profiler=' + (project.findProperty('enableProfiler') ?: 'false'),
     '-Dbc.engine.show-indicators=' + (project.findProperty('showIndicators') ?: 'true'),
     '-Dbc.game.team-a=' + project.property('teamA'),
     '-Dbc.game.team-b=' + project.property('teamB'),
@@ -299,7 +308,7 @@ task run(type: JavaExec) {
     '-Dbc.game.maps=' + project.property('maps'),
     '-Dbc.server.validate-maps=' + project.property('validateMaps'),
     '-Dbc.server.alternate-order=' + project.property('alternateOrder'),
-    '-Dbc.server.save-file=' + (project.findProperty('replay') ?: defaultReplay),
+    '-Dbc.server.save-file=' + (project.findProperty('replay') ?: defaultReplayFile),
   ]
 }
 
