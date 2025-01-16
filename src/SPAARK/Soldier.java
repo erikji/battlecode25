@@ -159,7 +159,7 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                if (Robot.retreatTower != -1) {
+                if (Robot.retreatTower >= 0) {
                     if (G.me.isWithinDistanceSquared(POI.towerLocs[Robot.retreatTower], 8))
                         Robot.retreat(moveWithPaintMicro);
                     else
