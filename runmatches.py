@@ -72,6 +72,7 @@ maps += ['[SP2] Duolingo']
 maps += ['[SP2] Narrow']
 maps += ['[SP2] NotMyMap']
 
+#maps.reverse()
 matches = list(product(bots, maps))
 
 numWinsMapping = {
