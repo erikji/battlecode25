@@ -1854,16 +1854,6 @@ public class Mopper {
         public int[] micro(Direction d, MapLocation dest) throws Exception {
             // REALLY avoid being on enemy paint
             int[] scores = Motion.defaultMicro.micro(d, dest);
-            for (int i = 9; --i >= 0;) {
-                if (G.rc.canMove(G.ALL_DIRECTIONS[i])) {
-                    MapLocation m = G.me.add(G.ALL_DIRECTIONS[i]);
-                    PaintType paint = G.rc.senseMapInfo(m).getPaint();
-                    if (paint.isEnemy())
-                        scores[i] -= 10;
-                    if (paint == PaintType.EMPTY)
-                        scores[i] -= 5;
-                }
-            }
             // run away from towers
             MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
             for (int r = ruins.length; --r >= 0;) {

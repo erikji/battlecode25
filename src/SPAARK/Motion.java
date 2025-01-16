@@ -1227,7 +1227,7 @@ public class Motion {
         }
     }
 
-    //weighting moving in the correct direction == 4 paint, adj direction == 3 paint
+    //1 paint = 5 score
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
         int[] scores = new int[9];
         MapLocation nxt;
@@ -1235,6 +1235,7 @@ public class Motion {
         scores[G.dirOrd(d)] += 20;
         scores[(G.dirOrd(d)+1)%8] += 15;
         scores[(G.dirOrd(d)+7)%8] += 15;
+        int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i])){
                 scores[i] = -1000000000;
@@ -1242,9 +1243,19 @@ public class Motion {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
-                    scores[i] -= 10;
+                    scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier;
+                    // for (int j = 8; --j >= 0;) {
+                    //     if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
+                    //         scores[i] -= 10; //2 is hardcoded in the engine oof
+                    //     }
+                    // }
                 } else if (p == PaintType.EMPTY) {
-                    scores[i] -= 5;
+                    scores[i] -= 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperMultiplier;
+                    // for (int j = 8; --j >= 0;) {
+                    //     if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
+                    //         scores[i] -= 5;
+                    //     }
+                    // }
                 }
             }
         }
