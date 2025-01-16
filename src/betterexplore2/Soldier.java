@@ -1,4 +1,4 @@
-package SPAARK;
+package betterexplore2;
 
 import battlecode.common.*;
 
@@ -437,7 +437,7 @@ public class Soldier {
                 }
             }
         }
-        if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
+        if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation) && G.rc.getPaint() > 50) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
             POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
             mode = EXPLORE;

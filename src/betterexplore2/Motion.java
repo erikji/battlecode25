@@ -1,9 +1,9 @@
-package SPAARK;
+package betterexplore2;
 
 import battlecode.common.*;
 
 public class Motion {
-    public static final boolean ENABLE_EXPLORE_INDICATORS = false;
+    public static final boolean ENABLE_EXPLORE_INDICATORS = true;
 
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
@@ -87,9 +87,6 @@ public class Motion {
 
     // basic random movement
     public static void moveRandomly() throws Exception {
-        moveRandomly(defaultMicro);
-    }
-    public static void moveRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
             for (int i = 8; --i >= 0;) {
@@ -106,16 +103,13 @@ public class Motion {
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
-            if (microMove(m.micro(direction, G.me.add(direction)))) {
+            if (move(direction)) {
                 lastRandomDir = direction;
             }
         }
     }
 
     public static void spreadRandomly() throws Exception {
-        spreadRandomly(defaultMicro);
-    }
-    public static void spreadRandomly(Micro m) throws Exception {
         boolean stuck = true;
         for (int i = G.DIRECTIONS.length; --i >= 0;) {
             if (G.rc.canMove(G.DIRECTIONS[i])) {
@@ -148,7 +142,7 @@ public class Motion {
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
                     Direction direction = G.me.directionTo(target);
-                    if (microMove(m.micro(direction, target))) {
+                    if (move(direction)) {
                         lastRandomSpread = lastRandomSpread.add(direction);
                         lastRandomDir = direction;
                     } else {
@@ -162,7 +156,7 @@ public class Motion {
                     lastDir = Direction.CENTER;
                 }
                 Direction direction = bug2Helper(G.me, target, TOWARDS, 0, 0);
-                if (microMove(m.micro(direction, target))) {
+                if (move(direction)) {
                     lastRandomSpread = target;
                     lastRandomDir = direction;
                 }
@@ -172,7 +166,62 @@ public class Motion {
 
     public static MapLocation exploreLoc;
 
-    public static MapLocation exploreRandomlyLoc() throws Exception {
+    public static void exploreRandomly() throws Exception {
+        exploreRandomly(defaultMicro);
+    }
+
+    public static void exploreRandomly(Micro m, int a) throws Exception {
+        if (G.rc.isMovementReady()) {
+            if (exploreLoc != null) {
+                if (G.rc.canSenseLocation(exploreLoc)) {
+                    exploreLoc = null;
+                }
+                if (Random.rand() % 25 == 0) {
+                    exploreLoc = null;
+                }
+            }
+            // don't explore in direction of a lot of allied bots
+            MapLocation otherBots = G.me;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
+            }
+            if (!G.me.isWithinDistanceSquared(otherBots, 36)
+                    && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+                exploreLoc = null;
+            }
+            if (exploreLoc == null) {
+                // pick a random location that we haven't seen before
+                int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                int rand = Random.rand() % sum;
+                int cur = 0;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            bugnavTowards(exploreLoc, m);
+            if (ENABLE_EXPLORE_INDICATORS)
+                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+        }
+    }
+    
+    //exploreRandomly but it doesnt move
+    public static MapLocation exploreRandomlyLoc(int a) throws Exception {
         if (exploreLoc != null) {
             if (G.rc.canSenseLocation(exploreLoc)) {
                 exploreLoc = null;
@@ -215,27 +264,88 @@ public class Motion {
                 }
             }
         }
+        if (ENABLE_EXPLORE_INDICATORS)
+            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         return exploreLoc;
     }
 
-    public static void exploreRandomly() throws Exception {
-        exploreRandomly(defaultMicro);
-    }
+    public static MapLocation edgeLoc = null;
     public static void exploreRandomly(Micro m) throws Exception {
+        edgeLoc = exploreRandomlyLoc();
         if (G.rc.isMovementReady()) {
-            exploreRandomlyLoc();
-            bugnavTowards(exploreLoc, m);
+            // if (edgeLoc != null) {
+            //     if (G.rc.canSenseLocation(edgeLoc)) {
+            //         edgeLoc = null;
+            //     }
+            //     if (Random.rand() % 25 == 0) {
+            //         edgeLoc = null;
+            //     }
+            // }
+            // // don't explore in direction of a lot of allied bots
+            // // if (!G.me.isWithinDistanceSquared(otherBots, 36)
+            // //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+            // //     exploreLoc = null;
+            // // }
+            // if (edgeLoc == null) {
+            //     // MapLocation otherBots = G.me;
+            //     // for (int i = G.allyRobots.length; --i >= 0;) {
+            //     //     otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
+            //     // }
+            //     double angle = (((double) (Random.rand() % 1000)) / 1000 + 0.5) * Math.PI;
+            //     double dx = Math.cos(angle);
+            //     double dy = Math.sin(angle);
+            //     // guaranteed to be nonzero because angle is offset by 0.5
+
+            //     double tx = 0;
+            //     double ty = 0;
+
+            //     if (dx < 0) {
+            //         tx = G.me.x / -dx;
+            //     }
+            //     else {
+            //         tx = (G.rc.getMapWidth() - 1 - G.me.x) / dx;
+            //     }
+            //     if (dy < 0) {
+            //         ty = G.me.y / -dy;
+            //     }
+            //     else {
+            //         ty = (G.rc.getMapHeight() - 1 - G.me.y) / dy;
+            //     }
+
+            //     G.indicatorString = new StringBuilder();
+            //     // G.indicatorString.append("dx:" + dx + ",dy:" + dy + ",tx:" + tx + ",ty:" + ty);
+            //     // G.indicatorString.append("X:" + Math.floor(G.me.x + tx * dx) + ",Y:" + Math.floor(G.me.y + tx * dy));
+            //     // G.indicatorString.append("X2:" + Math.floor(G.me.x + ty * dx) + ",Y2:" + Math.floor(G.me.y + ty * dy));
+            //     G.indicatorString.append("c:" + (tx < ty));
+            //     // if (G.rc.getRoundNum() > 500) {
+            //     //     G.rc.resign();
+            //     // }
+
+            //     if (tx < ty) {
+            //         edgeLoc = new MapLocation((int) Math.floor(G.me.x + tx * dx), (int) Math.floor(G.me.y + tx * dy));
+            //     }
+            //     else {
+            //         edgeLoc = new MapLocation((int) Math.floor(G.me.x + ty * dx), (int) Math.floor(G.me.y + ty * dy));
+            //     }
+            //     G.indicatorString.append(edgeLoc.toString());
+            //     if (!G.rc.onTheMap(edgeLoc)) {
+            //         edgeLoc = null;
+            //     }
+            // }
+            // if (edgeLoc != null) {
+            bugnavTowards(edgeLoc, m);
+            //     if (ENABLE_EXPLORE_INDICATORS)
+            //         G.rc.setIndicatorLine(G.me, edgeLoc, 0, 200, 0);
+            // }
         }
     }
-
-    public static MapLocation edgeLoc = null;
-    public static void exploreEdges(Micro m) throws Exception {
+    public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {
             if (edgeLoc != null) {
                 if (G.rc.canSenseLocation(edgeLoc)) {
                     edgeLoc = null;
                 }
-                if (Random.rand() % 25 == 0) {
+                if (Random.rand() % 50 == 0) {
                     edgeLoc = null;
                 }
             }
@@ -245,38 +355,68 @@ public class Motion {
             //     exploreLoc = null;
             // }
             if (edgeLoc == null) {
-                MapLocation otherBots = G.me;
-                for (int i = G.allyRobots.length; --i >= 0;) {
-                    otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
+                // MapLocation otherBots = G.me;
+                // for (int i = G.allyRobots.length; --i >= 0;) {
+                //     otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
+                // }
+                double angle = (((double) (Random.rand() % 1000)) / 1000 + 0.5) * Math.PI * 2;
+                double dx = Math.cos(angle);
+                double dy = Math.sin(angle);
+                // guaranteed to be nonzero because angle is offset by 0.5
+
+                double tx = 0;
+                double ty = 0;
+
+                if (dx < 0) {
+                    tx = (G.me.x + 0.5) / -dx;
                 }
-                // pick a random location that we haven't seen before
-                int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
-                for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                    sum -= Long.bitCount(POI.explored[i]);
+                else {
+                    tx = (G.rc.getMapWidth() - G.me.x - 0.5) / dx;
                 }
-                int rand = Random.rand() % sum;
-                int cur = 0;
-                for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
-                    if (cur > rand) {
-                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
-                        int cur2 = 0;
-                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
-                            if (((POI.explored[i] >> b) & 1) == 0) {
-                                if (++cur2 > rand) {
-                                    exploreLoc = new MapLocation(b, i);
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
+                if (dy < 0) {
+                    ty = (G.me.y + 0.5) / -dy;
+                }
+                else {
+                    ty = (G.rc.getMapHeight() - G.me.y - 0.5) / dy;
+                }
+
+                G.indicatorString = new StringBuilder();
+                // G.indicatorString.append("dx:" + dx + ",dy:" + dy + ",tx:" + tx + ",ty:" + ty);
+                // G.indicatorString.append("X:" + Math.floor(G.me.x + tx * dx) + ",Y:" + Math.floor(G.me.y + tx * dy));
+                // G.indicatorString.append("X2:" + Math.floor(G.me.x + ty * dx) + ",Y2:" + Math.floor(G.me.y + ty * dy));
+                G.indicatorString.append("c:" + (tx < ty));
+                // if (G.rc.getRoundNum() > 500) {
+                //     G.rc.resign();
+                // }
+
+                if (tx < ty) {
+                    edgeLoc = new MapLocation((int) Math.floor(G.me.x + 0.5 + tx * dx + 0.5), (int) Math.floor(G.me.y + 0.5 + tx * dy + 0.5));
+                }
+                else {
+                    edgeLoc = new MapLocation((int) Math.floor(G.me.x + 0.5 + ty * dx + 0.5), (int) Math.floor(G.me.y + 0.5 + ty * dy + 0.5));
+                }
+                if (edgeLoc.x == G.rc.getMapWidth()) {
+                    edgeLoc = edgeLoc.translate(-1, 0);
+                }
+                if (edgeLoc.y == G.rc.getMapHeight()) {
+                    edgeLoc = edgeLoc.translate(0, -1);
+                }
+                G.indicatorString.append(edgeLoc.toString());
+                if (!G.rc.onTheMap(edgeLoc)) {
+                    MapLocation loc = edgeLoc;
+                    edgeLoc = null;
+                    System.out.println("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
+                    System.out.println(tx + " " + ty);
+                    System.out.println((G.me.x + tx * dx) + " " + (G.me.y + tx * dy));
+                    System.out.println((G.me.x + ty * dx) + " " + (G.me.y + ty * dy));
+                    G.rc.resign();
+                    throw new Exception("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
                 }
             }
-            bugnavTowards(exploreLoc, m);
-            if (ENABLE_EXPLORE_INDICATORS)
-                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
+        if (ENABLE_EXPLORE_INDICATORS)
+            G.rc.setIndicatorLine(G.me, edgeLoc, 0, 200, 0);
+        return edgeLoc;
     }
 
     //cownav
@@ -317,7 +457,7 @@ public class Motion {
     public static MapLocation currentObstacle;
     public static StringBuilder visitedList = new StringBuilder();
 
-    // public static Direction bug2Helper(MapLocation target, int mode, int
+    // public static Direction bug2Helper(MapLocation useless, MapLocation target, int mode, int
     // minCircleDistance1, int maxCircleDistance1)
     // throws Exception {
     // boolean stuck = true;
@@ -1186,36 +1326,30 @@ public class Motion {
         }
     }
 
-    //1 paint = 5 score
+    //weighting moving in the correct direction == 4 paint, adj direction == 3 paint
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
         int[] scores = new int[9];
+        int score;
         MapLocation nxt;
         PaintType p;
-        scores[G.dirOrd(d)] += 20;
-        scores[(G.dirOrd(d)+1)%8] += 15;
-        scores[(G.dirOrd(d)+7)%8] += 15;
-        int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i])){
                 scores[i] = -1000000000;
             } else {
+                score = 0;
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
-                    scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier;
-                    for (int j = 8; --j >= 0;) {
-                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
-                            scores[i] -= 10; //2 is hardcoded in the engine oof
-                        }
-                    }
+                    score -= 10;
                 } else if (p == PaintType.EMPTY) {
-                    scores[i] -= 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperMultiplier;
-                    for (int j = 8; --j >= 0;) {
-                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
-                            scores[i] -= 5;
-                        }
-                    }
+                    score -= 5;
                 }
+                if (G.ALL_DIRECTIONS[i] == d) {
+                    score += 20;
+                } else if (G.ALL_DIRECTIONS[i].rotateLeft() == d || G.ALL_DIRECTIONS[i].rotateRight() == d) {
+                    score += 15;
+                }
+                scores[i] = score;
             }
         }
         return scores;

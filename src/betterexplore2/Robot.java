@@ -1,4 +1,4 @@
-package SPAARK;
+package betterexplore2;
 
 import battlecode.common.*;
 
@@ -146,8 +146,7 @@ public class Robot {
         }
         if (retreatTower == -2) {
             // oof no tower
-            // Motion.exploreRandomly();
-            Motion.spreadRandomly();
+            Motion.exploreRandomly();
             retreatTower = -1;
         } else if (retreatTower != -1) {
             MapLocation loc = POI.towerLocs[retreatTower];

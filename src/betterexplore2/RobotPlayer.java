@@ -1,4 +1,4 @@
-package SPAARK;
+package betterexplore2;
 
 import battlecode.common.*;
 
@@ -8,18 +8,6 @@ public class RobotPlayer {
         G.me = G.rc.getLocation();
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
-        G.allyRobotsString = new StringBuilder();
-        for (int i = G.allyRobots.length; --i >= 0;) {
-            if (G.allyRobots[i].type.isRobotType()) {
-                G.allyRobotsString.append(G.allyRobots[i].toString());
-            }
-        }
-        G.opponentRobotsString = new StringBuilder();
-        for (int i = G.opponentRobots.length; --i >= 0;) {
-            if (G.opponentRobots[i].type.isRobotType()) {
-                G.opponentRobotsString.append(G.opponentRobots[i].toString());
-            }
-        }
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
         G.round = G.rc.getRoundNum();
 

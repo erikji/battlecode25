@@ -1,4 +1,4 @@
-package SPAARK;
+package betterexplore2;
 
 import battlecode.common.*;
 
@@ -33,39 +33,24 @@ public class G {
             Direction.SOUTHWEST,
             Direction.SOUTH,
             Direction.SOUTHEAST,
-            Direction.EAST,
-            Direction.NORTHEAST,
-            Direction.NORTH,
-            Direction.NORTHWEST,
             Direction.WEST,
+            Direction.EAST,
+            Direction.NORTHWEST,
+            Direction.NORTH,
+            Direction.NORTHEAST,
     };
 
     public static final Direction[] ALL_DIRECTIONS = {
             Direction.SOUTHWEST,
             Direction.SOUTH,
             Direction.SOUTHEAST,
-            Direction.EAST,
-            Direction.NORTHEAST,
-            Direction.NORTH,
-            Direction.NORTHWEST,
             Direction.WEST,
-            Direction.CENTER
+            Direction.EAST,
+            Direction.NORTHWEST,
+            Direction.NORTH,
+            Direction.NORTHEAST,
+            Direction.CENTER,
     };
-
-    public static int dirOrd(Direction d) throws Exception {
-        switch (d) {
-            case Direction.SOUTHWEST: return 0;
-            case Direction.SOUTH: return 1;
-            case Direction.SOUTHEAST: return 2;
-            case Direction.EAST: return 3;
-            case Direction.NORTHEAST: return 4;
-            case Direction.NORTH: return 5;
-            case Direction.NORTHWEST: return 6;
-            case Direction.WEST: return 7;
-            case Direction.CENTER: return 8;
-            default: throw new Exception("how did you get an invalid dir");
-        }
-    }
     public static final MapLocation invalidLoc = new MapLocation(-1, -1);
 
     //all dx/dy within 20 distanceSquared, sorted in ascending distanceSquared
@@ -103,9 +88,6 @@ public class G {
     public static MapLocation me;
     public static RobotInfo[] allyRobots;
     public static RobotInfo[] opponentRobots;
-    //doesn't include towers
-    public static StringBuilder allyRobotsString;
-    public static StringBuilder opponentRobotsString;
     public static MapInfo[] nearbyMapInfos;
     public static int round;
     // divide all coordinates by 2, now 30x30
