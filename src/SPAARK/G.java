@@ -103,6 +103,8 @@ public class G {
     public static MapLocation me;
     public static RobotInfo[] allyRobots;
     public static RobotInfo[] opponentRobots;
+    public static StringBuilder allyRobotsString;
+    public static StringBuilder opponentRobotsString;
     public static MapInfo[] nearbyMapInfos;
     public static int round;
     // divide all coordinates by 2, now 30x30

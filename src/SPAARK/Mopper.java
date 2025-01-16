@@ -1048,13 +1048,7 @@ public class Mopper {
 	}
 
     public static void exploreSwingScores() throws Exception {
-		StringBuilder opponentRobotsString = new StringBuilder();
-		for (int i = G.opponentRobots.length; --i >= 0;) {
-			if (G.opponentRobots[i].type.isRobotType()) {
-				opponentRobotsString.append(G.opponentRobots[i].location);
-			}
-		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, -2).toString()) != -1) {
 			swingScores[32] += 35;
 			swingScores[28] += 35;
 			swingScores[9] += 35;
@@ -1062,20 +1056,20 @@ public class Mopper {
 			swingScores[4] += 35;
 			swingScores[0] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, -3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, -3).toString()) != -1) {
 			swingScores[4] += 35;
 			swingScores[0] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, -2).toString()) != -1) {
 			swingScores[28] += 35;
 			swingScores[5] += 35;
 			swingScores[1] += 35;
 			swingScores[0] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, -3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, -3).toString()) != -1) {
 			swingScores[0] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, -2).toString()) != -1) {
 			swingScores[32] += 35;
 			swingScores[28] += 35;
 			swingScores[12] += 35;
@@ -1085,12 +1079,12 @@ public class Mopper {
 			swingScores[2] += 35;
 			swingScores[0] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, -3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, -3).toString()) != -1) {
 			swingScores[8] += 35;
 			swingScores[4] += 35;
 			swingScores[0] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, -1).toString()) != -1) {
 			swingScores[33] += 35;
 			swingScores[29] += 35;
 			swingScores[28] += 35;
@@ -1098,14 +1092,14 @@ public class Mopper {
 			swingScores[5] += 35;
 			swingScores[1] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-3, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-3, -1).toString()) != -1) {
 			swingScores[29] += 35;
 			swingScores[1] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-3, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-3, -2).toString()) != -1) {
 			swingScores[1] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, 0).toString()) != -1) {
 			swingScores[33] += 35;
 			swingScores[29] += 35;
 			swingScores[25] += 35;
@@ -1115,12 +1109,12 @@ public class Mopper {
 			swingScores[3] += 35;
 			swingScores[1] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-3, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-3, 0).toString()) != -1) {
 			swingScores[29] += 35;
 			swingScores[25] += 35;
 			swingScores[1] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, -1).toString()) != -1) {
 			swingScores[32] += 35;
 			swingScores[30] += 35;
 			swingScores[28] += 35;
@@ -1132,7 +1126,7 @@ public class Mopper {
 			swingScores[9] += 35;
 			swingScores[2] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, -1).toString()) != -1) {
 			swingScores[34] += 35;
 			swingScores[32] += 35;
 			swingScores[30] += 35;
@@ -1142,7 +1136,7 @@ public class Mopper {
 			swingScores[6] += 35;
 			swingScores[2] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, 0).toString()) != -1) {
 			swingScores[30] += 35;
 			swingScores[26] += 35;
 			swingScores[24] += 35;
@@ -1156,7 +1150,7 @@ public class Mopper {
 			swingScores[3] += 35;
 			swingScores[2] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, 0).toString()) != -1) {
 			swingScores[34] += 35;
 			swingScores[30] += 35;
 			swingScores[26] += 35;
@@ -1168,7 +1162,7 @@ public class Mopper {
 			swingScores[6] += 35;
 			swingScores[2] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, -2).toString()) != -1) {
 			swingScores[32] += 35;
 			swingScores[12] += 35;
 			swingScores[8] += 35;
@@ -1176,7 +1170,7 @@ public class Mopper {
 			swingScores[4] += 35;
 			swingScores[2] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, 0).toString()) != -1) {
 			swingScores[33] += 35;
 			swingScores[24] += 35;
 			swingScores[21] += 35;
@@ -1188,7 +1182,7 @@ public class Mopper {
 			swingScores[5] += 35;
 			swingScores[3] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, 1).toString()) != -1) {
 			swingScores[35] += 35;
 			swingScores[33] += 35;
 			swingScores[31] += 35;
@@ -1198,7 +1192,7 @@ public class Mopper {
 			swingScores[7] += 35;
 			swingScores[3] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, 1).toString()) != -1) {
 			swingScores[35] += 35;
 			swingScores[31] += 35;
 			swingScores[30] += 35;
@@ -1210,7 +1204,7 @@ public class Mopper {
 			swingScores[7] += 35;
 			swingScores[3] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, 1).toString()) != -1) {
 			swingScores[33] += 35;
 			swingScores[31] += 35;
 			swingScores[29] += 35;
@@ -1218,11 +1212,11 @@ public class Mopper {
 			swingScores[21] += 35;
 			swingScores[3] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, -3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, -3).toString()) != -1) {
 			swingScores[8] += 35;
 			swingScores[4] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, -1).toString()) != -1) {
 			swingScores[33] += 35;
 			swingScores[32] += 35;
 			swingScores[28] += 35;
@@ -1232,7 +1226,7 @@ public class Mopper {
 			swingScores[9] += 35;
 			swingScores[5] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, -1).toString()) != -1) {
 			swingScores[34] += 35;
 			swingScores[16] += 35;
 			swingScores[14] += 35;
@@ -1240,7 +1234,7 @@ public class Mopper {
 			swingScores[10] += 35;
 			swingScores[6] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, 0).toString()) != -1) {
 			swingScores[34] += 35;
 			swingScores[22] += 35;
 			swingScores[18] += 35;
@@ -1250,13 +1244,13 @@ public class Mopper {
 			swingScores[10] += 35;
 			swingScores[6] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, -2).toString()) != -1) {
 			swingScores[12] += 35;
 			swingScores[10] += 35;
 			swingScores[8] += 35;
 			swingScores[6] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, 1).toString()) != -1) {
 			swingScores[35] += 35;
 			swingScores[34] += 35;
 			swingScores[30] += 35;
@@ -1266,22 +1260,22 @@ public class Mopper {
 			swingScores[11] += 35;
 			swingScores[7] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, -3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, -3).toString()) != -1) {
 			swingScores[8] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(3, -1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(3, -1).toString()) != -1) {
 			swingScores[14] += 35;
 			swingScores[10] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(3, 0).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(3, 0).toString()) != -1) {
 			swingScores[18] += 35;
 			swingScores[14] += 35;
 			swingScores[10] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(3, -2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(3, -2).toString()) != -1) {
 			swingScores[10] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, 1).toString()) != -1) {
 			swingScores[34] += 35;
 			swingScores[22] += 35;
 			swingScores[18] += 35;
@@ -1289,11 +1283,11 @@ public class Mopper {
 			swingScores[14] += 35;
 			swingScores[11] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(3, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(3, 1).toString()) != -1) {
 			swingScores[18] += 35;
 			swingScores[14] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, 2).toString()) != -1) {
 			swingScores[35] += 35;
 			swingScores[26] += 35;
 			swingScores[23] += 35;
@@ -1301,13 +1295,13 @@ public class Mopper {
 			swingScores[19] += 35;
 			swingScores[15] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, 2).toString()) != -1) {
 			swingScores[22] += 35;
 			swingScores[19] += 35;
 			swingScores[18] += 35;
 			swingScores[15] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, 2).toString()) != -1) {
 			swingScores[35] += 35;
 			swingScores[31] += 35;
 			swingScores[27] += 35;
@@ -1317,7 +1311,7 @@ public class Mopper {
 			swingScores[17] += 35;
 			swingScores[15] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, 2).toString()) != -1) {
 			swingScores[35] += 35;
 			swingScores[31] += 35;
 			swingScores[27] += 35;
@@ -1325,39 +1319,39 @@ public class Mopper {
 			swingScores[21] += 35;
 			swingScores[17] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(3, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(3, 2).toString()) != -1) {
 			swingScores[18] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(1, 3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(1, 3).toString()) != -1) {
 			swingScores[23] += 35;
 			swingScores[19] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(2, 3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(2, 3).toString()) != -1) {
 			swingScores[19] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(0, 3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(0, 3).toString()) != -1) {
 			swingScores[27] += 35;
 			swingScores[23] += 35;
 			swingScores[19] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, 2).toString()) != -1) {
 			swingScores[31] += 35;
 			swingScores[27] += 35;
 			swingScores[25] += 35;
 			swingScores[21] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-1, 3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-1, 3).toString()) != -1) {
 			swingScores[27] += 35;
 			swingScores[23] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-3, 1).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-3, 1).toString()) != -1) {
 			swingScores[29] += 35;
 			swingScores[25] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-3, 2).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-3, 2).toString()) != -1) {
 			swingScores[25] += 35;
 		}
-		if (opponentRobotsString.indexOf(G.me.translate(-2, 3).toString()) != -1) {
+		if (G.opponentRobotsString.indexOf(G.me.translate(-2, 3).toString()) != -1) {
 			swingScores[27] += 35;
 		}
     }

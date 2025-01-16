@@ -65,14 +65,6 @@ public class Splasher {
         int bestScore = 0;
         // painting heuristic
         // remove opponent paint, paint under enemy bots, paint under allied bots
-        StringBuilder allyRobotsList = new StringBuilder();
-        for (int i = G.allyRobots.length; --i >= 0;) {
-            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
-        }
-        StringBuilder opponentRobotsList = new StringBuilder();
-        for (int i = G.opponentRobots.length; --i >= 0;) {
-            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
-        }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
             int i = (j + r) % 13;
@@ -85,7 +77,7 @@ public class Splasher {
                     if (G.rc.canSenseLocation(nxt)) {
                         MapInfo info = G.rc.senseMapInfo(nxt);
                         //bonus points for hit opponent tower
-                        if (info.hasRuin() && opponentRobotsList.indexOf(nxt.toString()) != -1) score += 2;
+                        if (info.hasRuin() && G.opponentRobotsString.indexOf(nxt.toString()) != -1) score += 2;
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
                             int paintScore = 0;
@@ -97,10 +89,10 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
+                            if (G.allyRobotsString.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting allies
                             }
-                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
+                            if (G.opponentRobotsString.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting opponents
                             }
                             score += paintScore;
@@ -163,14 +155,6 @@ public class Splasher {
         int bestScore = 0;
         G.indicatorString.append("ATTACK ");
         // painting heuristic
-        StringBuilder allyRobotsList = new StringBuilder();
-        for (int i = G.allyRobots.length; --i >= 0;) {
-            allyRobotsList.append(G.allyRobots[i].getLocation().toString());
-        }
-        StringBuilder opponentRobotsList = new StringBuilder();
-        for (int i = G.opponentRobots.length; --i >= 0;) {
-            opponentRobotsList.append(G.opponentRobots[i].getLocation().toString());
-        }
         int r = Random.rand() % 13;
         for (int j = 13; --j >= 0;) {
             int i = (j + r) % 13;
@@ -185,7 +169,7 @@ public class Splasher {
                     if (G.rc.canSenseLocation(nxt)) {
                         MapInfo info = G.rc.senseMapInfo(nxt);
                         //bonus points for hit opponent tower
-                        if (info.hasRuin() && opponentRobotsList.indexOf(nxt.toString()) != -1) score += 2;
+                        if (info.hasRuin() && G.opponentRobotsString.indexOf(nxt.toString()) != -1) score += 2;
                         if (info.isPassable()) {
                             PaintType paint = info.getPaint();
                             int paintScore = 0;
@@ -201,10 +185,10 @@ public class Splasher {
                             if (!paint.isAlly() && nxt == G.me) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (allyRobotsList.indexOf(nxt.toString()) != -1) {
+                            if (G.allyRobotsString.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
                             }
-                            if (opponentRobotsList.indexOf(nxt.toString()) != -1) {
+                            if (G.opponentRobotsString.indexOf(nxt.toString()) != -1) {
                                 score += paintScore; // bonus points for painting self
                                 // if (!paint.isAlly()) {
                                 //     opponentRobotsPaintedScore++;
