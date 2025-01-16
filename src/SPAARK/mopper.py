@@ -26,24 +26,26 @@ for d in a:
     print(s,end='')
 
 #calculating scores
-# for i in range(25):
-#     print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
-#         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-#             if (G.rc.canSenseRobotAtLocation(loc)) {
-#                 //if it's an opponent, they get -1 paint
-#                 //if it's an ally, they go from -2 to -1 paint
-#                 //in both cases we gain 1 paint
-#                 //can't be a tower because it has to be painted
-#                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-#                 // mopScores["""+str(i)+"""] += (1 - bot.paintAmount / (double) bot.type.paintCapacity) * 10;
-#                 mopScores["""+str(i)+"""] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-#                 if (bot.getType() == UnitType.MOPPER) {
-#                     //double passive paint loss on moppers
-#                     mopScores["""+str(i)+"""]++;
-#                 }
-#             }
-#             mopScores["""+str(i)+"""] += 5;
-#         }""")
+for i in range(25):
+    print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores["""+str(i)+"""] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores["""+str(i)+"""] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores["""+str(i)+"""] += 100;
+                }
+            }
+            if (target.distanceSquaredTo(loc) <= 8) {
+                attackScores["""+str(i)+"""] += 50;
+            }
+            attackScores["""+str(i)+"""] += 25;
+        }""")
 
 print()
 print()
@@ -58,18 +60,16 @@ a2 = [
     [(0, 1), (0, 2), (1, 1), (1, 2), (-1, 1), (-1, 2)]
 ]
 s = []
-for i in range(36):
-    s.append('\t\t\tswingScores['+str(i)+'] = 0;\n')
 for d in a:
     for d2 in a2:
         for i in d2:
             try:
-                ind = s.index((f'\t\t\tif (opponentRobotsString.indexOf("["+(G.me.x{""if d[0]+i[0]<0 else "+"}{d[0]+i[0]})+", "+(G.me.y{""if d[1]+i[1]<0 else "+"}{d[1]+i[1]})+"]") != -1)' + ' {\n'))
+                ind = s.index(f'\t\t\tif (opponentRobotsString.indexOf(G.me.translate({d[0]+i[0]}, {d[1]+i[1]}).toString()) != -1)' + ' {\n')
                 if ind < 0:
                     raise Exception()
                 s.insert(ind+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 35;\n')
             except:
-                s.append(f'\t\t\tif (opponentRobotsString.indexOf("["+(G.me.x{""if d[0]+i[0]<0 else "+"}{d[0]+i[0]})+", "+(G.me.y{""if d[1]+i[1]<0 else "+"}{d[1]+i[1]})+"]") != -1)' + ' {\n')
+                s.append(f'\t\t\tif (opponentRobotsString.indexOf(G.me.translate({d[0]+i[0]}, {d[1]+i[1]}).toString()) != -1)' + ' {\n')
                 s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 35;\n')
                 s.append('\t\t\t}\n')
 # s = s.split('\n')
