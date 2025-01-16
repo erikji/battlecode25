@@ -1367,15 +1367,10 @@ public class Mopper {
         // TODO: FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-		for (int i = 8; --i >= 0;) {
-			if (G.me.directionTo(target) == G.DIRECTIONS[i]) {
-				moveScores = mopperMicro.micro(G.DIRECTIONS[i], target);
-				moveScores[i] -= 18;
-			} else if (G.me.directionTo(target).rotateLeft() == G.DIRECTIONS[i]
-					|| G.me.directionTo(target).rotateRight() == G.DIRECTIONS[i]) {
-				moveScores[i] -= 14;
-			}
-		}
+        moveScores = mopperMicro.micro(G.me.directionTo(target), target);
+        moveScores[G.dirOrd(G.me.directionTo(target))] -= 18;
+        moveScores[(G.dirOrd(G.me.directionTo(target))+1)%8] -= 14;
+        moveScores[(G.dirOrd(G.me.directionTo(target))+7)%8] -= 14;
 	}
 
 	public static void buildAttackScores() throws Exception {

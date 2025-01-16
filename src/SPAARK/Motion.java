@@ -1230,27 +1230,22 @@ public class Motion {
     //weighting moving in the correct direction == 4 paint, adj direction == 3 paint
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
         int[] scores = new int[9];
-        int score;
         MapLocation nxt;
         PaintType p;
+        scores[G.dirOrd(d)] += 20;
+        scores[(G.dirOrd(d)+1)%8] += 15;
+        scores[(G.dirOrd(d)+7)%8] += 15;
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i])){
                 scores[i] = -1000000000;
             } else {
-                score = 0;
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
-                    score -= 10;
+                    scores[i] -= 10;
                 } else if (p == PaintType.EMPTY) {
-                    score -= 5;
+                    scores[i] -= 5;
                 }
-                if (G.ALL_DIRECTIONS[i] == d) {
-                    score += 20;
-                } else if (G.ALL_DIRECTIONS[i].rotateLeft() == d || G.ALL_DIRECTIONS[i].rotateRight() == d) {
-                    score += 15;
-                }
-                scores[i] = score;
             }
         }
         return scores;

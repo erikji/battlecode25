@@ -51,6 +51,21 @@ public class G {
             Direction.WEST,
             Direction.CENTER
     };
+
+    public static int dirOrd(Direction d) throws Exception {
+        switch (d) {
+            case Direction.SOUTHWEST: return 0;
+            case Direction.SOUTH: return 1;
+            case Direction.SOUTHEAST: return 2;
+            case Direction.EAST: return 3;
+            case Direction.NORTHEAST: return 4;
+            case Direction.NORTH: return 5;
+            case Direction.NORTHWEST: return 6;
+            case Direction.WEST: return 7;
+            case Direction.CENTER: return 8;
+            default: throw new Exception("how did you get an invalid dir");
+        }
+    }
     public static final MapLocation invalidLoc = new MapLocation(-1, -1);
 
     //all dx/dy within 20 distanceSquared, sorted in ascending distanceSquared
