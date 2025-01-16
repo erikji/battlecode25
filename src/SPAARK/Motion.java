@@ -87,6 +87,9 @@ public class Motion {
 
     // basic random movement
     public static void moveRandomly() throws Exception {
+        moveRandomly(defaultMicro);
+    }
+    public static void moveRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
             for (int i = 8; --i >= 0;) {
@@ -103,13 +106,16 @@ public class Motion {
             if (direction == lastRandomDir.opposite() && G.rc.canMove(direction.opposite())) {
                 direction = direction.opposite();
             }
-            if (move(direction)) {
+            if (microMove(m.micro(direction, G.me.add(direction)))) {
                 lastRandomDir = direction;
             }
         }
     }
 
     public static void spreadRandomly() throws Exception {
+        spreadRandomly(defaultMicro);
+    }
+    public static void spreadRandomly(Micro m) throws Exception {
         boolean stuck = true;
         for (int i = G.DIRECTIONS.length; --i >= 0;) {
             if (G.rc.canMove(G.DIRECTIONS[i])) {
@@ -142,7 +148,7 @@ public class Motion {
                 } else {
                     // Direction direction = bug2Helper(me, lastRandomSpread, TOWARDS, 0, 0);
                     Direction direction = G.me.directionTo(target);
-                    if (move(direction)) {
+                    if (microMove(m.micro(direction, target))) {
                         lastRandomSpread = lastRandomSpread.add(direction);
                         lastRandomDir = direction;
                     } else {
@@ -156,7 +162,7 @@ public class Motion {
                     lastDir = Direction.CENTER;
                 }
                 Direction direction = bug2Helper(G.me, target, TOWARDS, 0, 0);
-                if (move(direction)) {
+                if (microMove(m.micro(direction, target))) {
                     lastRandomSpread = target;
                     lastRandomDir = direction;
                 }
@@ -166,61 +172,6 @@ public class Motion {
 
     public static MapLocation exploreLoc;
 
-    public static void exploreRandomly() throws Exception {
-        exploreRandomly(defaultMicro);
-    }
-
-    public static void exploreRandomly(Micro m) throws Exception {
-        if (G.rc.isMovementReady()) {
-            if (exploreLoc != null) {
-                if (G.rc.canSenseLocation(exploreLoc)) {
-                    exploreLoc = null;
-                }
-                if (Random.rand() % 25 == 0) {
-                    exploreLoc = null;
-                }
-            }
-            // don't explore in direction of a lot of allied bots
-            MapLocation otherBots = G.me;
-            for (int i = G.allyRobots.length; --i >= 0;) {
-                otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
-            }
-            if (!G.me.isWithinDistanceSquared(otherBots, 36)
-                    && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
-                exploreLoc = null;
-            }
-            if (exploreLoc == null) {
-                // pick a random location that we haven't seen before
-                int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
-                for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                    sum -= Long.bitCount(POI.explored[i]);
-                }
-                int rand = Random.rand() % sum;
-                int cur = 0;
-                for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
-                    if (cur > rand) {
-                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
-                        int cur2 = 0;
-                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
-                            if (((POI.explored[i] >> b) & 1) == 0) {
-                                if (++cur2 > rand) {
-                                    exploreLoc = new MapLocation(b, i);
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            bugnavTowards(exploreLoc, m);
-            if (ENABLE_EXPLORE_INDICATORS)
-                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
-        }
-    }
-    
-    //exploreRandomly but it doesnt move
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (exploreLoc != null) {
             if (G.rc.canSenseLocation(exploreLoc)) {
@@ -264,9 +215,17 @@ public class Motion {
                 }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         return exploreLoc;
+    }
+
+    public static void exploreRandomly() throws Exception {
+        exploreRandomly(defaultMicro);
+    }
+    public static void exploreRandomly(Micro m) throws Exception {
+        if (G.rc.isMovementReady()) {
+            exploreRandomlyLoc();
+            bugnavTowards(exploreLoc, m);
+        }
     }
 
     public static MapLocation edgeLoc = null;
@@ -1244,18 +1203,18 @@ public class Motion {
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
                     scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier;
-                    // for (int j = 8; --j >= 0;) {
-                    //     if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
-                    //         scores[i] -= 10; //2 is hardcoded in the engine oof
-                    //     }
-                    // }
+                    for (int j = 8; --j >= 0;) {
+                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
+                            scores[i] -= 10; //2 is hardcoded in the engine oof
+                        }
+                    }
                 } else if (p == PaintType.EMPTY) {
                     scores[i] -= 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperMultiplier;
-                    // for (int j = 8; --j >= 0;) {
-                    //     if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
-                    //         scores[i] -= 5;
-                    //     }
-                    // }
+                    for (int j = 8; --j >= 0;) {
+                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
+                            scores[i] -= 5;
+                        }
+                    }
                 }
             }
         }

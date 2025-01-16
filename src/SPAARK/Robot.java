@@ -146,7 +146,8 @@ public class Robot {
         }
         if (retreatTower == -2) {
             // oof no tower
-            Motion.exploreRandomly();
+            // Motion.exploreRandomly();
+            Motion.spreadRandomly();
             retreatTower = -1;
         } else if (retreatTower != -1) {
             MapLocation loc = POI.towerLocs[retreatTower];
