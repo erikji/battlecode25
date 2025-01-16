@@ -85,9 +85,7 @@ public class Robot {
         if (retreatTower == -1) {
             int best = -1;
             while (best == -1) {
-                int bestDistance = 0;
-                boolean bestPaint = false;
-                boolean bestCritical = false;
+                int bestWeight = Integer.MIN_VALUE;
                 boolean hasCritical = false;
                 for (int i = POI.numberOfTowers; --i >= 0;) {
                     if (POI.critical[i]) {
@@ -101,30 +99,23 @@ public class Robot {
                     //     // This is dumb but borks code for some reason
                     //     continue;
                     // }
+                    int weight = 0;
                     if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
-                        continue;
+                        weight -= 1000;
                     }
                     int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
-                    if (best == -1) {
+                    weight -= distance;
+                    if (paint) {
+                        weight += 100;
+                    }
+                    if (!POI.critical[i]) {
+                        weight += 200;
+                    }
+
+                    
+                    if (best == -1 || weight > bestWeight) {
                         best = i;
-                        bestDistance = distance;
-                        bestCritical = POI.critical[i];
-                        bestPaint = paint;
-                    } else if (paint && !bestPaint) {
-                        best = i;
-                        bestDistance = distance;
-                        bestCritical = POI.critical[i];
-                        bestPaint = paint;
-                    } else if (bestCritical && !POI.critical[i]) {
-                        best = i;
-                        bestDistance = distance;
-                        bestCritical = POI.critical[i];
-                        bestPaint = paint;
-                    } else if (distance < bestDistance) {
-                        best = i;
-                        bestDistance = distance;
-                        bestCritical = POI.critical[i];
-                        bestPaint = paint;
+                        bestWeight = weight;
                     }
                 }
                 if (best == -1) {
@@ -135,7 +126,7 @@ public class Robot {
                     triedRetreatTowers = new StringBuilder();
                     continue;
                 }
-                if (!hasCritical && !bestPaint) {
+                if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
                     retreatTower = -2;
                     break;
                 }
@@ -146,8 +137,8 @@ public class Robot {
         }
         if (retreatTower == -2) {
             // oof no tower
-            // Motion.exploreRandomly();
-            Motion.spreadRandomly();
+            Motion.exploreRandomly();
+            // Motion.spreadRandomly();
             retreatTower = -1;
         } else if (retreatTower != -1) {
             MapLocation loc = POI.towerLocs[retreatTower];
