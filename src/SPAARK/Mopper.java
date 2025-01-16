@@ -80,7 +80,7 @@ public class Mopper {
         }
 		boolean swing = false; //whether our attack will be a swing
         int cmax = attackScores[0];
-        int cx = 0; //if it's a swing, then also store index of swing direction
+        int cx = 0; //if it's a swing, then cx stores index of swing direction
         int cy = 0;
         // check every tile within sqrt2 radius
 		// don't need to set swing=false here since it defaults to false
@@ -149,6 +149,7 @@ public class Mopper {
         int[] allmax = new int[] {
                 cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax
         };
+        //if it's a swing, then allx stores index of swing direction
         int[] allx = new int[] {
                 cx, cx, cx, cx, cx, cx, cx, cx, cx
         };
@@ -511,39 +512,53 @@ public class Mopper {
 			allswing[7] = true;
 		}
         // copyspaghetti from Motion.microMove but whatever
-        int best = 8;
-        int numBest = 1;
-        for (int i = 8; --i >= 0;) {
-            if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
-                best = i;
-                numBest = 1;
-            } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best] && Random.rand() % ++numBest == 0) {
-                best = i;
+        if (G.rc.isActionReady()) {
+            int best = 8;
+            int numBest = 1;
+            for (int i = 8; --i >= 0;) {
+                if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
+                    best = i;
+                    numBest = 1;
+                } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best] && Random.rand() % ++numBest == 0) {
+                    best = i;
+                }
             }
+            // try attack then move then attack again
+            if (allswing[best]) {
+                if (allmax[best] == cmax) {
+                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                    }
+                }
+                Motion.move(G.ALL_DIRECTIONS[best]);
+                if (allmax[best] != cmax) {
+                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                    }
+                }
+            } else {
+                MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
+                if (G.rc.canAttack(attackLoc)) {
+                    G.rc.attack(attackLoc);
+                }
+                Motion.move(G.ALL_DIRECTIONS[best]);
+                if (G.rc.canAttack(attackLoc)) {
+                    G.rc.attack(attackLoc);
+                }
+            }
+        } else {
+            int best = 8;
+            int numBest = 1;
+            for (int i = 8; --i >= 0;) {
+                if (moveScores[i] > moveScores[best]) {
+                    best = i;
+                    numBest = 1;
+                } else if (moveScores[i] == moveScores[best] && Random.rand() % ++numBest == 0) {
+                    best = i;
+                }
+            }
+            Motion.move(G.ALL_DIRECTIONS[best]);
         }
-        // try attack then move then attack again
-		if (allswing[best]) {
-			if (allmax[best] == cmax) {
-				if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-					G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
-				}
-			}
-			Motion.move(G.ALL_DIRECTIONS[best]);
-			if (allmax[best] != cmax) {
-				if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-					G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
-				}
-			}
-		} else {
-			MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
-			if (G.rc.canAttack(attackLoc)) {
-				G.rc.attack(attackLoc);
-			}
-			Motion.move(G.ALL_DIRECTIONS[best]);
-			if (G.rc.canAttack(attackLoc)) {
-				G.rc.attack(attackLoc);
-			}
-		}
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
@@ -581,42 +596,40 @@ public class Mopper {
     }
 
 	public static void exploreMoveScores() throws Exception {
-        if (G.rc.isMovementReady()) {
-            MapLocation bestBot = null;
-            MapLocation bestEmpty = null;
-            MapLocation microDir = G.me;
-            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                MapInfo info = G.nearbyMapInfos[i];
-                MapLocation loc = info.getMapLocation();
-                // stuff we can't hit immediately cuz thats considered in attack micro
-                if (G.me.distanceSquaredTo(loc) > 2 && info.getPaint().isEnemy()) {
-                    microDir = microDir.add(G.me.directionTo(loc));
-                    if (G.rc.canSenseRobotAtLocation(loc)) {
-                        if (G.rc.senseRobotAtLocation(loc).team == G.opponentTeam
-                                && (bestBot == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestBot))) {
-                            bestBot = loc;
-                        }
-                    } else {
-                        if (bestEmpty == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
-                            bestEmpty = loc;
-                        }
+        MapLocation bestBot = null;
+        MapLocation bestEmpty = null;
+        MapLocation microDir = G.me;
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapInfo info = G.nearbyMapInfos[i];
+            MapLocation loc = info.getMapLocation();
+            // stuff we can't hit immediately cuz thats considered in attack micro
+            if (G.me.distanceSquaredTo(loc) > 2 && info.getPaint().isEnemy()) {
+                microDir = microDir.add(G.me.directionTo(loc));
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    if (G.rc.senseRobotAtLocation(loc).team == G.opponentTeam
+                            && (bestBot == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestBot))) {
+                        bestBot = loc;
+                    }
+                } else {
+                    if (bestEmpty == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
+                        bestEmpty = loc;
                     }
                 }
             }
-            Direction dir = Direction.CENTER;
-            if (bestEmpty == null && bestBot == null) {
-                G.indicatorString.append("RAND ");
-                dir = G.me.directionTo(Motion.exploreRandomlyLoc());
-            } else {
-                if (bestBot != null)
-                    bestEmpty = bestBot;
-                dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-                G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
-            }
-            moveScores = mopperMicro.micro(dir, G.invalidLoc);
-            if (G.rc.onTheMap(microDir))
-                G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         }
+        Direction dir = Direction.CENTER;
+        if (bestEmpty == null && bestBot == null) {
+            G.indicatorString.append("RAND ");
+            dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+        } else {
+            if (bestBot != null)
+                bestEmpty = bestBot;
+            dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
+            G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+        }
+        moveScores = mopperMicro.micro(dir, G.invalidLoc);
+        if (G.rc.onTheMap(microDir))
+            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
 	}
 
 	public static void exploreAttackScores() throws Exception {
@@ -1863,7 +1876,7 @@ public class Mopper {
 						for (int i = 9; --i >= 0;) {
 							if (G.rc.canMove(G.ALL_DIRECTIONS[i])) {
 								if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(bot.location, bot.type.actionRadiusSquared)) {
-									scores[i] -= 200;
+									scores[i] -= G.paintPerChips() * 180; // mopper costs 300 paint, and we lose 3/5 hp
 								}
 							}
 						}

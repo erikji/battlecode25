@@ -5,6 +5,8 @@ import battlecode.common.*;
 public class Motion {
     public static final boolean ENABLE_EXPLORE_INDICATORS = false;
 
+    public static int movementCooldown = 0;
+
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
     public static final int AROUND = 2;
@@ -1206,6 +1208,7 @@ public class Motion {
         scores[(G.dirOrd(d) + 1) % 8] += 15;
         scores[(G.dirOrd(d) + 7) % 8] += 15;
         int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
+        int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown) / 10);
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i])) {
                 scores[i] = -1000000000;
@@ -1213,14 +1216,14 @@ public class Motion {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
-                    scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier;
+                    scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier * numTurnsUntilNextMove;
                     for (int j = 8; --j >= 0;) {
                         if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
                             scores[i] -= 10; // 2 is hardcoded in the engine oof
                         }
                     }
                 } else if (p == PaintType.EMPTY) {
-                    scores[i] -= 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperMultiplier;
+                    scores[i] -= 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperMultiplier * numTurnsUntilNextMove;
                     for (int j = 8; --j >= 0;) {
                         if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
                             scores[i] -= 5;
@@ -1253,6 +1256,7 @@ public class Motion {
     public static boolean move(Direction dir) throws Exception {
         if (G.rc.canMove(dir)) {
             G.rc.move(dir);
+            movementCooldown += G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN);
             lastDir = dir;
             RobotPlayer.updateInfo();
             return true;
