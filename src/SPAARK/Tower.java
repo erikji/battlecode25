@@ -170,58 +170,17 @@ public class Tower {
             MapLocation bestEnemyLoc = null;
             int bestEnemyHp = 1000000;
             int attackStrength = G.rc.getType().attackStrength;
-            UnitType bestEnemyType = UnitType.MOPPER;
-            // priority: soldier, splasher, mopper
             for (int i = G.opponentRobots.length; --i >= 0;) {
                 RobotInfo r = G.opponentRobots[i];
                 //check if it's still alive
                 if (G.rc.canSenseRobotAtLocation(r.location) && G.me.isWithinDistanceSquared(r.location, G.rc.getType().actionRadiusSquared)) {
-                    switch (bestEnemyType) {
-                        case UnitType.MOPPER:
-                            if (bestEnemyHp > attackStrength) {
-                                if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || r.health < bestEnemyHp) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
-                            } else {
-                                if (r.type == UnitType.SOLDIER || r.type == UnitType.SPLASHER || (r.health > bestEnemyHp && r.health <= attackStrength)) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
-                            }
-                            break;
-                        case UnitType.SPLASHER:
-                            if (bestEnemyHp > attackStrength) {
-                                if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health < bestEnemyHp)) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
-                            } else {
-                                if (r.type == UnitType.SOLDIER || (r.type == UnitType.SPLASHER && r.health > bestEnemyHp && r.health <= attackStrength)) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                    bestEnemyType = r.type;
-                                }
-                            }
-                            break;
-                        case UnitType.SOLDIER:
-                            if (bestEnemyHp > attackStrength) {
-                                if (r.type == UnitType.SOLDIER && r.health < bestEnemyHp) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                }
-                            } else {
-                                if (r.type == UnitType.SOLDIER && r.health > bestEnemyHp && r.health <= attackStrength) {
-                                    bestEnemyHp = r.health;
-                                    bestEnemyLoc = r.location;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                    //just do lowest hp it's basically the same and it's more gold efficient to kill moppers anyways
+                    if (bestEnemyHp > attackStrength && r.health < bestEnemyHp) {
+                        bestEnemyHp = r.health;
+                        bestEnemyLoc = r.location;
+                    } else if (r.health > bestEnemyHp && r.health <= attackStrength) {
+                        bestEnemyHp = r.health;
+                        bestEnemyLoc = r.location;
                     }
                 }
             }
