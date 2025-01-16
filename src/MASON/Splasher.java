@@ -127,20 +127,22 @@ public class Splasher {
         int maxDim = Math.max(G.rc.getMapWidth(), G.rc.getMapHeight());
         if (maxDim - minDim <= 20 && G.rc.getRoundNum() < maxDim * maxDim / 80) {
             MapLocation c1 = new MapLocation(G.rc.getMapWidth() / 4, G.rc.getMapHeight() / 4);
-            Motion.bugnavTowards(c1);
-            // MapLocation c2 = new MapLocation(3 * G.rc.getMapWidth() / 4, G.rc.getMapHeight() / 4);
-            // MapLocation c3 = new MapLocation(G.rc.getMapWidth() / 4, 3 * G.rc.getMapHeight() / 4);
-            // MapLocation c4 = new MapLocation(3 * G.rc.getMapWidth() / 4, 3 * G.rc.getMapHeight() / 4);
-            // int dist1 = G.rc.getLocation().distanceSquaredTo(c1);
-            // int dist2 = G.rc.getLocation().distanceSquaredTo(c1);
-            // int dist3 = G.rc.getLocation().distanceSquaredTo(c1);
-            // int dist4 = G.rc.getLocation().distanceSquaredTo(c1);
-            // int minDist = Math.min(dist1, Math.min(dist2, Math.min(dist3, dist4)));
+            MapLocation c2 = new MapLocation(3 * G.rc.getMapWidth() / 4, G.rc.getMapHeight() / 4);
+            MapLocation c3 = new MapLocation(G.rc.getMapWidth() / 4, 3 * G.rc.getMapHeight() / 4);
+            MapLocation c4 = new MapLocation(3 * G.rc.getMapWidth() / 4, 3 * G.rc.getMapHeight() / 4);
+            MapLocation c5 = G.mapCenter;
+            int dist1 = G.rc.getLocation().distanceSquaredTo(c1);
+            int dist2 = G.rc.getLocation().distanceSquaredTo(c2);
+            int dist3 = G.rc.getLocation().distanceSquaredTo(c3);
+            int dist4 = G.rc.getLocation().distanceSquaredTo(c4);
+            int dist5 = G.rc.getLocation().distanceSquaredTo(c5);
+            int minDist = Math.max(dist1, Math.max(dist2, Math.max(dist3, Math.max(dist4, dist5))));
 
-            // if (dist1 == minDist) Motion.bugnavTowards(c1);
-            // else if (dist2 == minDist) Motion.bugnavTowards(c2);
-            // else if (dist3 == minDist) Motion.bugnavTowards(c3);
-            // else if (dist4 == minDist) Motion.bugnavTowards(c4);
+            if (dist1 == minDist) Motion.bugnavTowards(c1);
+            else if (dist2 == minDist) Motion.bugnavTowards(c2);
+            else if (dist3 == minDist) Motion.bugnavTowards(c3);
+            else if (dist4 == minDist) Motion.bugnavTowards(c4);
+            else if (dist5 == minDist) Motion.bugnavTowards(c4);
         }
         else {
             Motion.exploreRandomly();
