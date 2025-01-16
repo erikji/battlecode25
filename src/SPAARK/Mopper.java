@@ -80,7 +80,7 @@ public class Mopper {
         }
 		boolean swing = false; //whether our attack will be a swing
         int cmax = attackScores[0];
-        int cx = 0; //if it's a swing, then also store index of swing direction
+        int cx = 0; //if it's a swing, then cx stores index of swing direction
         int cy = 0;
         // check every tile within sqrt2 radius
 		// don't need to set swing=false here since it defaults to false
@@ -149,6 +149,7 @@ public class Mopper {
         int[] allmax = new int[] {
                 cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax
         };
+        //if it's a swing, then allx stores index of swing direction
         int[] allx = new int[] {
                 cx, cx, cx, cx, cx, cx, cx, cx, cx
         };
@@ -581,42 +582,40 @@ public class Mopper {
     }
 
 	public static void exploreMoveScores() throws Exception {
-        if (G.rc.isMovementReady()) {
-            MapLocation bestBot = null;
-            MapLocation bestEmpty = null;
-            MapLocation microDir = G.me;
-            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                MapInfo info = G.nearbyMapInfos[i];
-                MapLocation loc = info.getMapLocation();
-                // stuff we can't hit immediately cuz thats considered in attack micro
-                if (G.me.distanceSquaredTo(loc) > 2 && info.getPaint().isEnemy()) {
-                    microDir = microDir.add(G.me.directionTo(loc));
-                    if (G.rc.canSenseRobotAtLocation(loc)) {
-                        if (G.rc.senseRobotAtLocation(loc).team == G.opponentTeam
-                                && (bestBot == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestBot))) {
-                            bestBot = loc;
-                        }
-                    } else {
-                        if (bestEmpty == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
-                            bestEmpty = loc;
-                        }
+        MapLocation bestBot = null;
+        MapLocation bestEmpty = null;
+        MapLocation microDir = G.me;
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapInfo info = G.nearbyMapInfos[i];
+            MapLocation loc = info.getMapLocation();
+            // stuff we can't hit immediately cuz thats considered in attack micro
+            if (G.me.distanceSquaredTo(loc) > 2 && info.getPaint().isEnemy()) {
+                microDir = microDir.add(G.me.directionTo(loc));
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    if (G.rc.senseRobotAtLocation(loc).team == G.opponentTeam
+                            && (bestBot == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestBot))) {
+                        bestBot = loc;
+                    }
+                } else {
+                    if (bestEmpty == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
+                        bestEmpty = loc;
                     }
                 }
             }
-            Direction dir = Direction.CENTER;
-            if (bestEmpty == null && bestBot == null) {
-                G.indicatorString.append("RAND ");
-                dir = G.me.directionTo(Motion.exploreRandomlyLoc());
-            } else {
-                if (bestBot != null)
-                    bestEmpty = bestBot;
-                dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-                G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
-            }
-            moveScores = mopperMicro.micro(dir, G.invalidLoc);
-            if (G.rc.onTheMap(microDir))
-                G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         }
+        Direction dir = Direction.CENTER;
+        if (bestEmpty == null && bestBot == null) {
+            G.indicatorString.append("RAND ");
+            dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+        } else {
+            if (bestBot != null)
+                bestEmpty = bestBot;
+            dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
+            G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+        }
+        moveScores = mopperMicro.micro(dir, G.invalidLoc);
+        if (G.rc.onTheMap(microDir))
+            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
 	}
 
 	public static void exploreAttackScores() throws Exception {

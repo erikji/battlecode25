@@ -127,4 +127,8 @@ public class G {
     public static int getLastVisited(MapLocation loc) {
         return lastVisited[loc.y / 2][loc.x / 2] - 2000;
     }
+
+    public static double paintPerChips() {
+        return 0.5;
+    }
 }
