@@ -269,6 +269,57 @@ public class Motion {
         return exploreLoc;
     }
 
+    public static MapLocation edgeLoc = null;
+    public static void exploreEdges(Micro m) throws Exception {
+        if (G.rc.isMovementReady()) {
+            if (edgeLoc != null) {
+                if (G.rc.canSenseLocation(edgeLoc)) {
+                    edgeLoc = null;
+                }
+                if (Random.rand() % 25 == 0) {
+                    edgeLoc = null;
+                }
+            }
+            // don't explore in direction of a lot of allied bots
+            // if (!G.me.isWithinDistanceSquared(otherBots, 36)
+            //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+            //     exploreLoc = null;
+            // }
+            if (edgeLoc == null) {
+                MapLocation otherBots = G.me;
+                for (int i = G.allyRobots.length; --i >= 0;) {
+                    otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
+                }
+                // pick a random location that we haven't seen before
+                int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                int rand = Random.rand() % sum;
+                int cur = 0;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            bugnavTowards(exploreLoc, m);
+            if (ENABLE_EXPLORE_INDICATORS)
+                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+        }
+    }
+
     //cownav
     public static StringBuilder lastVisitedLocations = new StringBuilder();
 
@@ -598,7 +649,7 @@ public class Motion {
         boolean stuck = true;
         for (int i = 4; --i >= 0;) {
             String m = me + " " + i + " ";
-            if (!visitedList.toString().contains(m)) {
+            if (visitedList.indexOf(m) == -1) {
                 visitedList.append(m);
                 stuck = false;
                 break;

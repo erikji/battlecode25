@@ -106,9 +106,6 @@ public class Tower {
                 case 6:
                     trying = UnitType.MOPPER;
                     break;
-                case 7:
-                    trying = UnitType.MOPPER;
-                    break;
             }
 
             if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 1000 || G.rc.getPaint() == 1000) {
