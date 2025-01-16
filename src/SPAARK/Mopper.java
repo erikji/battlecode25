@@ -63,6 +63,7 @@ public class Mopper {
 			}
             case BUILD -> {
 				G.indicatorString.append("BUILD ");
+                lastBuild = G.round;
 				if (G.rc.isMovementReady()) {
 					buildMoveScores();
 				}
