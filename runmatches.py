@@ -14,12 +14,15 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'betterexplore' #bot to test
+currentBot = 'MASON' #bot to test
+#currentBot = 'SPAARK' #bot to test
+#currentBot = 'betterexplore' #bot to test
 #SPAARK IS THE BASELINE
 
 # bots = [chr(ord('a')+i) for i in range(1)]
-bots = ["SPAARK"]
+bots = ["a","newmicro"]
 # bots = ['MASON']
+bots = ["SPAARK"]
 
 maps = []
 maps += ['DefaultSmall']
@@ -27,7 +30,6 @@ maps += ['DefaultMedium']
 maps += ['DefaultLarge']
 maps += ['DefaultHuge']
 
-# Sprint 1 Maps
 maps += ['Fossil']
 maps += ['Gears']
 maps += ['Justice']
@@ -73,6 +75,7 @@ maps += ['[SP2] Duolingo']
 maps += ['[SP2] Narrow']
 maps += ['[SP2] NotMyMap']
 
+#maps.reverse()
 matches = list(product(bots, maps))
 
 numWinsMapping = {
