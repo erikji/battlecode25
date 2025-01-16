@@ -89,6 +89,7 @@ public class Motion {
     public static void moveRandomly() throws Exception {
         moveRandomly(defaultMicro);
     }
+
     public static void moveRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             boolean stuck = true;
@@ -115,6 +116,7 @@ public class Motion {
     public static void spreadRandomly() throws Exception {
         spreadRandomly(defaultMicro);
     }
+
     public static void spreadRandomly(Micro m) throws Exception {
         boolean stuck = true;
         for (int i = G.DIRECTIONS.length; --i >= 0;) {
@@ -221,6 +223,7 @@ public class Motion {
     public static void exploreRandomly() throws Exception {
         exploreRandomly(defaultMicro);
     }
+
     public static void exploreRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             exploreRandomlyLoc();
@@ -229,6 +232,7 @@ public class Motion {
     }
 
     public static MapLocation edgeLoc = null;
+
     public static void exploreEdges(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             if (edgeLoc != null) {
@@ -241,13 +245,16 @@ public class Motion {
             }
             // don't explore in direction of a lot of allied bots
             // if (!G.me.isWithinDistanceSquared(otherBots, 36)
-            //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
-            //     exploreLoc = null;
+            // &&
+            // Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots)))
+            // <= 1) {
+            // exploreLoc = null;
             // }
             if (edgeLoc == null) {
                 MapLocation otherBots = G.me;
                 for (int i = G.allyRobots.length; --i >= 0;) {
-                    otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
+                    otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x,
+                            G.allyRobots[i].getLocation().y - G.me.y);
                 }
                 // pick a random location that we haven't seen before
                 int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
@@ -279,29 +286,33 @@ public class Motion {
         }
     }
 
-    //cownav
+    // cownav
     public static StringBuilder lastVisitedLocations = new StringBuilder();
 
-    //use super cow powers navigation to score each direction
+    // use super cow powers navigation to score each direction
     // public static int[] cownav(MapLocation dest, Micro m) throws Exception {
-    //     int[] scores = new int[9];
-    //     for (int i = 8; --i >= 0;) {
-    //         if (G.me.directionTo(dest) == G.ALL_DIRECTIONS[i]) {
-    //             scores[i] += 10;
-    //         }
-    //         else if (G.me.directionTo(dest).rotateLeft() == G.ALL_DIRECTIONS[i] || G.me.directionTo(dest).rotateRight() == G.ALL_DIRECTIONS[i]) {
-    //             scores[i] += 5;
-    //         }
-    //         else if (G.me.directionTo(dest).rotateLeft().rotateLeft() == G.ALL_DIRECTIONS[i] || G.me.directionTo(dest).rotateRight().rotateRight() == G.ALL_DIRECTIONS[i]) {
-    //             scores[i]++;
-    //         }
-    //         //each MapLocation takes 8 spaces in the string so exclude last 6 locs
-    //         int ind = lastVisitedLocations.indexOf(G.me.add(G.ALL_DIRECTIONS[i]).toString());
-    //         if (ind >= 0 && ind + 48 < lastVisitedLocations.length()) {
-    //             scores[i] -= 10;
-    //         }
-    //     }
-    //     return m.micro(scores);
+    // int[] scores = new int[9];
+    // for (int i = 8; --i >= 0;) {
+    // if (G.me.directionTo(dest) == G.ALL_DIRECTIONS[i]) {
+    // scores[i] += 10;
+    // }
+    // else if (G.me.directionTo(dest).rotateLeft() == G.ALL_DIRECTIONS[i] ||
+    // G.me.directionTo(dest).rotateRight() == G.ALL_DIRECTIONS[i]) {
+    // scores[i] += 5;
+    // }
+    // else if (G.me.directionTo(dest).rotateLeft().rotateLeft() ==
+    // G.ALL_DIRECTIONS[i] || G.me.directionTo(dest).rotateRight().rotateRight() ==
+    // G.ALL_DIRECTIONS[i]) {
+    // scores[i]++;
+    // }
+    // //each MapLocation takes 8 spaces in the string so exclude last 6 locs
+    // int ind =
+    // lastVisitedLocations.indexOf(G.me.add(G.ALL_DIRECTIONS[i]).toString());
+    // if (ind >= 0 && ind + 48 < lastVisitedLocations.length()) {
+    // scores[i] -= 10;
+    // }
+    // }
+    // return m.micro(scores);
     // }
 
     // bugnav helpers
@@ -1186,17 +1197,17 @@ public class Motion {
         }
     }
 
-    //1 paint = 5 score
+    // 1 paint = 5 score
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
         int[] scores = new int[9];
         MapLocation nxt;
         PaintType p;
         scores[G.dirOrd(d)] += 20;
-        scores[(G.dirOrd(d)+1)%8] += 15;
-        scores[(G.dirOrd(d)+7)%8] += 15;
+        scores[(G.dirOrd(d) + 1) % 8] += 15;
+        scores[(G.dirOrd(d) + 7) % 8] += 15;
         int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
         for (int i = 9; --i >= 0;) {
-            if (!G.rc.canMove(G.ALL_DIRECTIONS[i])){
+            if (!G.rc.canMove(G.ALL_DIRECTIONS[i])) {
                 scores[i] = -1000000000;
             } else {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
@@ -1205,7 +1216,7 @@ public class Motion {
                     scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier;
                     for (int j = 8; --j >= 0;) {
                         if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
-                            scores[i] -= 10; //2 is hardcoded in the engine oof
+                            scores[i] -= 10; // 2 is hardcoded in the engine oof
                         }
                     }
                 } else if (p == PaintType.EMPTY) {
@@ -1228,8 +1239,7 @@ public class Motion {
             if (scores[i] > scores[best]) {
                 best = i;
                 numBest = 1;
-            }
-            else if (scores[i] == best && Random.rand() % ++numBest == 0) {
+            } else if (scores[i] == best && Random.rand() % ++numBest == 0) {
                 best = i;
             }
         }
