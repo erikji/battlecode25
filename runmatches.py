@@ -14,15 +14,11 @@ emojiMap = {
 }
 errors = []
 
-<<<<<<< HEAD
 currentBot = 'SPAARK' #bot to test
-=======
-currentBot = 'betterexplore' #bot to test
->>>>>>> refs/remotes/origin/main
 #SPAARK IS THE BASELINE
 
 # bots = [chr(ord('a')+i) for i in range(1)]
-bots = ["a","newmicro"]
+bots = ["a"]
 # bots = ['MASON']
 
 maps = []

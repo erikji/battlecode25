@@ -686,652 +686,310 @@ public class Mopper {
 			swingScores[34] = 0;
 			swingScores[35] = 0;
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[0] += 7;
+				swingScores[32] += 35;
+				swingScores[12] += 35;
+				swingScores[9] += 35;
+				swingScores[5] += 35;
+				swingScores[4] += 35;
+				swingScores[0] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[0] += 7;
+				swingScores[4] += 35;
+				swingScores[0] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[0] += 7;
+				swingScores[12] += 35;
+				swingScores[5] += 35;
+				swingScores[1] += 35;
+				swingScores[0] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[0] += 7;
+				swingScores[0] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[0] += 7;
+				swingScores[32] += 35;
+				swingScores[16] += 35;
+				swingScores[12] += 35;
+				swingScores[9] += 35;
+				swingScores[8] += 35;
+				swingScores[4] += 35;
+				swingScores[2] += 35;
+				swingScores[0] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[0] += 7;
+				swingScores[8] += 35;
+				swingScores[4] += 35;
+				swingScores[0] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[1] += 7;
+				swingScores[33] += 35;
+				swingScores[20] += 35;
+				swingScores[13] += 35;
+				swingScores[12] += 35;
+				swingScores[5] += 35;
+				swingScores[1] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[1] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[1] += 7;
+				swingScores[13] += 35;
+				swingScores[1] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[1] += 7;
+				swingScores[1] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[1] += 7;
+				swingScores[33] += 35;
+				swingScores[25] += 35;
+				swingScores[21] += 35;
+				swingScores[20] += 35;
+				swingScores[13] += 35;
+				swingScores[5] += 35;
+				swingScores[3] += 35;
+				swingScores[1] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[1] += 7;
+				swingScores[21] += 35;
+				swingScores[13] += 35;
+				swingScores[1] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[2] += 7;
+				swingScores[32] += 35;
+				swingScores[28] += 35;
+				swingScores[24] += 35;
+				swingScores[20] += 35;
+				swingScores[17] += 35;
+				swingScores[16] += 35;
+				swingScores[14] += 35;
+				swingScores[12] += 35;
+				swingScores[9] += 35;
+				swingScores[2] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[2] += 7;
+				swingScores[34] += 35;
+				swingScores[32] += 35;
+				swingScores[28] += 35;
+				swingScores[24] += 35;
+				swingScores[16] += 35;
+				swingScores[14] += 35;
+				swingScores[6] += 35;
+				swingScores[2] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[2] += 7;
+				swingScores[29] += 35;
+				swingScores[28] += 35;
+				swingScores[24] += 35;
+				swingScores[22] += 35;
+				swingScores[20] += 35;
+				swingScores[17] += 35;
+				swingScores[14] += 35;
+				swingScores[11] += 35;
+				swingScores[9] += 35;
+				swingScores[7] += 35;
+				swingScores[3] += 35;
+				swingScores[2] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[2] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[2] += 7;
+				swingScores[34] += 35;
+				swingScores[28] += 35;
+				swingScores[26] += 35;
+				swingScores[24] += 35;
+				swingScores[22] += 35;
+				swingScores[14] += 35;
+				swingScores[11] += 35;
+				swingScores[7] += 35;
+				swingScores[6] += 35;
+				swingScores[2] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[2] += 7;
+				swingScores[32] += 35;
+				swingScores[16] += 35;
+				swingScores[8] += 35;
+				swingScores[6] += 35;
+				swingScores[4] += 35;
+				swingScores[2] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[3] += 7;
+				swingScores[33] += 35;
+				swingScores[29] += 35;
+				swingScores[25] += 35;
+				swingScores[24] += 35;
+				swingScores[20] += 35;
+				swingScores[17] += 35;
+				swingScores[9] += 35;
+				swingScores[7] += 35;
+				swingScores[5] += 35;
+				swingScores[3] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[3] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[3] += 7;
+				swingScores[35] += 35;
+				swingScores[33] += 35;
+				swingScores[29] += 35;
+				swingScores[25] += 35;
+				swingScores[17] += 35;
+				swingScores[15] += 35;
+				swingScores[7] += 35;
+				swingScores[3] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[3] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[3] += 7;
+				swingScores[35] += 35;
+				swingScores[29] += 35;
+				swingScores[22] += 35;
+				swingScores[19] += 35;
+				swingScores[17] += 35;
+				swingScores[15] += 35;
+				swingScores[14] += 35;
+				swingScores[11] += 35;
+				swingScores[7] += 35;
+				swingScores[3] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[3] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[4] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[4] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[4] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[4] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[4] += 7;
+				swingScores[33] += 35;
+				swingScores[25] += 35;
+				swingScores[21] += 35;
+				swingScores[15] += 35;
+				swingScores[13] += 35;
+				swingScores[3] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[4] += 7;
+				swingScores[8] += 35;
+				swingScores[4] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[5] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[5] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[5] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[5] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[5] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[5] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[6] += 7;
+				swingScores[33] += 35;
+				swingScores[32] += 35;
+				swingScores[24] += 35;
+				swingScores[20] += 35;
+				swingScores[17] += 35;
+				swingScores[12] += 35;
+				swingScores[9] += 35;
+				swingScores[5] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[6] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[6] += 7;
+				swingScores[34] += 35;
+				swingScores[28] += 35;
+				swingScores[18] += 35;
+				swingScores[16] += 35;
+				swingScores[10] += 35;
+				swingScores[6] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[6] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[6] += 7;
+				swingScores[34] += 35;
+				swingScores[30] += 35;
+				swingScores[28] += 35;
+				swingScores[26] += 35;
+				swingScores[18] += 35;
+				swingScores[11] += 35;
+				swingScores[10] += 35;
+				swingScores[6] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[6] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[7] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[7] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[7] += 7;
+				swingScores[16] += 35;
+				swingScores[10] += 35;
+				swingScores[8] += 35;
+				swingScores[6] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[7] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[7] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[7] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[8] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[8] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[8] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[8] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[8] += 7;
+				swingScores[35] += 35;
+				swingScores[34] += 35;
+				swingScores[26] += 35;
+				swingScores[22] += 35;
+				swingScores[19] += 35;
+				swingScores[14] += 35;
+				swingScores[11] += 35;
+				swingScores[7] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[8] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[9] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[9] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[9] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[9] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[9] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[9] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[10] += 7;
+				swingScores[8] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[10] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[10] += 7;
+				swingScores[18] += 35;
+				swingScores[10] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[10] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[10] += 7;
+				swingScores[30] += 35;
+				swingScores[18] += 35;
+				swingScores[10] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[10] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[11] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[11] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[11] += 7;
+				swingScores[10] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[11] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[11] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[11] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[12] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[12] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[12] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[12] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[12] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[12] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[13] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[13] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[13] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[13] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[13] += 7;
+				swingScores[34] += 35;
+				swingScores[30] += 35;
+				swingScores[26] += 35;
+				swingScores[19] += 35;
+				swingScores[18] += 35;
+				swingScores[11] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[13] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[14] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[14] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[14] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[14] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[14] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[14] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[15] += 7;
+				swingScores[21] += 35;
+				swingScores[13] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[15] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[15] += 7;
+				swingScores[35] += 35;
+				swingScores[29] += 35;
+				swingScores[27] += 35;
+				swingScores[25] += 35;
+				swingScores[23] += 35;
+				swingScores[15] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[15] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[15] += 7;
+				swingScores[35] += 35;
+				swingScores[31] += 35;
+				swingScores[29] += 35;
+				swingScores[27] += 35;
+				swingScores[23] += 35;
+				swingScores[22] += 35;
+				swingScores[19] += 35;
+				swingScores[15] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[15] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[16] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[16] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[16] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[16] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[16] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[16] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[17] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[17] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[17] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[17] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[17] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[17] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[18] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[18] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[18] += 7;
+				swingScores[25] += 35;
+				swingScores[23] += 35;
+				swingScores[21] += 35;
+				swingScores[15] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[18] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[18] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[18] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[19] += 7;
+				swingScores[30] += 35;
+				swingScores[18] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[19] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[19] += 7;
+				swingScores[35] += 35;
+				swingScores[31] += 35;
+				swingScores[27] += 35;
+				swingScores[26] += 35;
+				swingScores[22] += 35;
+				swingScores[19] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[19] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[19] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[19] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[20] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[20] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[20] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[20] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[20] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[20] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[21] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[21] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[21] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[21] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[21] += 7;
+				swingScores[31] += 35;
+				swingScores[30] += 35;
+				swingScores[26] += 35;
+				swingScores[19] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[21] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[22] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[22] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[22] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[22] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[22] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[22] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[23] += 7;
+				swingScores[21] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[23] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[23] += 7;
+				swingScores[27] += 35;
+				swingScores[23] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[23] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[23] += 7;
+				swingScores[31] += 35;
+				swingScores[27] += 35;
+				swingScores[23] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[23] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[24] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[24] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[24] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[24] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[24] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[24] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[25] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[25] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[25] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[25] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[25] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[25] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[26] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[26] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[26] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[26] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[26] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[26] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[27] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[27] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[27] += 7;
+				swingScores[23] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[27] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[27] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[27] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[28] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[28] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[28] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[28] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[28] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[28] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[29] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[29] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[29] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[29] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[29] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[29] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[30] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[30] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[30] += 7;
+				swingScores[31] += 35;
+				swingScores[27] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[30] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[30] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[30] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[31] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[31] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[31] += 7;
+				swingScores[30] += 35;
 			}
 			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[31] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[31] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[31] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[32] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[32] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[32] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[32] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[32] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[32] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[33] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[33] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[33] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[33] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[33] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[33] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[34] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[34] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[34] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[34] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[34] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[34] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[35] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[35] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[35] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[35] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[35] += 7;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[35] += 7;
+				swingScores[31] += 35;
 			}
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);

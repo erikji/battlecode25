@@ -210,40 +210,6 @@ public class POI {
     // basically it takes tons of bytecode to update all map infos
     // so we only update the ones on the edge
     public static boolean firstUpdate = true;
-    public static MapLocation[] edgeLocations = new MapLocation[] {
-        new MapLocation(-4, -2),
-        new MapLocation(-4, -1),
-        new MapLocation(-4, 0),
-        new MapLocation(-4, 1),
-        new MapLocation(-4, 2),
-        new MapLocation(-3, -3),
-        new MapLocation(-3, -2),
-        new MapLocation(-3, 2),
-        new MapLocation(-3, 3),
-        new MapLocation(-2, -4),
-        new MapLocation(-2, -3),
-        new MapLocation(-2, 3),
-        new MapLocation(-2, 4),
-        new MapLocation(-1, -4),
-        new MapLocation(-1, 4),
-        new MapLocation(0, -4),
-        new MapLocation(0, 4),
-        new MapLocation(1, -4),
-        new MapLocation(1, 4),
-        new MapLocation(2, -4),
-        new MapLocation(2, -3),
-        new MapLocation(2, 3),
-        new MapLocation(2, 4),
-        new MapLocation(3, -3),
-        new MapLocation(3, -2),
-        new MapLocation(3, 2),
-        new MapLocation(3, 3),
-        new MapLocation(4, -2),
-        new MapLocation(4, -1),
-        new MapLocation(4, 0),
-        new MapLocation(4, 1),
-        new MapLocation(4, 2),
-    };
 
     public static void updateRound() throws Exception {
         int a = Clock.getBytecodeNum();
@@ -275,9 +241,9 @@ public class POI {
         if (firstUpdate) {
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
-                if (G.nearbyMapInfos[i].isWall()) {
-                    wall[xy.y] |= 1L << xy.x;
-                }
+                // if (G.nearbyMapInfos[i].isWall()) {
+                //     wall[xy.y] |= 1L << xy.x;
+                // }
                 explored[xy.y] |= 1L << xy.x;
             }
             firstUpdate = false;
@@ -287,9 +253,9 @@ public class POI {
                 if (!G.rc.onTheMap(xy)) {
                     continue;
                 }
-                if (G.rc.senseMapInfo(xy).isWall()) {
-                    wall[xy.y] |= 1L << xy.x;
-                }
+                // if (G.rc.senseMapInfo(xy).isWall()) {
+                //     wall[xy.y] |= 1L << xy.x;
+                // }
                 explored[xy.y] |= 1L << xy.x;
             }
         }

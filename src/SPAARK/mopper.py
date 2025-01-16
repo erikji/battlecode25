@@ -57,16 +57,23 @@ a2 = [
     [(1, 0), (2, 0), (1, 1), (2, 1), (1, -1), (2, -1)],
     [(0, 1), (0, 2), (1, 1), (1, 2), (-1, 1), (-1, 2)]
 ]
-s = ''
+s = []
 for i in range(36):
-    s+='\t\t\tswingScores['+str(i)+'] = 0;\n'
+    s.append('\t\t\tswingScores['+str(i)+'] = 0;\n')
 for d in a:
     for d2 in a2:
         for i in d2:
-            s += f'\t\t\tif (opponentRobotsString.indexOf("["+(G.me.x{""if d[0]+i[0]<0 else "+"}{d[0]+i[0]})+", "+(G.me.y{""if d[1]+i[1]<0 else "+"}{d[1]+i[1]})+"]") != -1)' + ' {\n'
-            s += f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 5;\n'
-            s += '\t\t\t}\n'
-print(s)
+            try:
+                ind = s.index((f'\t\t\tif (opponentRobotsString.indexOf("["+(G.me.x{""if d[0]+i[0]<0 else "+"}{d[0]+i[0]})+", "+(G.me.y{""if d[1]+i[1]<0 else "+"}{d[1]+i[1]})+"]") != -1)' + ' {\n'))
+                if ind < 0:
+                    raise Exception()
+                s.insert(ind+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 35;\n')
+            except:
+                s.append(f'\t\t\tif (opponentRobotsString.indexOf("["+(G.me.x{""if d[0]+i[0]<0 else "+"}{d[0]+i[0]})+", "+(G.me.y{""if d[1]+i[1]<0 else "+"}{d[1]+i[1]})+"]") != -1)' + ' {\n')
+                s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 35;\n')
+                s.append('\t\t\t}\n')
+# s = s.split('\n')
+print(''.join(s))
 
 #weighing scores
 s=''
