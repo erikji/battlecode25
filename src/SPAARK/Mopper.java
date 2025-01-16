@@ -512,39 +512,53 @@ public class Mopper {
 			allswing[7] = true;
 		}
         // copyspaghetti from Motion.microMove but whatever
-        int best = 8;
-        int numBest = 1;
-        for (int i = 8; --i >= 0;) {
-            if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
-                best = i;
-                numBest = 1;
-            } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best] && Random.rand() % ++numBest == 0) {
-                best = i;
+        if (G.rc.isActionReady()) {
+            int best = 8;
+            int numBest = 1;
+            for (int i = 8; --i >= 0;) {
+                if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
+                    best = i;
+                    numBest = 1;
+                } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best] && Random.rand() % ++numBest == 0) {
+                    best = i;
+                }
             }
+            // try attack then move then attack again
+            if (allswing[best]) {
+                if (allmax[best] == cmax) {
+                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                    }
+                }
+                Motion.move(G.ALL_DIRECTIONS[best]);
+                if (allmax[best] != cmax) {
+                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                    }
+                }
+            } else {
+                MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
+                if (G.rc.canAttack(attackLoc)) {
+                    G.rc.attack(attackLoc);
+                }
+                Motion.move(G.ALL_DIRECTIONS[best]);
+                if (G.rc.canAttack(attackLoc)) {
+                    G.rc.attack(attackLoc);
+                }
+            }
+        } else {
+            int best = 8;
+            int numBest = 1;
+            for (int i = 8; --i >= 0;) {
+                if (moveScores[i] > moveScores[best]) {
+                    best = i;
+                    numBest = 1;
+                } else if (moveScores[i] == moveScores[best] && Random.rand() % ++numBest == 0) {
+                    best = i;
+                }
+            }
+            Motion.move(G.ALL_DIRECTIONS[best]);
         }
-        // try attack then move then attack again
-		if (allswing[best]) {
-			if (allmax[best] == cmax) {
-				if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-					G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
-				}
-			}
-			Motion.move(G.ALL_DIRECTIONS[best]);
-			if (allmax[best] != cmax) {
-				if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-					G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
-				}
-			}
-		} else {
-			MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
-			if (G.rc.canAttack(attackLoc)) {
-				G.rc.attack(attackLoc);
-			}
-			Motion.move(G.ALL_DIRECTIONS[best]);
-			if (G.rc.canAttack(attackLoc)) {
-				G.rc.attack(attackLoc);
-			}
-		}
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
@@ -1862,7 +1876,7 @@ public class Mopper {
 						for (int i = 9; --i >= 0;) {
 							if (G.rc.canMove(G.ALL_DIRECTIONS[i])) {
 								if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(bot.location, bot.type.actionRadiusSquared)) {
-									scores[i] -= 200;
+									scores[i] -= G.paintPerChips() * 180; // mopper costs 300 paint, and we lose 3/5 hp
 								}
 							}
 						}

@@ -350,13 +350,18 @@ public class Splasher {
             }
             if (allmax[best] > 250) {
                 MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
-                if (G.rc.canAttack(attackLoc)) {
-                    G.rc.attack(attackLoc);
-                }
-                Motion.move(G.ALL_DIRECTIONS[best]);
-                if (G.rc.canAttack(attackLoc)) {
-                    G.rc.attack(attackLoc);
-                }
+				//try to move before attacking if possible so the paint we used in the attack isn't factored into movement cooldown
+				if (attackLoc.isWithinDistanceSquared(G.me.add(G.ALL_DIRECTIONS[best]), 4)) {
+					Motion.move(G.ALL_DIRECTIONS[best]);
+					if (G.rc.canAttack(attackLoc)) {
+						G.rc.attack(attackLoc);
+					}
+				} else {
+					if (G.rc.canAttack(attackLoc)) {
+						G.rc.attack(attackLoc);
+					}
+					Motion.move(G.ALL_DIRECTIONS[best]);
+				}
                 notMoved = true;
             }
         }

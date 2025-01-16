@@ -128,7 +128,16 @@ public class G {
         return lastVisited[loc.y / 2][loc.x / 2] - 2000;
     }
 
+    //random micro stuff
     public static double paintPerChips() {
+        //how many chips is 1 paint worth
         return 0.5;
+    }
+    public static int cooldown(int paintAmount, int cooldownToAdd) {
+        //how much cooldown is added if we have this much paint left?
+        //basically copy pasted from https://github.com/battlecode/battlecode25/blob/master/engine/src/main/battlecode/world/InternalRobot.java#L277
+        if (paintAmount * 2 > G.rc.getType().paintCapacity) return cooldownToAdd;
+        int paintPercentage = (int) Math.round(paintAmount * 100.0 / G.rc.getType().paintCapacity);
+        return cooldownToAdd + (int) Math.round(cooldownToAdd * (GameConstants.INCREASED_COOLDOWN_INTERCEPT + GameConstants.INCREASED_COOLDOWN_SLOPE * paintPercentage) / 100.0);
     }
 }
