@@ -6,7 +6,7 @@ for dx in range(-5,6):
 works.sort(key=lambda a:a[0]*a[0]+a[1]*a[1])
 #mop
 #weighing scores
-a = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+a = [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0)]
 for d in a:
     asdf = []
     s = ''
@@ -26,33 +26,33 @@ for d in a:
     print(s,end='')
 
 #calculating scores
-for i in range(25):
-    print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores["""+str(i)+"""] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    attackScores["""+str(i)+"""] += 5;
-                }
-                if (bot.paintAmount <= 10) {
-                    //treat freezing bot equivalent to gaining 20 paint
-                    attackScores["""+str(i)+"""] += 100;
-                }
-            }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores["""+str(i)+"""] += 50;
-            }
-            attackScores["""+str(i)+"""] += 25;
-        }""")
+# for i in range(25):
+#     print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
+#         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+#             if (G.rc.canSenseRobotAtLocation(loc)) {
+#                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+#                 attackScores["""+str(i)+"""] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+#                 if (bot.getType() == UnitType.MOPPER) {
+#                     //double passive paint loss on moppers
+#                     attackScores["""+str(i)+"""] += 5;
+#                 }
+#                 if (bot.paintAmount <= 10) {
+#                     //treat freezing bot equivalent to gaining 20 paint
+#                     attackScores["""+str(i)+"""] += 100;
+#                 }
+#             }
+#             if (target.distanceSquaredTo(loc) <= 8) {
+#                 attackScores["""+str(i)+"""] += 50;
+#             }
+#             attackScores["""+str(i)+"""] += 25;
+#         }""")
 
 print()
 print()
 print()
 #swings
 #calculating scores
-a = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1), (0, 0)]
+a = [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (0, 0)]
 a2 = [
     [(0, -1), (0, -2), (-1, -1), (-1, -2), (1, -1), (1, -2)],
     [(-1, 0), (-2, 0), (-1, -1), (-2, -1), (-1, 1), (-2, 1)],

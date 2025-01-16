@@ -33,23 +33,23 @@ public class G {
             Direction.SOUTHWEST,
             Direction.SOUTH,
             Direction.SOUTHEAST,
-            Direction.WEST,
             Direction.EAST,
-            Direction.NORTHWEST,
-            Direction.NORTH,
             Direction.NORTHEAST,
+            Direction.NORTH,
+            Direction.NORTHWEST,
+            Direction.WEST,
     };
 
     public static final Direction[] ALL_DIRECTIONS = {
             Direction.SOUTHWEST,
             Direction.SOUTH,
             Direction.SOUTHEAST,
-            Direction.WEST,
             Direction.EAST,
-            Direction.NORTHWEST,
-            Direction.NORTH,
             Direction.NORTHEAST,
-            Direction.CENTER,
+            Direction.NORTH,
+            Direction.NORTHWEST,
+            Direction.WEST,
+            Direction.CENTER
     };
     public static final MapLocation invalidLoc = new MapLocation(-1, -1);
 

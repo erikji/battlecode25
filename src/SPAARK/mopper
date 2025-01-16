@@ -1,0 +1,684 @@
+		if (attackScores[21] > allmax[0]) {
+			allmax[0] = attackScores[21];
+			allx[0] = -2;
+			ally[0] = -2;
+			allswing[0] = false;
+		}
+		if (attackScores[13] > allmax[0]) {
+			allmax[0] = attackScores[13];
+			allx[0] = -2;
+			ally[0] = -1;
+			allswing[0] = false;
+		}
+		if (attackScores[9] > allmax[0]) {
+			allmax[0] = attackScores[9];
+			allx[0] = -2;
+			ally[0] = 0;
+			allswing[0] = false;
+		}
+		if (attackScores[15] > allmax[0]) {
+			allmax[0] = attackScores[15];
+			allx[0] = -1;
+			ally[0] = -2;
+			allswing[0] = false;
+		}
+		if (attackScores[10] > allmax[0]) {
+			allmax[0] = attackScores[10];
+			allx[0] = 0;
+			ally[0] = -2;
+			allswing[0] = false;
+		}
+		if (attackScores[15] > allmax[1]) {
+			allmax[1] = attackScores[15];
+			allx[1] = -1;
+			ally[1] = -2;
+			allswing[1] = false;
+		}
+		if (attackScores[10] > allmax[1]) {
+			allmax[1] = attackScores[10];
+			allx[1] = 0;
+			ally[1] = -2;
+			allswing[1] = false;
+		}
+		if (attackScores[17] > allmax[1]) {
+			allmax[1] = attackScores[17];
+			allx[1] = 1;
+			ally[1] = -2;
+			allswing[1] = false;
+		}
+		if (attackScores[10] > allmax[2]) {
+			allmax[2] = attackScores[10];
+			allx[2] = 0;
+			ally[2] = -2;
+			allswing[2] = false;
+		}
+		if (attackScores[17] > allmax[2]) {
+			allmax[2] = attackScores[17];
+			allx[2] = 1;
+			ally[2] = -2;
+			allswing[2] = false;
+		}
+		if (attackScores[23] > allmax[2]) {
+			allmax[2] = attackScores[23];
+			allx[2] = 2;
+			ally[2] = -2;
+			allswing[2] = false;
+		}
+		if (attackScores[19] > allmax[2]) {
+			allmax[2] = attackScores[19];
+			allx[2] = 2;
+			ally[2] = -1;
+			allswing[2] = false;
+		}
+		if (attackScores[12] > allmax[2]) {
+			allmax[2] = attackScores[12];
+			allx[2] = 2;
+			ally[2] = 0;
+			allswing[2] = false;
+		}
+		if (attackScores[19] > allmax[3]) {
+			allmax[3] = attackScores[19];
+			allx[3] = 2;
+			ally[3] = -1;
+			allswing[3] = false;
+		}
+		if (attackScores[12] > allmax[3]) {
+			allmax[3] = attackScores[12];
+			allx[3] = 2;
+			ally[3] = 0;
+			allswing[3] = false;
+		}
+		if (attackScores[20] > allmax[3]) {
+			allmax[3] = attackScores[20];
+			allx[3] = 2;
+			ally[3] = 1;
+			allswing[3] = false;
+		}
+		if (attackScores[11] > allmax[4]) {
+			allmax[4] = attackScores[11];
+			allx[4] = 0;
+			ally[4] = 2;
+			allswing[4] = false;
+		}
+		if (attackScores[18] > allmax[4]) {
+			allmax[4] = attackScores[18];
+			allx[4] = 1;
+			ally[4] = 2;
+			allswing[4] = false;
+		}
+		if (attackScores[12] > allmax[4]) {
+			allmax[4] = attackScores[12];
+			allx[4] = 2;
+			ally[4] = 0;
+			allswing[4] = false;
+		}
+		if (attackScores[20] > allmax[4]) {
+			allmax[4] = attackScores[20];
+			allx[4] = 2;
+			ally[4] = 1;
+			allswing[4] = false;
+		}
+		if (attackScores[24] > allmax[4]) {
+			allmax[4] = attackScores[24];
+			allx[4] = 2;
+			ally[4] = 2;
+			allswing[4] = false;
+		}
+		if (attackScores[16] > allmax[5]) {
+			allmax[5] = attackScores[16];
+			allx[5] = -1;
+			ally[5] = 2;
+			allswing[5] = false;
+		}
+		if (attackScores[11] > allmax[5]) {
+			allmax[5] = attackScores[11];
+			allx[5] = 0;
+			ally[5] = 2;
+			allswing[5] = false;
+		}
+		if (attackScores[18] > allmax[5]) {
+			allmax[5] = attackScores[18];
+			allx[5] = 1;
+			ally[5] = 2;
+			allswing[5] = false;
+		}
+		if (attackScores[9] > allmax[6]) {
+			allmax[6] = attackScores[9];
+			allx[6] = -2;
+			ally[6] = 0;
+			allswing[6] = false;
+		}
+		if (attackScores[14] > allmax[6]) {
+			allmax[6] = attackScores[14];
+			allx[6] = -2;
+			ally[6] = 1;
+			allswing[6] = false;
+		}
+		if (attackScores[22] > allmax[6]) {
+			allmax[6] = attackScores[22];
+			allx[6] = -2;
+			ally[6] = 2;
+			allswing[6] = false;
+		}
+		if (attackScores[16] > allmax[6]) {
+			allmax[6] = attackScores[16];
+			allx[6] = -1;
+			ally[6] = 2;
+			allswing[6] = false;
+		}
+		if (attackScores[11] > allmax[6]) {
+			allmax[6] = attackScores[11];
+			allx[6] = 0;
+			ally[6] = 2;
+			allswing[6] = false;
+		}
+		if (attackScores[13] > allmax[7]) {
+			allmax[7] = attackScores[13];
+			allx[7] = -2;
+			ally[7] = -1;
+			allswing[7] = false;
+		}
+		if (attackScores[9] > allmax[7]) {
+			allmax[7] = attackScores[9];
+			allx[7] = -2;
+			ally[7] = 0;
+			allswing[7] = false;
+		}
+		if (attackScores[14] > allmax[7]) {
+			allmax[7] = attackScores[14];
+			allx[7] = -2;
+			ally[7] = 1;
+			allswing[7] = false;
+		}
+
+
+
+			if (opponentRobotsString.indexOf(G.me.translate(-1, -2).toString()) != -1) {
+				swingScores[32] += 35;
+				swingScores[28] += 35;
+				swingScores[9] += 35;
+				swingScores[5] += 35;
+				swingScores[4] += 35;
+				swingScores[0] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-1, -3).toString()) != -1) {
+				swingScores[4] += 35;
+				swingScores[0] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, -2).toString()) != -1) {
+				swingScores[28] += 35;
+				swingScores[5] += 35;
+				swingScores[1] += 35;
+				swingScores[0] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, -3).toString()) != -1) {
+				swingScores[0] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, -2).toString()) != -1) {
+				swingScores[32] += 35;
+				swingScores[28] += 35;
+				swingScores[12] += 35;
+				swingScores[9] += 35;
+				swingScores[8] += 35;
+				swingScores[4] += 35;
+				swingScores[2] += 35;
+				swingScores[0] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, -3).toString()) != -1) {
+				swingScores[8] += 35;
+				swingScores[4] += 35;
+				swingScores[0] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, -1).toString()) != -1) {
+				swingScores[33] += 35;
+				swingScores[29] += 35;
+				swingScores[28] += 35;
+				swingScores[24] += 35;
+				swingScores[5] += 35;
+				swingScores[1] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-3, -1).toString()) != -1) {
+				swingScores[29] += 35;
+				swingScores[1] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-3, -2).toString()) != -1) {
+				swingScores[1] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, 0).toString()) != -1) {
+				swingScores[33] += 35;
+				swingScores[29] += 35;
+				swingScores[25] += 35;
+				swingScores[24] += 35;
+				swingScores[21] += 35;
+				swingScores[5] += 35;
+				swingScores[3] += 35;
+				swingScores[1] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-3, 0).toString()) != -1) {
+				swingScores[29] += 35;
+				swingScores[25] += 35;
+				swingScores[1] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, -1).toString()) != -1) {
+				swingScores[32] += 35;
+				swingScores[30] += 35;
+				swingScores[28] += 35;
+				swingScores[24] += 35;
+				swingScores[20] += 35;
+				swingScores[16] += 35;
+				swingScores[13] += 35;
+				swingScores[12] += 35;
+				swingScores[9] += 35;
+				swingScores[2] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, -1).toString()) != -1) {
+				swingScores[34] += 35;
+				swingScores[32] += 35;
+				swingScores[30] += 35;
+				swingScores[20] += 35;
+				swingScores[16] += 35;
+				swingScores[12] += 35;
+				swingScores[6] += 35;
+				swingScores[2] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, 0).toString()) != -1) {
+				swingScores[30] += 35;
+				swingScores[26] += 35;
+				swingScores[24] += 35;
+				swingScores[20] += 35;
+				swingScores[17] += 35;
+				swingScores[16] += 35;
+				swingScores[13] += 35;
+				swingScores[11] += 35;
+				swingScores[9] += 35;
+				swingScores[7] += 35;
+				swingScores[3] += 35;
+				swingScores[2] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, 0).toString()) != -1) {
+				swingScores[34] += 35;
+				swingScores[30] += 35;
+				swingScores[26] += 35;
+				swingScores[22] += 35;
+				swingScores[20] += 35;
+				swingScores[16] += 35;
+				swingScores[11] += 35;
+				swingScores[7] += 35;
+				swingScores[6] += 35;
+				swingScores[2] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, -2).toString()) != -1) {
+				swingScores[32] += 35;
+				swingScores[12] += 35;
+				swingScores[8] += 35;
+				swingScores[6] += 35;
+				swingScores[4] += 35;
+				swingScores[2] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-1, 0).toString()) != -1) {
+				swingScores[33] += 35;
+				swingScores[24] += 35;
+				swingScores[21] += 35;
+				swingScores[20] += 35;
+				swingScores[17] += 35;
+				swingScores[13] += 35;
+				swingScores[9] += 35;
+				swingScores[7] += 35;
+				swingScores[5] += 35;
+				swingScores[3] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-1, 1).toString()) != -1) {
+				swingScores[35] += 35;
+				swingScores[33] += 35;
+				swingScores[31] += 35;
+				swingScores[21] += 35;
+				swingScores[17] += 35;
+				swingScores[13] += 35;
+				swingScores[7] += 35;
+				swingScores[3] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, 1).toString()) != -1) {
+				swingScores[35] += 35;
+				swingScores[31] += 35;
+				swingScores[30] += 35;
+				swingScores[26] += 35;
+				swingScores[17] += 35;
+				swingScores[15] += 35;
+				swingScores[13] += 35;
+				swingScores[11] += 35;
+				swingScores[7] += 35;
+				swingScores[3] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, 1).toString()) != -1) {
+				swingScores[33] += 35;
+				swingScores[31] += 35;
+				swingScores[29] += 35;
+				swingScores[25] += 35;
+				swingScores[21] += 35;
+				swingScores[3] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, -3).toString()) != -1) {
+				swingScores[8] += 35;
+				swingScores[4] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-1, -1).toString()) != -1) {
+				swingScores[33] += 35;
+				swingScores[32] += 35;
+				swingScores[28] += 35;
+				swingScores[24] += 35;
+				swingScores[20] += 35;
+				swingScores[13] += 35;
+				swingScores[9] += 35;
+				swingScores[5] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, -1).toString()) != -1) {
+				swingScores[34] += 35;
+				swingScores[16] += 35;
+				swingScores[14] += 35;
+				swingScores[12] += 35;
+				swingScores[10] += 35;
+				swingScores[6] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, 0).toString()) != -1) {
+				swingScores[34] += 35;
+				swingScores[22] += 35;
+				swingScores[18] += 35;
+				swingScores[16] += 35;
+				swingScores[14] += 35;
+				swingScores[11] += 35;
+				swingScores[10] += 35;
+				swingScores[6] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, -2).toString()) != -1) {
+				swingScores[12] += 35;
+				swingScores[10] += 35;
+				swingScores[8] += 35;
+				swingScores[6] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, 1).toString()) != -1) {
+				swingScores[35] += 35;
+				swingScores[34] += 35;
+				swingScores[30] += 35;
+				swingScores[26] += 35;
+				swingScores[22] += 35;
+				swingScores[15] += 35;
+				swingScores[11] += 35;
+				swingScores[7] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, -3).toString()) != -1) {
+				swingScores[8] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(3, -1).toString()) != -1) {
+				swingScores[14] += 35;
+				swingScores[10] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(3, 0).toString()) != -1) {
+				swingScores[18] += 35;
+				swingScores[14] += 35;
+				swingScores[10] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(3, -2).toString()) != -1) {
+				swingScores[10] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, 1).toString()) != -1) {
+				swingScores[34] += 35;
+				swingScores[22] += 35;
+				swingScores[18] += 35;
+				swingScores[15] += 35;
+				swingScores[14] += 35;
+				swingScores[11] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(3, 1).toString()) != -1) {
+				swingScores[18] += 35;
+				swingScores[14] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, 2).toString()) != -1) {
+				swingScores[35] += 35;
+				swingScores[26] += 35;
+				swingScores[23] += 35;
+				swingScores[22] += 35;
+				swingScores[19] += 35;
+				swingScores[15] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, 2).toString()) != -1) {
+				swingScores[22] += 35;
+				swingScores[19] += 35;
+				swingScores[18] += 35;
+				swingScores[15] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, 2).toString()) != -1) {
+				swingScores[35] += 35;
+				swingScores[31] += 35;
+				swingScores[27] += 35;
+				swingScores[26] += 35;
+				swingScores[23] += 35;
+				swingScores[19] += 35;
+				swingScores[17] += 35;
+				swingScores[15] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-1, 2).toString()) != -1) {
+				swingScores[35] += 35;
+				swingScores[31] += 35;
+				swingScores[27] += 35;
+				swingScores[23] += 35;
+				swingScores[21] += 35;
+				swingScores[17] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(3, 2).toString()) != -1) {
+				swingScores[18] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(1, 3).toString()) != -1) {
+				swingScores[23] += 35;
+				swingScores[19] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(2, 3).toString()) != -1) {
+				swingScores[19] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(0, 3).toString()) != -1) {
+				swingScores[27] += 35;
+				swingScores[23] += 35;
+				swingScores[19] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, 2).toString()) != -1) {
+				swingScores[31] += 35;
+				swingScores[27] += 35;
+				swingScores[25] += 35;
+				swingScores[21] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-1, 3).toString()) != -1) {
+				swingScores[27] += 35;
+				swingScores[23] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-3, 1).toString()) != -1) {
+				swingScores[29] += 35;
+				swingScores[25] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-3, 2).toString()) != -1) {
+				swingScores[25] += 35;
+			}
+			if (opponentRobotsString.indexOf(G.me.translate(-2, 3).toString()) != -1) {
+				swingScores[27] += 35;
+			}
+
+		if (swingScores[32] > cmax) {
+			cmax = swingScores[32];
+			cx = 1;
+			swing = true;
+		}
+		if (swingScores[33] > cmax) {
+			cmax = swingScores[33];
+			cx = 7;
+			swing = true;
+		}
+		if (swingScores[34] > cmax) {
+			cmax = swingScores[34];
+			cx = 3;
+			swing = true;
+		}
+		if (swingScores[35] > cmax) {
+			cmax = swingScores[35];
+			cx = 5;
+			swing = true;
+		}
+
+		if (swingScores[0] > allmax[0]) {
+			allmax[0] = swingScores[0];
+			allx[0] = 1;
+			allswing[0] = true;
+		}
+		if (swingScores[1] > allmax[0]) {
+			allmax[0] = swingScores[1];
+			allx[0] = 7;
+			allswing[0] = true;
+		}
+		if (swingScores[2] > allmax[0]) {
+			allmax[0] = swingScores[2];
+			allx[0] = 3;
+			allswing[0] = true;
+		}
+		if (swingScores[3] > allmax[0]) {
+			allmax[0] = swingScores[3];
+			allx[0] = 5;
+			allswing[0] = true;
+		}
+		if (swingScores[4] > allmax[1]) {
+			allmax[1] = swingScores[4];
+			allx[1] = 1;
+			allswing[1] = true;
+		}
+		if (swingScores[5] > allmax[1]) {
+			allmax[1] = swingScores[5];
+			allx[1] = 7;
+			allswing[1] = true;
+		}
+		if (swingScores[6] > allmax[1]) {
+			allmax[1] = swingScores[6];
+			allx[1] = 3;
+			allswing[1] = true;
+		}
+		if (swingScores[7] > allmax[1]) {
+			allmax[1] = swingScores[7];
+			allx[1] = 5;
+			allswing[1] = true;
+		}
+		if (swingScores[8] > allmax[2]) {
+			allmax[2] = swingScores[8];
+			allx[2] = 1;
+			allswing[2] = true;
+		}
+		if (swingScores[9] > allmax[2]) {
+			allmax[2] = swingScores[9];
+			allx[2] = 7;
+			allswing[2] = true;
+		}
+		if (swingScores[10] > allmax[2]) {
+			allmax[2] = swingScores[10];
+			allx[2] = 3;
+			allswing[2] = true;
+		}
+		if (swingScores[11] > allmax[2]) {
+			allmax[2] = swingScores[11];
+			allx[2] = 5;
+			allswing[2] = true;
+		}
+		if (swingScores[12] > allmax[3]) {
+			allmax[3] = swingScores[12];
+			allx[3] = 1;
+			allswing[3] = true;
+		}
+		if (swingScores[13] > allmax[3]) {
+			allmax[3] = swingScores[13];
+			allx[3] = 7;
+			allswing[3] = true;
+		}
+		if (swingScores[14] > allmax[3]) {
+			allmax[3] = swingScores[14];
+			allx[3] = 3;
+			allswing[3] = true;
+		}
+		if (swingScores[15] > allmax[3]) {
+			allmax[3] = swingScores[15];
+			allx[3] = 5;
+			allswing[3] = true;
+		}
+		if (swingScores[16] > allmax[4]) {
+			allmax[4] = swingScores[16];
+			allx[4] = 1;
+			allswing[4] = true;
+		}
+		if (swingScores[17] > allmax[4]) {
+			allmax[4] = swingScores[17];
+			allx[4] = 7;
+			allswing[4] = true;
+		}
+		if (swingScores[18] > allmax[4]) {
+			allmax[4] = swingScores[18];
+			allx[4] = 3;
+			allswing[4] = true;
+		}
+		if (swingScores[19] > allmax[4]) {
+			allmax[4] = swingScores[19];
+			allx[4] = 5;
+			allswing[4] = true;
+		}
+		if (swingScores[20] > allmax[5]) {
+			allmax[5] = swingScores[20];
+			allx[5] = 1;
+			allswing[5] = true;
+		}
+		if (swingScores[21] > allmax[5]) {
+			allmax[5] = swingScores[21];
+			allx[5] = 7;
+			allswing[5] = true;
+		}
+		if (swingScores[22] > allmax[5]) {
+			allmax[5] = swingScores[22];
+			allx[5] = 3;
+			allswing[5] = true;
+		}
+		if (swingScores[23] > allmax[5]) {
+			allmax[5] = swingScores[23];
+			allx[5] = 5;
+			allswing[5] = true;
+		}
+		if (swingScores[24] > allmax[6]) {
+			allmax[6] = swingScores[24];
+			allx[6] = 1;
+			allswing[6] = true;
+		}
+		if (swingScores[25] > allmax[6]) {
+			allmax[6] = swingScores[25];
+			allx[6] = 7;
+			allswing[6] = true;
+		}
+		if (swingScores[26] > allmax[6]) {
+			allmax[6] = swingScores[26];
+			allx[6] = 3;
+			allswing[6] = true;
+		}
+		if (swingScores[27] > allmax[6]) {
+			allmax[6] = swingScores[27];
+			allx[6] = 5;
+			allswing[6] = true;
+		}
+		if (swingScores[28] > allmax[7]) {
+			allmax[7] = swingScores[28];
+			allx[7] = 1;
+			allswing[7] = true;
+		}
+		if (swingScores[29] > allmax[7]) {
+			allmax[7] = swingScores[29];
+			allx[7] = 7;
+			allswing[7] = true;
+		}
+		if (swingScores[30] > allmax[7]) {
+			allmax[7] = swingScores[30];
+			allx[7] = 3;
+			allswing[7] = true;
+		}
+		if (swingScores[31] > allmax[7]) {
+			allmax[7] = swingScores[31];
+			allx[7] = 5;
+			allswing[7] = true;
+		}
+
