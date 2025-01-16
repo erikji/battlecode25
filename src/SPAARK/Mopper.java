@@ -48,30 +48,33 @@ public class Mopper {
         int b = Clock.getBytecodeNum();
         G.indicatorString.append((b - a) + " ");
         // grab directions for micro
+		swingScores[0] = swingScores[1] = swingScores[2] = swingScores[3] = swingScores[4] = swingScores[5] = swingScores[6] = swingScores[7] = swingScores[8] = swingScores[9] = swingScores[10] = swingScores[11] = swingScores[12] = swingScores[13] = swingScores[14] = swingScores[15] = swingScores[16] = swingScores[17] = swingScores[18] = swingScores[19] = swingScores[20] = swingScores[21] = swingScores[22] = swingScores[23] = swingScores[24] = swingScores[25] = swingScores[26] = swingScores[27] = swingScores[28] = swingScores[29] = swingScores[30] = swingScores[31] = swingScores[32] = swingScores[33] = swingScores[34] = swingScores[35] = attackScores[0] = attackScores[1] = attackScores[2] = attackScores[3] = attackScores[4] = attackScores[5] = attackScores[6] = attackScores[7] = attackScores[8] = attackScores[9] = attackScores[10] = attackScores[11] = attackScores[12] = attackScores[13] = attackScores[14] = attackScores[15] = attackScores[16] = attackScores[17] = attackScores[18] = attackScores[19] = attackScores[20] = attackScores[21] = attackScores[22] = attackScores[23] = attackScores[24] = moveScores[0] = moveScores[1] = moveScores[2] = moveScores[3] = moveScores[4] = moveScores[5] = moveScores[6] = moveScores[7] = moveScores[8] = 0;
         switch (mode) {
             case EXPLORE -> {
-				explore();
+				G.indicatorString.append("EXPLORE ");
+				if (G.rc.isMovementReady()) {
+					exploreMoveScores();
+				}
+				if (G.rc.isActionReady()) {
+					exploreAttackScores();
+					exploreSwingScores();
+				}
+				G.rc.setIndicatorDot(G.me, 0, 255, 0);
 			}
             case BUILD -> {
-				build();
+				G.indicatorString.append("BUILD ");
+				if (G.rc.isMovementReady()) {
+					buildMoveScores();
+				}
+				if (G.rc.isActionReady()) {
+					buildAttackScores();
+					buildSwingScores();
+				}
+				G.rc.setIndicatorDot(G.me, 0, 0, 255);
 			}
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 Robot.retreat();
-            }
-        }
-        if (!G.rc.isActionReady()) {
-            for (int i = 36; --i >= 25;) {
-                swingScores[i] = 0;
-            }
-            for (int i = 25; --i >= 0;) {
-                attackScores[i] = 0;
-                swingScores[i] = 0;
-            }
-        }
-        if (!G.rc.isMovementReady()) {
-            for (int i = 9; --i >= 0;) {
-                moveScores[i] = 0;
             }
         }
 		boolean swing = false; //whether our attack will be a swing
@@ -576,8 +579,7 @@ public class Mopper {
         target = null;
     }
 
-    public static void explore() throws Exception {
-        G.indicatorString.append("EXPLORE ");
+	public static void exploreMoveScores() throws Exception {
         if (G.rc.isMovementReady()) {
             MapLocation bestBot = null;
             MapLocation bestEmpty = null;
@@ -614,432 +616,399 @@ public class Mopper {
             if (G.rc.onTheMap(microDir))
                 G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         }
-        if (G.rc.isActionReady()) {
-            StringBuilder opponentRobotsString = new StringBuilder();
-            for (int i = G.opponentRobots.length; --i >= 0;) {
-				if (G.opponentRobots[i].type.isRobotType()) {
-					opponentRobotsString.append(G.opponentRobots[i].location);
+	}
+
+	public static void exploreAttackScores() throws Exception {
+		for (int i = 25; --i >= 0;) {
+			MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
+			if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+				if (G.rc.canSenseRobotAtLocation(loc)) {
+					// if it's an opponent, they get -1 paint
+					// if it's an ally, they go from -2 to -1 paint
+					// in both cases we gain 1 paint
+					// can't be a tower because it has to be painted
+					RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+					// maybe also incentize mopping enemies with low paint
+					attackScores[i] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+					if (bot.getType() == UnitType.MOPPER) {
+						// double paint loss on moppers
+						attackScores[i]++;
+					}
+					if (bot.paintAmount <= 10) {
+						//treat freezing bot equivalent to gaining 20 paint
+						attackScores[i] += 20;
+					}
 				}
-            }
-            for (int i = 25; --i >= 0;) {
-                attackScores[i] = 0;
-                MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-                    if (G.rc.canSenseRobotAtLocation(loc)) {
-                        // if it's an opponent, they get -1 paint
-                        // if it's an ally, they go from -2 to -1 paint
-                        // in both cases we gain 1 paint
-                        // can't be a tower because it has to be painted
-                        RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                        // maybe also incentize mopping enemies with low paint
-                        attackScores[i] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                        if (bot.getType() == UnitType.MOPPER) {
-                            // double paint loss on moppers
-                            attackScores[i]++;
-                        }
-                        if (bot.paintAmount <= 10) {
-                            //treat freezing bot equivalent to gaining 20 paint
-                            attackScores[i] += 20;
-                        }
-                    }
-                    attackScores[i] += 5;
-                    attackScores[i] *= 5;
-                }
-            }
-            swingScores[0] = 0;
-			swingScores[1] = 0;
-			swingScores[2] = 0;
-			swingScores[3] = 0;
-			swingScores[4] = 0;
-			swingScores[5] = 0;
-			swingScores[6] = 0;
-			swingScores[7] = 0;
-			swingScores[8] = 0;
-			swingScores[9] = 0;
-			swingScores[10] = 0;
-			swingScores[11] = 0;
-			swingScores[12] = 0;
-			swingScores[13] = 0;
-			swingScores[14] = 0;
-			swingScores[15] = 0;
-			swingScores[16] = 0;
-			swingScores[17] = 0;
-			swingScores[18] = 0;
-			swingScores[19] = 0;
-			swingScores[20] = 0;
-			swingScores[21] = 0;
-			swingScores[22] = 0;
-			swingScores[23] = 0;
-			swingScores[24] = 0;
-			swingScores[25] = 0;
-			swingScores[26] = 0;
-			swingScores[27] = 0;
-			swingScores[28] = 0;
-			swingScores[29] = 0;
-			swingScores[30] = 0;
-			swingScores[31] = 0;
-			swingScores[32] = 0;
-			swingScores[33] = 0;
-			swingScores[34] = 0;
-			swingScores[35] = 0;
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[32] += 35;
-				swingScores[12] += 35;
-				swingScores[9] += 35;
-				swingScores[5] += 35;
-				swingScores[4] += 35;
-				swingScores[0] += 35;
+				attackScores[i] += 5;
+				attackScores[i] *= 5;
 			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[4] += 35;
-				swingScores[0] += 35;
+		}
+	}
+
+    public static void exploreSwingScores() throws Exception {
+		StringBuilder opponentRobotsString = new StringBuilder();
+		for (int i = G.opponentRobots.length; --i >= 0;) {
+			if (G.opponentRobots[i].type.isRobotType()) {
+				opponentRobotsString.append(G.opponentRobots[i].location);
 			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[12] += 35;
-				swingScores[5] += 35;
-				swingScores[1] += 35;
-				swingScores[0] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[0] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[32] += 35;
-				swingScores[16] += 35;
-				swingScores[12] += 35;
-				swingScores[9] += 35;
-				swingScores[8] += 35;
-				swingScores[4] += 35;
-				swingScores[2] += 35;
-				swingScores[0] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[8] += 35;
-				swingScores[4] += 35;
-				swingScores[0] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[33] += 35;
-				swingScores[20] += 35;
-				swingScores[13] += 35;
-				swingScores[12] += 35;
-				swingScores[5] += 35;
-				swingScores[1] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[13] += 35;
-				swingScores[1] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[1] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[33] += 35;
-				swingScores[25] += 35;
-				swingScores[21] += 35;
-				swingScores[20] += 35;
-				swingScores[13] += 35;
-				swingScores[5] += 35;
-				swingScores[3] += 35;
-				swingScores[1] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[21] += 35;
-				swingScores[13] += 35;
-				swingScores[1] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[32] += 35;
-				swingScores[28] += 35;
-				swingScores[24] += 35;
-				swingScores[20] += 35;
-				swingScores[17] += 35;
-				swingScores[16] += 35;
-				swingScores[14] += 35;
-				swingScores[12] += 35;
-				swingScores[9] += 35;
-				swingScores[2] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[34] += 35;
-				swingScores[32] += 35;
-				swingScores[28] += 35;
-				swingScores[24] += 35;
-				swingScores[16] += 35;
-				swingScores[14] += 35;
-				swingScores[6] += 35;
-				swingScores[2] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[29] += 35;
-				swingScores[28] += 35;
-				swingScores[24] += 35;
-				swingScores[22] += 35;
-				swingScores[20] += 35;
-				swingScores[17] += 35;
-				swingScores[14] += 35;
-				swingScores[11] += 35;
-				swingScores[9] += 35;
-				swingScores[7] += 35;
-				swingScores[3] += 35;
-				swingScores[2] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[34] += 35;
-				swingScores[28] += 35;
-				swingScores[26] += 35;
-				swingScores[24] += 35;
-				swingScores[22] += 35;
-				swingScores[14] += 35;
-				swingScores[11] += 35;
-				swingScores[7] += 35;
-				swingScores[6] += 35;
-				swingScores[2] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[32] += 35;
-				swingScores[16] += 35;
-				swingScores[8] += 35;
-				swingScores[6] += 35;
-				swingScores[4] += 35;
-				swingScores[2] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[33] += 35;
-				swingScores[29] += 35;
-				swingScores[25] += 35;
-				swingScores[24] += 35;
-				swingScores[20] += 35;
-				swingScores[17] += 35;
-				swingScores[9] += 35;
-				swingScores[7] += 35;
-				swingScores[5] += 35;
-				swingScores[3] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[35] += 35;
-				swingScores[33] += 35;
-				swingScores[29] += 35;
-				swingScores[25] += 35;
-				swingScores[17] += 35;
-				swingScores[15] += 35;
-				swingScores[7] += 35;
-				swingScores[3] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[35] += 35;
-				swingScores[29] += 35;
-				swingScores[22] += 35;
-				swingScores[19] += 35;
-				swingScores[17] += 35;
-				swingScores[15] += 35;
-				swingScores[14] += 35;
-				swingScores[11] += 35;
-				swingScores[7] += 35;
-				swingScores[3] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[33] += 35;
-				swingScores[25] += 35;
-				swingScores[21] += 35;
-				swingScores[15] += 35;
-				swingScores[13] += 35;
-				swingScores[3] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[8] += 35;
-				swingScores[4] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[33] += 35;
-				swingScores[32] += 35;
-				swingScores[24] += 35;
-				swingScores[20] += 35;
-				swingScores[17] += 35;
-				swingScores[12] += 35;
-				swingScores[9] += 35;
-				swingScores[5] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[34] += 35;
-				swingScores[28] += 35;
-				swingScores[18] += 35;
-				swingScores[16] += 35;
-				swingScores[10] += 35;
-				swingScores[6] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[34] += 35;
-				swingScores[30] += 35;
-				swingScores[28] += 35;
-				swingScores[26] += 35;
-				swingScores[18] += 35;
-				swingScores[11] += 35;
-				swingScores[10] += 35;
-				swingScores[6] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[16] += 35;
-				swingScores[10] += 35;
-				swingScores[8] += 35;
-				swingScores[6] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[35] += 35;
-				swingScores[34] += 35;
-				swingScores[26] += 35;
-				swingScores[22] += 35;
-				swingScores[19] += 35;
-				swingScores[14] += 35;
-				swingScores[11] += 35;
-				swingScores[7] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-3)+"]") != -1) {
-				swingScores[8] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-1)+"]") != -1) {
-				swingScores[18] += 35;
-				swingScores[10] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+0)+"]") != -1) {
-				swingScores[30] += 35;
-				swingScores[18] += 35;
-				swingScores[10] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-2)+"]") != -1) {
-				swingScores[10] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[34] += 35;
-				swingScores[30] += 35;
-				swingScores[26] += 35;
-				swingScores[19] += 35;
-				swingScores[18] += 35;
-				swingScores[11] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[21] += 35;
-				swingScores[13] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[35] += 35;
-				swingScores[29] += 35;
-				swingScores[27] += 35;
-				swingScores[25] += 35;
-				swingScores[23] += 35;
-				swingScores[15] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[35] += 35;
-				swingScores[31] += 35;
-				swingScores[29] += 35;
-				swingScores[27] += 35;
-				swingScores[23] += 35;
-				swingScores[22] += 35;
-				swingScores[19] += 35;
-				swingScores[15] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[25] += 35;
-				swingScores[23] += 35;
-				swingScores[21] += 35;
-				swingScores[15] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+1)+"]") != -1) {
-				swingScores[30] += 35;
-				swingScores[18] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[35] += 35;
-				swingScores[31] += 35;
-				swingScores[27] += 35;
-				swingScores[26] += 35;
-				swingScores[22] += 35;
-				swingScores[19] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[31] += 35;
-				swingScores[30] += 35;
-				swingScores[26] += 35;
-				swingScores[19] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[21] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[27] += 35;
-				swingScores[23] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[31] += 35;
-				swingScores[27] += 35;
-				swingScores[23] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[23] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[31] += 35;
-				swingScores[27] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+2)+"]") != -1) {
-				swingScores[30] += 35;
-			}
-			if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+3)+"]") != -1) {
-				swingScores[31] += 35;
-			}
-        }
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[32] += 35;
+			swingScores[12] += 35;
+			swingScores[9] += 35;
+			swingScores[5] += 35;
+			swingScores[4] += 35;
+			swingScores[0] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-3)+"]") != -1) {
+			swingScores[4] += 35;
+			swingScores[0] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[12] += 35;
+			swingScores[5] += 35;
+			swingScores[1] += 35;
+			swingScores[0] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-3)+"]") != -1) {
+			swingScores[0] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[32] += 35;
+			swingScores[16] += 35;
+			swingScores[12] += 35;
+			swingScores[9] += 35;
+			swingScores[8] += 35;
+			swingScores[4] += 35;
+			swingScores[2] += 35;
+			swingScores[0] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-3)+"]") != -1) {
+			swingScores[8] += 35;
+			swingScores[4] += 35;
+			swingScores[0] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[33] += 35;
+			swingScores[20] += 35;
+			swingScores[13] += 35;
+			swingScores[12] += 35;
+			swingScores[5] += 35;
+			swingScores[1] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[13] += 35;
+			swingScores[1] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[1] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[33] += 35;
+			swingScores[25] += 35;
+			swingScores[21] += 35;
+			swingScores[20] += 35;
+			swingScores[13] += 35;
+			swingScores[5] += 35;
+			swingScores[3] += 35;
+			swingScores[1] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[21] += 35;
+			swingScores[13] += 35;
+			swingScores[1] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[32] += 35;
+			swingScores[28] += 35;
+			swingScores[24] += 35;
+			swingScores[20] += 35;
+			swingScores[17] += 35;
+			swingScores[16] += 35;
+			swingScores[14] += 35;
+			swingScores[12] += 35;
+			swingScores[9] += 35;
+			swingScores[2] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[34] += 35;
+			swingScores[32] += 35;
+			swingScores[28] += 35;
+			swingScores[24] += 35;
+			swingScores[16] += 35;
+			swingScores[14] += 35;
+			swingScores[6] += 35;
+			swingScores[2] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[29] += 35;
+			swingScores[28] += 35;
+			swingScores[24] += 35;
+			swingScores[22] += 35;
+			swingScores[20] += 35;
+			swingScores[17] += 35;
+			swingScores[14] += 35;
+			swingScores[11] += 35;
+			swingScores[9] += 35;
+			swingScores[7] += 35;
+			swingScores[3] += 35;
+			swingScores[2] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[34] += 35;
+			swingScores[28] += 35;
+			swingScores[26] += 35;
+			swingScores[24] += 35;
+			swingScores[22] += 35;
+			swingScores[14] += 35;
+			swingScores[11] += 35;
+			swingScores[7] += 35;
+			swingScores[6] += 35;
+			swingScores[2] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[32] += 35;
+			swingScores[16] += 35;
+			swingScores[8] += 35;
+			swingScores[6] += 35;
+			swingScores[4] += 35;
+			swingScores[2] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[33] += 35;
+			swingScores[29] += 35;
+			swingScores[25] += 35;
+			swingScores[24] += 35;
+			swingScores[20] += 35;
+			swingScores[17] += 35;
+			swingScores[9] += 35;
+			swingScores[7] += 35;
+			swingScores[5] += 35;
+			swingScores[3] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[35] += 35;
+			swingScores[33] += 35;
+			swingScores[29] += 35;
+			swingScores[25] += 35;
+			swingScores[17] += 35;
+			swingScores[15] += 35;
+			swingScores[7] += 35;
+			swingScores[3] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[35] += 35;
+			swingScores[29] += 35;
+			swingScores[22] += 35;
+			swingScores[19] += 35;
+			swingScores[17] += 35;
+			swingScores[15] += 35;
+			swingScores[14] += 35;
+			swingScores[11] += 35;
+			swingScores[7] += 35;
+			swingScores[3] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[33] += 35;
+			swingScores[25] += 35;
+			swingScores[21] += 35;
+			swingScores[15] += 35;
+			swingScores[13] += 35;
+			swingScores[3] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y-3)+"]") != -1) {
+			swingScores[8] += 35;
+			swingScores[4] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[33] += 35;
+			swingScores[32] += 35;
+			swingScores[24] += 35;
+			swingScores[20] += 35;
+			swingScores[17] += 35;
+			swingScores[12] += 35;
+			swingScores[9] += 35;
+			swingScores[5] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[34] += 35;
+			swingScores[28] += 35;
+			swingScores[18] += 35;
+			swingScores[16] += 35;
+			swingScores[10] += 35;
+			swingScores[6] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[34] += 35;
+			swingScores[30] += 35;
+			swingScores[28] += 35;
+			swingScores[26] += 35;
+			swingScores[18] += 35;
+			swingScores[11] += 35;
+			swingScores[10] += 35;
+			swingScores[6] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[16] += 35;
+			swingScores[10] += 35;
+			swingScores[8] += 35;
+			swingScores[6] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[35] += 35;
+			swingScores[34] += 35;
+			swingScores[26] += 35;
+			swingScores[22] += 35;
+			swingScores[19] += 35;
+			swingScores[14] += 35;
+			swingScores[11] += 35;
+			swingScores[7] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y-3)+"]") != -1) {
+			swingScores[8] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-1)+"]") != -1) {
+			swingScores[18] += 35;
+			swingScores[10] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+0)+"]") != -1) {
+			swingScores[30] += 35;
+			swingScores[18] += 35;
+			swingScores[10] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y-2)+"]") != -1) {
+			swingScores[10] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[34] += 35;
+			swingScores[30] += 35;
+			swingScores[26] += 35;
+			swingScores[19] += 35;
+			swingScores[18] += 35;
+			swingScores[11] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[21] += 35;
+			swingScores[13] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[35] += 35;
+			swingScores[29] += 35;
+			swingScores[27] += 35;
+			swingScores[25] += 35;
+			swingScores[23] += 35;
+			swingScores[15] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[35] += 35;
+			swingScores[31] += 35;
+			swingScores[29] += 35;
+			swingScores[27] += 35;
+			swingScores[23] += 35;
+			swingScores[22] += 35;
+			swingScores[19] += 35;
+			swingScores[15] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[25] += 35;
+			swingScores[23] += 35;
+			swingScores[21] += 35;
+			swingScores[15] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+1)+"]") != -1) {
+			swingScores[30] += 35;
+			swingScores[18] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[35] += 35;
+			swingScores[31] += 35;
+			swingScores[27] += 35;
+			swingScores[26] += 35;
+			swingScores[22] += 35;
+			swingScores[19] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[31] += 35;
+			swingScores[30] += 35;
+			swingScores[26] += 35;
+			swingScores[19] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-3)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[21] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-1)+", "+(G.me.y+3)+"]") != -1) {
+			swingScores[27] += 35;
+			swingScores[23] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+0)+", "+(G.me.y+3)+"]") != -1) {
+			swingScores[31] += 35;
+			swingScores[27] += 35;
+			swingScores[23] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x-2)+", "+(G.me.y+3)+"]") != -1) {
+			swingScores[23] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+1)+", "+(G.me.y+3)+"]") != -1) {
+			swingScores[31] += 35;
+			swingScores[27] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+3)+", "+(G.me.y+2)+"]") != -1) {
+			swingScores[30] += 35;
+		}
+		if (opponentRobotsString.indexOf("["+(G.me.x+2)+", "+(G.me.y+3)+"]") != -1) {
+			swingScores[31] += 35;
+		}
     }
 
-    public static void build() throws Exception {
-        G.indicatorString.append("BUILD ");
-        // clean enemy paint for ruin patterns
+	public static void buildMoveScores() throws Exception {
+		// clean enemy paint for ruin patterns
         // TODO: FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-        if (G.rc.isActionReady()) {
-            for (int i = 25; --i >= 0;) {
-                attackScores[i] = 0;
-                MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
-                    if (G.rc.canSenseRobotAtLocation(loc)) {
-                        // if it's an opponent, they get -1 paint
-                        // if it's an ally, they go from -2 to -1 paint
-                        // in both cases we gain 1 paint
-                        // can't be a tower because it has to be painted
-                        RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                        // maybe also incentize mopping enemies with low paint
-                        attackScores[i] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
-                        if (bot.getType() == UnitType.MOPPER) {
-                            // double paint loss on moppers
-                            attackScores[i]++;
-                        }
-                        if (bot.paintAmount <= 10) {
-                            //treat freezing bot equivalent to gaining 20 paint
-                            attackScores[i] += 20;
-                        }
-                    }
-                    if (target.distanceSquaredTo(loc) <= 8) {
-                        attackScores[i] += 10;
-                    }
-                    attackScores[i] += 5;
-                    attackScores[i] *= 5;
-                }
-            }
-        }
-        if (G.rc.isMovementReady()) {
-            for (int i = 8; --i >= 0;) {
-                if (G.me.directionTo(target) == G.DIRECTIONS[i]) {
-                    moveScores = avoidPaintMicro.micro(G.DIRECTIONS[i], target);
-                    moveScores[i] -= 19; // yes only 1 paint
-                } else if (G.me.directionTo(target).rotateLeft() == G.DIRECTIONS[i]
-                        || G.me.directionTo(target).rotateRight() == G.DIRECTIONS[i]) {
-                    moveScores[i] -= 15;
-                }
-            }
-        }
-        G.rc.setIndicatorDot(G.me, 0, 0, 255);
+		for (int i = 8; --i >= 0;) {
+			if (G.me.directionTo(target) == G.DIRECTIONS[i]) {
+				moveScores = avoidPaintMicro.micro(G.DIRECTIONS[i], target);
+				moveScores[i] -= 18;
+			} else if (G.me.directionTo(target).rotateLeft() == G.DIRECTIONS[i]
+					|| G.me.directionTo(target).rotateRight() == G.DIRECTIONS[i]) {
+				moveScores[i] -= 14;
+			}
+		}
+	}
+
+	public static void buildAttackScores() throws Exception {
+		for (int i = 25; --i >= 0;) {
+			attackScores[i] = 0;
+			MapLocation loc = G.me.translate(G.range20X[i], G.range20Y[i]);
+			if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+				if (G.rc.canSenseRobotAtLocation(loc)) {
+					// if it's an opponent, they get -1 paint
+					// if it's an ally, they go from -2 to -1 paint
+					// in both cases we gain 1 paint
+					// can't be a tower because it has to be painted
+					RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+					// maybe also incentize mopping enemies with low paint
+					attackScores[i] += 11 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint());
+					if (bot.getType() == UnitType.MOPPER) {
+						// double paint loss on moppers
+						attackScores[i]++;
+					}
+					if (bot.paintAmount <= 10) {
+						//treat freezing bot equivalent to gaining 20 paint
+						attackScores[i] += 20;
+					}
+				}
+				if (target.distanceSquaredTo(loc) <= 8) {
+					attackScores[i] += 10;
+				}
+				attackScores[i] += 5;
+				attackScores[i] *= 5;
+			}
+		}
+	}
+
+    public static void buildSwingScores() throws Exception {
+		exploreSwingScores();
     }
 
     public static Micro avoidPaintMicro = new Micro() {
