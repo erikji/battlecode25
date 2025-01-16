@@ -21,7 +21,6 @@ public class RobotPlayer {
             }
         }
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
-        G.round = G.rc.getRoundNum();
 
         String s = G.me.toString();
         Motion.lastVisitedLocations.append(s);
@@ -37,6 +36,9 @@ public class RobotPlayer {
 
     public static void updateRound() throws Exception {
         // every round
+        Motion.movementCooldown -= GameConstants.COOLDOWNS_PER_TURN * (G.rc.getRoundNum() - G.round);
+        Motion.movementCooldown = Math.max(Motion.movementCooldown, 0);
+        G.round = G.rc.getRoundNum();
         updateInfo();
         POI.updateRound();
     }
