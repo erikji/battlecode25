@@ -49,8 +49,12 @@ public class Mopper {
         G.indicatorString.append((b - a) + " ");
         // grab directions for micro
         switch (mode) {
-            case EXPLORE -> explore();
-            case BUILD -> build();
+            case EXPLORE -> {
+				explore();
+			}
+            case BUILD -> {
+				build();
+			}
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 Robot.retreat();
@@ -75,53 +79,46 @@ public class Mopper {
         int cx = 0; //if it's a swing, then also store index of swing direction
         int cy = 0;
         // check every tile within sqrt2 radius
+		// don't need to set swing=false here since it defaults to false
         if (attackScores[1] > cmax) {
             cmax = attackScores[1];
             cx = -1;
             cy = 0;
-			swing = false;
         }
         if (attackScores[2] > cmax) {
             cmax = attackScores[2];
             cx = 0;
             cy = -1;
-			swing = false;
         }
         if (attackScores[3] > cmax) {
             cmax = attackScores[3];
             cx = 0;
             cy = 1;
-			swing = false;
         }
         if (attackScores[4] > cmax) {
             cmax = attackScores[4];
             cx = 1;
             cy = 0;
-			swing = false;
         }
         if (attackScores[5] > cmax) {
             cmax = attackScores[5];
             cx = -1;
             cy = -1;
-			swing = false;
         }
         if (attackScores[6] > cmax) {
             cmax = attackScores[6];
             cx = -1;
             cy = 1;
-			swing = false;
         }
         if (attackScores[7] > cmax) {
             cmax = attackScores[7];
             cx = 1;
             cy = -1;
-			swing = false;
         }
         if (attackScores[8] > cmax) {
             cmax = attackScores[8];
             cx = 1;
             cy = 1;
-			swing = false;
         }
 		if (swingScores[32] > cmax) {
 			cmax = swingScores[32];
