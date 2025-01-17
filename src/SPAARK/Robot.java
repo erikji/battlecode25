@@ -22,6 +22,9 @@ public class Robot {
 
     public static void run() throws Exception {
         Motion.paintLost += Math.max(Motion.lastPaint - G.rc.getPaint(), 0);
+        if (G.rc.getPaint() == 0 && G.allyRobots.length > 0) {
+            G.rc.disintegrate();
+        }
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
