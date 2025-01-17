@@ -7,6 +7,6 @@ public class Random {
         state ^= state << 13;
         state ^= state >> 17;
         state ^= state << 15;
-        return state<0?~state:state;
+        return state&2147483647;
     }
 }
