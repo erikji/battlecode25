@@ -1232,6 +1232,15 @@ public class Motion {
                 }
             }
         }
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            if (G.opponentRobots[i].type == UnitType.MOPPER) {
+                for (int j = 9; --j >= 0;) {
+                    if (G.me.add(G.ALL_DIRECTIONS[j]).isWithinDistanceSquared(G.opponentRobots[i].location, 8)) {
+                        scores[j] -= 20; //lose 4 paint?
+                    }
+                }
+            }
+        }
         return scores;
     };
 

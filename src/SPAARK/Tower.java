@@ -174,7 +174,7 @@ public class Tower {
                 RobotInfo r = G.opponentRobots[i];
                 //check if it's still alive
                 if (G.rc.canSenseRobotAtLocation(r.location) && G.me.isWithinDistanceSquared(r.location, G.rc.getType().actionRadiusSquared)) {
-                    //just do lowest hp it's basically the same and it's more gold efficient to kill moppers anyways
+                    //just do lowest hp it's basically the same as having priorities and it's more gold efficient to kill moppers anyways
                     if (bestEnemyHp > attackStrength && r.health < bestEnemyHp) {
                         bestEnemyHp = r.health;
                         bestEnemyLoc = r.location;
