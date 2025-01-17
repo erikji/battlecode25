@@ -382,30 +382,12 @@ public class Splasher {
     }
 
     public static void exploreAttackScores1() throws Exception {
-        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
-		StringBuilder ruinsString = new StringBuilder();
-		for (int i = ruins.length; --i >= 0;) {
-			ruinsString.append(ruins[i].toString());
-		}
 		MapLocation loc = G.me;
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[12] += 25;
-				attackScores[11] += 25;
-				attackScores[9] += 25;
-				attackScores[10] += 25;
-				attackScores[5] += 25;
-				attackScores[2] += 25;
-				attackScores[7] += 25;
-				attackScores[4] += 25;
-				attackScores[8] += 25;
-				attackScores[3] += 25;
-				attackScores[6] += 25;
-				attackScores[1] += 25;
-				attackScores[0] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[12] += 25;
 						attackScores[11] += 25;
 						attackScores[9] += 25;
@@ -419,52 +401,29 @@ public class Splasher {
 						attackScores[6] += 25;
 						attackScores[1] += 25;
 						attackScores[0] += 25;
-					} else {
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 25;
-					attackScores[11] += 25;
-					attackScores[9] += 25;
-					attackScores[10] += 25;
-					attackScores[5] += 25;
-					attackScores[2] += 25;
-					attackScores[7] += 25;
-					attackScores[4] += 25;
-					attackScores[8] += 25;
-					attackScores[3] += 25;
-					attackScores[6] += 25;
-					attackScores[1] += 25;
-					attackScores[0] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[5] += 50;
-				attackScores[2] += 50;
-				attackScores[7] += 50;
-				attackScores[4] += 50;
-				attackScores[8] += 50;
-				attackScores[3] += 50;
-				attackScores[6] += 50;
-				attackScores[1] += 50;
-				attackScores[0] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 50;
-					attackScores[11] += 50;
-					attackScores[9] += 50;
-					attackScores[10] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+						} else {
+							attackScores[5] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[5] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[5] += 50;
 					attackScores[2] += 50;
 					attackScores[7] += 50;
@@ -474,42 +433,20 @@ public class Splasher {
 					attackScores[6] += 50;
 					attackScores[1] += 50;
 					attackScores[0] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 50;
-					attackScores[11] += 50;
-					attackScores[9] += 50;
-					attackScores[10] += 50;
-					attackScores[5] += 50;
-					attackScores[2] += 50;
-					attackScores[7] += 50;
-					attackScores[4] += 50;
-					attackScores[8] += 50;
-					attackScores[3] += 50;
-					attackScores[6] += 50;
-					attackScores[1] += 50;
-					attackScores[0] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[5] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[5] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-1, 0);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[4] += 25;
-				attackScores[16] += 25;
-				attackScores[25] += 25;
-				attackScores[15] += 25;
-				attackScores[13] += 25;
-				attackScores[5] += 25;
-				attackScores[2] += 25;
-				attackScores[0] += 25;
-				attackScores[3] += 25;
-				attackScores[6] += 25;
-				attackScores[14] += 25;
-				attackScores[9] += 25;
-				attackScores[1] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[4] += 25;
 						attackScores[16] += 25;
 						attackScores[25] += 25;
@@ -523,52 +460,29 @@ public class Splasher {
 						attackScores[14] += 25;
 						attackScores[9] += 25;
 						attackScores[1] += 25;
-					} else {
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 25;
-					attackScores[16] += 25;
-					attackScores[25] += 25;
-					attackScores[15] += 25;
-					attackScores[13] += 25;
-					attackScores[5] += 25;
-					attackScores[2] += 25;
-					attackScores[0] += 25;
-					attackScores[3] += 25;
-					attackScores[6] += 25;
-					attackScores[14] += 25;
-					attackScores[9] += 25;
-					attackScores[1] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[13] += 50;
-				attackScores[5] += 50;
-				attackScores[2] += 50;
-				attackScores[0] += 50;
-				attackScores[3] += 50;
-				attackScores[6] += 50;
-				attackScores[14] += 50;
-				attackScores[9] += 50;
-				attackScores[1] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 50;
-					attackScores[16] += 50;
-					attackScores[25] += 50;
-					attackScores[15] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+						} else {
+							attackScores[13] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[13] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[13] += 50;
 					attackScores[5] += 50;
 					attackScores[2] += 50;
@@ -578,42 +492,20 @@ public class Splasher {
 					attackScores[14] += 50;
 					attackScores[9] += 50;
 					attackScores[1] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 50;
-					attackScores[16] += 50;
-					attackScores[25] += 50;
-					attackScores[15] += 50;
-					attackScores[13] += 50;
-					attackScores[5] += 50;
-					attackScores[2] += 50;
-					attackScores[0] += 50;
-					attackScores[3] += 50;
-					attackScores[6] += 50;
-					attackScores[14] += 50;
-					attackScores[9] += 50;
-					attackScores[1] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[13] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[13] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(0, -1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[19] += 25;
-				attackScores[3] += 25;
-				attackScores[13] += 25;
-				attackScores[26] += 25;
-				attackScores[15] += 25;
-				attackScores[10] += 25;
-				attackScores[17] += 25;
-				attackScores[7] += 25;
-				attackScores[4] += 25;
-				attackScores[0] += 25;
-				attackScores[1] += 25;
-				attackScores[5] += 25;
-				attackScores[2] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[19] += 25;
 						attackScores[3] += 25;
 						attackScores[13] += 25;
@@ -627,52 +519,29 @@ public class Splasher {
 						attackScores[1] += 25;
 						attackScores[5] += 25;
 						attackScores[2] += 25;
-					} else {
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 25;
-					attackScores[3] += 25;
-					attackScores[13] += 25;
-					attackScores[26] += 25;
-					attackScores[15] += 25;
-					attackScores[10] += 25;
-					attackScores[17] += 25;
-					attackScores[7] += 25;
-					attackScores[4] += 25;
-					attackScores[0] += 25;
-					attackScores[1] += 25;
-					attackScores[5] += 25;
-					attackScores[2] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[15] += 50;
-				attackScores[10] += 50;
-				attackScores[17] += 50;
-				attackScores[7] += 50;
-				attackScores[4] += 50;
-				attackScores[0] += 50;
-				attackScores[1] += 50;
-				attackScores[5] += 50;
-				attackScores[2] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 50;
-					attackScores[3] += 50;
-					attackScores[13] += 50;
-					attackScores[26] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+						} else {
+							attackScores[15] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[15] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[15] += 50;
 					attackScores[10] += 50;
 					attackScores[17] += 50;
@@ -682,42 +551,20 @@ public class Splasher {
 					attackScores[1] += 50;
 					attackScores[5] += 50;
 					attackScores[2] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 50;
-					attackScores[3] += 50;
-					attackScores[13] += 50;
-					attackScores[26] += 50;
-					attackScores[15] += 50;
-					attackScores[10] += 50;
-					attackScores[17] += 50;
-					attackScores[7] += 50;
-					attackScores[4] += 50;
-					attackScores[0] += 50;
-					attackScores[1] += 50;
-					attackScores[5] += 50;
-					attackScores[2] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[15] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[15] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(0, 1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[20] += 25;
-				attackScores[27] += 25;
-				attackScores[14] += 25;
-				attackScores[2] += 25;
-				attackScores[1] += 25;
-				attackScores[0] += 25;
-				attackScores[4] += 25;
-				attackScores[8] += 25;
-				attackScores[18] += 25;
-				attackScores[11] += 25;
-				attackScores[16] += 25;
-				attackScores[6] += 25;
-				attackScores[3] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[20] += 25;
 						attackScores[27] += 25;
 						attackScores[14] += 25;
@@ -731,52 +578,29 @@ public class Splasher {
 						attackScores[16] += 25;
 						attackScores[6] += 25;
 						attackScores[3] += 25;
-					} else {
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 25;
-					attackScores[27] += 25;
-					attackScores[14] += 25;
-					attackScores[2] += 25;
-					attackScores[1] += 25;
-					attackScores[0] += 25;
-					attackScores[4] += 25;
-					attackScores[8] += 25;
-					attackScores[18] += 25;
-					attackScores[11] += 25;
-					attackScores[16] += 25;
-					attackScores[6] += 25;
-					attackScores[3] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[1] += 50;
-				attackScores[0] += 50;
-				attackScores[4] += 50;
-				attackScores[8] += 50;
-				attackScores[18] += 50;
-				attackScores[11] += 50;
-				attackScores[16] += 50;
-				attackScores[6] += 50;
-				attackScores[3] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 50;
-					attackScores[27] += 50;
-					attackScores[14] += 50;
-					attackScores[2] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+						} else {
+							attackScores[1] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[1] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[1] += 50;
 					attackScores[0] += 50;
 					attackScores[4] += 50;
@@ -786,42 +610,20 @@ public class Splasher {
 					attackScores[16] += 50;
 					attackScores[6] += 50;
 					attackScores[3] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 50;
-					attackScores[27] += 50;
-					attackScores[14] += 50;
-					attackScores[2] += 50;
-					attackScores[1] += 50;
-					attackScores[0] += 50;
-					attackScores[4] += 50;
-					attackScores[8] += 50;
-					attackScores[18] += 50;
-					attackScores[11] += 50;
-					attackScores[16] += 50;
-					attackScores[6] += 50;
-					attackScores[3] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[1] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[1] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(1, 0);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[28] += 25;
-				attackScores[18] += 25;
-				attackScores[1] += 25;
-				attackScores[17] += 25;
-				attackScores[2] += 25;
-				attackScores[7] += 25;
-				attackScores[19] += 25;
-				attackScores[12] += 25;
-				attackScores[20] += 25;
-				attackScores[8] += 25;
-				attackScores[3] += 25;
-				attackScores[0] += 25;
-				attackScores[4] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[28] += 25;
 						attackScores[18] += 25;
 						attackScores[1] += 25;
@@ -835,52 +637,29 @@ public class Splasher {
 						attackScores[3] += 25;
 						attackScores[0] += 25;
 						attackScores[4] += 25;
-					} else {
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[28] += 25;
-					attackScores[18] += 25;
-					attackScores[1] += 25;
-					attackScores[17] += 25;
-					attackScores[2] += 25;
-					attackScores[7] += 25;
-					attackScores[19] += 25;
-					attackScores[12] += 25;
-					attackScores[20] += 25;
-					attackScores[8] += 25;
-					attackScores[3] += 25;
-					attackScores[0] += 25;
-					attackScores[4] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[2] += 50;
-				attackScores[7] += 50;
-				attackScores[19] += 50;
-				attackScores[12] += 50;
-				attackScores[20] += 50;
-				attackScores[8] += 50;
-				attackScores[3] += 50;
-				attackScores[0] += 50;
-				attackScores[4] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[28] += 50;
-					attackScores[18] += 50;
-					attackScores[1] += 50;
-					attackScores[17] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+						} else {
+							attackScores[2] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[2] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[2] += 50;
 					attackScores[7] += 50;
 					attackScores[19] += 50;
@@ -890,42 +669,20 @@ public class Splasher {
 					attackScores[3] += 50;
 					attackScores[0] += 50;
 					attackScores[4] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[28] += 50;
-					attackScores[18] += 50;
-					attackScores[1] += 50;
-					attackScores[17] += 50;
-					attackScores[2] += 50;
-					attackScores[7] += 50;
-					attackScores[19] += 50;
-					attackScores[12] += 50;
-					attackScores[20] += 50;
-					attackScores[8] += 50;
-					attackScores[3] += 50;
-					attackScores[0] += 50;
-					attackScores[4] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[2] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[2] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-1, -1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[7] += 25;
-				attackScores[6] += 25;
-				attackScores[29] += 25;
-				attackScores[31] += 25;
-				attackScores[21] += 25;
-				attackScores[15] += 25;
-				attackScores[10] += 25;
-				attackScores[2] += 25;
-				attackScores[0] += 25;
-				attackScores[1] += 25;
-				attackScores[9] += 25;
-				attackScores[13] += 25;
-				attackScores[5] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[7] += 25;
 						attackScores[6] += 25;
 						attackScores[29] += 25;
@@ -939,52 +696,29 @@ public class Splasher {
 						attackScores[9] += 25;
 						attackScores[13] += 25;
 						attackScores[5] += 25;
-					} else {
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[7] += 25;
-					attackScores[6] += 25;
-					attackScores[29] += 25;
-					attackScores[31] += 25;
-					attackScores[21] += 25;
-					attackScores[15] += 25;
-					attackScores[10] += 25;
-					attackScores[2] += 25;
-					attackScores[0] += 25;
-					attackScores[1] += 25;
-					attackScores[9] += 25;
-					attackScores[13] += 25;
-					attackScores[5] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[21] += 50;
-				attackScores[15] += 50;
-				attackScores[10] += 50;
-				attackScores[2] += 50;
-				attackScores[0] += 50;
-				attackScores[1] += 50;
-				attackScores[9] += 50;
-				attackScores[13] += 50;
-				attackScores[5] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[7] += 50;
-					attackScores[6] += 50;
-					attackScores[29] += 50;
-					attackScores[31] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+						} else {
+							attackScores[21] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[21] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[21] += 50;
 					attackScores[15] += 50;
 					attackScores[10] += 50;
@@ -994,42 +728,20 @@ public class Splasher {
 					attackScores[9] += 50;
 					attackScores[13] += 50;
 					attackScores[5] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[7] += 50;
-					attackScores[6] += 50;
-					attackScores[29] += 50;
-					attackScores[31] += 50;
-					attackScores[21] += 50;
-					attackScores[15] += 50;
-					attackScores[10] += 50;
-					attackScores[2] += 50;
-					attackScores[0] += 50;
-					attackScores[1] += 50;
-					attackScores[9] += 50;
-					attackScores[13] += 50;
-					attackScores[5] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[21] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[21] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-1, 1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[8] += 25;
-				attackScores[32] += 25;
-				attackScores[30] += 25;
-				attackScores[5] += 25;
-				attackScores[9] += 25;
-				attackScores[1] += 25;
-				attackScores[0] += 25;
-				attackScores[3] += 25;
-				attackScores[11] += 25;
-				attackScores[16] += 25;
-				attackScores[22] += 25;
-				attackScores[14] += 25;
-				attackScores[6] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[8] += 25;
 						attackScores[32] += 25;
 						attackScores[30] += 25;
@@ -1043,52 +755,29 @@ public class Splasher {
 						attackScores[22] += 25;
 						attackScores[14] += 25;
 						attackScores[6] += 25;
-					} else {
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[8] += 25;
-					attackScores[32] += 25;
-					attackScores[30] += 25;
-					attackScores[5] += 25;
-					attackScores[9] += 25;
-					attackScores[1] += 25;
-					attackScores[0] += 25;
-					attackScores[3] += 25;
-					attackScores[11] += 25;
-					attackScores[16] += 25;
-					attackScores[22] += 25;
-					attackScores[14] += 25;
-					attackScores[6] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[9] += 50;
-				attackScores[1] += 50;
-				attackScores[0] += 50;
-				attackScores[3] += 50;
-				attackScores[11] += 50;
-				attackScores[16] += 50;
-				attackScores[22] += 50;
-				attackScores[14] += 50;
-				attackScores[6] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[8] += 50;
-					attackScores[32] += 50;
-					attackScores[30] += 50;
-					attackScores[5] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+						} else {
+							attackScores[9] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[9] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[9] += 50;
 					attackScores[1] += 50;
 					attackScores[0] += 50;
@@ -1098,42 +787,20 @@ public class Splasher {
 					attackScores[22] += 50;
 					attackScores[14] += 50;
 					attackScores[6] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[8] += 50;
-					attackScores[32] += 50;
-					attackScores[30] += 50;
-					attackScores[5] += 50;
-					attackScores[9] += 50;
-					attackScores[1] += 50;
-					attackScores[0] += 50;
-					attackScores[3] += 50;
-					attackScores[11] += 50;
-					attackScores[16] += 50;
-					attackScores[22] += 50;
-					attackScores[14] += 50;
-					attackScores[6] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[9] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[9] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(1, -1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[35] += 25;
-				attackScores[8] += 25;
-				attackScores[5] += 25;
-				attackScores[33] += 25;
-				attackScores[10] += 25;
-				attackScores[17] += 25;
-				attackScores[23] += 25;
-				attackScores[19] += 25;
-				attackScores[12] += 25;
-				attackScores[4] += 25;
-				attackScores[0] += 25;
-				attackScores[2] += 25;
-				attackScores[7] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[35] += 25;
 						attackScores[8] += 25;
 						attackScores[5] += 25;
@@ -1147,52 +814,29 @@ public class Splasher {
 						attackScores[0] += 25;
 						attackScores[2] += 25;
 						attackScores[7] += 25;
-					} else {
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[35] += 25;
-					attackScores[8] += 25;
-					attackScores[5] += 25;
-					attackScores[33] += 25;
-					attackScores[10] += 25;
-					attackScores[17] += 25;
-					attackScores[23] += 25;
-					attackScores[19] += 25;
-					attackScores[12] += 25;
-					attackScores[4] += 25;
-					attackScores[0] += 25;
-					attackScores[2] += 25;
-					attackScores[7] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[10] += 50;
-				attackScores[17] += 50;
-				attackScores[23] += 50;
-				attackScores[19] += 50;
-				attackScores[12] += 50;
-				attackScores[4] += 50;
-				attackScores[0] += 50;
-				attackScores[2] += 50;
-				attackScores[7] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[35] += 50;
-					attackScores[8] += 50;
-					attackScores[5] += 50;
-					attackScores[33] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+						} else {
+							attackScores[10] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[10] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[10] += 50;
 					attackScores[17] += 50;
 					attackScores[23] += 50;
@@ -1202,42 +846,20 @@ public class Splasher {
 					attackScores[0] += 50;
 					attackScores[2] += 50;
 					attackScores[7] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[35] += 50;
-					attackScores[8] += 50;
-					attackScores[5] += 50;
-					attackScores[33] += 50;
-					attackScores[10] += 50;
-					attackScores[17] += 50;
-					attackScores[23] += 50;
-					attackScores[19] += 50;
-					attackScores[12] += 50;
-					attackScores[4] += 50;
-					attackScores[0] += 50;
-					attackScores[2] += 50;
-					attackScores[7] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[10] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[10] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(1, 1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[36] += 25;
-				attackScores[34] += 25;
-				attackScores[6] += 25;
-				attackScores[7] += 25;
-				attackScores[0] += 25;
-				attackScores[4] += 25;
-				attackScores[12] += 25;
-				attackScores[20] += 25;
-				attackScores[24] += 25;
-				attackScores[18] += 25;
-				attackScores[11] += 25;
-				attackScores[3] += 25;
-				attackScores[8] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[36] += 25;
 						attackScores[34] += 25;
 						attackScores[6] += 25;
@@ -1251,52 +873,29 @@ public class Splasher {
 						attackScores[11] += 25;
 						attackScores[3] += 25;
 						attackScores[8] += 25;
-					} else {
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[36] += 25;
-					attackScores[34] += 25;
-					attackScores[6] += 25;
-					attackScores[7] += 25;
-					attackScores[0] += 25;
-					attackScores[4] += 25;
-					attackScores[12] += 25;
-					attackScores[20] += 25;
-					attackScores[24] += 25;
-					attackScores[18] += 25;
-					attackScores[11] += 25;
-					attackScores[3] += 25;
-					attackScores[8] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[0] += 50;
-				attackScores[4] += 50;
-				attackScores[12] += 50;
-				attackScores[20] += 50;
-				attackScores[24] += 50;
-				attackScores[18] += 50;
-				attackScores[11] += 50;
-				attackScores[3] += 50;
-				attackScores[8] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[36] += 50;
-					attackScores[34] += 50;
-					attackScores[6] += 50;
-					attackScores[7] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+						} else {
+							attackScores[0] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[0] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[0] += 50;
 					attackScores[4] += 50;
 					attackScores[12] += 50;
@@ -1306,41 +905,20 @@ public class Splasher {
 					attackScores[11] += 50;
 					attackScores[3] += 50;
 					attackScores[8] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[36] += 50;
-					attackScores[34] += 50;
-					attackScores[6] += 50;
-					attackScores[7] += 50;
-					attackScores[0] += 50;
-					attackScores[4] += 50;
-					attackScores[12] += 50;
-					attackScores[20] += 50;
-					attackScores[24] += 50;
-					attackScores[18] += 50;
-					attackScores[11] += 50;
-					attackScores[3] += 50;
-					attackScores[8] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[0] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[0] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-2, 0);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[0] += 25;
-				attackScores[22] += 25;
-				attackScores[21] += 25;
-				attackScores[29] += 25;
-				attackScores[13] += 25;
-				attackScores[5] += 25;
-				attackScores[1] += 25;
-				attackScores[6] += 25;
-				attackScores[14] += 25;
-				attackScores[30] += 25;
-				attackScores[25] += 25;
-				attackScores[9] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[0] += 25;
 						attackScores[22] += 25;
 						attackScores[21] += 25;
@@ -1353,49 +931,28 @@ public class Splasher {
 						attackScores[30] += 25;
 						attackScores[25] += 25;
 						attackScores[9] += 25;
-					} else {
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[0] += 25;
-					attackScores[22] += 25;
-					attackScores[21] += 25;
-					attackScores[29] += 25;
-					attackScores[13] += 25;
-					attackScores[5] += 25;
-					attackScores[1] += 25;
-					attackScores[6] += 25;
-					attackScores[14] += 25;
-					attackScores[30] += 25;
-					attackScores[25] += 25;
-					attackScores[9] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[29] += 50;
-				attackScores[13] += 50;
-				attackScores[5] += 50;
-				attackScores[1] += 50;
-				attackScores[6] += 50;
-				attackScores[14] += 50;
-				attackScores[30] += 50;
-				attackScores[25] += 50;
-				attackScores[9] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[0] += 50;
-					attackScores[22] += 50;
-					attackScores[21] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+						} else {
+							attackScores[29] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[29] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[29] += 50;
 					attackScores[13] += 50;
 					attackScores[5] += 50;
@@ -1405,40 +962,20 @@ public class Splasher {
 					attackScores[30] += 50;
 					attackScores[25] += 50;
 					attackScores[9] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[0] += 50;
-					attackScores[22] += 50;
-					attackScores[21] += 50;
-					attackScores[29] += 50;
-					attackScores[13] += 50;
-					attackScores[5] += 50;
-					attackScores[1] += 50;
-					attackScores[6] += 50;
-					attackScores[14] += 50;
-					attackScores[30] += 50;
-					attackScores[25] += 50;
-					attackScores[9] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[29] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[29] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(0, -2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[23] += 25;
-				attackScores[0] += 25;
-				attackScores[21] += 25;
-				attackScores[31] += 25;
-				attackScores[26] += 25;
-				attackScores[33] += 25;
-				attackScores[17] += 25;
-				attackScores[7] += 25;
-				attackScores[2] += 25;
-				attackScores[5] += 25;
-				attackScores[15] += 25;
-				attackScores[10] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[23] += 25;
 						attackScores[0] += 25;
 						attackScores[21] += 25;
@@ -1451,49 +988,28 @@ public class Splasher {
 						attackScores[5] += 25;
 						attackScores[15] += 25;
 						attackScores[10] += 25;
-					} else {
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 25;
-					attackScores[0] += 25;
-					attackScores[21] += 25;
-					attackScores[31] += 25;
-					attackScores[26] += 25;
-					attackScores[33] += 25;
-					attackScores[17] += 25;
-					attackScores[7] += 25;
-					attackScores[2] += 25;
-					attackScores[5] += 25;
-					attackScores[15] += 25;
-					attackScores[10] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[31] += 50;
-				attackScores[26] += 50;
-				attackScores[33] += 50;
-				attackScores[17] += 50;
-				attackScores[7] += 50;
-				attackScores[2] += 50;
-				attackScores[5] += 50;
-				attackScores[15] += 50;
-				attackScores[10] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 50;
-					attackScores[0] += 50;
-					attackScores[21] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+						} else {
+							attackScores[31] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[31] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[31] += 50;
 					attackScores[26] += 50;
 					attackScores[33] += 50;
@@ -1503,40 +1019,20 @@ public class Splasher {
 					attackScores[5] += 50;
 					attackScores[15] += 50;
 					attackScores[10] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 50;
-					attackScores[0] += 50;
-					attackScores[21] += 50;
-					attackScores[31] += 50;
-					attackScores[26] += 50;
-					attackScores[33] += 50;
-					attackScores[17] += 50;
-					attackScores[7] += 50;
-					attackScores[2] += 50;
-					attackScores[5] += 50;
-					attackScores[15] += 50;
-					attackScores[10] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[31] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[31] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(0, 2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[24] += 25;
-				attackScores[22] += 25;
-				attackScores[0] += 25;
-				attackScores[6] += 25;
-				attackScores[3] += 25;
-				attackScores[8] += 25;
-				attackScores[18] += 25;
-				attackScores[34] += 25;
-				attackScores[27] += 25;
-				attackScores[32] += 25;
-				attackScores[16] += 25;
-				attackScores[11] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[24] += 25;
 						attackScores[22] += 25;
 						attackScores[0] += 25;
@@ -1549,49 +1045,28 @@ public class Splasher {
 						attackScores[32] += 25;
 						attackScores[16] += 25;
 						attackScores[11] += 25;
-					} else {
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 25;
-					attackScores[22] += 25;
-					attackScores[0] += 25;
-					attackScores[6] += 25;
-					attackScores[3] += 25;
-					attackScores[8] += 25;
-					attackScores[18] += 25;
-					attackScores[34] += 25;
-					attackScores[27] += 25;
-					attackScores[32] += 25;
-					attackScores[16] += 25;
-					attackScores[11] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[6] += 50;
-				attackScores[3] += 50;
-				attackScores[8] += 50;
-				attackScores[18] += 50;
-				attackScores[34] += 50;
-				attackScores[27] += 50;
-				attackScores[32] += 50;
-				attackScores[16] += 50;
-				attackScores[11] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[22] += 50;
-					attackScores[0] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+						} else {
+							attackScores[6] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[6] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[6] += 50;
 					attackScores[3] += 50;
 					attackScores[8] += 50;
@@ -1601,40 +1076,20 @@ public class Splasher {
 					attackScores[32] += 50;
 					attackScores[16] += 50;
 					attackScores[11] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[22] += 50;
-					attackScores[0] += 50;
-					attackScores[6] += 50;
-					attackScores[3] += 50;
-					attackScores[8] += 50;
-					attackScores[18] += 50;
-					attackScores[34] += 50;
-					attackScores[27] += 50;
-					attackScores[32] += 50;
-					attackScores[16] += 50;
-					attackScores[11] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[6] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[6] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(2, 0);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[24] += 25;
-				attackScores[0] += 25;
-				attackScores[23] += 25;
-				attackScores[7] += 25;
-				attackScores[19] += 25;
-				attackScores[35] += 25;
-				attackScores[28] += 25;
-				attackScores[36] += 25;
-				attackScores[20] += 25;
-				attackScores[8] += 25;
-				attackScores[4] += 25;
-				attackScores[12] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[24] += 25;
 						attackScores[0] += 25;
 						attackScores[23] += 25;
@@ -1647,49 +1102,28 @@ public class Splasher {
 						attackScores[8] += 25;
 						attackScores[4] += 25;
 						attackScores[12] += 25;
-					} else {
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[0] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 25;
-					attackScores[0] += 25;
-					attackScores[23] += 25;
-					attackScores[7] += 25;
-					attackScores[19] += 25;
-					attackScores[35] += 25;
-					attackScores[28] += 25;
-					attackScores[36] += 25;
-					attackScores[20] += 25;
-					attackScores[8] += 25;
-					attackScores[4] += 25;
-					attackScores[12] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[7] += 50;
-				attackScores[19] += 50;
-				attackScores[35] += 50;
-				attackScores[28] += 50;
-				attackScores[36] += 50;
-				attackScores[20] += 50;
-				attackScores[8] += 50;
-				attackScores[4] += 50;
-				attackScores[12] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[0] += 50;
-					attackScores[23] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[0] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+						} else {
+							attackScores[7] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[7] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[7] += 50;
 					attackScores[19] += 50;
 					attackScores[35] += 50;
@@ -1699,38 +1133,20 @@ public class Splasher {
 					attackScores[8] += 50;
 					attackScores[4] += 50;
 					attackScores[12] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[0] += 50;
-					attackScores[23] += 50;
-					attackScores[7] += 50;
-					attackScores[19] += 50;
-					attackScores[35] += 50;
-					attackScores[28] += 50;
-					attackScores[36] += 50;
-					attackScores[20] += 50;
-					attackScores[8] += 50;
-					attackScores[4] += 50;
-					attackScores[12] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[7] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[7] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-2, -1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[2] += 25;
-				attackScores[14] += 25;
-				attackScores[21] += 25;
-				attackScores[15] += 25;
-				attackScores[5] += 25;
-				attackScores[1] += 25;
-				attackScores[9] += 25;
-				attackScores[25] += 25;
-				attackScores[29] += 25;
-				attackScores[13] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[2] += 25;
 						attackScores[14] += 25;
 						attackScores[21] += 25;
@@ -1741,43 +1157,24 @@ public class Splasher {
 						attackScores[25] += 25;
 						attackScores[29] += 25;
 						attackScores[13] += 25;
-					} else {
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[2] += 25;
-					attackScores[14] += 25;
-					attackScores[21] += 25;
-					attackScores[15] += 25;
-					attackScores[5] += 25;
-					attackScores[1] += 25;
-					attackScores[9] += 25;
-					attackScores[25] += 25;
-					attackScores[29] += 25;
-					attackScores[13] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[21] += 50;
-				attackScores[15] += 50;
-				attackScores[5] += 50;
-				attackScores[1] += 50;
-				attackScores[9] += 50;
-				attackScores[25] += 50;
-				attackScores[29] += 50;
-				attackScores[13] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[2] += 50;
-					attackScores[14] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[21] += 50;
 					attackScores[15] += 50;
 					attackScores[5] += 50;
@@ -1786,36 +1183,18 @@ public class Splasher {
 					attackScores[25] += 50;
 					attackScores[29] += 50;
 					attackScores[13] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[2] += 50;
-					attackScores[14] += 50;
-					attackScores[21] += 50;
-					attackScores[15] += 50;
-					attackScores[5] += 50;
-					attackScores[1] += 50;
-					attackScores[9] += 50;
-					attackScores[25] += 50;
-					attackScores[29] += 50;
-					attackScores[13] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-2, 1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[3] += 25;
-				attackScores[13] += 25;
-				attackScores[25] += 25;
-				attackScores[9] += 25;
-				attackScores[1] += 25;
-				attackScores[6] += 25;
-				attackScores[16] += 25;
-				attackScores[22] += 25;
-				attackScores[30] += 25;
-				attackScores[14] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[3] += 25;
 						attackScores[13] += 25;
 						attackScores[25] += 25;
@@ -1826,43 +1205,26 @@ public class Splasher {
 						attackScores[22] += 25;
 						attackScores[30] += 25;
 						attackScores[14] += 25;
-					} else {
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 25;
-					attackScores[13] += 25;
-					attackScores[25] += 25;
-					attackScores[9] += 25;
-					attackScores[1] += 25;
-					attackScores[6] += 25;
-					attackScores[16] += 25;
-					attackScores[22] += 25;
-					attackScores[30] += 25;
-					attackScores[14] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[25] += 50;
-				attackScores[9] += 50;
-				attackScores[1] += 50;
-				attackScores[6] += 50;
-				attackScores[16] += 50;
-				attackScores[22] += 50;
-				attackScores[30] += 50;
-				attackScores[14] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 50;
-					attackScores[13] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+						} else {
+							attackScores[25] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[25] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[25] += 50;
 					attackScores[9] += 50;
 					attackScores[1] += 50;
@@ -1871,36 +1233,20 @@ public class Splasher {
 					attackScores[22] += 50;
 					attackScores[30] += 50;
 					attackScores[14] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 50;
-					attackScores[13] += 50;
-					attackScores[25] += 50;
-					attackScores[9] += 50;
-					attackScores[1] += 50;
-					attackScores[6] += 50;
-					attackScores[16] += 50;
-					attackScores[22] += 50;
-					attackScores[30] += 50;
-					attackScores[14] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[25] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[25] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-1, -2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[17] += 25;
-				attackScores[1] += 25;
-				attackScores[31] += 25;
-				attackScores[26] += 25;
-				attackScores[10] += 25;
-				attackScores[2] += 25;
-				attackScores[5] += 25;
-				attackScores[13] += 25;
-				attackScores[21] += 25;
-				attackScores[15] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[17] += 25;
 						attackScores[1] += 25;
 						attackScores[31] += 25;
@@ -1911,43 +1257,24 @@ public class Splasher {
 						attackScores[13] += 25;
 						attackScores[21] += 25;
 						attackScores[15] += 25;
-					} else {
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[17] += 25;
-					attackScores[1] += 25;
-					attackScores[31] += 25;
-					attackScores[26] += 25;
-					attackScores[10] += 25;
-					attackScores[2] += 25;
-					attackScores[5] += 25;
-					attackScores[13] += 25;
-					attackScores[21] += 25;
-					attackScores[15] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[31] += 50;
-				attackScores[26] += 50;
-				attackScores[10] += 50;
-				attackScores[2] += 50;
-				attackScores[5] += 50;
-				attackScores[13] += 50;
-				attackScores[21] += 50;
-				attackScores[15] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[17] += 50;
-					attackScores[1] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[31] += 50;
 					attackScores[26] += 50;
 					attackScores[10] += 50;
@@ -1956,36 +1283,18 @@ public class Splasher {
 					attackScores[13] += 50;
 					attackScores[21] += 50;
 					attackScores[15] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[17] += 50;
-					attackScores[1] += 50;
-					attackScores[31] += 50;
-					attackScores[26] += 50;
-					attackScores[10] += 50;
-					attackScores[2] += 50;
-					attackScores[5] += 50;
-					attackScores[13] += 50;
-					attackScores[21] += 50;
-					attackScores[15] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-1, 2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[18] += 25;
-				attackScores[1] += 25;
-				attackScores[14] += 25;
-				attackScores[6] += 25;
-				attackScores[3] += 25;
-				attackScores[11] += 25;
-				attackScores[27] += 25;
-				attackScores[32] += 25;
-				attackScores[22] += 25;
-				attackScores[16] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[18] += 25;
 						attackScores[1] += 25;
 						attackScores[14] += 25;
@@ -1996,43 +1305,26 @@ public class Splasher {
 						attackScores[32] += 25;
 						attackScores[22] += 25;
 						attackScores[16] += 25;
-					} else {
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 25;
-					attackScores[1] += 25;
-					attackScores[14] += 25;
-					attackScores[6] += 25;
-					attackScores[3] += 25;
-					attackScores[11] += 25;
-					attackScores[27] += 25;
-					attackScores[32] += 25;
-					attackScores[22] += 25;
-					attackScores[16] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[14] += 50;
-				attackScores[6] += 50;
-				attackScores[3] += 50;
-				attackScores[11] += 50;
-				attackScores[27] += 50;
-				attackScores[32] += 50;
-				attackScores[22] += 50;
-				attackScores[16] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 50;
-					attackScores[1] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+						} else {
+							attackScores[14] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[14] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[14] += 50;
 					attackScores[6] += 50;
 					attackScores[3] += 50;
@@ -2041,36 +1333,20 @@ public class Splasher {
 					attackScores[32] += 50;
 					attackScores[22] += 50;
 					attackScores[16] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 50;
-					attackScores[1] += 50;
-					attackScores[14] += 50;
-					attackScores[6] += 50;
-					attackScores[3] += 50;
-					attackScores[11] += 50;
-					attackScores[27] += 50;
-					attackScores[32] += 50;
-					attackScores[22] += 50;
-					attackScores[16] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[14] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[14] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(1, -2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[4] += 25;
-				attackScores[15] += 25;
-				attackScores[26] += 25;
-				attackScores[33] += 25;
-				attackScores[23] += 25;
-				attackScores[19] += 25;
-				attackScores[7] += 25;
-				attackScores[2] += 25;
-				attackScores[10] += 25;
-				attackScores[17] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[4] += 25;
 						attackScores[15] += 25;
 						attackScores[26] += 25;
@@ -2081,43 +1357,26 @@ public class Splasher {
 						attackScores[2] += 25;
 						attackScores[10] += 25;
 						attackScores[17] += 25;
-					} else {
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 25;
-					attackScores[15] += 25;
-					attackScores[26] += 25;
-					attackScores[33] += 25;
-					attackScores[23] += 25;
-					attackScores[19] += 25;
-					attackScores[7] += 25;
-					attackScores[2] += 25;
-					attackScores[10] += 25;
-					attackScores[17] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[26] += 50;
-				attackScores[33] += 50;
-				attackScores[23] += 50;
-				attackScores[19] += 50;
-				attackScores[7] += 50;
-				attackScores[2] += 50;
-				attackScores[10] += 50;
-				attackScores[17] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 50;
-					attackScores[15] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+						} else {
+							attackScores[26] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[26] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[26] += 50;
 					attackScores[33] += 50;
 					attackScores[23] += 50;
@@ -2126,36 +1385,20 @@ public class Splasher {
 					attackScores[2] += 50;
 					attackScores[10] += 50;
 					attackScores[17] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 50;
-					attackScores[15] += 50;
-					attackScores[26] += 50;
-					attackScores[33] += 50;
-					attackScores[23] += 50;
-					attackScores[19] += 50;
-					attackScores[7] += 50;
-					attackScores[2] += 50;
-					attackScores[10] += 50;
-					attackScores[17] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[26] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[26] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(1, 2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[16] += 25;
-				attackScores[4] += 25;
-				attackScores[3] += 25;
-				attackScores[8] += 25;
-				attackScores[20] += 25;
-				attackScores[24] += 25;
-				attackScores[34] += 25;
-				attackScores[27] += 25;
-				attackScores[11] += 25;
-				attackScores[18] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[16] += 25;
 						attackScores[4] += 25;
 						attackScores[3] += 25;
@@ -2166,43 +1409,26 @@ public class Splasher {
 						attackScores[27] += 25;
 						attackScores[11] += 25;
 						attackScores[18] += 25;
-					} else {
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 25;
-					attackScores[4] += 25;
-					attackScores[3] += 25;
-					attackScores[8] += 25;
-					attackScores[20] += 25;
-					attackScores[24] += 25;
-					attackScores[34] += 25;
-					attackScores[27] += 25;
-					attackScores[11] += 25;
-					attackScores[18] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[3] += 50;
-				attackScores[8] += 50;
-				attackScores[20] += 50;
-				attackScores[24] += 50;
-				attackScores[34] += 50;
-				attackScores[27] += 50;
-				attackScores[11] += 50;
-				attackScores[18] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 50;
-					attackScores[4] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+						} else {
+							attackScores[3] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[3] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[3] += 50;
 					attackScores[8] += 50;
 					attackScores[20] += 50;
@@ -2211,36 +1437,20 @@ public class Splasher {
 					attackScores[27] += 50;
 					attackScores[11] += 50;
 					attackScores[18] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 50;
-					attackScores[4] += 50;
-					attackScores[3] += 50;
-					attackScores[8] += 50;
-					attackScores[20] += 50;
-					attackScores[24] += 50;
-					attackScores[34] += 50;
-					attackScores[27] += 50;
-					attackScores[11] += 50;
-					attackScores[18] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[3] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[3] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(2, -1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[20] += 25;
-				attackScores[2] += 25;
-				attackScores[17] += 25;
-				attackScores[23] += 25;
-				attackScores[35] += 25;
-				attackScores[28] += 25;
-				attackScores[12] += 25;
-				attackScores[4] += 25;
-				attackScores[7] += 25;
-				attackScores[19] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[20] += 25;
 						attackScores[2] += 25;
 						attackScores[17] += 25;
@@ -2251,43 +1461,26 @@ public class Splasher {
 						attackScores[4] += 25;
 						attackScores[7] += 25;
 						attackScores[19] += 25;
-					} else {
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 25;
-					attackScores[2] += 25;
-					attackScores[17] += 25;
-					attackScores[23] += 25;
-					attackScores[35] += 25;
-					attackScores[28] += 25;
-					attackScores[12] += 25;
-					attackScores[4] += 25;
-					attackScores[7] += 25;
-					attackScores[19] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[17] += 50;
-				attackScores[23] += 50;
-				attackScores[35] += 50;
-				attackScores[28] += 50;
-				attackScores[12] += 50;
-				attackScores[4] += 50;
-				attackScores[7] += 50;
-				attackScores[19] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 50;
-					attackScores[2] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+						} else {
+							attackScores[17] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[17] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[17] += 50;
 					attackScores[23] += 50;
 					attackScores[35] += 50;
@@ -2296,36 +1489,20 @@ public class Splasher {
 					attackScores[4] += 50;
 					attackScores[7] += 50;
 					attackScores[19] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 50;
-					attackScores[2] += 50;
-					attackScores[17] += 50;
-					attackScores[23] += 50;
-					attackScores[35] += 50;
-					attackScores[28] += 50;
-					attackScores[12] += 50;
-					attackScores[4] += 50;
-					attackScores[7] += 50;
-					attackScores[19] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[17] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[17] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(2, 1);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[3] += 25;
-				attackScores[19] += 25;
-				attackScores[4] += 25;
-				attackScores[12] += 25;
-				attackScores[28] += 25;
-				attackScores[36] += 25;
-				attackScores[24] += 25;
-				attackScores[18] += 25;
-				attackScores[8] += 25;
-				attackScores[20] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[3] += 25;
 						attackScores[19] += 25;
 						attackScores[4] += 25;
@@ -2336,43 +1513,26 @@ public class Splasher {
 						attackScores[18] += 25;
 						attackScores[8] += 25;
 						attackScores[20] += 25;
-					} else {
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 25;
-					attackScores[19] += 25;
-					attackScores[4] += 25;
-					attackScores[12] += 25;
-					attackScores[28] += 25;
-					attackScores[36] += 25;
-					attackScores[24] += 25;
-					attackScores[18] += 25;
-					attackScores[8] += 25;
-					attackScores[20] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[4] += 50;
-				attackScores[12] += 50;
-				attackScores[28] += 50;
-				attackScores[36] += 50;
-				attackScores[24] += 50;
-				attackScores[18] += 50;
-				attackScores[8] += 50;
-				attackScores[20] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 50;
-					attackScores[19] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+						} else {
+							attackScores[4] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[4] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[4] += 50;
 					attackScores[12] += 50;
 					attackScores[28] += 50;
@@ -2381,34 +1541,20 @@ public class Splasher {
 					attackScores[18] += 50;
 					attackScores[8] += 50;
 					attackScores[20] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 50;
-					attackScores[19] += 50;
-					attackScores[4] += 50;
-					attackScores[12] += 50;
-					attackScores[28] += 50;
-					attackScores[36] += 50;
-					attackScores[24] += 50;
-					attackScores[18] += 50;
-					attackScores[8] += 50;
-					attackScores[20] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[4] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[4] += 50;
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-2, -2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[10] += 25;
-				attackScores[9] += 25;
-				attackScores[31] += 25;
-				attackScores[15] += 25;
-				attackScores[5] += 25;
-				attackScores[13] += 25;
-				attackScores[29] += 25;
-				attackScores[21] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[10] += 25;
 						attackScores[9] += 25;
 						attackScores[31] += 25;
@@ -2417,69 +1563,40 @@ public class Splasher {
 						attackScores[13] += 25;
 						attackScores[29] += 25;
 						attackScores[21] += 25;
-					} else {
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[10] += 25;
-					attackScores[9] += 25;
-					attackScores[31] += 25;
-					attackScores[15] += 25;
-					attackScores[5] += 25;
-					attackScores[13] += 25;
-					attackScores[29] += 25;
-					attackScores[21] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[31] += 50;
-				attackScores[15] += 50;
-				attackScores[5] += 50;
-				attackScores[13] += 50;
-				attackScores[29] += 50;
-				attackScores[21] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[10] += 50;
-					attackScores[9] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[31] += 50;
 					attackScores[15] += 50;
 					attackScores[5] += 50;
 					attackScores[13] += 50;
 					attackScores[29] += 50;
 					attackScores[21] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[10] += 50;
-					attackScores[9] += 50;
-					attackScores[31] += 50;
-					attackScores[15] += 50;
-					attackScores[5] += 50;
-					attackScores[13] += 50;
-					attackScores[29] += 50;
-					attackScores[21] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
 				}
 			}
 		}
 		loc = G.me.translate(-2, 2);
 		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[11] += 25;
-				attackScores[9] += 25;
-				attackScores[30] += 25;
-				attackScores[14] += 25;
-				attackScores[6] += 25;
-				attackScores[16] += 25;
-				attackScores[32] += 25;
-				attackScores[22] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
 						attackScores[11] += 25;
 						attackScores[9] += 25;
 						attackScores[30] += 25;
@@ -2488,2233 +1605,1585 @@ public class Splasher {
 						attackScores[16] += 25;
 						attackScores[32] += 25;
 						attackScores[22] += 25;
-					} else {
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
 					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 25;
-					attackScores[9] += 25;
-					attackScores[30] += 25;
-					attackScores[14] += 25;
-					attackScores[6] += 25;
-					attackScores[16] += 25;
-					attackScores[32] += 25;
-					attackScores[22] += 25;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+						} else {
+							attackScores[30] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[30] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[30] += 50;
+					attackScores[14] += 50;
+					attackScores[6] += 50;
+					attackScores[16] += 50;
+					attackScores[32] += 50;
+					attackScores[22] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[30] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[30] += 50;
+					}
 				}
 			}
-			else if (paint.isEnemy()) {
-				attackScores[30] += 50;
-				attackScores[14] += 50;
-				attackScores[6] += 50;
-				attackScores[16] += 50;
-				attackScores[32] += 50;
-				attackScores[22] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 50;
+		}
+		loc = G.me.translate(2, -2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[12] += 25;
+						attackScores[10] += 25;
+						attackScores[33] += 25;
+						attackScores[35] += 25;
+						attackScores[19] += 25;
+						attackScores[7] += 25;
+						attackScores[17] += 25;
+						attackScores[23] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+						} else {
+							attackScores[33] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[33] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[33] += 50;
+					attackScores[35] += 50;
+					attackScores[19] += 50;
+					attackScores[7] += 50;
+					attackScores[17] += 50;
+					attackScores[23] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[33] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[33] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(2, 2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[11] += 25;
+						attackScores[12] += 25;
+						attackScores[8] += 25;
+						attackScores[20] += 25;
+						attackScores[36] += 25;
+						attackScores[34] += 25;
+						attackScores[18] += 25;
+						attackScores[24] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+						} else {
+							attackScores[8] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[8] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[8] += 50;
+					attackScores[20] += 50;
+					attackScores[36] += 50;
+					attackScores[34] += 50;
+					attackScores[18] += 50;
+					attackScores[24] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[8] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[8] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, 0);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[1] += 25;
+						attackScores[29] += 25;
+						attackScores[13] += 25;
+						attackScores[9] += 25;
+						attackScores[14] += 25;
+						attackScores[30] += 25;
+						attackScores[25] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[1] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[29] += 50;
+					attackScores[13] += 50;
 					attackScores[9] += 50;
+					attackScores[14] += 50;
+					attackScores[30] += 50;
+					attackScores[25] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(0, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[2] += 25;
+						attackScores[33] += 25;
+						attackScores[17] += 25;
+						attackScores[10] += 25;
+						attackScores[15] += 25;
+						attackScores[31] += 25;
+						attackScores[26] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[2] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[33] += 50;
+					attackScores[17] += 50;
+					attackScores[10] += 50;
+					attackScores[15] += 50;
+					attackScores[31] += 50;
+					attackScores[26] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(0, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[3] += 25;
+						attackScores[16] += 25;
+						attackScores[11] += 25;
+						attackScores[18] += 25;
+						attackScores[34] += 25;
+						attackScores[32] += 25;
+						attackScores[27] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[3] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+						} else {
+							attackScores[16] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[16] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[16] += 50;
+					attackScores[11] += 50;
+					attackScores[18] += 50;
+					attackScores[34] += 50;
+					attackScores[32] += 50;
+					attackScores[27] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[16] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[16] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, 0);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[4] += 25;
+						attackScores[19] += 25;
+						attackScores[35] += 25;
+						attackScores[36] += 25;
+						attackScores[20] += 25;
+						attackScores[12] += 25;
+						attackScores[28] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[4] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+						} else {
+							attackScores[19] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[19] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[19] += 50;
+					attackScores[35] += 50;
+					attackScores[36] += 50;
+					attackScores[20] += 50;
+					attackScores[12] += 50;
+					attackScores[28] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[19] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[19] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, -1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[5] += 25;
+						attackScores[30] += 25;
+						attackScores[21] += 25;
+						attackScores[13] += 25;
+						attackScores[9] += 25;
+						attackScores[25] += 25;
+						attackScores[29] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[21] += 50;
+					attackScores[13] += 50;
+					attackScores[9] += 50;
+					attackScores[25] += 50;
+					attackScores[29] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, 1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[6] += 25;
+						attackScores[29] += 25;
+						attackScores[25] += 25;
+						attackScores[9] += 25;
+						attackScores[14] += 25;
+						attackScores[22] += 25;
+						attackScores[30] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[25] += 50;
+					attackScores[9] += 50;
+					attackScores[14] += 50;
+					attackScores[22] += 50;
+					attackScores[30] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-1, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[33] += 25;
+						attackScores[5] += 25;
+						attackScores[26] += 25;
+						attackScores[10] += 25;
+						attackScores[15] += 25;
+						attackScores[21] += 25;
+						attackScores[31] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[5] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[26] += 50;
+					attackScores[10] += 50;
+					attackScores[15] += 50;
+					attackScores[21] += 50;
+					attackScores[31] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-1, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[34] += 25;
+						attackScores[6] += 25;
+						attackScores[22] += 25;
+						attackScores[16] += 25;
+						attackScores[11] += 25;
+						attackScores[27] += 25;
+						attackScores[32] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[6] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+						} else {
+							attackScores[22] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[22] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[22] += 50;
+					attackScores[16] += 50;
+					attackScores[11] += 50;
+					attackScores[27] += 50;
+					attackScores[32] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[22] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[22] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(1, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[7] += 25;
+						attackScores[31] += 25;
+						attackScores[23] += 25;
+						attackScores[17] += 25;
+						attackScores[10] += 25;
+						attackScores[26] += 25;
+						attackScores[33] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[23] += 50;
+					attackScores[17] += 50;
+					attackScores[10] += 50;
+					attackScores[26] += 50;
+					attackScores[33] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(1, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[32] += 25;
+						attackScores[8] += 25;
+						attackScores[11] += 25;
+						attackScores[18] += 25;
+						attackScores[24] += 25;
+						attackScores[27] += 25;
+						attackScores[34] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+						} else {
+							attackScores[11] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[11] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[11] += 50;
+					attackScores[18] += 50;
+					attackScores[24] += 50;
+					attackScores[27] += 50;
+					attackScores[34] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[11] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[11] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, -1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[36] += 25;
+						attackScores[7] += 25;
+						attackScores[23] += 25;
+						attackScores[28] += 25;
+						attackScores[12] += 25;
+						attackScores[19] += 25;
+						attackScores[35] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[7] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+						} else {
+							attackScores[23] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[23] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[23] += 50;
+					attackScores[28] += 50;
+					attackScores[12] += 50;
+					attackScores[19] += 50;
+					attackScores[35] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[23] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[23] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, 1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[8] += 25;
+						attackScores[35] += 25;
+						attackScores[12] += 25;
+						attackScores[28] += 25;
+						attackScores[24] += 25;
+						attackScores[20] += 25;
+						attackScores[36] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[8] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+						} else {
+							attackScores[12] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[12] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[12] += 50;
+					attackScores[28] += 50;
+					attackScores[24] += 50;
+					attackScores[20] += 50;
+					attackScores[36] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[12] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[12] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, -2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[15] += 25;
+						attackScores[25] += 25;
+						attackScores[21] += 25;
+						attackScores[13] += 25;
+						attackScores[29] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[21] += 50;
+					attackScores[13] += 50;
+					attackScores[29] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, 2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[16] += 25;
+						attackScores[25] += 25;
+						attackScores[30] += 25;
+						attackScores[14] += 25;
+						attackScores[22] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[30] += 50;
 					attackScores[14] += 50;
-					attackScores[6] += 50;
+					attackScores[22] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-2, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[26] += 25;
+						attackScores[13] += 25;
+						attackScores[31] += 25;
+						attackScores[15] += 25;
+						attackScores[21] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[31] += 50;
+					attackScores[15] += 50;
+					attackScores[21] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-2, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[27] += 25;
+						attackScores[14] += 25;
+						attackScores[22] += 25;
+						attackScores[16] += 25;
+						attackScores[32] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[22] += 50;
 					attackScores[16] += 50;
 					attackScores[32] += 50;
-					attackScores[22] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 50;
-					attackScores[9] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(2, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[19] += 25;
+						attackScores[26] += 25;
+						attackScores[23] += 25;
+						attackScores[17] += 25;
+						attackScores[33] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[23] += 50;
+					attackScores[17] += 50;
+					attackScores[33] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(2, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[27] += 25;
+						attackScores[20] += 25;
+						attackScores[18] += 25;
+						attackScores[24] += 25;
+						attackScores[34] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+						} else {
+							attackScores[18] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[18] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[18] += 50;
+					attackScores[24] += 50;
+					attackScores[34] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[18] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[18] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, -2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[28] += 25;
+						attackScores[17] += 25;
+						attackScores[35] += 25;
+						attackScores[19] += 25;
+						attackScores[23] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[35] += 50;
+					attackScores[19] += 50;
+					attackScores[23] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, 2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[18] += 25;
+						attackScores[28] += 25;
+						attackScores[20] += 25;
+						attackScores[36] += 25;
+						attackScores[24] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+						} else {
+							attackScores[20] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[20] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[20] += 50;
+					attackScores[36] += 50;
+					attackScores[24] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[20] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[20] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-4, 0);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[9] += 25;
+						attackScores[29] += 25;
+						attackScores[25] += 25;
+						attackScores[30] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[9] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[29] += 50;
+					attackScores[25] += 50;
 					attackScores[30] += 50;
-					attackScores[14] += 50;
-					attackScores[6] += 50;
-					attackScores[16] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(0, -4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[10] += 25;
+						attackScores[33] += 25;
+						attackScores[26] += 25;
+						attackScores[31] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[10] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[33] += 50;
+					attackScores[26] += 50;
+					attackScores[31] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(0, 4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[11] += 25;
+						attackScores[32] += 25;
+						attackScores[27] += 25;
+						attackScores[34] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[11] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+						} else {
+							attackScores[32] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[32] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[32] += 50;
+					attackScores[27] += 50;
+					attackScores[34] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[32] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[32] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(4, 0);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[12] += 25;
+						attackScores[35] += 25;
+						attackScores[36] += 25;
+						attackScores[28] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[12] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+						} else {
+							attackScores[35] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[35] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[35] += 50;
+					attackScores[36] += 50;
+					attackScores[28] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[35] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[35] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-4, -1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[13] += 25;
+						attackScores[29] += 25;
+						attackScores[25] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[13] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[29] += 50;
+					attackScores[25] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-4, 1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[14] += 25;
+						attackScores[25] += 25;
+						attackScores[30] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[14] += G.paintPerChips() * 100;
+							attackScores[25] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[25] += 50;
+					attackScores[30] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-1, -4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[15] += 25;
+						attackScores[26] += 25;
+						attackScores[31] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[15] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[26] += 50;
+					attackScores[31] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-1, 4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[16] += 25;
+						attackScores[32] += 25;
+						attackScores[27] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[16] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[32] += 50;
+					attackScores[27] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(1, -4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[17] += 25;
+						attackScores[33] += 25;
+						attackScores[26] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[17] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[26] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[33] += 50;
+					attackScores[26] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(1, 4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[18] += 25;
+						attackScores[27] += 25;
+						attackScores[34] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[18] += G.paintPerChips() * 100;
+							attackScores[27] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+						} else {
+							attackScores[27] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[27] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[27] += 50;
+					attackScores[34] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[27] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[27] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(4, -1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[19] += 25;
+						attackScores[28] += 25;
+						attackScores[35] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[19] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[28] += 50;
+					attackScores[35] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(4, 1);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[20] += 25;
+						attackScores[28] += 25;
+						attackScores[36] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[20] += G.paintPerChips() * 100;
+							attackScores[28] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+						} else {
+							attackScores[28] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[28] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[28] += 50;
+					attackScores[36] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[28] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[28] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[31] += 25;
+						attackScores[29] += 25;
+						attackScores[21] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[31] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+							attackScores[21] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[21] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-3, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[32] += 25;
+						attackScores[30] += 25;
+						attackScores[22] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[32] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+							attackScores[22] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
 					attackScores[22] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, -3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[35] += 25;
+						attackScores[33] += 25;
+						attackScores[23] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[35] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+							attackScores[23] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[23] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(3, 3);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[34] += 25;
+						attackScores[36] += 25;
+						attackScores[24] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[34] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+							attackScores[24] += G.paintPerChips() * 100;
+						} else {
+							attackScores[24] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[24] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[24] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[24] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[24] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-4, -2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[21] += 25;
+						attackScores[29] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[29] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[29] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-4, 2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[22] += 25;
+						attackScores[30] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[30] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[30] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-2, -4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[21] += 25;
+						attackScores[31] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[21] += G.paintPerChips() * 100;
+							attackScores[31] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[31] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(-2, 4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[22] += 25;
+						attackScores[32] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[22] += G.paintPerChips() * 100;
+							attackScores[32] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[32] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(2, -4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[23] += 25;
+						attackScores[33] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[33] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[33] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(2, 4);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[24] += 25;
+						attackScores[34] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[34] += G.paintPerChips() * 100;
+						} else {
+							attackScores[34] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[34] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[34] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[34] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[34] += 50;
+					}
+				}
+			}
+		}
+		loc = G.me.translate(4, -2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[23] += 25;
+						attackScores[35] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[23] += G.paintPerChips() * 100;
+							attackScores[35] += G.paintPerChips() * 100;
+						} else {
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[35] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+					}
+				}
+			}
+		}
+		loc = G.me.translate(4, 2);
+		if (G.rc.onTheMap(loc)) {
+			MapInfo info = G.rc.senseMapInfo(loc);
+			if (!info.isWall()) {
+				if (info.getPaint() == PaintType.EMPTY) {
+					if (!info.hasRuin()) {
+						attackScores[24] += 25;
+						attackScores[36] += 25;
+					}
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						if (info.hasRuin()) {
+							attackScores[24] += G.paintPerChips() * 100;
+							attackScores[36] += G.paintPerChips() * 100;
+						} else {
+							attackScores[36] += 25;
+						}
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[36] += 25;
+					}
+				} else if (info.getPaint().isEnemy()) {
+					attackScores[36] += 50;
+					if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[36] += 50;
+					} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
+						attackScores[36] += 50;
+					}
 				}
 			}
 		}
     }
 
     public static void exploreAttackScores2() throws Exception {
-        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
-        StringBuilder ruinsString = new StringBuilder();
-        for (int i = ruins.length; --i >= 0;) {
-            ruinsString.append(ruins[i].toString());
-        }
-        MapLocation loc = G.me.translate(2, -2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[12] += 25;
-				attackScores[10] += 25;
-				attackScores[33] += 25;
-				attackScores[35] += 25;
-				attackScores[19] += 25;
-				attackScores[7] += 25;
-				attackScores[17] += 25;
-				attackScores[23] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[12] += 25;
-						attackScores[10] += 25;
-						attackScores[33] += 25;
-						attackScores[35] += 25;
-						attackScores[19] += 25;
-						attackScores[7] += 25;
-						attackScores[17] += 25;
-						attackScores[23] += 25;
-					} else {
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 25;
-					attackScores[10] += 25;
-					attackScores[33] += 25;
-					attackScores[35] += 25;
-					attackScores[19] += 25;
-					attackScores[7] += 25;
-					attackScores[17] += 25;
-					attackScores[23] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[33] += 50;
-				attackScores[35] += 50;
-				attackScores[19] += 50;
-				attackScores[7] += 50;
-				attackScores[17] += 50;
-				attackScores[23] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 50;
-					attackScores[10] += 50;
-					attackScores[33] += 50;
-					attackScores[35] += 50;
-					attackScores[19] += 50;
-					attackScores[7] += 50;
-					attackScores[17] += 50;
-					attackScores[23] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 50;
-					attackScores[10] += 50;
-					attackScores[33] += 50;
-					attackScores[35] += 50;
-					attackScores[19] += 50;
-					attackScores[7] += 50;
-					attackScores[17] += 50;
-					attackScores[23] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(2, 2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[11] += 25;
-				attackScores[12] += 25;
-				attackScores[8] += 25;
-				attackScores[20] += 25;
-				attackScores[36] += 25;
-				attackScores[34] += 25;
-				attackScores[18] += 25;
-				attackScores[24] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[11] += 25;
-						attackScores[12] += 25;
-						attackScores[8] += 25;
-						attackScores[20] += 25;
-						attackScores[36] += 25;
-						attackScores[34] += 25;
-						attackScores[18] += 25;
-						attackScores[24] += 25;
-					} else {
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 25;
-					attackScores[12] += 25;
-					attackScores[8] += 25;
-					attackScores[20] += 25;
-					attackScores[36] += 25;
-					attackScores[34] += 25;
-					attackScores[18] += 25;
-					attackScores[24] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[8] += 50;
-				attackScores[20] += 50;
-				attackScores[36] += 50;
-				attackScores[34] += 50;
-				attackScores[18] += 50;
-				attackScores[24] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 50;
-					attackScores[12] += 50;
-					attackScores[8] += 50;
-					attackScores[20] += 50;
-					attackScores[36] += 50;
-					attackScores[34] += 50;
-					attackScores[18] += 50;
-					attackScores[24] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 50;
-					attackScores[12] += 50;
-					attackScores[8] += 50;
-					attackScores[20] += 50;
-					attackScores[36] += 50;
-					attackScores[34] += 50;
-					attackScores[18] += 50;
-					attackScores[24] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 0);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[1] += 25;
-				attackScores[29] += 25;
-				attackScores[13] += 25;
-				attackScores[9] += 25;
-				attackScores[14] += 25;
-				attackScores[30] += 25;
-				attackScores[25] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[1] += 25;
-						attackScores[29] += 25;
-						attackScores[13] += 25;
-						attackScores[9] += 25;
-						attackScores[14] += 25;
-						attackScores[30] += 25;
-						attackScores[25] += 25;
-					} else {
-						attackScores[1] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[1] += 25;
-					attackScores[29] += 25;
-					attackScores[13] += 25;
-					attackScores[9] += 25;
-					attackScores[14] += 25;
-					attackScores[30] += 25;
-					attackScores[25] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[29] += 50;
-				attackScores[13] += 50;
-				attackScores[9] += 50;
-				attackScores[14] += 50;
-				attackScores[30] += 50;
-				attackScores[25] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[1] += 50;
-					attackScores[29] += 50;
-					attackScores[13] += 50;
-					attackScores[9] += 50;
-					attackScores[14] += 50;
-					attackScores[30] += 50;
-					attackScores[25] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[1] += 50;
-					attackScores[29] += 50;
-					attackScores[13] += 50;
-					attackScores[9] += 50;
-					attackScores[14] += 50;
-					attackScores[30] += 50;
-					attackScores[25] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(0, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[2] += 25;
-				attackScores[33] += 25;
-				attackScores[17] += 25;
-				attackScores[10] += 25;
-				attackScores[15] += 25;
-				attackScores[31] += 25;
-				attackScores[26] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[2] += 25;
-						attackScores[33] += 25;
-						attackScores[17] += 25;
-						attackScores[10] += 25;
-						attackScores[15] += 25;
-						attackScores[31] += 25;
-						attackScores[26] += 25;
-					} else {
-						attackScores[2] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[2] += 25;
-					attackScores[33] += 25;
-					attackScores[17] += 25;
-					attackScores[10] += 25;
-					attackScores[15] += 25;
-					attackScores[31] += 25;
-					attackScores[26] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[33] += 50;
-				attackScores[17] += 50;
-				attackScores[10] += 50;
-				attackScores[15] += 50;
-				attackScores[31] += 50;
-				attackScores[26] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[2] += 50;
-					attackScores[33] += 50;
-					attackScores[17] += 50;
-					attackScores[10] += 50;
-					attackScores[15] += 50;
-					attackScores[31] += 50;
-					attackScores[26] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[2] += 50;
-					attackScores[33] += 50;
-					attackScores[17] += 50;
-					attackScores[10] += 50;
-					attackScores[15] += 50;
-					attackScores[31] += 50;
-					attackScores[26] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(0, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[3] += 25;
-				attackScores[16] += 25;
-				attackScores[11] += 25;
-				attackScores[18] += 25;
-				attackScores[34] += 25;
-				attackScores[32] += 25;
-				attackScores[27] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[3] += 25;
-						attackScores[16] += 25;
-						attackScores[11] += 25;
-						attackScores[18] += 25;
-						attackScores[34] += 25;
-						attackScores[32] += 25;
-						attackScores[27] += 25;
-					} else {
-						attackScores[3] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 25;
-					attackScores[16] += 25;
-					attackScores[11] += 25;
-					attackScores[18] += 25;
-					attackScores[34] += 25;
-					attackScores[32] += 25;
-					attackScores[27] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[16] += 50;
-				attackScores[11] += 50;
-				attackScores[18] += 50;
-				attackScores[34] += 50;
-				attackScores[32] += 50;
-				attackScores[27] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 50;
-					attackScores[16] += 50;
-					attackScores[11] += 50;
-					attackScores[18] += 50;
-					attackScores[34] += 50;
-					attackScores[32] += 50;
-					attackScores[27] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[3] += 50;
-					attackScores[16] += 50;
-					attackScores[11] += 50;
-					attackScores[18] += 50;
-					attackScores[34] += 50;
-					attackScores[32] += 50;
-					attackScores[27] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, 0);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[4] += 25;
-				attackScores[19] += 25;
-				attackScores[35] += 25;
-				attackScores[36] += 25;
-				attackScores[20] += 25;
-				attackScores[12] += 25;
-				attackScores[28] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[4] += 25;
-						attackScores[19] += 25;
-						attackScores[35] += 25;
-						attackScores[36] += 25;
-						attackScores[20] += 25;
-						attackScores[12] += 25;
-						attackScores[28] += 25;
-					} else {
-						attackScores[4] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 25;
-					attackScores[19] += 25;
-					attackScores[35] += 25;
-					attackScores[36] += 25;
-					attackScores[20] += 25;
-					attackScores[12] += 25;
-					attackScores[28] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[19] += 50;
-				attackScores[35] += 50;
-				attackScores[36] += 50;
-				attackScores[20] += 50;
-				attackScores[12] += 50;
-				attackScores[28] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 50;
-					attackScores[19] += 50;
-					attackScores[35] += 50;
-					attackScores[36] += 50;
-					attackScores[20] += 50;
-					attackScores[12] += 50;
-					attackScores[28] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[4] += 50;
-					attackScores[19] += 50;
-					attackScores[35] += 50;
-					attackScores[36] += 50;
-					attackScores[20] += 50;
-					attackScores[12] += 50;
-					attackScores[28] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, -1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[5] += 25;
-				attackScores[30] += 25;
-				attackScores[21] += 25;
-				attackScores[13] += 25;
-				attackScores[9] += 25;
-				attackScores[25] += 25;
-				attackScores[29] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[5] += 25;
-						attackScores[30] += 25;
-						attackScores[21] += 25;
-						attackScores[13] += 25;
-						attackScores[9] += 25;
-						attackScores[25] += 25;
-						attackScores[29] += 25;
-					} else {
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[5] += 25;
-					attackScores[30] += 25;
-					attackScores[21] += 25;
-					attackScores[13] += 25;
-					attackScores[9] += 25;
-					attackScores[25] += 25;
-					attackScores[29] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[21] += 50;
-				attackScores[13] += 50;
-				attackScores[9] += 50;
-				attackScores[25] += 50;
-				attackScores[29] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[5] += 50;
-					attackScores[30] += 50;
-					attackScores[21] += 50;
-					attackScores[13] += 50;
-					attackScores[9] += 50;
-					attackScores[25] += 50;
-					attackScores[29] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[5] += 50;
-					attackScores[30] += 50;
-					attackScores[21] += 50;
-					attackScores[13] += 50;
-					attackScores[9] += 50;
-					attackScores[25] += 50;
-					attackScores[29] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[6] += 25;
-				attackScores[29] += 25;
-				attackScores[25] += 25;
-				attackScores[9] += 25;
-				attackScores[14] += 25;
-				attackScores[22] += 25;
-				attackScores[30] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[6] += 25;
-						attackScores[29] += 25;
-						attackScores[25] += 25;
-						attackScores[9] += 25;
-						attackScores[14] += 25;
-						attackScores[22] += 25;
-						attackScores[30] += 25;
-					} else {
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[6] += 25;
-					attackScores[29] += 25;
-					attackScores[25] += 25;
-					attackScores[9] += 25;
-					attackScores[14] += 25;
-					attackScores[22] += 25;
-					attackScores[30] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[25] += 50;
-				attackScores[9] += 50;
-				attackScores[14] += 50;
-				attackScores[22] += 50;
-				attackScores[30] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[6] += 50;
-					attackScores[29] += 50;
-					attackScores[25] += 50;
-					attackScores[9] += 50;
-					attackScores[14] += 50;
-					attackScores[22] += 50;
-					attackScores[30] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[6] += 50;
-					attackScores[29] += 50;
-					attackScores[25] += 50;
-					attackScores[9] += 50;
-					attackScores[14] += 50;
-					attackScores[22] += 50;
-					attackScores[30] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-1, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[33] += 25;
-				attackScores[5] += 25;
-				attackScores[26] += 25;
-				attackScores[10] += 25;
-				attackScores[15] += 25;
-				attackScores[21] += 25;
-				attackScores[31] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[33] += 25;
-						attackScores[5] += 25;
-						attackScores[26] += 25;
-						attackScores[10] += 25;
-						attackScores[15] += 25;
-						attackScores[21] += 25;
-						attackScores[31] += 25;
-					} else {
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[5] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[33] += 25;
-					attackScores[5] += 25;
-					attackScores[26] += 25;
-					attackScores[10] += 25;
-					attackScores[15] += 25;
-					attackScores[21] += 25;
-					attackScores[31] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[26] += 50;
-				attackScores[10] += 50;
-				attackScores[15] += 50;
-				attackScores[21] += 50;
-				attackScores[31] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[33] += 50;
-					attackScores[5] += 50;
-					attackScores[26] += 50;
-					attackScores[10] += 50;
-					attackScores[15] += 50;
-					attackScores[21] += 50;
-					attackScores[31] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[33] += 50;
-					attackScores[5] += 50;
-					attackScores[26] += 50;
-					attackScores[10] += 50;
-					attackScores[15] += 50;
-					attackScores[21] += 50;
-					attackScores[31] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-1, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[34] += 25;
-				attackScores[6] += 25;
-				attackScores[22] += 25;
-				attackScores[16] += 25;
-				attackScores[11] += 25;
-				attackScores[27] += 25;
-				attackScores[32] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[34] += 25;
-						attackScores[6] += 25;
-						attackScores[22] += 25;
-						attackScores[16] += 25;
-						attackScores[11] += 25;
-						attackScores[27] += 25;
-						attackScores[32] += 25;
-					} else {
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[6] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[34] += 25;
-					attackScores[6] += 25;
-					attackScores[22] += 25;
-					attackScores[16] += 25;
-					attackScores[11] += 25;
-					attackScores[27] += 25;
-					attackScores[32] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[22] += 50;
-				attackScores[16] += 50;
-				attackScores[11] += 50;
-				attackScores[27] += 50;
-				attackScores[32] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[34] += 50;
-					attackScores[6] += 50;
-					attackScores[22] += 50;
-					attackScores[16] += 50;
-					attackScores[11] += 50;
-					attackScores[27] += 50;
-					attackScores[32] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[34] += 50;
-					attackScores[6] += 50;
-					attackScores[22] += 50;
-					attackScores[16] += 50;
-					attackScores[11] += 50;
-					attackScores[27] += 50;
-					attackScores[32] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(1, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[7] += 25;
-				attackScores[31] += 25;
-				attackScores[23] += 25;
-				attackScores[17] += 25;
-				attackScores[10] += 25;
-				attackScores[26] += 25;
-				attackScores[33] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[7] += 25;
-						attackScores[31] += 25;
-						attackScores[23] += 25;
-						attackScores[17] += 25;
-						attackScores[10] += 25;
-						attackScores[26] += 25;
-						attackScores[33] += 25;
-					} else {
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[7] += 25;
-					attackScores[31] += 25;
-					attackScores[23] += 25;
-					attackScores[17] += 25;
-					attackScores[10] += 25;
-					attackScores[26] += 25;
-					attackScores[33] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[23] += 50;
-				attackScores[17] += 50;
-				attackScores[10] += 50;
-				attackScores[26] += 50;
-				attackScores[33] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[7] += 50;
-					attackScores[31] += 50;
-					attackScores[23] += 50;
-					attackScores[17] += 50;
-					attackScores[10] += 50;
-					attackScores[26] += 50;
-					attackScores[33] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[7] += 50;
-					attackScores[31] += 50;
-					attackScores[23] += 50;
-					attackScores[17] += 50;
-					attackScores[10] += 50;
-					attackScores[26] += 50;
-					attackScores[33] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(1, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[32] += 25;
-				attackScores[8] += 25;
-				attackScores[11] += 25;
-				attackScores[18] += 25;
-				attackScores[24] += 25;
-				attackScores[27] += 25;
-				attackScores[34] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[32] += 25;
-						attackScores[8] += 25;
-						attackScores[11] += 25;
-						attackScores[18] += 25;
-						attackScores[24] += 25;
-						attackScores[27] += 25;
-						attackScores[34] += 25;
-					} else {
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[32] += 25;
-					attackScores[8] += 25;
-					attackScores[11] += 25;
-					attackScores[18] += 25;
-					attackScores[24] += 25;
-					attackScores[27] += 25;
-					attackScores[34] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[11] += 50;
-				attackScores[18] += 50;
-				attackScores[24] += 50;
-				attackScores[27] += 50;
-				attackScores[34] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[32] += 50;
-					attackScores[8] += 50;
-					attackScores[11] += 50;
-					attackScores[18] += 50;
-					attackScores[24] += 50;
-					attackScores[27] += 50;
-					attackScores[34] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[32] += 50;
-					attackScores[8] += 50;
-					attackScores[11] += 50;
-					attackScores[18] += 50;
-					attackScores[24] += 50;
-					attackScores[27] += 50;
-					attackScores[34] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, -1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[36] += 25;
-				attackScores[7] += 25;
-				attackScores[23] += 25;
-				attackScores[28] += 25;
-				attackScores[12] += 25;
-				attackScores[19] += 25;
-				attackScores[35] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[36] += 25;
-						attackScores[7] += 25;
-						attackScores[23] += 25;
-						attackScores[28] += 25;
-						attackScores[12] += 25;
-						attackScores[19] += 25;
-						attackScores[35] += 25;
-					} else {
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[7] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[36] += 25;
-					attackScores[7] += 25;
-					attackScores[23] += 25;
-					attackScores[28] += 25;
-					attackScores[12] += 25;
-					attackScores[19] += 25;
-					attackScores[35] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[23] += 50;
-				attackScores[28] += 50;
-				attackScores[12] += 50;
-				attackScores[19] += 50;
-				attackScores[35] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[36] += 50;
-					attackScores[7] += 50;
-					attackScores[23] += 50;
-					attackScores[28] += 50;
-					attackScores[12] += 50;
-					attackScores[19] += 50;
-					attackScores[35] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[36] += 50;
-					attackScores[7] += 50;
-					attackScores[23] += 50;
-					attackScores[28] += 50;
-					attackScores[12] += 50;
-					attackScores[19] += 50;
-					attackScores[35] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, 1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[8] += 25;
-				attackScores[35] += 25;
-				attackScores[12] += 25;
-				attackScores[28] += 25;
-				attackScores[24] += 25;
-				attackScores[20] += 25;
-				attackScores[36] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[8] += 25;
-						attackScores[35] += 25;
-						attackScores[12] += 25;
-						attackScores[28] += 25;
-						attackScores[24] += 25;
-						attackScores[20] += 25;
-						attackScores[36] += 25;
-					} else {
-						attackScores[8] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[8] += 25;
-					attackScores[35] += 25;
-					attackScores[12] += 25;
-					attackScores[28] += 25;
-					attackScores[24] += 25;
-					attackScores[20] += 25;
-					attackScores[36] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[12] += 50;
-				attackScores[28] += 50;
-				attackScores[24] += 50;
-				attackScores[20] += 50;
-				attackScores[36] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[8] += 50;
-					attackScores[35] += 50;
-					attackScores[12] += 50;
-					attackScores[28] += 50;
-					attackScores[24] += 50;
-					attackScores[20] += 50;
-					attackScores[36] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[8] += 50;
-					attackScores[35] += 50;
-					attackScores[12] += 50;
-					attackScores[28] += 50;
-					attackScores[24] += 50;
-					attackScores[20] += 50;
-					attackScores[36] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, -2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[15] += 25;
-				attackScores[25] += 25;
-				attackScores[21] += 25;
-				attackScores[13] += 25;
-				attackScores[29] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[15] += 25;
-						attackScores[25] += 25;
-						attackScores[21] += 25;
-						attackScores[13] += 25;
-						attackScores[29] += 25;
-					} else {
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[15] += 25;
-					attackScores[25] += 25;
-					attackScores[21] += 25;
-					attackScores[13] += 25;
-					attackScores[29] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[21] += 50;
-				attackScores[13] += 50;
-				attackScores[29] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[15] += 50;
-					attackScores[25] += 50;
-					attackScores[21] += 50;
-					attackScores[13] += 50;
-					attackScores[29] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[15] += 50;
-					attackScores[25] += 50;
-					attackScores[21] += 50;
-					attackScores[13] += 50;
-					attackScores[29] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[16] += 25;
-				attackScores[25] += 25;
-				attackScores[30] += 25;
-				attackScores[14] += 25;
-				attackScores[22] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[16] += 25;
-						attackScores[25] += 25;
-						attackScores[30] += 25;
-						attackScores[14] += 25;
-						attackScores[22] += 25;
-					} else {
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 25;
-					attackScores[25] += 25;
-					attackScores[30] += 25;
-					attackScores[14] += 25;
-					attackScores[22] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[30] += 50;
-				attackScores[14] += 50;
-				attackScores[22] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 50;
-					attackScores[25] += 50;
-					attackScores[30] += 50;
-					attackScores[14] += 50;
-					attackScores[22] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 50;
-					attackScores[25] += 50;
-					attackScores[30] += 50;
-					attackScores[14] += 50;
-					attackScores[22] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-2, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[26] += 25;
-				attackScores[13] += 25;
-				attackScores[31] += 25;
-				attackScores[15] += 25;
-				attackScores[21] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[26] += 25;
-						attackScores[13] += 25;
-						attackScores[31] += 25;
-						attackScores[15] += 25;
-						attackScores[21] += 25;
-					} else {
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[26] += 25;
-					attackScores[13] += 25;
-					attackScores[31] += 25;
-					attackScores[15] += 25;
-					attackScores[21] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[31] += 50;
-				attackScores[15] += 50;
-				attackScores[21] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[26] += 50;
-					attackScores[13] += 50;
-					attackScores[31] += 50;
-					attackScores[15] += 50;
-					attackScores[21] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[26] += 50;
-					attackScores[13] += 50;
-					attackScores[31] += 50;
-					attackScores[15] += 50;
-					attackScores[21] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-2, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[27] += 25;
-				attackScores[14] += 25;
-				attackScores[22] += 25;
-				attackScores[16] += 25;
-				attackScores[32] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[27] += 25;
-						attackScores[14] += 25;
-						attackScores[22] += 25;
-						attackScores[16] += 25;
-						attackScores[32] += 25;
-					} else {
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[27] += 25;
-					attackScores[14] += 25;
-					attackScores[22] += 25;
-					attackScores[16] += 25;
-					attackScores[32] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[22] += 50;
-				attackScores[16] += 50;
-				attackScores[32] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[27] += 50;
-					attackScores[14] += 50;
-					attackScores[22] += 50;
-					attackScores[16] += 50;
-					attackScores[32] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[27] += 50;
-					attackScores[14] += 50;
-					attackScores[22] += 50;
-					attackScores[16] += 50;
-					attackScores[32] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(2, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[19] += 25;
-				attackScores[26] += 25;
-				attackScores[23] += 25;
-				attackScores[17] += 25;
-				attackScores[33] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[19] += 25;
-						attackScores[26] += 25;
-						attackScores[23] += 25;
-						attackScores[17] += 25;
-						attackScores[33] += 25;
-					} else {
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 25;
-					attackScores[26] += 25;
-					attackScores[23] += 25;
-					attackScores[17] += 25;
-					attackScores[33] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[23] += 50;
-				attackScores[17] += 50;
-				attackScores[33] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 50;
-					attackScores[26] += 50;
-					attackScores[23] += 50;
-					attackScores[17] += 50;
-					attackScores[33] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 50;
-					attackScores[26] += 50;
-					attackScores[23] += 50;
-					attackScores[17] += 50;
-					attackScores[33] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(2, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[27] += 25;
-				attackScores[20] += 25;
-				attackScores[18] += 25;
-				attackScores[24] += 25;
-				attackScores[34] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[27] += 25;
-						attackScores[20] += 25;
-						attackScores[18] += 25;
-						attackScores[24] += 25;
-						attackScores[34] += 25;
-					} else {
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[27] += 25;
-					attackScores[20] += 25;
-					attackScores[18] += 25;
-					attackScores[24] += 25;
-					attackScores[34] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[18] += 50;
-				attackScores[24] += 50;
-				attackScores[34] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[27] += 50;
-					attackScores[20] += 50;
-					attackScores[18] += 50;
-					attackScores[24] += 50;
-					attackScores[34] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[27] += 50;
-					attackScores[20] += 50;
-					attackScores[18] += 50;
-					attackScores[24] += 50;
-					attackScores[34] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, -2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[28] += 25;
-				attackScores[17] += 25;
-				attackScores[35] += 25;
-				attackScores[19] += 25;
-				attackScores[23] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[28] += 25;
-						attackScores[17] += 25;
-						attackScores[35] += 25;
-						attackScores[19] += 25;
-						attackScores[23] += 25;
-					} else {
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[28] += 25;
-					attackScores[17] += 25;
-					attackScores[35] += 25;
-					attackScores[19] += 25;
-					attackScores[23] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[35] += 50;
-				attackScores[19] += 50;
-				attackScores[23] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[28] += 50;
-					attackScores[17] += 50;
-					attackScores[35] += 50;
-					attackScores[19] += 50;
-					attackScores[23] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[28] += 50;
-					attackScores[17] += 50;
-					attackScores[35] += 50;
-					attackScores[19] += 50;
-					attackScores[23] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, 2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[18] += 25;
-				attackScores[28] += 25;
-				attackScores[20] += 25;
-				attackScores[36] += 25;
-				attackScores[24] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[18] += 25;
-						attackScores[28] += 25;
-						attackScores[20] += 25;
-						attackScores[36] += 25;
-						attackScores[24] += 25;
-					} else {
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 25;
-					attackScores[28] += 25;
-					attackScores[20] += 25;
-					attackScores[36] += 25;
-					attackScores[24] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[20] += 50;
-				attackScores[36] += 50;
-				attackScores[24] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 50;
-					attackScores[28] += 50;
-					attackScores[20] += 50;
-					attackScores[36] += 50;
-					attackScores[24] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 50;
-					attackScores[28] += 50;
-					attackScores[20] += 50;
-					attackScores[36] += 50;
-					attackScores[24] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-4, 0);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[9] += 25;
-				attackScores[29] += 25;
-				attackScores[25] += 25;
-				attackScores[30] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[9] += 25;
-						attackScores[29] += 25;
-						attackScores[25] += 25;
-						attackScores[30] += 25;
-					} else {
-						attackScores[9] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[9] += 25;
-					attackScores[29] += 25;
-					attackScores[25] += 25;
-					attackScores[30] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[29] += 50;
-				attackScores[25] += 50;
-				attackScores[30] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[9] += 50;
-					attackScores[29] += 50;
-					attackScores[25] += 50;
-					attackScores[30] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[9] += 50;
-					attackScores[29] += 50;
-					attackScores[25] += 50;
-					attackScores[30] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(0, -4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[10] += 25;
-				attackScores[33] += 25;
-				attackScores[26] += 25;
-				attackScores[31] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[10] += 25;
-						attackScores[33] += 25;
-						attackScores[26] += 25;
-						attackScores[31] += 25;
-					} else {
-						attackScores[10] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[10] += 25;
-					attackScores[33] += 25;
-					attackScores[26] += 25;
-					attackScores[31] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[33] += 50;
-				attackScores[26] += 50;
-				attackScores[31] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[10] += 50;
-					attackScores[33] += 50;
-					attackScores[26] += 50;
-					attackScores[31] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[10] += 50;
-					attackScores[33] += 50;
-					attackScores[26] += 50;
-					attackScores[31] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(0, 4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[11] += 25;
-				attackScores[32] += 25;
-				attackScores[27] += 25;
-				attackScores[34] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[11] += 25;
-						attackScores[32] += 25;
-						attackScores[27] += 25;
-						attackScores[34] += 25;
-					} else {
-						attackScores[11] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 25;
-					attackScores[32] += 25;
-					attackScores[27] += 25;
-					attackScores[34] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[32] += 50;
-				attackScores[27] += 50;
-				attackScores[34] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 50;
-					attackScores[32] += 50;
-					attackScores[27] += 50;
-					attackScores[34] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[11] += 50;
-					attackScores[32] += 50;
-					attackScores[27] += 50;
-					attackScores[34] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(4, 0);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[12] += 25;
-				attackScores[35] += 25;
-				attackScores[36] += 25;
-				attackScores[28] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[12] += 25;
-						attackScores[35] += 25;
-						attackScores[36] += 25;
-						attackScores[28] += 25;
-					} else {
-						attackScores[12] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 25;
-					attackScores[35] += 25;
-					attackScores[36] += 25;
-					attackScores[28] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[35] += 50;
-				attackScores[36] += 50;
-				attackScores[28] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 50;
-					attackScores[35] += 50;
-					attackScores[36] += 50;
-					attackScores[28] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[12] += 50;
-					attackScores[35] += 50;
-					attackScores[36] += 50;
-					attackScores[28] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-4, -1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[13] += 25;
-				attackScores[29] += 25;
-				attackScores[25] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[13] += 25;
-						attackScores[29] += 25;
-						attackScores[25] += 25;
-					} else {
-						attackScores[13] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[13] += 25;
-					attackScores[29] += 25;
-					attackScores[25] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[29] += 50;
-				attackScores[25] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[13] += 50;
-					attackScores[29] += 50;
-					attackScores[25] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[13] += 50;
-					attackScores[29] += 50;
-					attackScores[25] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-4, 1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[14] += 25;
-				attackScores[25] += 25;
-				attackScores[30] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[14] += 25;
-						attackScores[25] += 25;
-						attackScores[30] += 25;
-					} else {
-						attackScores[14] += G.paintPerChips() * 500;
-						attackScores[25] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[14] += 25;
-					attackScores[25] += 25;
-					attackScores[30] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[25] += 50;
-				attackScores[30] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[14] += 50;
-					attackScores[25] += 50;
-					attackScores[30] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[14] += 50;
-					attackScores[25] += 50;
-					attackScores[30] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-1, -4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[15] += 25;
-				attackScores[26] += 25;
-				attackScores[31] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[15] += 25;
-						attackScores[26] += 25;
-						attackScores[31] += 25;
-					} else {
-						attackScores[15] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[15] += 25;
-					attackScores[26] += 25;
-					attackScores[31] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[26] += 50;
-				attackScores[31] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[15] += 50;
-					attackScores[26] += 50;
-					attackScores[31] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[15] += 50;
-					attackScores[26] += 50;
-					attackScores[31] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-1, 4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[16] += 25;
-				attackScores[32] += 25;
-				attackScores[27] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[16] += 25;
-						attackScores[32] += 25;
-						attackScores[27] += 25;
-					} else {
-						attackScores[16] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 25;
-					attackScores[32] += 25;
-					attackScores[27] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[32] += 50;
-				attackScores[27] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 50;
-					attackScores[32] += 50;
-					attackScores[27] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[16] += 50;
-					attackScores[32] += 50;
-					attackScores[27] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(1, -4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[17] += 25;
-				attackScores[33] += 25;
-				attackScores[26] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[17] += 25;
-						attackScores[33] += 25;
-						attackScores[26] += 25;
-					} else {
-						attackScores[17] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[26] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[17] += 25;
-					attackScores[33] += 25;
-					attackScores[26] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[33] += 50;
-				attackScores[26] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[17] += 50;
-					attackScores[33] += 50;
-					attackScores[26] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[17] += 50;
-					attackScores[33] += 50;
-					attackScores[26] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(1, 4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[18] += 25;
-				attackScores[27] += 25;
-				attackScores[34] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[18] += 25;
-						attackScores[27] += 25;
-						attackScores[34] += 25;
-					} else {
-						attackScores[18] += G.paintPerChips() * 500;
-						attackScores[27] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 25;
-					attackScores[27] += 25;
-					attackScores[34] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[27] += 50;
-				attackScores[34] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 50;
-					attackScores[27] += 50;
-					attackScores[34] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[18] += 50;
-					attackScores[27] += 50;
-					attackScores[34] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(4, -1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[19] += 25;
-				attackScores[28] += 25;
-				attackScores[35] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[19] += 25;
-						attackScores[28] += 25;
-						attackScores[35] += 25;
-					} else {
-						attackScores[19] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 25;
-					attackScores[28] += 25;
-					attackScores[35] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[28] += 50;
-				attackScores[35] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 50;
-					attackScores[28] += 50;
-					attackScores[35] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[19] += 50;
-					attackScores[28] += 50;
-					attackScores[35] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(4, 1);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[20] += 25;
-				attackScores[28] += 25;
-				attackScores[36] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[20] += 25;
-						attackScores[28] += 25;
-						attackScores[36] += 25;
-					} else {
-						attackScores[20] += G.paintPerChips() * 500;
-						attackScores[28] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 25;
-					attackScores[28] += 25;
-					attackScores[36] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[28] += 50;
-				attackScores[36] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 50;
-					attackScores[28] += 50;
-					attackScores[36] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[20] += 50;
-					attackScores[28] += 50;
-					attackScores[36] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[31] += 25;
-				attackScores[29] += 25;
-				attackScores[21] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[31] += 25;
-						attackScores[29] += 25;
-						attackScores[21] += 25;
-					} else {
-						attackScores[31] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-						attackScores[21] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[31] += 25;
-					attackScores[29] += 25;
-					attackScores[21] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[21] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[31] += 50;
-					attackScores[29] += 50;
-					attackScores[21] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[31] += 50;
-					attackScores[29] += 50;
-					attackScores[21] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[32] += 25;
-				attackScores[30] += 25;
-				attackScores[22] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[32] += 25;
-						attackScores[30] += 25;
-						attackScores[22] += 25;
-					} else {
-						attackScores[32] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-						attackScores[22] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[32] += 25;
-					attackScores[30] += 25;
-					attackScores[22] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[22] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[32] += 50;
-					attackScores[30] += 50;
-					attackScores[22] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[32] += 50;
-					attackScores[30] += 50;
-					attackScores[22] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, -3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[35] += 25;
-				attackScores[33] += 25;
-				attackScores[23] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[35] += 25;
-						attackScores[33] += 25;
-						attackScores[23] += 25;
-					} else {
-						attackScores[35] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-						attackScores[23] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[35] += 25;
-					attackScores[33] += 25;
-					attackScores[23] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[23] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[35] += 50;
-					attackScores[33] += 50;
-					attackScores[23] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[35] += 50;
-					attackScores[33] += 50;
-					attackScores[23] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(3, 3);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[34] += 25;
-				attackScores[36] += 25;
-				attackScores[24] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[34] += 25;
-						attackScores[36] += 25;
-						attackScores[24] += 25;
-					} else {
-						attackScores[34] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-						attackScores[24] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[34] += 25;
-					attackScores[36] += 25;
-					attackScores[24] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[24] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[34] += 50;
-					attackScores[36] += 50;
-					attackScores[24] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[34] += 50;
-					attackScores[36] += 50;
-					attackScores[24] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-4, -2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[21] += 25;
-				attackScores[29] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[21] += 25;
-						attackScores[29] += 25;
-					} else {
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[29] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[21] += 25;
-					attackScores[29] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[29] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[21] += 50;
-					attackScores[29] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[21] += 50;
-					attackScores[29] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-4, 2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[22] += 25;
-				attackScores[30] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[22] += 25;
-						attackScores[30] += 25;
-					} else {
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[30] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[22] += 25;
-					attackScores[30] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[30] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[22] += 50;
-					attackScores[30] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[22] += 50;
-					attackScores[30] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-2, -4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[21] += 25;
-				attackScores[31] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[21] += 25;
-						attackScores[31] += 25;
-					} else {
-						attackScores[21] += G.paintPerChips() * 500;
-						attackScores[31] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[21] += 25;
-					attackScores[31] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[31] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[21] += 50;
-					attackScores[31] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[21] += 50;
-					attackScores[31] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(-2, 4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[22] += 25;
-				attackScores[32] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[22] += 25;
-						attackScores[32] += 25;
-					} else {
-						attackScores[22] += G.paintPerChips() * 500;
-						attackScores[32] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[22] += 25;
-					attackScores[32] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[32] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[22] += 50;
-					attackScores[32] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[22] += 50;
-					attackScores[32] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(2, -4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[23] += 25;
-				attackScores[33] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[23] += 25;
-						attackScores[33] += 25;
-					} else {
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[33] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 25;
-					attackScores[33] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[33] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 50;
-					attackScores[33] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 50;
-					attackScores[33] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(2, 4);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[24] += 25;
-				attackScores[34] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[24] += 25;
-						attackScores[34] += 25;
-					} else {
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[34] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 25;
-					attackScores[34] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[34] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[34] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[34] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(4, -2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[23] += 25;
-				attackScores[35] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[23] += 25;
-						attackScores[35] += 25;
-					} else {
-						attackScores[23] += G.paintPerChips() * 500;
-						attackScores[35] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 25;
-					attackScores[35] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[35] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 50;
-					attackScores[35] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[23] += 50;
-					attackScores[35] += 50;
-				}
-			}
-		}
-		loc = G.me.translate(4, 2);
-		if (G.rc.onTheMap(loc)) {
-			PaintType paint = G.rc.senseMapInfo(loc).getPaint();
-			if (paint == PaintType.EMPTY) {
-				attackScores[24] += 25;
-				attackScores[36] += 25;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					if (ruinsString.indexOf(loc.toString()) == -1) {
-						attackScores[24] += 25;
-						attackScores[36] += 25;
-					} else {
-						attackScores[24] += G.paintPerChips() * 500;
-						attackScores[36] += G.paintPerChips() * 500;
-					}
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 25;
-					attackScores[36] += 25;
-				}
-			}
-			else if (paint.isEnemy()) {
-				attackScores[36] += 50;
-				if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[36] += 50;
-				} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {
-					attackScores[24] += 50;
-					attackScores[36] += 50;
-				}
-			}
-		}
     }
 
     public static void exploreMoveScores() throws Exception {
