@@ -76,7 +76,13 @@ public class Mopper {
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
-                Motion.retreat(mopperMicro);
+                if (G.rc.isMovementReady()) {
+                    retreatMoveScores();
+                }
+                if (G.rc.isActionReady()) {
+                    retreatAttackScores();
+                    retreatSwingScores();
+                }
             }
         }
 		boolean swing = false; //whether our attack will be a swing
@@ -633,12 +639,12 @@ public class Mopper {
             G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
 	}
 
-	public static void exploreAttackScores() throws Exception {
-		MapLocation loc = G.me;
+    public static void exploreAttackScores() throws Exception {
+        MapLocation loc = G.me;
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[0] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[0] += 5;
@@ -649,13 +655,12 @@ public class Mopper {
                 }
             }
             attackScores[0] += 25;
-
         }
 		loc = G.me.translate(-1, 0);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[1] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[1] += 5;
@@ -666,13 +671,12 @@ public class Mopper {
                 }
             }
             attackScores[1] += 25;
-
         }
 		loc = G.me.translate(0, -1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[2] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[2] += 5;
@@ -683,13 +687,12 @@ public class Mopper {
                 }
             }
             attackScores[2] += 25;
-
         }
 		loc = G.me.translate(0, 1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[3] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[3] += 5;
@@ -700,13 +703,12 @@ public class Mopper {
                 }
             }
             attackScores[3] += 25;
-
         }
 		loc = G.me.translate(1, 0);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[4] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[4] += 5;
@@ -717,13 +719,12 @@ public class Mopper {
                 }
             }
             attackScores[4] += 25;
-
         }
 		loc = G.me.translate(-1, -1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[5] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[5] += 5;
@@ -734,13 +735,12 @@ public class Mopper {
                 }
             }
             attackScores[5] += 25;
-
         }
 		loc = G.me.translate(-1, 1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[6] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[6] += 5;
@@ -751,13 +751,12 @@ public class Mopper {
                 }
             }
             attackScores[6] += 25;
-
         }
 		loc = G.me.translate(1, -1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[7] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[7] += 5;
@@ -768,13 +767,12 @@ public class Mopper {
                 }
             }
             attackScores[7] += 25;
-
         }
 		loc = G.me.translate(1, 1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[8] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[8] += 5;
@@ -785,13 +783,12 @@ public class Mopper {
                 }
             }
             attackScores[8] += 25;
-
         }
 		loc = G.me.translate(-2, 0);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[9] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[9] += 5;
@@ -802,13 +799,12 @@ public class Mopper {
                 }
             }
             attackScores[9] += 25;
-
         }
 		loc = G.me.translate(0, -2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[10] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[10] += 5;
@@ -819,13 +815,12 @@ public class Mopper {
                 }
             }
             attackScores[10] += 25;
-
         }
 		loc = G.me.translate(0, 2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[11] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[11] += 5;
@@ -836,13 +831,12 @@ public class Mopper {
                 }
             }
             attackScores[11] += 25;
-
         }
 		loc = G.me.translate(2, 0);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[12] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[12] += 5;
@@ -853,13 +847,12 @@ public class Mopper {
                 }
             }
             attackScores[12] += 25;
-
         }
 		loc = G.me.translate(-2, -1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[13] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[13] += 5;
@@ -870,13 +863,12 @@ public class Mopper {
                 }
             }
             attackScores[13] += 25;
-
         }
 		loc = G.me.translate(-2, 1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[14] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[14] += 5;
@@ -887,13 +879,12 @@ public class Mopper {
                 }
             }
             attackScores[14] += 25;
-
         }
 		loc = G.me.translate(-1, -2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[15] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[15] += 5;
@@ -904,13 +895,12 @@ public class Mopper {
                 }
             }
             attackScores[15] += 25;
-
         }
 		loc = G.me.translate(-1, 2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[16] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[16] += 5;
@@ -921,13 +911,12 @@ public class Mopper {
                 }
             }
             attackScores[16] += 25;
-
         }
 		loc = G.me.translate(1, -2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[17] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[17] += 5;
@@ -938,13 +927,12 @@ public class Mopper {
                 }
             }
             attackScores[17] += 25;
-
         }
 		loc = G.me.translate(1, 2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[18] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[18] += 5;
@@ -955,13 +943,12 @@ public class Mopper {
                 }
             }
             attackScores[18] += 25;
-
         }
 		loc = G.me.translate(2, -1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[19] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[19] += 5;
@@ -972,13 +959,12 @@ public class Mopper {
                 }
             }
             attackScores[19] += 25;
-
         }
 		loc = G.me.translate(2, 1);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[20] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[20] += 5;
@@ -989,13 +975,12 @@ public class Mopper {
                 }
             }
             attackScores[20] += 25;
-
         }
 		loc = G.me.translate(-2, -2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[21] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[21] += 5;
@@ -1006,13 +991,12 @@ public class Mopper {
                 }
             }
             attackScores[21] += 25;
-
         }
 		loc = G.me.translate(-2, 2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[22] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[22] += 5;
@@ -1023,13 +1007,12 @@ public class Mopper {
                 }
             }
             attackScores[22] += 25;
-
         }
 		loc = G.me.translate(2, -2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[23] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[23] += 5;
@@ -1040,13 +1023,12 @@ public class Mopper {
                 }
             }
             attackScores[23] += 25;
-
         }
 		loc = G.me.translate(2, 2);
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[24] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[24] += 5;
@@ -1057,9 +1039,8 @@ public class Mopper {
                 }
             }
             attackScores[24] += 25;
-
         }
-	}
+    }
 
     public static void exploreSwingScores() throws Exception {
 		if (G.opponentRobotsString.indexOf(G.me.translate(-1, -2).toString()) != -1) {
@@ -1386,7 +1367,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[0] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[0] += 5;
@@ -1405,7 +1386,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[1] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[1] += 5;
@@ -1424,7 +1405,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[2] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[2] += 5;
@@ -1443,7 +1424,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[3] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[3] += 5;
@@ -1462,7 +1443,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[4] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[4] += 5;
@@ -1481,7 +1462,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[5] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[5] += 5;
@@ -1500,7 +1481,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[6] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[6] += 5;
@@ -1519,7 +1500,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[7] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[7] += 5;
@@ -1538,7 +1519,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[8] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[8] += 5;
@@ -1557,7 +1538,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[9] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[9] += 5;
@@ -1576,7 +1557,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[10] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[10] += 5;
@@ -1595,7 +1576,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[11] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[11] += 5;
@@ -1614,7 +1595,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[12] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[12] += 5;
@@ -1633,7 +1614,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[13] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[13] += 5;
@@ -1652,7 +1633,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[14] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[14] += 5;
@@ -1671,7 +1652,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[15] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[15] += 5;
@@ -1690,7 +1671,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[16] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[16] += 5;
@@ -1709,7 +1690,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[17] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[17] += 5;
@@ -1728,7 +1709,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[18] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[18] += 5;
@@ -1747,7 +1728,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[19] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[19] += 5;
@@ -1766,7 +1747,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[20] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[20] += 5;
@@ -1785,7 +1766,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[21] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[21] += 5;
@@ -1804,7 +1785,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[22] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[22] += 5;
@@ -1823,7 +1804,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[23] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[23] += 5;
@@ -1842,7 +1823,7 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 55 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
+                attackScores[24] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
                 if (bot.getType() == UnitType.MOPPER) {
                     //double passive paint loss on moppers
                     attackScores[24] += 5;
@@ -1861,6 +1842,422 @@ public class Mopper {
 
     public static void buildSwingScores() throws Exception {
 		exploreSwingScores();
+    }
+
+    public static void retreatMoveScores() throws Exception {
+        MapLocation loc = Motion.retreatLoc();
+        moveScores = mopperMicro.micro(G.me.directionTo(loc), loc);
+        moveScores[G.dirOrd(G.me.directionTo(loc))] += 50;
+        moveScores[(G.dirOrd(G.me.directionTo(loc))+1)%8] += 40;
+        moveScores[(G.dirOrd(G.me.directionTo(loc))+7)%8] += 40;
+    }
+
+    //basically the same as exploreAttackScores but with extra bonus for stealing 5 paint
+    public static void retreatAttackScores() throws Exception {
+        MapLocation loc = G.me;
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[0] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[0] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[0] += 100;
+                }
+            }
+            attackScores[0] += 25;
+        }
+		loc = G.me.translate(-1, 0);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[1] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[1] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[1] += 100;
+                }
+            }
+            attackScores[1] += 25;
+        }
+		loc = G.me.translate(0, -1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[2] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[2] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[2] += 100;
+                }
+            }
+            attackScores[2] += 25;
+        }
+		loc = G.me.translate(0, 1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[3] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[3] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[3] += 100;
+                }
+            }
+            attackScores[3] += 25;
+        }
+		loc = G.me.translate(1, 0);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[4] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[4] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[4] += 100;
+                }
+            }
+            attackScores[4] += 25;
+        }
+		loc = G.me.translate(-1, -1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[5] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[5] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[5] += 100;
+                }
+            }
+            attackScores[5] += 25;
+        }
+		loc = G.me.translate(-1, 1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[6] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[6] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[6] += 100;
+                }
+            }
+            attackScores[6] += 25;
+        }
+		loc = G.me.translate(1, -1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[7] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[7] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[7] += 100;
+                }
+            }
+            attackScores[7] += 25;
+        }
+		loc = G.me.translate(1, 1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[8] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[8] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[8] += 100;
+                }
+            }
+            attackScores[8] += 25;
+        }
+		loc = G.me.translate(-2, 0);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[9] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[9] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[9] += 100;
+                }
+            }
+            attackScores[9] += 25;
+        }
+		loc = G.me.translate(0, -2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[10] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[10] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[10] += 100;
+                }
+            }
+            attackScores[10] += 25;
+        }
+		loc = G.me.translate(0, 2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[11] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[11] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[11] += 100;
+                }
+            }
+            attackScores[11] += 25;
+        }
+		loc = G.me.translate(2, 0);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[12] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[12] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[12] += 100;
+                }
+            }
+            attackScores[12] += 25;
+        }
+		loc = G.me.translate(-2, -1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[13] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[13] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[13] += 100;
+                }
+            }
+            attackScores[13] += 25;
+        }
+		loc = G.me.translate(-2, 1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[14] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[14] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[14] += 100;
+                }
+            }
+            attackScores[14] += 25;
+        }
+		loc = G.me.translate(-1, -2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[15] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[15] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[15] += 100;
+                }
+            }
+            attackScores[15] += 25;
+        }
+		loc = G.me.translate(-1, 2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[16] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[16] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[16] += 100;
+                }
+            }
+            attackScores[16] += 25;
+        }
+		loc = G.me.translate(1, -2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[17] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[17] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[17] += 100;
+                }
+            }
+            attackScores[17] += 25;
+        }
+		loc = G.me.translate(1, 2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[18] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[18] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[18] += 100;
+                }
+            }
+            attackScores[18] += 25;
+        }
+		loc = G.me.translate(2, -1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[19] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[19] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[19] += 100;
+                }
+            }
+            attackScores[19] += 25;
+        }
+		loc = G.me.translate(2, 1);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[20] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[20] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[20] += 100;
+                }
+            }
+            attackScores[20] += 25;
+        }
+		loc = G.me.translate(-2, -2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[21] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[21] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[21] += 100;
+                }
+            }
+            attackScores[21] += 25;
+        }
+		loc = G.me.translate(-2, 2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[22] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[22] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[22] += 100;
+                }
+            }
+            attackScores[22] += 25;
+        }
+		loc = G.me.translate(2, -2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[23] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[23] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[23] += 100;
+                }
+            }
+            attackScores[23] += 25;
+        }
+		loc = G.me.translate(2, 2);
+        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                attackScores[24] += 100;
+                if (bot.getType() == UnitType.MOPPER) {
+                    //double passive paint loss on moppers
+                    attackScores[24] += 5;
+                }
+                if (bot.paintAmount <= 10) {
+                    //treat freezing bot equivalent to gaining 20 paint
+                    attackScores[24] += 100;
+                }
+            }
+            attackScores[24] += 25;
+        }
+    }
+    
+    public static void retreatSwingScores() throws Exception {
+        exploreSwingScores();
     }
 
     public static Micro mopperMicro = new Micro() {
