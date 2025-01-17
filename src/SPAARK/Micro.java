@@ -61,6 +61,5 @@ public interface Micro {
 
     // Mopper.java
     public static final int BUILD_TIMEOUT = 10;
-    
     public int[] micro(Direction d, MapLocation dest) throws Exception;
 }
