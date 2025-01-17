@@ -221,11 +221,9 @@ public class Motion {
         }
         return exploreLoc;
     }
-
     public static void exploreRandomly() throws Exception {
         exploreRandomly(defaultMicro);
     }
-
     public static void exploreRandomly(Micro m) throws Exception {
         if (G.rc.isMovementReady()) {
             exploreRandomlyLoc();
@@ -285,6 +283,139 @@ public class Motion {
             bugnavTowards(exploreLoc, m);
             if (ENABLE_EXPLORE_INDICATORS)
                 G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+        }
+    }
+
+    // lastPaint stores how much paint has been lost to neutral/opponent territory
+    // used to determine how much paint until retreating
+    public static int lastPaint = 0;
+    public static int paintLost = 0;
+
+    public static int retreatTower = -1;
+    public static StringBuilder triedRetreatTowers = new StringBuilder();
+
+    // retreat calculations
+    public static final int RETREAT_PAINT_OFFSET = 30;
+    public static final double RETREAT_PAINT_RATIO = 0.25;
+
+    public static int getRetreatPaint() throws Exception {
+        return Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+    }
+
+    public static MapLocation retreatLoc() throws Exception {
+        // retreats to an ally tower
+        // depends on which information needs to be transmitted and if tower has paint
+        // if no paint towers found it should go to chip tower to update POI and find
+        // paint tower to retreat to
+        paintLost = 0;
+        if (retreatTower >= 0) {
+            // oopsies tower was replaced
+            if (POI.towerTeams[retreatTower] != G.team) {
+                retreatTower = -1;
+            }
+        }
+        if (retreatTower >= 0) {
+            // don't retreat to tower with lots of bots surrounding it
+            MapLocation loc = POI.towerLocs[retreatTower];
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                G.indicatorString.append("R: " + G.rc.senseNearbyRobots(loc, 2, G.team).length + " ");
+                if (G.me.distanceSquaredTo(loc) > 2 && G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
+                    retreatTower = -1;
+                } else {
+                    RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
+                    if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER
+                            && robotInfo.getPaintAmount() == 0) {
+                        retreatTower = -1;
+                    }
+                }
+            }
+        }
+        if (retreatTower == -1) {
+            int best = -1;
+            while (best == -1) {
+                int bestWeight = Integer.MIN_VALUE;
+                boolean hasCritical = false;
+                for (int i = POI.numberOfTowers; --i >= 0;) {
+                    if (POI.critical[i]) {
+                        hasCritical = true;
+                    }
+                    if (POI.towerTeams[i] != G.team)
+                        continue;
+                    // this needs to change
+                    boolean paint = POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER;
+                    // if (!paint) {
+                    //     // This is dumb but borks code for some reason
+                    //     continue;
+                    // }
+                    int weight = 0;
+                    if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
+                        weight -= 1000;
+                    }
+                    int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
+                    weight -= distance;
+                    if (paint) {
+                        weight += 100;
+                    }
+                    if (!POI.critical[i]) {
+                        weight += 200;
+                    }
+
+                    
+                    if (best == -1 || weight > bestWeight) {
+                        best = i;
+                        bestWeight = weight;
+                    }
+                }
+                if (best == -1) {
+                    if (triedRetreatTowers.length() == 0) {
+                        retreatTower = -2;
+                        break;
+                    }
+                    triedRetreatTowers = new StringBuilder();
+                    continue;
+                }
+                if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
+                    retreatTower = -2;
+                    break;
+                }
+                retreatTower = best;
+                triedRetreatTowers.append((char) best);
+                break;
+            }
+        }
+        if (retreatTower == -2) {
+            // oof no tower
+            retreatTower = -1;
+            return Motion.exploreRandomlyLoc();
+        } else if (retreatTower != -1) {
+            return POI.towerLocs[retreatTower];
+            // Motion.bugnavTowards(loc, micro);
+            // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+            // if (G.rc.canSenseRobotAtLocation(loc)) {
+            //     int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+            //             G.rc.senseRobotAtLocation(loc).getPaintAmount());
+            //     if (G.rc.canTransferPaint(loc, amt)) {
+            //         G.rc.transferPaint(loc, amt);
+            //     }
+            // }
+        }
+        return G.invalidLoc;
+    }
+    public static void retreat() throws Exception {
+        retreat(Motion.defaultMicro);
+    }
+    public static void retreat(Micro micro) throws Exception {
+        if (G.rc.isMovementReady()) {
+            MapLocation loc = retreatLoc();
+            Motion.bugnavAround(loc, 1, 4);
+            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                        G.rc.senseRobotAtLocation(loc).getPaintAmount());
+                if (G.rc.canTransferPaint(loc, amt)) {
+                    G.rc.transferPaint(loc, amt);
+                }
+            }
         }
     }
 

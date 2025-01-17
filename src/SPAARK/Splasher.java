@@ -34,7 +34,7 @@ public class Splasher {
      */
     public static void run() throws Exception {
         // occasionally clear ruins to not oof forever
-        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint()) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
@@ -55,6 +55,7 @@ public class Splasher {
         switch (mode) {
             case EXPLORE -> {
 				G.indicatorString.append("EXPLORE ");
+				G.rc.setIndicatorDot(G.me, 0, 255, 0);
 				if (G.rc.isMovementReady()) {
 					exploreMoveScores();
 				}
@@ -63,22 +64,22 @@ public class Splasher {
 					exploreAttackScores1();
 					exploreAttackScores2();
 				}
-				G.rc.setIndicatorDot(G.me, 0, 255, 0);
 			}
             case ATTACK -> {
 				G.indicatorString.append("ATTACK ");
+				G.rc.setIndicatorDot(G.me, 0, 0, 255);
 				if (G.rc.isMovementReady()) {
 					attackMoveScores();
 				}
 				if (G.rc.isActionReady()) {
 					attackAttackScores();
 				}
-				G.rc.setIndicatorDot(G.me, 0, 0, 255);
                 G.rc.setIndicatorLine(G.me, attackTarget, 0, 0, 255);
 			}
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                Robot.retreat();
+                G.rc.setIndicatorDot(G.me, 255, 0, 255);
+                Motion.retreat();
             }
         }
         int cmax = attackScores[0];
@@ -3184,6 +3185,7 @@ public class Splasher {
     }
 
     public static void exploreAttackScores2() throws Exception {
+		//dont delete this function its here in case the codegen for exploreAttackScores gets too big
     }
 
     public static void exploreMoveScores() throws Exception {

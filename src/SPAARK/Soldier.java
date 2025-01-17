@@ -126,7 +126,7 @@ public class Soldier {
      */
     public static void run() throws Exception {
         if (!avoidRetreating
-                && G.rc.getPaint() < Robot.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1)) {
+                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1)) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
             mode = EXPLORE;
@@ -158,13 +158,11 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                if (Robot.retreatTower >= 0) {
-                    if (G.me.isWithinDistanceSquared(POI.towerLocs[Robot.retreatTower], 8))
-                        Robot.retreat(moveWithPaintMicro);
-                    else
-                        Robot.retreat();
+				G.rc.setIndicatorDot(G.me, 0, 255, 0);
+                if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8)) {
+                    Motion.retreat(moveWithPaintMicro);
                 } else {
-                    Robot.retreat();
+                    Motion.retreat();
                 }
             }
         }

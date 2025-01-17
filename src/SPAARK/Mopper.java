@@ -35,7 +35,7 @@ public class Mopper {
      * Help soldiers mop enemy paint around ruins
      */
     public static void run() throws Exception {
-        if (G.rc.getPaint() < Robot.getRetreatPaint()) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint()) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
@@ -52,6 +52,7 @@ public class Mopper {
         switch (mode) {
             case EXPLORE -> {
 				G.indicatorString.append("EXPLORE ");
+				G.rc.setIndicatorDot(G.me, 0, 255, 0);
 				if (G.rc.isMovementReady()) {
 					exploreMoveScores();
 				}
@@ -59,10 +60,10 @@ public class Mopper {
 					exploreAttackScores();
 					exploreSwingScores();
 				}
-				G.rc.setIndicatorDot(G.me, 0, 255, 0);
 			}
             case BUILD -> {
 				G.indicatorString.append("BUILD ");
+				G.rc.setIndicatorDot(G.me, 0, 0, 255);
                 lastBuild = G.round;
 				if (G.rc.isMovementReady()) {
 					buildMoveScores();
@@ -71,11 +72,11 @@ public class Mopper {
 					buildAttackScores();
 					buildSwingScores();
 				}
-				G.rc.setIndicatorDot(G.me, 0, 0, 255);
 			}
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                Robot.retreat();
+                G.rc.setIndicatorDot(G.me, 255, 0, 255);
+                Motion.retreat(mopperMicro);
             }
         }
 		boolean swing = false; //whether our attack will be a swing
@@ -1865,7 +1866,6 @@ public class Mopper {
     public static Micro mopperMicro = new Micro() {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
-            // REALLY avoid being on enemy paint
             int[] scores = Motion.defaultMicro.micro(d, dest);
             // run away from towers
             MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
