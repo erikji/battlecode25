@@ -350,8 +350,7 @@ public class Motion {
     public static int exploreTime = 0;
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {
-            exploreTime--;
-            G.indicatorString.append(exploreTime);
+            --exploreTime;
             if (exploreLoc != null) {
                 if (G.rc.canSenseLocation(exploreLoc)) {
                     exploreLoc = null;
@@ -359,134 +358,208 @@ public class Motion {
                 if (exploreTime == 0) {
                     exploreLoc = null;
                 }
-                // tested: 25, 35, 50
-                // 50 is 50/90 wins
                 if (Random.rand() % 35 == 0) {
                     exploreLoc = null;
                 }
             }
-            // don't explore in direction of a lot of allied bots
-            // if (!G.me.isWithinDistanceSquared(otherBots, 36)
-            //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
-            //     exploreLoc = null;
-            // }
-            // don't explore in direction of a lot of allied bots
-            // MapLocation otherBots = G.me;
-            // for (int i = G.allyRobots.length; --i >= 0;) {
-            //     otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
-            // }
-            // if (!G.me.isWithinDistanceSquared(otherBots, 36)) {
-            //     MapLocation a = otherBots.translate(-G.me.x, -G.me.y);
-            //     MapLocation b = otherBots.translate(-G.me.x, -G.me.y);
-            // }
-            //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
-            //     exploreLoc = null;
-            // }
-            if (exploreLoc == null) {
-                // int mapFactor = Math.max(0, G.rc.getMapWidth() - 30) * Math.max(0, G.rc.getMapHeight() - 30);
-                // if (Random.rand() % 900 >= mapFactor) {
-                    // pick a random location that we haven't seen before
-                    int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
-                    for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                        sum -= Long.bitCount(POI.explored[i]);
+            int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
+            if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() % 4 > 0) {
+                int rand = Random.rand() % POI.numberOfTowers;
+                search: for (int j = POI.numberOfTowers; --j >= 0;) {
+                    int i = (j + rand) % POI.numberOfTowers;
+                    if (POI.towerTeams[i] == G.opponentTeam && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                        exploreLoc = POI.towerLocs[i];
+                        break;
                     }
-                    // int a = Clock.getBytecodeNum();
-                    // for (int j = 10; --j >= 0;) {
-                    int rand = Random.rand() % sum;
-                    int cur = 0;
-                    for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                        cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
-                        if (cur > rand) {
-                            rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
-                            int cur2 = 0;
-                            for (int b = G.rc.getMapWidth(); --b >= 0;) {
-                                if (((POI.explored[i] >> b) & 1) == 0) {
-                                    if (++cur2 > rand) {
-                                        // if (exploreLoc == null || getChebyshevDistance(G.me, exploreLoc) > getChebyshevDistance(G.me, new MapLocation(b, i))) {
-                                        exploreLoc = new MapLocation(b, i);
-                                        // }
-                                        break;
-                                    }
+                    if (POI.towerTeams[i] == G.team) {
+                        int rand2 = Random.rand() % 3;
+                        for (int j2 = 3; --j2 >= 0;) {
+                            int i2 = (j2 + rand2) % 3;
+                            if (POI.symmetry[i2]) {
+                                MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
+                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                    exploreLoc = loc;
+                                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                    break search;
                                 }
                             }
-                            break;
                         }
                     }
-                    // if (Clock.getBytecodesLeft() < 6000) {
-                    //     break;
-                    // }
-                    // }
-                    // System.out.println(Clock.getBytecodeNum() - a);
-                    // tested: +50, 50/90 wins
-                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
-                    // exploreTime = 20;
-                // }
-                // else {
-                    // // MapLocation otherBots = G.me;
-                    // // for (int i = G.allyRobots.length; --i >= 0;) {
-                    // //     otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
-                    // // }
-                    // double angle = (((double) (Random.rand() % 1000)) / 1000 + 0.5) * Math.PI * 2;
-                    // // angle = (((double) (Random.rand() % 500 + Random.rand() % 500 - 500)) / 1000 + 0.5) * Math.PI * 2 + Math.atan2(((double) G.rc.getMapHeight()) / 2 - 0.5 - G.me.y, ((double) G.rc.getMapWidth()) / 2 - 0.5 - G.me.x);
-                    // double dx = Math.cos(angle);
-                    // double dy = Math.sin(angle);
-                    // // guaranteed to be nonzero because angle is offset by 0.5
-    
-                    // double tx = 0;
-                    // double ty = 0;
-    
-                    // if (dx < 0) {
-                    //     tx = (G.me.x + 0.5) / -dx;
-                    // }
-                    // else {
-                    //     tx = (G.rc.getMapWidth() - G.me.x - 0.5) / dx;
-                    // }
-                    // if (dy < 0) {
-                    //     ty = (G.me.y + 0.5) / -dy;
-                    // }
-                    // else {
-                    //     ty = (G.rc.getMapHeight() - G.me.y - 0.5) / dy;
-                    // }
-    
-                    // G.indicatorString = new StringBuilder();
-                    // // G.indicatorString.append("dx:" + dx + ",dy:" + dy + ",tx:" + tx + ",ty:" + ty);
-                    // // G.indicatorString.append("X:" + Math.floor(G.me.x + tx * dx) + ",Y:" + Math.floor(G.me.y + tx * dy));
-                    // // G.indicatorString.append("X2:" + Math.floor(G.me.x + ty * dx) + ",Y2:" + Math.floor(G.me.y + ty * dy));
-                    // G.indicatorString.append("c:" + (tx < ty));
-                    // // if (G.rc.getRoundNum() > 500) {
-                    // //     G.rc.resign();
-                    // // }
-    
-                    // if (tx < ty) {
-                    //     exploreLoc = new MapLocation((int) Math.floor(G.me.x + 0.5 + tx * dx + 0.5), (int) Math.floor(G.me.y + 0.5 + tx * dy + 0.5));
-                    // }
-                    // else {
-                    //     exploreLoc = new MapLocation((int) Math.floor(G.me.x + 0.5 + ty * dx + 0.5), (int) Math.floor(G.me.y + 0.5 + ty * dy + 0.5));
-                    // }
-                    // if (exploreLoc.x == G.rc.getMapWidth()) {
-                    //     exploreLoc = exploreLoc.translate(-1, 0);
-                    // }
-                    // if (exploreLoc.y == G.rc.getMapHeight()) {
-                    //     exploreLoc = exploreLoc.translate(0, -1);
-                    // }
-                    // G.indicatorString.append(exploreLoc.toString());
-                    // if (!G.rc.onTheMap(exploreLoc)) {
-                    //     MapLocation loc = exploreLoc;
-                    //     exploreLoc = null;
-                    //     System.out.println("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
-                    //     System.out.println(tx + " " + ty);
-                    //     System.out.println((G.me.x + tx * dx) + " " + (G.me.y + tx * dy));
-                    //     System.out.println((G.me.x + ty * dx) + " " + (G.me.y + ty * dy));
-                    //     G.rc.resign();
-                    //     throw new Exception("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
-                    // }
-                // }
+                }
+            }
+            if (exploreLoc == null) {
+                int sum = G.mapArea;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                // int a = Clock.getBytecodeNum();
+                // for (int j = 10; --j >= 0;) {
+                int rand = Random.rand() % sum;
+                int cur = 0;
+                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    // if (exploreLoc == null || getChebyshevDistance(G.me, exploreLoc) > getChebyshevDistance(G.me, new MapLocation(b, i))) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    // }
+                                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+        if (true)
+            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
+    // public static MapLocation exploreRandomlyLoc() throws Exception {
+    //     if (G.rc.isMovementReady()) {
+    //         exploreTime--;
+    //         G.indicatorString.append(exploreTime);
+    //         if (exploreLoc != null) {
+    //             if (G.rc.canSenseLocation(exploreLoc)) {
+    //                 exploreLoc = null;
+    //             }
+    //             if (exploreTime == 0) {
+    //                 exploreLoc = null;
+    //             }
+    //             // tested: 25, 35, 50
+    //             // 50 is 50/90 wins
+    //             if (Random.rand() % 35 == 0) {
+    //                 exploreLoc = null;
+    //             }
+    //         }
+    //         // don't explore in direction of a lot of allied bots
+    //         // if (!G.me.isWithinDistanceSquared(otherBots, 36)
+    //         //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+    //         //     exploreLoc = null;
+    //         // }
+    //         // don't explore in direction of a lot of allied bots
+    //         // MapLocation otherBots = G.me;
+    //         // for (int i = G.allyRobots.length; --i >= 0;) {
+    //         //     otherBots = otherBots.add(G.me.directionTo(G.allyRobots[i].getLocation()));
+    //         // }
+    //         // if (!G.me.isWithinDistanceSquared(otherBots, 36)) {
+    //         //     MapLocation a = otherBots.translate(-G.me.x, -G.me.y);
+    //         //     MapLocation b = otherBots.translate(-G.me.x, -G.me.y);
+    //         // }
+    //         //         && Math.abs(G.me.directionTo(otherBots).compareTo(G.me.directionTo(otherBots))) <= 1) {
+    //         //     exploreLoc = null;
+    //         // }
+    //         if (exploreLoc == null) {
+    //             // int mapFactor = Math.max(0, G.rc.getMapWidth() - 30) * Math.max(0, G.rc.getMapHeight() - 30);
+    //             // if (Random.rand() % 900 >= mapFactor) {
+    //                 // pick a random location that we haven't seen before
+    //                 int sum = G.rc.getMapHeight() * G.rc.getMapWidth();
+    //                 for (int i = G.rc.getMapHeight(); --i >= 0;) {
+    //                     sum -= Long.bitCount(POI.explored[i]);
+    //                 }
+    //                 // int a = Clock.getBytecodeNum();
+    //                 // for (int j = 10; --j >= 0;) {
+    //                 int rand = Random.rand() % sum;
+    //                 int cur = 0;
+    //                 for (int i = G.rc.getMapHeight(); --i >= 0;) {
+    //                     cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+    //                     if (cur > rand) {
+    //                         rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+    //                         int cur2 = 0;
+    //                         for (int b = G.rc.getMapWidth(); --b >= 0;) {
+    //                             if (((POI.explored[i] >> b) & 1) == 0) {
+    //                                 if (++cur2 > rand) {
+    //                                     // if (exploreLoc == null || getChebyshevDistance(G.me, exploreLoc) > getChebyshevDistance(G.me, new MapLocation(b, i))) {
+    //                                     exploreLoc = new MapLocation(b, i);
+    //                                     // }
+    //                                     break;
+    //                                 }
+    //                             }
+    //                         }
+    //                         break;
+    //                     }
+    //                 }
+    //                 // if (Clock.getBytecodesLeft() < 6000) {
+    //                 //     break;
+    //                 // }
+    //                 // }
+    //                 // System.out.println(Clock.getBytecodeNum() - a);
+    //                 // tested: +50, 50/90 wins
+    //                 exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+    //                 // exploreTime = 20;
+    //             // }
+    //             // else {
+    //                 // // MapLocation otherBots = G.me;
+    //                 // // for (int i = G.allyRobots.length; --i >= 0;) {
+    //                 // //     otherBots = otherBots.translate(G.allyRobots[i].getLocation().x - G.me.x, G.allyRobots[i].getLocation().y - G.me.y);
+    //                 // // }
+    //                 // double angle = (((double) (Random.rand() % 1000)) / 1000 + 0.5) * Math.PI * 2;
+    //                 // // angle = (((double) (Random.rand() % 500 + Random.rand() % 500 - 500)) / 1000 + 0.5) * Math.PI * 2 + Math.atan2(((double) G.rc.getMapHeight()) / 2 - 0.5 - G.me.y, ((double) G.rc.getMapWidth()) / 2 - 0.5 - G.me.x);
+    //                 // double dx = Math.cos(angle);
+    //                 // double dy = Math.sin(angle);
+    //                 // // guaranteed to be nonzero because angle is offset by 0.5
+    
+    //                 // double tx = 0;
+    //                 // double ty = 0;
+    
+    //                 // if (dx < 0) {
+    //                 //     tx = (G.me.x + 0.5) / -dx;
+    //                 // }
+    //                 // else {
+    //                 //     tx = (G.rc.getMapWidth() - G.me.x - 0.5) / dx;
+    //                 // }
+    //                 // if (dy < 0) {
+    //                 //     ty = (G.me.y + 0.5) / -dy;
+    //                 // }
+    //                 // else {
+    //                 //     ty = (G.rc.getMapHeight() - G.me.y - 0.5) / dy;
+    //                 // }
+    
+    //                 // G.indicatorString = new StringBuilder();
+    //                 // // G.indicatorString.append("dx:" + dx + ",dy:" + dy + ",tx:" + tx + ",ty:" + ty);
+    //                 // // G.indicatorString.append("X:" + Math.floor(G.me.x + tx * dx) + ",Y:" + Math.floor(G.me.y + tx * dy));
+    //                 // // G.indicatorString.append("X2:" + Math.floor(G.me.x + ty * dx) + ",Y2:" + Math.floor(G.me.y + ty * dy));
+    //                 // G.indicatorString.append("c:" + (tx < ty));
+    //                 // // if (G.rc.getRoundNum() > 500) {
+    //                 // //     G.rc.resign();
+    //                 // // }
+    
+    //                 // if (tx < ty) {
+    //                 //     exploreLoc = new MapLocation((int) Math.floor(G.me.x + 0.5 + tx * dx + 0.5), (int) Math.floor(G.me.y + 0.5 + tx * dy + 0.5));
+    //                 // }
+    //                 // else {
+    //                 //     exploreLoc = new MapLocation((int) Math.floor(G.me.x + 0.5 + ty * dx + 0.5), (int) Math.floor(G.me.y + 0.5 + ty * dy + 0.5));
+    //                 // }
+    //                 // if (exploreLoc.x == G.rc.getMapWidth()) {
+    //                 //     exploreLoc = exploreLoc.translate(-1, 0);
+    //                 // }
+    //                 // if (exploreLoc.y == G.rc.getMapHeight()) {
+    //                 //     exploreLoc = exploreLoc.translate(0, -1);
+    //                 // }
+    //                 // G.indicatorString.append(exploreLoc.toString());
+    //                 // if (!G.rc.onTheMap(exploreLoc)) {
+    //                 //     MapLocation loc = exploreLoc;
+    //                 //     exploreLoc = null;
+    //                 //     System.out.println("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
+    //                 //     System.out.println(tx + " " + ty);
+    //                 //     System.out.println((G.me.x + tx * dx) + " " + (G.me.y + tx * dy));
+    //                 //     System.out.println((G.me.x + ty * dx) + " " + (G.me.y + ty * dy));
+    //                 //     G.rc.resign();
+    //                 //     throw new Exception("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
+    //                 // }
+    //             // }
+    //         }
+    //     }
+    //     if (ENABLE_EXPLORE_INDICATORS)
+    //         G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+    //     return exploreLoc;
+    // }
 
     // lastPaint stores how much paint has been lost to neutral/opponent territory
     // used to determine how much paint until retreating

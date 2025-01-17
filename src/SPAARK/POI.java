@@ -241,9 +241,9 @@ public class POI {
         if (firstUpdate) {
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
-                // if (G.nearbyMapInfos[i].isWall()) {
-                //     wall[xy.y] |= 1L << xy.x;
-                // }
+                if (G.nearbyMapInfos[i].isWall()) {
+                    wall[xy.y] |= 1L << xy.x;
+                }
                 explored[xy.y] |= 1L << xy.x;
             }
             firstUpdate = false;
@@ -253,27 +253,27 @@ public class POI {
                 if (!G.rc.onTheMap(xy)) {
                     continue;
                 }
-                // if (G.rc.senseMapInfo(xy).isWall()) {
-                //     wall[xy.y] |= 1L << xy.x;
-                // }
+                if (G.rc.senseMapInfo(xy).isWall()) {
+                    wall[xy.y] |= 1L << xy.x;
+                }
                 explored[xy.y] |= 1L << xy.x;
+            }
+        }
+        G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        int numValidSymmetries = (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) + (symmetry[2] ? 1 : 0);
+        if (numValidSymmetries > 1) {
+            if (symmetry[0] && !symmetryValid(0)) {
+                removeValidSymmetry(-1, 0);
+            }
+            if (symmetry[1] && !symmetryValid(1)) {
+                removeValidSymmetry(-1, 1);
+            }
+            if (symmetry[2] && !symmetryValid(2)) {
+                removeValidSymmetry(-1, 2);
             }
         }
         G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
-        // // G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
-        // if (!((symmetry[0] && !symmetry[1] && !symmetry[2]) || (symmetry[1] && !symmetry[2] && !symmetry[0])
-        //         || (symmetry[2] && !symmetry[0] && !symmetry[1]))) {
-        //     if (symmetry[0] && !symmetryValid(0)) {
-        //         removeValidSymmetry(-1, 0);
-        //     }
-        //     if (symmetry[1] && !symmetryValid(1)) {
-        //         removeValidSymmetry(-1, 1);
-        //     }
-        //     if (symmetry[2] && !symmetryValid(2)) {
-        //         removeValidSymmetry(-1, 2);
-        //     }
-        // }
         sendMessages();
         G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
@@ -311,9 +311,22 @@ public class POI {
                         return false;
                 }
                 return true;
+            default:
+                throw new Exception("invalid symmetry argument");
         }
-        System.out.println("invalid symmetry argument");
-        return false;
+    }
+    public static MapLocation getOppositeMapLocation(MapLocation m, int sym) throws Exception {
+        //get the opposite map location according to this symmetry
+        switch (sym) {
+            case 0:
+                return new MapLocation(m.x, G.rc.getMapHeight() - m.y - 1);
+            case 1:
+                return new MapLocation(G.rc.getMapWidth() - m.x - 1, m.y);
+            case 2:
+                return new MapLocation(G.rc.getMapWidth() - m.x - 1, G.rc.getMapHeight() - m.y - 1);
+            default:
+                throw new Exception("invalid symmetry argument");
+        }
     }
 
     // each message contains 2 towers/symmetries
