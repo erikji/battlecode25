@@ -40,6 +40,7 @@ public class Mopper {
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
+        Motion.paintNeededToStopRetreating = G.rc.getType().paintCapacity * 3 / 4;
         int a = Clock.getBytecodeNum();
         switch (mode) {
             case EXPLORE -> exploreCheckMode();
@@ -76,16 +77,18 @@ public class Mopper {
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
-                if (G.rc.isMovementReady()) {
-                    retreatMoveScores();
-                }
-                if (G.rc.isActionReady()) {
-                    retreatAttackScores();
-                    retreatSwingScores();
-                }
+                // if (G.rc.isMovementReady()) {
+                //     retreatMoveScores();
+                // }
+                // if (G.rc.isActionReady()) {
+                //     retreatAttackScores();
+                //     retreatSwingScores();
+                // }
+                Motion.retreat();
             }
         }
-        boolean swing = false; // whether our attack will be a swing
+        if (mode != RETREAT) {
+		boolean swing = false; // whether our attack will be a swing
         int cmax = attackScores[0];
         int cx = 0; // if it's a swing, then cx stores index of swing direction
         int cy = 0;
@@ -568,6 +571,7 @@ public class Mopper {
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
+    }
     }
 
     public static void exploreCheckMode() throws Exception {

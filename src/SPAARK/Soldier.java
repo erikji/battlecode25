@@ -131,6 +131,7 @@ public class Soldier {
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
             mode = EXPLORE;
         }
+        Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         nearbyRuins = G.rc.senseNearbyRuins(-1);
         // map
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;

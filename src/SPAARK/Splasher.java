@@ -39,6 +39,7 @@ public class Splasher {
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
         }
+        Motion.paintNeededToStopRetreating = G.rc.getType().paintCapacity * 3 / 4;
         if (mode != RETREAT) {
             updateAttackTarget();
         } else {
@@ -82,6 +83,7 @@ public class Splasher {
                 Motion.retreat();
             }
         }
+        if (mode != RETREAT) {
         int cmax = attackScores[0];
         int cx = 0;
         int cy = 0;
@@ -381,6 +383,7 @@ public class Splasher {
             }
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
+	}
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 

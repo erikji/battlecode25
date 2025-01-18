@@ -270,8 +270,13 @@ public class Motion {
     public static int lastPaint = 0;
     public static int paintLost = 0;
 
+    // Retreat tower stores the id of the tower in the POI
+    // if it is -1, that means no tower
+    // if it is -2, that means oof only money tower or no towers found and time to explore
     public static int retreatTower = -1;
     public static StringBuilder triedRetreatTowers = new StringBuilder();
+
+    public static int paintNeededToStopRetreating;
 
     // retreat calculations
     public static final int RETREAT_PAINT_OFFSET = 30;
@@ -384,19 +389,75 @@ public class Motion {
     public static void retreat() throws Exception {
         retreat(Motion.defaultMicro);
     }
-
+    public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
+        new MapLocation(2, 0),
+        new MapLocation(0, 2),
+        new MapLocation(-2, 0),
+        new MapLocation(0, -2),
+        new MapLocation(2, 2),
+        new MapLocation(2, -2),
+        new MapLocation(-2, 2),
+        new MapLocation(-2, -2),
+    };
     public static void retreat(Micro micro) throws Exception {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
-            Motion.bugnavAround(loc, 1, 4);
-            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
-                        G.rc.senseRobotAtLocation(loc).getPaintAmount());
-                if (G.rc.canTransferPaint(loc, amt)) {
-                    G.rc.transferPaint(loc, amt);
+            if (G.me.distanceSquaredTo(loc) > 8) {
+                Motion.bugnavTowards(loc);
+            }
+            else {
+                MapLocation best = null;
+                int bestDistance = 0;
+                for (int i = 8; --i>=0;) {
+                    MapLocation waitingLoc = retreatWaitingLocs[i].translate(loc.x, loc.y);
+                    if (G.rc.canSenseLocation(waitingLoc) && !G.rc.sensePassability(waitingLoc)) {
+                        continue;
+                    }
+                    if (best == null || getChebyshevDistance(G.me, waitingLoc) < bestDistance) {
+                        best = waitingLoc;
+                        bestDistance = getChebyshevDistance(G.me, waitingLoc);
+                    }
+                }
+                G.rc.setIndicatorLine(G.me, best, 0, 200, 255);
+                if (G.rc.canSenseRobotAtLocation(loc)) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                    int amount = paintNeededToStopRetreating - G.rc.getPaint();
+                    if (r.paintAmount >= amount) {
+                        bugnavTowards(loc);
+                        int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                                r.paintAmount);
+                        if (G.rc.canTransferPaint(loc, amt)) {
+                            G.rc.transferPaint(loc, amt);
+                        }
+                        return;
+                    }
+                    else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+                        if (r.paintAmount != 0) {
+                            bugnavTowards(loc);
+                            int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                                    r.paintAmount);
+                            if (G.rc.canTransferPaint(loc, amt)) {
+                                G.rc.transferPaint(loc, amt);
+                            }
+                            return;
+                        }
+                        else {
+                            retreatTower = -1;
+                        }
+                    }
+                    if (best == null) {
+                        retreatTower = -1;
+                    }
+                    else {
+                        if (!G.me.equals(best)) {
+                            Motion.bugnavTowards(best);
+                        }
+                        G.rc.setIndicatorLine(G.me, best, 200, 200, 0);
+                    }
                 }
             }
+            // Motion.bugnavAround(loc, 1, 4);
+            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
         }
     }
 
