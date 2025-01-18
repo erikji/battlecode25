@@ -84,7 +84,7 @@ public class Tower {
             spawnBot(UnitType.SPLASHER);
         }
         // } else if (spawnedRobots == 2) {
-        //     spawnBot(UnitType.SOLDIER);
+        // spawnBot(UnitType.SOLDIER);
         // }
         else {
             UnitType trying = UnitType.SPLASHER;
@@ -96,12 +96,12 @@ public class Tower {
             double mopperWeight = 2;
 
             // if (G.rc.getNumberTowers() < 25) {
-            //     for (int i = POI.numberOfTowers; --i >= 0;) {
-            //         if (POI.towerTeams[i] == Team.NEUTRAL) {
-            //             soldierWeight += 1;
-            //             break;
-            //         }
-            //     }
+            // for (int i = POI.numberOfTowers; --i >= 0;) {
+            // if (POI.towerTeams[i] == Team.NEUTRAL) {
+            // soldierWeight += 1;
+            // break;
+            // }
+            // }
             // }
             if (G.rc.getNumberTowers() == 25) {
                 soldierWeight -= 1;
@@ -112,30 +112,29 @@ public class Tower {
             mopperWeight /= sum;
 
             G.indicatorString = new StringBuilder();
-            G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " " + doubleSpawnedSplashers + " " + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + " ");
+            G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " " + doubleSpawnedSplashers + " "
+                    + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + " ");
 
             double soldier = doubleSpawnedSoldiers + soldierWeight - spawnedSoldiers;
             double splasher = doubleSpawnedSplashers + splasherWeight - spawnedSplashers;
             double mopper = doubleSpawnedMoppers + mopperWeight - spawnedMoppers;
 
             // if (soldier >= splasher && soldier >= mopper) {
-            //     trying = UnitType.SOLDIER;
+            // trying = UnitType.SOLDIER;
             // }
             // else if (splasher >= mopper) {
-            //     trying = UnitType.SPLASHER;
+            // trying = UnitType.SPLASHER;
             // }
             // else {
-            //     trying = UnitType.MOPPER;
+            // trying = UnitType.MOPPER;
             // }
 
             // IMPORTANT: this prioritizes mopper > splasher > soldier at the start
             if (mopper >= splasher && mopper >= soldier) {
                 trying = UnitType.MOPPER;
-            }
-            else if (splasher >= soldier) {
+            } else if (splasher >= soldier) {
                 trying = UnitType.SPLASHER;
-            }
-            else {
+            } else {
                 trying = UnitType.SOLDIER;
             }
 
@@ -225,7 +224,7 @@ public class Tower {
             }
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
-        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level==0?2500:5000) >= 5000) {
+        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 5000) {
             attack();
             G.rc.upgradeTower(G.me);
         }
@@ -234,20 +233,22 @@ public class Tower {
     }
 
     public static void attack() throws Exception {
-        //prioritize bots with low hp, unless they have less hp then our attack power
+        // prioritize bots with low hp, unless they have less hp then our attack power
         if (G.rc.canAttack(null)) {
             G.rc.attack(null);
         }
-        //check cooldown on single target attack
+        // check cooldown on single target attack
         if (G.rc.canAttack(G.me)) {
             MapLocation bestEnemyLoc = null;
             int bestEnemyHp = 1000000;
             int attackStrength = G.rc.getType().attackStrength;
             for (int i = G.opponentRobots.length; --i >= 0;) {
                 RobotInfo r = G.opponentRobots[i];
-                //check if it's still alive
-                if (G.rc.canSenseRobotAtLocation(r.location) && G.me.isWithinDistanceSquared(r.location, G.rc.getType().actionRadiusSquared)) {
-                    //just do lowest hp it's basically the same as having priorities and it's more gold efficient to kill moppers anyways
+                // check if it's still alive
+                if (G.rc.canSenseRobotAtLocation(r.location)
+                        && G.me.isWithinDistanceSquared(r.location, G.rc.getType().actionRadiusSquared)) {
+                    // just do lowest hp it's basically the same as having priorities and it's more
+                    // gold efficient to kill moppers anyways
                     if (bestEnemyHp > attackStrength && r.health < bestEnemyHp) {
                         bestEnemyHp = r.health;
                         bestEnemyLoc = r.location;
