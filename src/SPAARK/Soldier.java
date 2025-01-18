@@ -24,7 +24,6 @@ public class Soldier {
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
     // max build time, max build time if no moppers/splashers to remove paint
     public static final int MAX_TOWER_TIME = 200;
-    public static final int MAX_TOWER_TIME_NO_HELP = 80;
     // don't build SRP early-game, prioritize towers
     public static final int MIN_SRP_ROUND = 40;
     public static final int MIN_SRP_TOWERS = 2; // probably shouldn't be higher
@@ -43,7 +42,7 @@ public class Soldier {
     public static final int INITIAL_SRP_ALT_CHIPS = 300;
     // stop building SRP if enemy paint interferes too much
     public static final int MAX_SRP_ENEMY_PAINT = 2;
-    public static final int MAX_SRP_BLOCKED_TIME = 10;
+    public static final int MAX_SRP_BLOCKED_TIME = 5;
     // max build time
     public static final int MAX_SRP_TIME = 50;
     // don't expand SRP if low on paint, since very slow
@@ -440,7 +439,7 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
-            Motion.bugnavAround(ruinLocation, 1, 1);
+            Motion.bugnavAround(ruinLocation, 0, 1);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         if (paintLocation != null)
@@ -733,11 +732,10 @@ public class Soldier {
 
     /**
      * Check if an SRP can be built or repaired at location.
-     * MUST be called while at or adjacent (distance^2 <= 1) to location!
      */
     public static boolean canBuildSRPAtLocation(MapLocation center) throws Exception {
         // if on top of a current SRP, yes
-        if (mapInfos[4][4].getMark() == PaintType.ALLY_SECONDARY)
+        if (G.rc.canSenseLocation(center) && G.rc.senseMapInfo(center).getMark() == PaintType.ALLY_SECONDARY)
             return true;
         else
             return !cannotBuildSRPAtLocation(center);
