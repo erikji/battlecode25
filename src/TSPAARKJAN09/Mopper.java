@@ -102,11 +102,11 @@ public class Mopper {
             if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
             Motion.bugnavAround(bestEmpty, 1, 1);
-            // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+            // // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
         // if (G.rc.onTheMap(microDir))
-            // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
-        // G.rc.setIndicatorDot(G.me, 0, 255, 0);
+            // // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        // // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void build() throws Exception {
@@ -142,12 +142,12 @@ public class Mopper {
                 G.rc.attack(bestLoc);
                 if (bestLoc2 != null) {
                     Motion.bugnavTowards(bestLoc2);
-                    // G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
+                    // // G.rc.setIndicatorLine(G.me, bestLoc2, 0, 255, 200);
                 } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                     mode = EXPLORE;
                     lastBuild = G.rc.getRoundNum();
                     Motion.exploreRandomly();
-                    // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+                    // // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
                     ruinLocation = null;
                 } else {
                     Motion.bugnavTowards(ruinLocation);
@@ -155,17 +155,17 @@ public class Mopper {
             } else {
                 Motion.bugnavTowards(bestLoc);
             }
-            // G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
+            // // G.rc.setIndicatorLine(G.me, bestLoc, 0, 255, 255);
         } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
             mode = EXPLORE;
             lastBuild = G.rc.getRoundNum();
             Motion.exploreRandomly();
-            // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
+            // // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 0, 0, 0);
             ruinLocation = null;
         } else {
             Motion.bugnavTowards(ruinLocation);
         }
-        // G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        // // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     /**

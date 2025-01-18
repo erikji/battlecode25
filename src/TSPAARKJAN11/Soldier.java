@@ -190,7 +190,7 @@ public class Soldier {
                             // if (G.rc.canCompleteResourcePattern(loc)) {
                             // G.rc.completeResourcePattern(loc);
                             // // signal completion
-                            // // G.rc.setIndicatorDot(loc, 255, 200, 0);
+                            // // // G.rc.setIndicatorDot(loc, 255, 200, 0);
                             // }
                             mode = EXPAND_RESOURCE;
                             // SRP expand will enter SRP build, which may repair if needed before expanding
@@ -371,7 +371,7 @@ public class Soldier {
             Motion.exploreRandomly();
         } else {
             Motion.bugnavTowards(bestLoc);
-            // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+            // // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
         }
         MapInfo me = G.rc.senseMapInfo(G.me);
         // place paint under self to avoid passive paint drain if possible
@@ -385,7 +385,7 @@ public class Soldier {
             }
             G.rc.attack(G.me, cnt[(G.me.x + G.me.y) & 1] > cnt[(1 + G.me.x + G.me.y) & 1]);
         }
-        // G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        // // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void buildTower() throws Exception {
@@ -418,15 +418,15 @@ public class Soldier {
             mode = EXPLORE;
             Motion.exploreRandomly();
             // dot to signal building complete
-            // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
+            // // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             ruinLocation = null;
         } else {
             Motion.bugnavAround(ruinLocation, 1, 2);
-            // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
+            // // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         // if (paintLocation != null)
-            // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        // G.rc.setIndicatorDot(G.me, 0, 0, 255);
+            // // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     public static void buildResource() throws Exception {
@@ -471,15 +471,15 @@ public class Soldier {
             }
             Motion.exploreRandomly();
             // dot to signal building complete
-            // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            // // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
             resourceLocation = null;
         } else {
             Motion.bugnavAround(resourceLocation, 0, 2);
-            // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
+            // // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         // if (paintLocation != null)
-            // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
+            // // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
@@ -488,10 +488,10 @@ public class Soldier {
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             // dots guaranteed to be on map because of expandResourceCheckMode
-            // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+            // // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
         }
-        // G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
-        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
+        // // G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
+        // // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void attack() throws Exception {
@@ -511,7 +511,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1);
             }
         }
-        // G.rc.setIndicatorDot(G.me, 255, 0, 0);
+        // // G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     /**

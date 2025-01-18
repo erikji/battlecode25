@@ -102,7 +102,7 @@ public class Robot {
         }
         if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
-            // G.rc.setIndicatorLine(G.me, loc, 255, 0, 255);
+            // // G.rc.setIndicatorLine(G.me, loc, 255, 0, 255);
             Motion.bugnavTowards(loc);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),

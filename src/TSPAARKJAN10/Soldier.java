@@ -201,7 +201,7 @@ public class Soldier {
             Motion.exploreRandomly();
         } else {
             Motion.bugnavTowards(bestLoc);
-            // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+            // // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
         }
         MapInfo me = G.rc.senseMapInfo(G.me);
         // place paint under self to avoid passive paint drain if possible
@@ -215,7 +215,7 @@ public class Soldier {
             }
             G.rc.attack(G.me, (cnt[(G.me.x+G.me.y)&1]>cnt[(1+G.me.x+G.me.y)&1]?true:false));
         }
-        // G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        // // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void buildTower() throws Exception {
@@ -247,15 +247,15 @@ public class Soldier {
                     POI.intifyTower(G.team, Robot.towers[t]) | POI.intifyLocation(ruinLocation));
             mode = EXPLORE;
             Motion.exploreRandomly();
-            // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
+            // // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             ruinLocation = null;
         } else {
             Motion.bugnavAround(ruinLocation, 1, 2);
-            // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
+            // // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         // if (paintLocation != null)
-            // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        // G.rc.setIndicatorDot(G.me, 0, 0, 255);
+            // // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     public static void buildResource() throws Exception {
@@ -284,15 +284,15 @@ public class Soldier {
             // that the bot then pathfinds to and checks if can build pattern
             mode = EXPLORE;
             Motion.exploreRandomly();
-            // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            // // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
             resourceLocation = null;
         } else {
             Motion.bugnavAround(resourceLocation, 0, 2);
-            // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
+            // // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         // if (paintLocation != null)
-            // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
+            // // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
@@ -316,7 +316,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1);
             }
         }
-        // G.rc.setIndicatorDot(G.me, 255, 0, 0);
+        // // G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     /**

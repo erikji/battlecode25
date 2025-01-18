@@ -84,7 +84,7 @@ public class Mopper {
         G.indicatorString.append((Clock.getBytecodesLeft() - bt) + " ");
         // this is using all the bytecode???
         // if (G.rc.onTheMap(microDir))
-            // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+            // // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         G.rc.setIndicatorString("sdf " + Clock.getBytecodesLeft());
         if (bestEmpty == null && bestBot == null) {
             if (G.me.distanceSquaredTo(microDir) >= 2) {
@@ -98,7 +98,7 @@ public class Mopper {
         } else {
             if (bestBot != null)
                 bestEmpty = bestBot;
-            // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+            // // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
             if (G.rc.canAttack(bestEmpty))
                 G.rc.attack(bestEmpty);
             G.indicatorString.append(Clock.getBytecodesLeft());
@@ -111,7 +111,7 @@ public class Mopper {
         G.indicatorString.append("BUILD ");
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-        // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
+        // // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 255, 0);
         if (!G.rc.canSenseLocation(ruinLocation) || G.rc.canSenseRobotAtLocation(ruinLocation)) {
             mode = EXPLORE;
             ruinLocation = null;
@@ -136,11 +136,11 @@ public class Mopper {
                 }
             }
             if (bestLoc != null) {
-                // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 255);
+                // // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 255);
                 if (G.rc.canAttack(bestLoc)) {
                     G.rc.attack(bestLoc);
                     if (bestLoc2 != null) {
-                        // G.rc.setIndicatorLine(G.me, bestLoc2, 128, 128, 128);
+                        // // G.rc.setIndicatorLine(G.me, bestLoc2, 128, 128, 128);
                         Motion.bugnavTowards(bestLoc2);
                     } else if (G.me.distanceSquaredTo(ruinLocation) <= 4) {
                         mode = EXPLORE;

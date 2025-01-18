@@ -113,9 +113,9 @@ public class POI {
             // System.out.println(parseLocation(towers[i]));
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
-                    // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                    // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
                 } else {
-                    // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
+                    // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 100, 0, 0);
                 }
             } catch (Exception e) {
             }

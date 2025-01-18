@@ -413,14 +413,14 @@ public class POI {
                 try {
                     if (parseTowerTeam(towers[i]) == G.team) {
                         if (parseTowerType(towers[i]) == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                            // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
+                            // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
                         } else {
-                            // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
+                            // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 150, 0);
                         }
                     } else if (parseTowerTeam(towers[i]) == G.opponentTeam) {
-                        // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
+                        // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 150, 0, 0);
                     } else {
-                        // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
+                        // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 0, 150);
                     }
                 } catch (Exception e) {
                 }
