@@ -651,8 +651,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[0] += 100;
                 }
@@ -663,8 +663,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[1] += 100;
                 }
@@ -675,8 +675,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[2] += 100;
                 }
@@ -687,8 +687,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[3] += 100;
                 }
@@ -699,8 +699,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[4] += 100;
                 }
@@ -711,8 +711,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[5] += 100;
                 }
@@ -723,8 +723,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[6] += 100;
                 }
@@ -735,8 +735,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[7] += 100;
                 }
@@ -747,8 +747,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[8] += 100;
                 }
@@ -759,8 +759,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[9] += 100;
                 }
@@ -771,8 +771,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[10] += 100;
                 }
@@ -783,8 +783,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[11] += 100;
                 }
@@ -795,8 +795,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[12] += 100;
                 }
@@ -807,8 +807,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[13] += 100;
                 }
@@ -819,8 +819,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[14] += 100;
                 }
@@ -831,8 +831,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[15] += 100;
                 }
@@ -843,8 +843,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[16] += 100;
                 }
@@ -855,8 +855,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[17] += 100;
                 }
@@ -867,8 +867,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[18] += 100;
                 }
@@ -879,8 +879,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[19] += 100;
                 }
@@ -891,8 +891,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[20] += 100;
                 }
@@ -903,8 +903,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[21] += 100;
                 }
@@ -915,8 +915,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[22] += 100;
                 }
@@ -927,8 +927,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[23] += 100;
                 }
@@ -939,8 +939,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[24] += 100;
                 }
@@ -950,311 +950,402 @@ public class Mopper {
     }
 
     public static void exploreSwingScores() throws Exception {
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, -2).toString()) != -1) {
-            swingScores[32] += 35;
-            swingScores[28] += 35;
-            swingScores[9] += 35;
-            swingScores[5] += 35;
-            swingScores[4] += 35;
-            swingScores[0] += 35;
+        MapLocation loc;
+        loc = G.me.translate(-1, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, -3).toString()) != -1) {
-            swingScores[4] += 35;
-            swingScores[0] += 35;
+        loc = G.me.translate(-1, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, -2).toString()) != -1) {
-            swingScores[28] += 35;
-            swingScores[5] += 35;
-            swingScores[1] += 35;
-            swingScores[0] += 35;
+        loc = G.me.translate(-2, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[1] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, -3).toString()) != -1) {
-            swingScores[0] += 35;
+        loc = G.me.translate(-2, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, -2).toString()) != -1) {
-            swingScores[32] += 35;
-            swingScores[28] += 35;
-            swingScores[12] += 35;
-            swingScores[9] += 35;
-            swingScores[8] += 35;
-            swingScores[4] += 35;
-            swingScores[2] += 35;
-            swingScores[0] += 35;
+        loc = G.me.translate(0, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[2] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, -3).toString()) != -1) {
-            swingScores[8] += 35;
-            swingScores[4] += 35;
-            swingScores[0] += 35;
+        loc = G.me.translate(0, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, -1).toString()) != -1) {
-            swingScores[33] += 35;
-            swingScores[29] += 35;
-            swingScores[28] += 35;
-            swingScores[24] += 35;
-            swingScores[5] += 35;
-            swingScores[1] += 35;
+        loc = G.me.translate(-2, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-3, -1).toString()) != -1) {
-            swingScores[29] += 35;
-            swingScores[1] += 35;
+        loc = G.me.translate(-3, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-3, -2).toString()) != -1) {
-            swingScores[1] += 35;
+        loc = G.me.translate(-3, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, 0).toString()) != -1) {
-            swingScores[33] += 35;
-            swingScores[29] += 35;
-            swingScores[25] += 35;
-            swingScores[24] += 35;
-            swingScores[21] += 35;
-            swingScores[5] += 35;
-            swingScores[3] += 35;
-            swingScores[1] += 35;
+        loc = G.me.translate(-2, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[3] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-3, 0).toString()) != -1) {
-            swingScores[29] += 35;
-            swingScores[25] += 35;
-            swingScores[1] += 35;
+        loc = G.me.translate(-3, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, -1).toString()) != -1) {
-            swingScores[32] += 35;
-            swingScores[30] += 35;
-            swingScores[28] += 35;
-            swingScores[24] += 35;
-            swingScores[20] += 35;
-            swingScores[16] += 35;
-            swingScores[13] += 35;
-            swingScores[12] += 35;
-            swingScores[9] += 35;
-            swingScores[2] += 35;
+        loc = G.me.translate(0, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, -1).toString()) != -1) {
-            swingScores[34] += 35;
-            swingScores[32] += 35;
-            swingScores[30] += 35;
-            swingScores[20] += 35;
-            swingScores[16] += 35;
-            swingScores[12] += 35;
-            swingScores[6] += 35;
-            swingScores[2] += 35;
+        loc = G.me.translate(1, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[6] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, 0).toString()) != -1) {
-            swingScores[30] += 35;
-            swingScores[26] += 35;
-            swingScores[24] += 35;
-            swingScores[20] += 35;
-            swingScores[17] += 35;
-            swingScores[16] += 35;
-            swingScores[13] += 35;
-            swingScores[11] += 35;
-            swingScores[9] += 35;
-            swingScores[7] += 35;
-            swingScores[3] += 35;
-            swingScores[2] += 35;
+        loc = G.me.translate(0, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[3] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, 0).toString()) != -1) {
-            swingScores[34] += 35;
-            swingScores[30] += 35;
-            swingScores[26] += 35;
-            swingScores[22] += 35;
-            swingScores[20] += 35;
-            swingScores[16] += 35;
-            swingScores[11] += 35;
-            swingScores[7] += 35;
-            swingScores[6] += 35;
-            swingScores[2] += 35;
+        loc = G.me.translate(1, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[6] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, -2).toString()) != -1) {
-            swingScores[32] += 35;
-            swingScores[12] += 35;
-            swingScores[8] += 35;
-            swingScores[6] += 35;
-            swingScores[4] += 35;
-            swingScores[2] += 35;
+        loc = G.me.translate(1, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[6] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, 0).toString()) != -1) {
-            swingScores[33] += 35;
-            swingScores[24] += 35;
-            swingScores[21] += 35;
-            swingScores[20] += 35;
-            swingScores[17] += 35;
-            swingScores[13] += 35;
-            swingScores[9] += 35;
-            swingScores[7] += 35;
-            swingScores[5] += 35;
-            swingScores[3] += 35;
+        loc = G.me.translate(-1, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, 1).toString()) != -1) {
-            swingScores[35] += 35;
-            swingScores[33] += 35;
-            swingScores[31] += 35;
-            swingScores[21] += 35;
-            swingScores[17] += 35;
-            swingScores[13] += 35;
-            swingScores[7] += 35;
-            swingScores[3] += 35;
+        loc = G.me.translate(-1, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, 1).toString()) != -1) {
-            swingScores[35] += 35;
-            swingScores[31] += 35;
-            swingScores[30] += 35;
-            swingScores[26] += 35;
-            swingScores[17] += 35;
-            swingScores[15] += 35;
-            swingScores[13] += 35;
-            swingScores[11] += 35;
-            swingScores[7] += 35;
-            swingScores[3] += 35;
+        loc = G.me.translate(0, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[15] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, 1).toString()) != -1) {
-            swingScores[33] += 35;
-            swingScores[31] += 35;
-            swingScores[29] += 35;
-            swingScores[25] += 35;
-            swingScores[21] += 35;
-            swingScores[3] += 35;
+        loc = G.me.translate(-2, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, -3).toString()) != -1) {
-            swingScores[8] += 35;
-            swingScores[4] += 35;
+        loc = G.me.translate(1, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[4] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, -1).toString()) != -1) {
-            swingScores[33] += 35;
-            swingScores[32] += 35;
-            swingScores[28] += 35;
-            swingScores[24] += 35;
-            swingScores[20] += 35;
-            swingScores[13] += 35;
-            swingScores[9] += 35;
-            swingScores[5] += 35;
+        loc = G.me.translate(-1, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[5] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, -1).toString()) != -1) {
-            swingScores[34] += 35;
-            swingScores[16] += 35;
-            swingScores[14] += 35;
-            swingScores[12] += 35;
-            swingScores[10] += 35;
-            swingScores[6] += 35;
+        loc = G.me.translate(2, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[10] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, 0).toString()) != -1) {
-            swingScores[34] += 35;
-            swingScores[22] += 35;
-            swingScores[18] += 35;
-            swingScores[16] += 35;
-            swingScores[14] += 35;
-            swingScores[11] += 35;
-            swingScores[10] += 35;
-            swingScores[6] += 35;
+        loc = G.me.translate(2, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[10] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, -2).toString()) != -1) {
-            swingScores[12] += 35;
-            swingScores[10] += 35;
-            swingScores[8] += 35;
-            swingScores[6] += 35;
+        loc = G.me.translate(2, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[10] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, 1).toString()) != -1) {
-            swingScores[35] += 35;
-            swingScores[34] += 35;
-            swingScores[30] += 35;
-            swingScores[26] += 35;
-            swingScores[22] += 35;
-            swingScores[15] += 35;
-            swingScores[11] += 35;
-            swingScores[7] += 35;
+        loc = G.me.translate(1, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[15] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[7] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, -3).toString()) != -1) {
-            swingScores[8] += 35;
+        loc = G.me.translate(2, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[8] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(3, -1).toString()) != -1) {
-            swingScores[14] += 35;
-            swingScores[10] += 35;
+        loc = G.me.translate(3, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(3, 0).toString()) != -1) {
-            swingScores[18] += 35;
-            swingScores[14] += 35;
-            swingScores[10] += 35;
+        loc = G.me.translate(3, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(3, -2).toString()) != -1) {
-            swingScores[10] += 35;
+        loc = G.me.translate(3, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, 1).toString()) != -1) {
-            swingScores[34] += 35;
-            swingScores[22] += 35;
-            swingScores[18] += 35;
-            swingScores[15] += 35;
-            swingScores[14] += 35;
-            swingScores[11] += 35;
+        loc = G.me.translate(2, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[15] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[11] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(3, 1).toString()) != -1) {
-            swingScores[18] += 35;
-            swingScores[14] += 35;
+        loc = G.me.translate(3, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[14] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, 2).toString()) != -1) {
-            swingScores[35] += 35;
-            swingScores[26] += 35;
-            swingScores[23] += 35;
-            swingScores[22] += 35;
-            swingScores[19] += 35;
-            swingScores[15] += 35;
+        loc = G.me.translate(1, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[19] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, 2).toString()) != -1) {
-            swingScores[22] += 35;
-            swingScores[19] += 35;
-            swingScores[18] += 35;
-            swingScores[15] += 35;
+        loc = G.me.translate(2, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[19] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, 2).toString()) != -1) {
-            swingScores[35] += 35;
-            swingScores[31] += 35;
-            swingScores[27] += 35;
-            swingScores[26] += 35;
-            swingScores[23] += 35;
-            swingScores[19] += 35;
-            swingScores[17] += 35;
-            swingScores[15] += 35;
+        loc = G.me.translate(0, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[19] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, 2).toString()) != -1) {
-            swingScores[35] += 35;
-            swingScores[31] += 35;
-            swingScores[27] += 35;
-            swingScores[23] += 35;
-            swingScores[21] += 35;
-            swingScores[17] += 35;
+        loc = G.me.translate(-1, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[17] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(3, 2).toString()) != -1) {
-            swingScores[18] += 35;
+        loc = G.me.translate(3, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[18] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(1, 3).toString()) != -1) {
-            swingScores[23] += 35;
-            swingScores[19] += 35;
+        loc = G.me.translate(1, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(2, 3).toString()) != -1) {
-            swingScores[19] += 35;
+        loc = G.me.translate(2, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(0, 3).toString()) != -1) {
-            swingScores[27] += 35;
-            swingScores[23] += 35;
-            swingScores[19] += 35;
+        loc = G.me.translate(0, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, 2).toString()) != -1) {
-            swingScores[31] += 35;
-            swingScores[27] += 35;
-            swingScores[25] += 35;
-            swingScores[21] += 35;
+        loc = G.me.translate(-2, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[21] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-1, 3).toString()) != -1) {
-            swingScores[27] += 35;
-            swingScores[23] += 35;
+        loc = G.me.translate(-1, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[23] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-3, 1).toString()) != -1) {
-            swingScores[29] += 35;
-            swingScores[25] += 35;
+        loc = G.me.translate(-3, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+            swingScores[25] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-3, 2).toString()) != -1) {
-            swingScores[25] += 35;
+        loc = G.me.translate(-3, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[25] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
-        if (G.opponentRobotsString.indexOf(G.me.translate(-2, 3).toString()) != -1) {
-            swingScores[27] += 35;
+        loc = G.me.translate(-2, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            swingScores[27] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
         }
     }
 
@@ -1274,8 +1365,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[0] += 100;
                 }
@@ -1289,8 +1380,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[1] += 100;
                 }
@@ -1304,8 +1395,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[2] += 100;
                 }
@@ -1319,8 +1410,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[3] += 100;
                 }
@@ -1334,8 +1425,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[4] += 100;
                 }
@@ -1349,8 +1440,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[5] += 100;
                 }
@@ -1364,8 +1455,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[6] += 100;
                 }
@@ -1379,8 +1470,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[7] += 100;
                 }
@@ -1394,8 +1485,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[8] += 100;
                 }
@@ -1409,8 +1500,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[9] += 100;
                 }
@@ -1424,8 +1515,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[10] += 100;
                 }
@@ -1439,8 +1530,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[11] += 100;
                 }
@@ -1454,8 +1545,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[12] += 100;
                 }
@@ -1469,8 +1560,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[13] += 100;
                 }
@@ -1484,8 +1575,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[14] += 100;
                 }
@@ -1499,8 +1590,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[15] += 100;
                 }
@@ -1514,8 +1605,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[16] += 100;
                 }
@@ -1529,8 +1620,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[17] += 100;
                 }
@@ -1544,8 +1635,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[18] += 100;
                 }
@@ -1559,8 +1650,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[19] += 100;
                 }
@@ -1574,8 +1665,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[20] += 100;
                 }
@@ -1589,8 +1680,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[21] += 100;
                 }
@@ -1604,8 +1695,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[22] += 100;
                 }
@@ -1619,8 +1710,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[23] += 100;
                 }
@@ -1634,8 +1725,8 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.paintAmount <= 10) {
+                attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[24] += 100;
                 }
@@ -1667,7 +1758,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[0] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[0] += 100;
                 }
@@ -1679,7 +1770,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[1] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[1] += 100;
                 }
@@ -1691,7 +1782,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[2] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[2] += 100;
                 }
@@ -1703,7 +1794,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[3] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[3] += 100;
                 }
@@ -1715,7 +1806,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[4] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[4] += 100;
                 }
@@ -1727,7 +1818,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[5] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[5] += 100;
                 }
@@ -1739,7 +1830,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[6] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[6] += 100;
                 }
@@ -1751,7 +1842,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[7] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[7] += 100;
                 }
@@ -1763,7 +1854,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[8] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[8] += 100;
                 }
@@ -1775,7 +1866,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[9] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[9] += 100;
                 }
@@ -1787,7 +1878,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[10] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[10] += 100;
                 }
@@ -1799,7 +1890,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[11] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[11] += 100;
                 }
@@ -1811,7 +1902,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[12] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[12] += 100;
                 }
@@ -1823,7 +1914,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[13] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[13] += 100;
                 }
@@ -1835,7 +1926,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[14] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[14] += 100;
                 }
@@ -1847,7 +1938,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[15] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[15] += 100;
                 }
@@ -1859,7 +1950,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[16] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[16] += 100;
                 }
@@ -1871,7 +1962,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[17] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[17] += 100;
                 }
@@ -1883,7 +1974,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[18] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[18] += 100;
                 }
@@ -1895,7 +1986,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[19] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[19] += 100;
                 }
@@ -1907,7 +1998,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[20] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[20] += 100;
                 }
@@ -1919,7 +2010,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[21] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[21] += 100;
                 }
@@ -1931,7 +2022,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[22] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[22] += 100;
                 }
@@ -1943,7 +2034,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[23] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[23] += 100;
                 }
@@ -1955,7 +2046,7 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 attackScores[24] += 100;
-                if (bot.paintAmount <= 10) {
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     // treat freezing bot equivalent to gaining 20 paint
                     attackScores[24] += 100;
                 }
