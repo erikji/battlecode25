@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN17;
 
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;

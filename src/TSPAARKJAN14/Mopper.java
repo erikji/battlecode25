@@ -431,11 +431,11 @@ public class Mopper {
                 if (bestBot != null)
                     bestEmpty = bestBot;
                 dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-                G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+              // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
             }
             moveScores = avoidPaintMicro.micro(dir, G.invalidLoc);
-            if (G.rc.onTheMap(microDir))
-                G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+            // if (G.rc.onTheMap(microDir))
+              // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         }
         if (G.rc.isActionReady()) {
             for (int i = 25; --i >= 0;) {
@@ -460,7 +460,7 @@ public class Mopper {
                 }
             }
         }
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
+      // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void build() throws Exception {
@@ -506,7 +506,7 @@ public class Mopper {
                 }
             }
         }
-        G.rc.setIndicatorDot(G.me, 0, 0, 255);
+      // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     public static Micro avoidPaintMicro = new Micro() {

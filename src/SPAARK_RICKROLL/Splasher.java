@@ -196,7 +196,7 @@ public class Splasher {
             MapLocation loc = new MapLocation(G.me.x + attackRange[i].x, G.me.y + attackRange[i].y);
             if (G.rc.canAttack(loc)) {
                 int score = 0;
-                int opponentRobotsPaintedScore = 0;
+                // int opponentRobotsPaintedScore = 0;
                 for (int dir = 9; --dir >= 0;) {
                     // TODO: negative weight for painting SRP
                     // only care about sqrt(2) distance because bytecode restrictions
