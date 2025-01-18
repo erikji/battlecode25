@@ -276,6 +276,8 @@ public class Motion {
     public static int retreatTower = -1;
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
+    public static MapLocation retreatWaitingLoc = null;
+
     public static int paintNeededToStopRetreating;
 
     // retreat calculations
@@ -287,6 +289,26 @@ public class Motion {
                 (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
     }
 
+    public static void updateRetreatWaitingLoc() throws Exception {
+        MapLocation loc = POI.towerLocs[retreatTower];
+        retreatWaitingLoc = null;
+        int bestDistance = 0;
+        for (int i = 8; --i >= 0;) {
+            MapLocation waitingLoc = retreatWaitingLocs[i].translate(loc.x, loc.y);
+            if (G.rc.canSenseLocation(waitingLoc)) {
+                if (!G.rc.sensePassability(waitingLoc) || G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                    continue;
+                }
+            }
+            if (retreatWaitingLoc == null || G.me.distanceSquaredTo(waitingLoc) < bestDistance) {
+                retreatWaitingLoc = waitingLoc;
+                bestDistance = G.me.distanceSquaredTo(waitingLoc);
+            }
+        }
+        if (retreatWaitingLoc == null) {
+            retreatTower = -1;
+        }
+    }
     public static MapLocation retreatLoc() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
@@ -303,15 +325,13 @@ public class Motion {
             // don't retreat to tower with lots of bots surrounding it
             MapLocation loc = POI.towerLocs[retreatTower];
             if (G.rc.canSenseRobotAtLocation(loc)) {
-                G.indicatorString.append("R: " + G.rc.senseNearbyRobots(loc, 2, G.team).length + " ");
-                if (G.me.distanceSquaredTo(loc) > 2 && G.rc.senseNearbyRobots(loc, 2, G.team).length > 4) {
+                RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
+                if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER
+                        && robotInfo.getPaintAmount() == 0) {
                     retreatTower = -1;
-                } else {
-                    RobotInfo robotInfo = G.rc.senseRobotAtLocation(loc);
-                    if (robotInfo.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER
-                            && robotInfo.getPaintAmount() == 0) {
-                        retreatTower = -1;
-                    }
+                }
+                else {
+                    updateRetreatWaitingLoc();
                 }
             }
         }
@@ -402,25 +422,8 @@ public class Motion {
     public static void retreat(Micro micro) throws Exception {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
-            if (G.me.distanceSquaredTo(loc) > 8) {
-                bugnavTowards(loc);
-            }
-            else {
-                MapLocation best = null;
-                int bestDistance = 0;
-                for (int i = 8; --i>=0;) {
-                    MapLocation waitingLoc = retreatWaitingLocs[i].translate(loc.x, loc.y);
-                    if (G.rc.canSenseLocation(waitingLoc)) {
-                        if (!G.rc.sensePassability(waitingLoc) || G.rc.canSenseRobotAtLocation(waitingLoc)) {
-                            continue;
-                        }
-                    }
-                    if (best == null || getChebyshevDistance(G.me, waitingLoc) < bestDistance) {
-                        best = waitingLoc;
-                        bestDistance = getChebyshevDistance(G.me, waitingLoc);
-                    }
-                }
-                G.rc.setIndicatorLine(G.me, best, 0, 200, 255);
+            int dist = G.me.distanceSquaredTo(loc);
+            if (dist <= 8) {
                 if (G.rc.canSenseRobotAtLocation(loc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(loc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
@@ -443,18 +446,22 @@ public class Motion {
                             }
                             return;
                         }
-                        else {
-                            retreatTower = -1;
-                        }
                     }
-                    if (best == null) {
-                        retreatTower = -1;
+                }
+            }
+            else {
+                if (dist != 4 && dist != 8) {
+                    if (G.rc.canSenseRobotAtLocation(loc)) {
+                        if (retreatWaitingLoc == null) {
+                            updateRetreatWaitingLoc();
+                        }
+                        if (retreatWaitingLoc != null) {
+                            G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
+                            bugnavTowards(retreatWaitingLoc);
+                        }
                     }
                     else {
-                        if (!G.me.equals(best)) {
-                            bugnavTowards(best);
-                        }
-                        G.rc.setIndicatorLine(G.me, best, 200, 0, 100);
+                        bugnavTowards(loc);
                     }
                 }
             }
