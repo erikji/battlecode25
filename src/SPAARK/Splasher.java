@@ -55,7 +55,6 @@ public class Splasher {
         switch (mode) {
             case EXPLORE -> {
                 G.indicatorString.append("EXPLORE ");
-                G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 if (G.rc.isMovementReady()) {
                     exploreMoveScores();
                 }
@@ -68,7 +67,6 @@ public class Splasher {
             }
             case ATTACK -> {
                 G.indicatorString.append("ATTACK ");
-                G.rc.setIndicatorDot(G.me, 0, 0, 255);
                 if (G.rc.isMovementReady()) {
                     attackMoveScores();
                 }
@@ -79,316 +77,315 @@ public class Splasher {
             }
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                G.rc.setIndicatorDot(G.me, 255, 0, 255);
                 Motion.retreat();
             }
         }
         if (mode != RETREAT) {
-        int cmax = attackScores[0];
-        int cx = 0;
-        int cy = 0;
-        if (attackScores[1] > cmax) {
-            cmax = attackScores[1];
-            cx = -1;
-            cy = 0;
-        }
-        if (attackScores[2] > cmax) {
-            cmax = attackScores[2];
-            cx = 0;
-            cy = -1;
-        }
-        if (attackScores[3] > cmax) {
-            cmax = attackScores[3];
-            cx = 0;
-            cy = 1;
-        }
-        if (attackScores[4] > cmax) {
-            cmax = attackScores[4];
-            cx = 1;
-            cy = 0;
-        }
-        if (attackScores[5] > cmax) {
-            cmax = attackScores[5];
-            cx = -1;
-            cy = -1;
-        }
-        if (attackScores[6] > cmax) {
-            cmax = attackScores[6];
-            cx = -1;
-            cy = 1;
-        }
-        if (attackScores[7] > cmax) {
-            cmax = attackScores[7];
-            cx = 1;
-            cy = -1;
-        }
-        if (attackScores[8] > cmax) {
-            cmax = attackScores[8];
-            cx = 1;
-            cy = 1;
-        }
-        // store total score and best attack location for each direction (incl
-        // Direction.CENTER)
-        int[] allmax = new int[] {
-                cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax
-        };
-        int[] allx = new int[] {
-                cx, cx, cx, cx, cx, cx, cx, cx, cx
-        };
-        int[] ally = new int[] {
-                cy, cy, cy, cy, cy, cy, cy, cy, cy
-        };
-        if (attackScores[13] > allmax[0]) {
-            allmax[0] = attackScores[13];
-            allx[0] = -2;
-            ally[0] = -1;
-        }
-        if (attackScores[15] > allmax[0]) {
-            allmax[0] = attackScores[15];
-            allx[0] = -1;
-            ally[0] = -2;
-        }
-        if (attackScores[21] > allmax[0]) {
-            allmax[0] = attackScores[21];
-            allx[0] = -2;
-            ally[0] = -2;
-        }
-        if (attackScores[29] > allmax[0]) {
-            allmax[0] = attackScores[29];
-            allx[0] = -3;
-            ally[0] = -1;
-        }
-        if (attackScores[31] > allmax[0]) {
-            allmax[0] = attackScores[31];
-            allx[0] = -1;
-            ally[0] = -3;
-        }
-        if (attackScores[15] > allmax[1]) {
-            allmax[1] = attackScores[15];
-            allx[1] = -1;
-            ally[1] = -2;
-        }
-        if (attackScores[17] > allmax[1]) {
-            allmax[1] = attackScores[17];
-            allx[1] = 1;
-            ally[1] = -2;
-        }
-        if (attackScores[13] > allmax[1]) {
-            allmax[1] = attackScores[13];
-            allx[1] = -2;
-            ally[1] = -1;
-        }
-        if (attackScores[26] > allmax[1]) {
-            allmax[1] = attackScores[26];
-            allx[1] = 0;
-            ally[1] = -3;
-        }
-        if (attackScores[19] > allmax[1]) {
-            allmax[1] = attackScores[19];
-            allx[1] = 2;
-            ally[1] = -1;
-        }
-        if (attackScores[17] > allmax[2]) {
-            allmax[2] = attackScores[17];
-            allx[2] = 1;
-            ally[2] = -2;
-        }
-        if (attackScores[19] > allmax[2]) {
-            allmax[2] = attackScores[19];
-            allx[2] = 2;
-            ally[2] = -1;
-        }
-        if (attackScores[23] > allmax[2]) {
-            allmax[2] = attackScores[23];
-            allx[2] = 2;
-            ally[2] = -2;
-        }
-        if (attackScores[33] > allmax[2]) {
-            allmax[2] = attackScores[33];
-            allx[2] = 1;
-            ally[2] = -3;
-        }
-        if (attackScores[35] > allmax[2]) {
-            allmax[2] = attackScores[35];
-            allx[2] = 3;
-            ally[2] = -1;
-        }
-        if (attackScores[19] > allmax[3]) {
-            allmax[3] = attackScores[19];
-            allx[3] = 2;
-            ally[3] = -1;
-        }
-        if (attackScores[20] > allmax[3]) {
-            allmax[3] = attackScores[20];
-            allx[3] = 2;
-            ally[3] = 1;
-        }
-        if (attackScores[17] > allmax[3]) {
-            allmax[3] = attackScores[17];
-            allx[3] = 1;
-            ally[3] = -2;
-        }
-        if (attackScores[18] > allmax[3]) {
-            allmax[3] = attackScores[18];
-            allx[3] = 1;
-            ally[3] = 2;
-        }
-        if (attackScores[28] > allmax[3]) {
-            allmax[3] = attackScores[28];
-            allx[3] = 3;
-            ally[3] = 0;
-        }
-        if (attackScores[18] > allmax[4]) {
-            allmax[4] = attackScores[18];
-            allx[4] = 1;
-            ally[4] = 2;
-        }
-        if (attackScores[20] > allmax[4]) {
-            allmax[4] = attackScores[20];
-            allx[4] = 2;
-            ally[4] = 1;
-        }
-        if (attackScores[24] > allmax[4]) {
-            allmax[4] = attackScores[24];
-            allx[4] = 2;
-            ally[4] = 2;
-        }
-        if (attackScores[34] > allmax[4]) {
-            allmax[4] = attackScores[34];
-            allx[4] = 1;
-            ally[4] = 3;
-        }
-        if (attackScores[36] > allmax[4]) {
-            allmax[4] = attackScores[36];
-            allx[4] = 3;
-            ally[4] = 1;
-        }
-        if (attackScores[16] > allmax[5]) {
-            allmax[5] = attackScores[16];
-            allx[5] = -1;
-            ally[5] = 2;
-        }
-        if (attackScores[18] > allmax[5]) {
-            allmax[5] = attackScores[18];
-            allx[5] = 1;
-            ally[5] = 2;
-        }
-        if (attackScores[14] > allmax[5]) {
-            allmax[5] = attackScores[14];
-            allx[5] = -2;
-            ally[5] = 1;
-        }
-        if (attackScores[27] > allmax[5]) {
-            allmax[5] = attackScores[27];
-            allx[5] = 0;
-            ally[5] = 3;
-        }
-        if (attackScores[20] > allmax[5]) {
-            allmax[5] = attackScores[20];
-            allx[5] = 2;
-            ally[5] = 1;
-        }
-        if (attackScores[14] > allmax[6]) {
-            allmax[6] = attackScores[14];
-            allx[6] = -2;
-            ally[6] = 1;
-        }
-        if (attackScores[16] > allmax[6]) {
-            allmax[6] = attackScores[16];
-            allx[6] = -1;
-            ally[6] = 2;
-        }
-        if (attackScores[22] > allmax[6]) {
-            allmax[6] = attackScores[22];
-            allx[6] = -2;
-            ally[6] = 2;
-        }
-        if (attackScores[30] > allmax[6]) {
-            allmax[6] = attackScores[30];
-            allx[6] = -3;
-            ally[6] = 1;
-        }
-        if (attackScores[32] > allmax[6]) {
-            allmax[6] = attackScores[32];
-            allx[6] = -1;
-            ally[6] = 3;
-        }
-        if (attackScores[13] > allmax[7]) {
-            allmax[7] = attackScores[13];
-            allx[7] = -2;
-            ally[7] = -1;
-        }
-        if (attackScores[14] > allmax[7]) {
-            allmax[7] = attackScores[14];
-            allx[7] = -2;
-            ally[7] = 1;
-        }
-        if (attackScores[25] > allmax[7]) {
-            allmax[7] = attackScores[25];
-            allx[7] = -3;
-            ally[7] = 0;
-        }
-        if (attackScores[15] > allmax[7]) {
-            allmax[7] = attackScores[15];
-            allx[7] = -1;
-            ally[7] = -2;
-        }
-        if (attackScores[16] > allmax[7]) {
-            allmax[7] = attackScores[16];
-            allx[7] = -1;
-            ally[7] = 2;
-        }
-        // copyspaghetti from Motion.microMove and Mopper but whatever
-        boolean notMoved = true;
-        if (G.rc.isActionReady()) {
-            int best = 8;
-            int numBest = 1;
-            for (int i = 8; --i >= 0;) {
-                if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
-                    best = i;
-                    numBest = 1;
-                } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best]
-                        && Random.rand() % ++numBest == 0) {
-                    best = i;
-                }
+            int cmax = attackScores[0];
+            int cx = 0;
+            int cy = 0;
+            if (attackScores[1] > cmax) {
+                cmax = attackScores[1];
+                cx = -1;
+                cy = 0;
             }
-            if (allmax[best] > 250) {
-                MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
-                // try to move before attacking if possible so the paint we used in the attack
-                // isn't factored into movement cooldown
-                if (attackLoc.isWithinDistanceSquared(G.me.add(G.ALL_DIRECTIONS[best]), 4)) {
-                    Motion.move(G.ALL_DIRECTIONS[best]);
-                    if (G.rc.canAttack(attackLoc)) {
-                        G.rc.attack(attackLoc);
+            if (attackScores[2] > cmax) {
+                cmax = attackScores[2];
+                cx = 0;
+                cy = -1;
+            }
+            if (attackScores[3] > cmax) {
+                cmax = attackScores[3];
+                cx = 0;
+                cy = 1;
+            }
+            if (attackScores[4] > cmax) {
+                cmax = attackScores[4];
+                cx = 1;
+                cy = 0;
+            }
+            if (attackScores[5] > cmax) {
+                cmax = attackScores[5];
+                cx = -1;
+                cy = -1;
+            }
+            if (attackScores[6] > cmax) {
+                cmax = attackScores[6];
+                cx = -1;
+                cy = 1;
+            }
+            if (attackScores[7] > cmax) {
+                cmax = attackScores[7];
+                cx = 1;
+                cy = -1;
+            }
+            if (attackScores[8] > cmax) {
+                cmax = attackScores[8];
+                cx = 1;
+                cy = 1;
+            }
+            // store total score and best attack location for each direction (incl
+            // Direction.CENTER)
+            int[] allmax = new int[] {
+                    cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax
+            };
+            int[] allx = new int[] {
+                    cx, cx, cx, cx, cx, cx, cx, cx, cx
+            };
+            int[] ally = new int[] {
+                    cy, cy, cy, cy, cy, cy, cy, cy, cy
+            };
+            if (attackScores[13] > allmax[0]) {
+                allmax[0] = attackScores[13];
+                allx[0] = -2;
+                ally[0] = -1;
+            }
+            if (attackScores[15] > allmax[0]) {
+                allmax[0] = attackScores[15];
+                allx[0] = -1;
+                ally[0] = -2;
+            }
+            if (attackScores[21] > allmax[0]) {
+                allmax[0] = attackScores[21];
+                allx[0] = -2;
+                ally[0] = -2;
+            }
+            if (attackScores[29] > allmax[0]) {
+                allmax[0] = attackScores[29];
+                allx[0] = -3;
+                ally[0] = -1;
+            }
+            if (attackScores[31] > allmax[0]) {
+                allmax[0] = attackScores[31];
+                allx[0] = -1;
+                ally[0] = -3;
+            }
+            if (attackScores[15] > allmax[1]) {
+                allmax[1] = attackScores[15];
+                allx[1] = -1;
+                ally[1] = -2;
+            }
+            if (attackScores[17] > allmax[1]) {
+                allmax[1] = attackScores[17];
+                allx[1] = 1;
+                ally[1] = -2;
+            }
+            if (attackScores[13] > allmax[1]) {
+                allmax[1] = attackScores[13];
+                allx[1] = -2;
+                ally[1] = -1;
+            }
+            if (attackScores[26] > allmax[1]) {
+                allmax[1] = attackScores[26];
+                allx[1] = 0;
+                ally[1] = -3;
+            }
+            if (attackScores[19] > allmax[1]) {
+                allmax[1] = attackScores[19];
+                allx[1] = 2;
+                ally[1] = -1;
+            }
+            if (attackScores[17] > allmax[2]) {
+                allmax[2] = attackScores[17];
+                allx[2] = 1;
+                ally[2] = -2;
+            }
+            if (attackScores[19] > allmax[2]) {
+                allmax[2] = attackScores[19];
+                allx[2] = 2;
+                ally[2] = -1;
+            }
+            if (attackScores[23] > allmax[2]) {
+                allmax[2] = attackScores[23];
+                allx[2] = 2;
+                ally[2] = -2;
+            }
+            if (attackScores[33] > allmax[2]) {
+                allmax[2] = attackScores[33];
+                allx[2] = 1;
+                ally[2] = -3;
+            }
+            if (attackScores[35] > allmax[2]) {
+                allmax[2] = attackScores[35];
+                allx[2] = 3;
+                ally[2] = -1;
+            }
+            if (attackScores[19] > allmax[3]) {
+                allmax[3] = attackScores[19];
+                allx[3] = 2;
+                ally[3] = -1;
+            }
+            if (attackScores[20] > allmax[3]) {
+                allmax[3] = attackScores[20];
+                allx[3] = 2;
+                ally[3] = 1;
+            }
+            if (attackScores[17] > allmax[3]) {
+                allmax[3] = attackScores[17];
+                allx[3] = 1;
+                ally[3] = -2;
+            }
+            if (attackScores[18] > allmax[3]) {
+                allmax[3] = attackScores[18];
+                allx[3] = 1;
+                ally[3] = 2;
+            }
+            if (attackScores[28] > allmax[3]) {
+                allmax[3] = attackScores[28];
+                allx[3] = 3;
+                ally[3] = 0;
+            }
+            if (attackScores[18] > allmax[4]) {
+                allmax[4] = attackScores[18];
+                allx[4] = 1;
+                ally[4] = 2;
+            }
+            if (attackScores[20] > allmax[4]) {
+                allmax[4] = attackScores[20];
+                allx[4] = 2;
+                ally[4] = 1;
+            }
+            if (attackScores[24] > allmax[4]) {
+                allmax[4] = attackScores[24];
+                allx[4] = 2;
+                ally[4] = 2;
+            }
+            if (attackScores[34] > allmax[4]) {
+                allmax[4] = attackScores[34];
+                allx[4] = 1;
+                ally[4] = 3;
+            }
+            if (attackScores[36] > allmax[4]) {
+                allmax[4] = attackScores[36];
+                allx[4] = 3;
+                ally[4] = 1;
+            }
+            if (attackScores[16] > allmax[5]) {
+                allmax[5] = attackScores[16];
+                allx[5] = -1;
+                ally[5] = 2;
+            }
+            if (attackScores[18] > allmax[5]) {
+                allmax[5] = attackScores[18];
+                allx[5] = 1;
+                ally[5] = 2;
+            }
+            if (attackScores[14] > allmax[5]) {
+                allmax[5] = attackScores[14];
+                allx[5] = -2;
+                ally[5] = 1;
+            }
+            if (attackScores[27] > allmax[5]) {
+                allmax[5] = attackScores[27];
+                allx[5] = 0;
+                ally[5] = 3;
+            }
+            if (attackScores[20] > allmax[5]) {
+                allmax[5] = attackScores[20];
+                allx[5] = 2;
+                ally[5] = 1;
+            }
+            if (attackScores[14] > allmax[6]) {
+                allmax[6] = attackScores[14];
+                allx[6] = -2;
+                ally[6] = 1;
+            }
+            if (attackScores[16] > allmax[6]) {
+                allmax[6] = attackScores[16];
+                allx[6] = -1;
+                ally[6] = 2;
+            }
+            if (attackScores[22] > allmax[6]) {
+                allmax[6] = attackScores[22];
+                allx[6] = -2;
+                ally[6] = 2;
+            }
+            if (attackScores[30] > allmax[6]) {
+                allmax[6] = attackScores[30];
+                allx[6] = -3;
+                ally[6] = 1;
+            }
+            if (attackScores[32] > allmax[6]) {
+                allmax[6] = attackScores[32];
+                allx[6] = -1;
+                ally[6] = 3;
+            }
+            if (attackScores[13] > allmax[7]) {
+                allmax[7] = attackScores[13];
+                allx[7] = -2;
+                ally[7] = -1;
+            }
+            if (attackScores[14] > allmax[7]) {
+                allmax[7] = attackScores[14];
+                allx[7] = -2;
+                ally[7] = 1;
+            }
+            if (attackScores[25] > allmax[7]) {
+                allmax[7] = attackScores[25];
+                allx[7] = -3;
+                ally[7] = 0;
+            }
+            if (attackScores[15] > allmax[7]) {
+                allmax[7] = attackScores[15];
+                allx[7] = -1;
+                ally[7] = -2;
+            }
+            if (attackScores[16] > allmax[7]) {
+                allmax[7] = attackScores[16];
+                allx[7] = -1;
+                ally[7] = 2;
+            }
+            // copyspaghetti from Motion.microMove and Mopper but whatever
+            boolean notMoved = true;
+            if (G.rc.isActionReady()) {
+                int best = 8;
+                int numBest = 1;
+                for (int i = 8; --i >= 0;) {
+                    if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
+                        best = i;
+                        numBest = 1;
+                    } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best]
+                            && Random.rand() % ++numBest == 0) {
+                        best = i;
                     }
-                } else {
-                    if (G.rc.canAttack(attackLoc)) {
-                        G.rc.attack(attackLoc);
+                }
+                if (allmax[best] > 250) {
+                    MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
+                    // try to move before attacking if possible so the paint we used in the attack
+                    // isn't factored into movement cooldown
+                    if (attackLoc.isWithinDistanceSquared(G.me.add(G.ALL_DIRECTIONS[best]), 4)) {
+                        Motion.move(G.ALL_DIRECTIONS[best]);
+                        if (G.rc.canAttack(attackLoc)) {
+                            G.rc.attack(attackLoc);
+                        }
+                    } else {
+                        if (G.rc.canAttack(attackLoc)) {
+                            G.rc.attack(attackLoc);
+                        }
+                        Motion.move(G.ALL_DIRECTIONS[best]);
                     }
-                    Motion.move(G.ALL_DIRECTIONS[best]);
-                }
-                notMoved = true;
-            }
-        }
-        if (notMoved) {
-            int best = 8;
-            int numBest = 1;
-            for (int i = 8; --i >= 0;) {
-                if (moveScores[i] > moveScores[best]) {
-                    best = i;
-                    numBest = 1;
-                } else if (moveScores[i] == moveScores[best] && Random.rand() % ++numBest == 0) {
-                    best = i;
+                    notMoved = true;
                 }
             }
-            Motion.move(G.ALL_DIRECTIONS[best]);
+            if (notMoved) {
+                int best = 8;
+                int numBest = 1;
+                for (int i = 8; --i >= 0;) {
+                    if (moveScores[i] > moveScores[best]) {
+                        best = i;
+                        numBest = 1;
+                    } else if (moveScores[i] == moveScores[best] && Random.rand() % ++numBest == 0) {
+                        best = i;
+                    }
+                }
+                Motion.move(G.ALL_DIRECTIONS[best]);
+            }
         }
-	}
-    switch (mode) {
-        case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
-        case ATTACK ->  G.rc.setIndicatorDot(G.me, 255, 0, 0);
-        case RETREAT ->  G.rc.setIndicatorDot(G.me, 255, 0, 255);
-    }
+        switch (mode) {
+            case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
+            case ATTACK -> G.rc.setIndicatorDot(G.me, 255, 0, 0);
+            case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
+        }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
