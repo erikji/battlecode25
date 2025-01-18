@@ -52,7 +52,7 @@ public class Mopper {
         switch (mode) {
             case EXPLORE -> {
 				G.indicatorString.append("EXPLORE ");
-				G.rc.setIndicatorDot(G.me, 0, 255, 0);
+				// G.rc.setIndicatorDot(G.me, 0, 255, 0);
 				if (G.rc.isMovementReady()) {
 					exploreMoveScores();
 				}
@@ -63,7 +63,7 @@ public class Mopper {
 			}
             case BUILD -> {
 				G.indicatorString.append("BUILD ");
-				G.rc.setIndicatorDot(G.me, 0, 0, 255);
+				// G.rc.setIndicatorDot(G.me, 0, 0, 255);
                 lastBuild = G.round;
 				if (G.rc.isMovementReady()) {
 					buildMoveScores();
@@ -75,7 +75,7 @@ public class Mopper {
 			}
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-              // G.rc.setIndicatorDot(G.me, 255, 0, 255);
+              // // G.rc.setIndicatorDot(G.me, 255, 0, 255);
                 if (G.rc.isMovementReady()) {
                     retreatMoveScores();
                 }
@@ -632,11 +632,11 @@ public class Mopper {
             if (bestBot != null)
                 bestEmpty = bestBot;
             dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-          // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+          // // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
         moveScores = mopperMicro.micro(dir, G.invalidLoc);
         // if (G.rc.onTheMap(microDir))
-          // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+          // // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
 	}
 
     public static void exploreAttackScores() throws Exception {

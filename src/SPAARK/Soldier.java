@@ -440,7 +440,7 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
-            Motion.bugnavAround(ruinLocation, 1, 1, moveWithPaintMicro);
+            Motion.bugnavAround(ruinLocation, 1, 1);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         if (paintLocation != null)

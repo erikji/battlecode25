@@ -123,8 +123,8 @@ public class Robot {
         } else if (retreatTower != -1) {
             MapLocation loc = POI.parseLocation(POI.towers[retreatTower]);
             Motion.bugnavTowards(loc);
-            // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
-            // G.rc.setIndicatorDot(G.me, 255, 0, 255);
+            // // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+            // // G.rc.setIndicatorDot(G.me, 255, 0, 255);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
                         G.rc.senseRobotAtLocation(loc).getPaintAmount());

@@ -152,7 +152,7 @@ public class Motion {
                 optimalDir = Direction.CENTER;
             } else {
                 // try {
-                // G.rc.setIndicatorLine(me, target, 0, 0, 0);
+                // // G.rc.setIndicatorLine(me, target, 0, 0, 0);
                 // } catch (Exception e) {
                 // }
                 if (lastDir == me.directionTo(target)) {
@@ -509,7 +509,7 @@ public class Motion {
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
-                    // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
+                    // // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
                     for (int j = step - 1; j >= 0; j--) {
                         if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
                             recalculationNeeded = Math.min(j, recalculationNeeded);
@@ -699,18 +699,18 @@ public class Motion {
         // if (((bfsDist[(G.rc.getRoundNum() % 100) * (height + 2) + j + 1] >> b) & 1)
         // == 0) {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
         // }
         // else {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
         // }
         // }
         // else {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
         // }
         // else {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
         // }
         // }
         // }

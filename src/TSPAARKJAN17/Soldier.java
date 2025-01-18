@@ -158,7 +158,7 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-				G.rc.setIndicatorDot(G.me, 0, 255, 0);
+				// G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8)) {
                     Motion.retreat(moveWithPaintMicro);
                 } else {
@@ -333,7 +333,7 @@ public class Soldier {
         while (!G.rc.onTheMap(target) || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round
                 || cannotBuildSRPAtLocation(target)) {
             if (G.rc.onTheMap(target))
-              // G.rc.setIndicatorDot(target, 255, 100, 0);
+              // // G.rc.setIndicatorDot(target, 255, 100, 0);
             if (++srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
                 // don't waste turns
@@ -348,7 +348,7 @@ public class Soldier {
             resourceLocation = G.me;
             // only place one marker
             G.rc.mark(target, true);
-          // G.rc.setIndicatorDot(target, 255, 200, 0);
+          // // G.rc.setIndicatorDot(target, 255, 200, 0);
             G.indicatorString.append("MK_SRP ");
             mode = BUILD_RESOURCE;
         }
@@ -397,9 +397,9 @@ public class Soldier {
             Motion.exploreRandomly(moveWithPaintMicro);
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
-          // G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
+          // // G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
-      // G.rc.setIndicatorDot(G.me, 0, 255, 0);
+      // // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void buildTower() throws Exception {
@@ -425,7 +425,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }
@@ -437,14 +437,14 @@ public class Soldier {
             mode = EXPLORE;
             Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
-          // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
+          // // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
             Motion.bugnavAround(ruinLocation, 1, 1, moveWithPaintMicro);
-          // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
+          // // G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
         // if (paintLocation != null)
-          // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-      // G.rc.setIndicatorDot(G.me, 0, 0, 255);
+          // // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+      // // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     public static void buildResource() throws Exception {
@@ -467,7 +467,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }
@@ -506,15 +506,15 @@ public class Soldier {
             }
             Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
-          // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+          // // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
             // just sit in the middle of the SRP
             Motion.bugnavTowards(resourceLocation, moveWithPaintMicro);
-          // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
+          // // G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
         }
         // if (paintLocation != null)
-          // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-      // G.rc.setIndicatorDot(G.me, 0, 200, 255);
+          // // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+      // // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
@@ -523,10 +523,10 @@ public class Soldier {
         // show the queue and current target
         // for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             // if (G.rc.onTheMap(srpCheckLocations[i]))
-              // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+              // // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
         // }
-      // G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
-      // G.rc.setIndicatorDot(G.me, 0, 200, 255);
+      // // G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
+      // // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void attack() throws Exception {
@@ -546,7 +546,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1, moveWithPaintMicro);
             }
         }
-      // G.rc.setIndicatorDot(G.me, 255, 0, 0);
+      // // G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     /**
