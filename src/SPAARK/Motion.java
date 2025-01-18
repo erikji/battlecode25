@@ -422,24 +422,24 @@ public class Motion {
         return retreatDir(retreatLoc());
     }
 
-    public static Direction retreatDir(MapLocation retreatLocation) throws Exception {
+    public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
-            int dist = G.me.distanceSquaredTo(retreatLocation);
+            int dist = G.me.distanceSquaredTo(retreatLoc);
             if (dist <= 8) {
-                if (G.rc.canSenseRobotAtLocation(retreatLocation)) {
-                    RobotInfo r = G.rc.senseRobotAtLocation(retreatLocation);
+                if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     if (r.paintAmount >= amount) {
-                        return bug2Helper(G.me, retreatLocation, TOWARDS, 0, 0);
+                        return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
                     } else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
                         if (r.paintAmount != 0) {
-                            return bug2Helper(G.me, retreatLocation, TOWARDS, 0, 0);
+                            return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
                         }
                     }
                 }
             }
             if (dist != 4 && dist != 8) {
-                if (G.rc.canSenseRobotAtLocation(retreatLocation)) {
+                if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
                     if (retreatWaitingLoc == null) {
                         updateRetreatWaitingLoc();
                     }
@@ -449,12 +449,12 @@ public class Motion {
                         return bug2Helper(G.me, retreatWaitingLoc, TOWARDS, 0, 0);
                     }
                 } else {
-                    // bugnavTowards(retreatLocation);
-                    return bug2Helper(G.me, retreatLocation, TOWARDS, 0, 0);
+                    // bugnavTowards(retreatLoc);
+                    return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
                 }
             }
-            // Motion.bugnavAround(retreatLocation, 1, 4);
-            G.rc.setIndicatorLine(G.me, retreatLocation, 200, 0, 200);
+            // Motion.bugnavAround(retreatLoc, 1, 4);
+            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
         }
         return Direction.CENTER;
     }
