@@ -12,42 +12,42 @@ public class Soldier {
     public static int mode = EXPLORE;
 
     // ratio of paint necessary to exit retreat mode
-    public static final double RETREAT_PAINT_RATIO = Micro.RETREAT_PAINT_RATIO;
+    public static final double RETREAT_PAINT_RATIO = 0.85;
     // ratio to reduce retreat requirement by if building tower/srp
-    public static final double RETREAT_REDUCED_RATIO = Micro.RETREAT_PAINT_RATIO;
+    public static final double RETREAT_REDUCED_RATIO = 0.5;
     // exploration weight multiplier
-    public static final int EXPLORE_OPP_WEIGHT = Micro.EXPLORE_OPP_WEIGHT;
+    public static final int EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
-    public static final int VISIT_TIMEOUT = Micro.VISIT_TIMEOUT;
+    public static final int VISIT_TIMEOUT = 40;
     // stop building towers if enemy paint interferes too much
-    public static final int MAX_TOWER_ENEMY_PAINT = Micro.MAX_TOWER_ENEMY_PAINT;
-    public static final int MAX_TOWER_BLOCKED_TIME = Micro.MAX_TOWER_BLOCKED_TIME;
+    public static final int MAX_TOWER_ENEMY_PAINT = 10;
+    public static final int MAX_TOWER_BLOCKED_TIME = 30;
     // max build time, max build time if no moppers/splashers to remove paint
-    public static final int MAX_TOWER_TIME = Micro.MAX_TOWER_TIME;
-    public static final int MAX_TOWER_TIME_NO_HELP = Micro.MAX_TOWER_TIME_NO_HELP;
+    public static final int MAX_TOWER_TIME = 200;
+    public static final int MAX_TOWER_TIME_NO_HELP = 80;
     // don't build SRP early-game, prioritize towers
-    public static final int MIN_SRP_ROUND = Micro.MIN_SRP_ROUND;
-    public static final int MIN_SRP_TOWERS = Micro.MIN_SRP_TOWERS; // probably shouldn't be higher
+    public static final int MIN_SRP_ROUND = 40;
+    public static final int MIN_SRP_TOWERS = 2; // probably shouldn't be higher
     // controls rounds between repairing/expanding SRP
-    public static final int SRP_VISIT_TIMEOUT = Micro.SRP_VISIT_TIMEOUT;
+    public static final int SRP_VISIT_TIMEOUT = 20;
     // balance exploring and building SRPs (don't SRP if near target)
-    public static final int SRP_EXPAND_TIMEOUT = Micro.SRP_EXPAND_TIMEOUT;
-    public static final int SRP_EXP_OVERRIDE_DIST = Micro.SRP_EXP_OVERRIDE_DIST;
+    public static final int SRP_EXPAND_TIMEOUT = 20;
+    public static final int SRP_EXP_OVERRIDE_DIST = 36;
     // have at most TOWER_CEIL for the first TOWER_CEIL rounds, if map small
-    public static final int TOWER_CEIL = Micro.TOWER_CEIL;
-    public static final int TOWER_CEIL_MAP_AREA = Micro.TOWER_CEIL_MAP_AREA;
-    public static final int TOWER_CEIL_ROUND = Micro.TOWER_CEIL_ROUND;
+    public static final int TOWER_CEIL = 3;
+    public static final int TOWER_CEIL_MAP_AREA = 1600;
+    public static final int TOWER_CEIL_ROUND = 75;
     // encourages building SRPs if waiting for chips on large maps initially
-    public static final int INITIAL_SRP_ALT_MAP_AREA = Micro.INITIAL_SRP_ALT_CHIPS;
-    public static final int INITIAL_SRP_ALT_TOWER_CAP = Micro.INITIAL_SRP_ALT_TOWER_CAP;
-    public static final int INITIAL_SRP_ALT_CHIPS = Micro.INITIAL_SRP_ALT_CHIPS;
+    public static final int INITIAL_SRP_ALT_MAP_AREA = 1600;
+    public static final int INITIAL_SRP_ALT_TOWER_CAP = 6;
+    public static final int INITIAL_SRP_ALT_CHIPS = 300;
     // stop building SRP if enemy paint interferes too much
-    public static final int MAX_SRP_ENEMY_PAINT = Micro.MAX_SRP_ENEMY_PAINT;
-    public static final int MAX_SRP_BLOCKED_TIME = Micro.MAX_SRP_BLOCKED_TIME;
+    public static final int MAX_SRP_ENEMY_PAINT = 2;
+    public static final int MAX_SRP_BLOCKED_TIME = 10;
     // max build time
-    public static final int MAX_SRP_TIME = Micro.MAX_SRP_TIME;
+    public static final int MAX_SRP_TIME = 50;
     // don't expand SRP if low on paint, since very slow
-    public static final int EXPAND_SRP_MIN_PAINT = Micro.EXPAND_SRP_MIN_PAINT;
+    public static final int EXPAND_SRP_MIN_PAINT = 75;
 
     public static MapLocation exploreLocation = null; // EXPLORE mode
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode

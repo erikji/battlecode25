@@ -8,7 +8,7 @@ public class Mopper {
     public static final int RETREAT = 2;
     public static int mode = EXPLORE;
 
-    public static final int BUILD_TIMEOUT = Micro.BUILD_TIMEOUT;
+    public static final int BUILD_TIMEOUT = 10;
 
     public static MapLocation target = null;
 
