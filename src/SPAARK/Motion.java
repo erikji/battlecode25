@@ -465,7 +465,7 @@ public class Motion {
 
     public static void retreat(Micro micro) throws Exception {
         MapLocation loc = retreatLoc();
-        Motion.microMove(Motion.defaultMicro.micro(Motion.retreatDir(loc), loc));
+        Motion.microMove(micro.micro(Motion.retreatDir(loc), loc));
     }
 
     public static void tryTransferPaint() throws Exception {
