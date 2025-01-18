@@ -9,6 +9,10 @@ public class Tower {
     public static int spawnedMoppers = 0;
     public static int spawnedRobots = 0;
 
+    public static double doubleSpawnedSoldiers = 0;
+    public static double doubleSpawnedSplashers = 0;
+    public static double doubleSpawnedMoppers = 0;
+
     public static int cnt = 0;
 
     public static MapLocation[] spawnLocs;
@@ -40,7 +44,7 @@ public class Tower {
                     if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
                         G.rc.buildRobot(UnitType.MOPPER, loc);
                         spawnedRobots++;
-                        spawnedMoppers++;
+                        // spawnedMoppers++;
                         break;
                     }
                 }
@@ -50,7 +54,7 @@ public class Tower {
                     if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
                         G.rc.buildRobot(UnitType.SPLASHER, loc);
                         spawnedRobots++;
-                        spawnedSplashers++;
+                        // spawnedSplashers++;
                         break;
                     }
                 }
@@ -60,7 +64,7 @@ public class Tower {
                     if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
                         G.rc.buildRobot(UnitType.SOLDIER, loc);
                         spawnedRobots++;
-                        spawnedSoldiers++;
+                        // spawnedSoldiers++;
                         break;
                     }
                 }
@@ -76,40 +80,107 @@ public class Tower {
         if (spawnedRobots == 0) {
             spawnBot(UnitType.SOLDIER);
         } else if (spawnedRobots == 1) {
+            // spawnBot(UnitType.MOPPER);
             spawnBot(UnitType.SPLASHER);
         }
+        // } else if (spawnedRobots == 2) {
+        //     spawnBot(UnitType.SOLDIER);
+        // }
         else {
             UnitType trying = UnitType.SPLASHER;
             // int mod = 7;
             // int area = G.rc.getMapHeight() * G.rc.getMapWidth();
-            
-            switch ((spawnedRobots - 2) % 7) {
-                // make sure to subtract 2
-                case 0:
-                    trying = UnitType.MOPPER;
-                    break;
-                case 1:
-                    trying = UnitType.SPLASHER;
-                    break;
-                case 2:
-                    trying = UnitType.SOLDIER;
-                    break;
-                case 3:
-                    trying = UnitType.SPLASHER;
-                    break;
-                case 4:
-                    trying = UnitType.SOLDIER;
-                    break;
-                case 5:
-                    trying = UnitType.SPLASHER;
-                    break;
-                case 6:
-                    trying = UnitType.MOPPER;
-                    break;
+
+            double soldierWeight = 2;
+            double splasherWeight = 2;
+            double mopperWeight = 2;
+
+            // if (G.rc.getNumberTowers() < 25) {
+            //     for (int i = POI.numberOfTowers; --i >= 0;) {
+            //         if (POI.towerTeams[i] == Team.NEUTRAL) {
+            //             soldierWeight += 1;
+            //             break;
+            //         }
+            //     }
+            // }
+            if (G.rc.getNumberTowers() == 25) {
+                soldierWeight -= 1;
+            }
+            double sum = soldierWeight + splasherWeight + mopperWeight;
+            soldierWeight /= sum;
+            splasherWeight /= sum;
+            mopperWeight /= sum;
+
+            G.indicatorString = new StringBuilder();
+            G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " " + doubleSpawnedSplashers + " " + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + " ");
+
+            double soldier = doubleSpawnedSoldiers + soldierWeight - spawnedSoldiers;
+            double splasher = doubleSpawnedSplashers + splasherWeight - spawnedSplashers;
+            double mopper = doubleSpawnedMoppers + mopperWeight - spawnedMoppers;
+
+            // if (soldier >= splasher && soldier >= mopper) {
+            //     trying = UnitType.SOLDIER;
+            // }
+            // else if (splasher >= mopper) {
+            //     trying = UnitType.SPLASHER;
+            // }
+            // else {
+            //     trying = UnitType.MOPPER;
+            // }
+            if (mopper >= splasher && mopper >= soldier) {
+                trying = UnitType.MOPPER;
+            }
+            else if (splasher >= soldier) {
+                trying = UnitType.SPLASHER;
+            }
+            else {
+                trying = UnitType.SOLDIER;
             }
 
             if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 1000 || G.rc.getPaint() == 1000) {
-                spawnBot(trying);
+                switch (trying) {
+                    case UnitType.MOPPER:
+                        for (MapLocation loc : spawnLocs) {
+                            if (G.rc.canBuildRobot(UnitType.MOPPER, loc)) {
+                                G.rc.buildRobot(UnitType.MOPPER, loc);
+                                spawnedRobots++;
+                                spawnedMoppers++;
+                                doubleSpawnedSoldiers += soldierWeight;
+                                doubleSpawnedSplashers += splasherWeight;
+                                doubleSpawnedMoppers += mopperWeight;
+                                break;
+                            }
+                        }
+                        break;
+                    case UnitType.SPLASHER:
+                        for (MapLocation loc : spawnLocs) {
+                            if (G.rc.canBuildRobot(UnitType.SPLASHER, loc)) {
+                                G.rc.buildRobot(UnitType.SPLASHER, loc);
+                                spawnedRobots++;
+                                spawnedSplashers++;
+                                doubleSpawnedSoldiers += soldierWeight;
+                                doubleSpawnedSplashers += splasherWeight;
+                                doubleSpawnedMoppers += mopperWeight;
+                                break;
+                            }
+                        }
+                        break;
+                    case UnitType.SOLDIER:
+                        for (MapLocation loc : spawnLocs) {
+                            if (G.rc.canBuildRobot(UnitType.SOLDIER, loc)) {
+                                G.rc.buildRobot(UnitType.SOLDIER, loc);
+                                spawnedRobots++;
+                                spawnedSoldiers++;
+                                doubleSpawnedSoldiers += soldierWeight;
+                                doubleSpawnedSplashers += splasherWeight;
+                                doubleSpawnedMoppers += mopperWeight;
+                                break;
+                            }
+                        }
+                        break;
+                    default:
+                        throw new Exception("what are you spawning?? a tower???");
+                }
             }
         }
         // more specialized here

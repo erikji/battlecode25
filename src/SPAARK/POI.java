@@ -52,6 +52,8 @@ public class POI {
     // 1: vert
     // 2: rot
 
+    public static int maxOpponentPaintSeen = 0;
+
     // stores all tower and ruin data
 
     // upto 144 robots
@@ -260,6 +262,17 @@ public class POI {
             }
         }
         G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        // a = Clock.getBytecodeNum();
+        // int opponentPaintSeen = 0;
+        // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+        //     if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+        //         opponentPaintSeen++;
+        //     }
+        // }
+        // if (opponentPaintSeen > maxOpponentPaintSeen) {
+        //     maxOpponentPaintSeen = opponentPaintSeen;
+        // }
+        // G.indicatorString.append("PAINT-BT " + (Clock.getBytecodeNum() - a) + " ");
         int numValidSymmetries = (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) + (symmetry[2] ? 1 : 0);
         if (numValidSymmetries > 1) {
             if (symmetry[0] && !symmetryValid(0)) {
