@@ -78,12 +78,19 @@ public class Tower {
         // general common code for all towers
         // spawning
         if (spawnedRobots == 0) {
-            spawnBot(UnitType.SOLDIER);
-            doubleSpawnedSoldiers -= 0.0000002;
+            if (G.rc.getNumberTowers() < 5) {
+                spawnBot(UnitType.SOLDIER);
+                doubleSpawnedSoldiers -= 0.0000002;
+            } else {
+                spawnBot(UnitType.SPLASHER);
+            }
         } else if (spawnedRobots == 1) {
-            // spawnBot(UnitType.MOPPER);
-            spawnBot(UnitType.SPLASHER);
-            doubleSpawnedSplashers -= 0.0000001;
+            if (G.rc.getNumberTowers() < 5) {
+                spawnBot(UnitType.SPLASHER);
+                doubleSpawnedSplashers -= 0.0000001;
+            } else {
+                spawnBot(UnitType.SOLDIER);
+            }
         }
         // } else if (spawnedRobots == 2) {
         // spawnBot(UnitType.SOLDIER);
