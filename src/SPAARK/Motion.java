@@ -403,7 +403,7 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
             if (G.me.distanceSquaredTo(loc) > 8) {
-                Motion.bugnavTowards(loc);
+                bugnavTowards(loc);
             }
             else {
                 MapLocation best = null;
@@ -452,7 +452,7 @@ public class Motion {
                     }
                     else {
                         if (!G.me.equals(best)) {
-                            Motion.bugnavTowards(best);
+                            bugnavTowards(best);
                         }
                         G.rc.setIndicatorLine(G.me, best, 200, 0, 100);
                     }
