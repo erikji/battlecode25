@@ -18,7 +18,44 @@ public class POI {
     public static MapLocation[] towerLocs = new MapLocation[144];
     public static Team[] towerTeams = new Team[144];
     public static UnitType[] towerTypes = new UnitType[144];
-    public static int[][] towerGrid = new int[12][12];
+    public static int[][] towerGrid = new int[][]{
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+    };
     // public static int[] towers = new int[] {
     // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     // -1, -1, -1, -1, -1, -1, -1, -1,
@@ -32,18 +69,6 @@ public class POI {
     // -1, -1, -1, -1, -1, -1, -1, -1,
     // -1, -1, -1, -1, -1, -1, -1, -1, -1
     // };
-
-    public static void init() throws Exception {
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                towerGrid[i][j] = -1;
-            }
-        }
-        for (int i = 0; i < 144; i++) {
-            towerTeams[i] = null;
-            towerTypes[i] = null;
-        }
-    }
 
     // symmetry detection
     // set bit if its a wall, ruin, or we explored it, and use bit operators to

@@ -46,8 +46,19 @@ public class Mopper {
         Motion.paintNeededToStopRetreating = G.rc.getType().paintCapacity * 3 / 4;
         int a = Clock.getBytecodeNum();
         switch (mode) {
-            case EXPLORE -> exploreCheckMode();
-            case BUILD -> buildCheckMode();
+            case EXPLORE:
+                exploreCheckMode();
+                break;
+            case BUILD:
+                buildCheckMode();
+                break;
+            case RETREAT: 
+                Motion.setRetreatLoc();
+                if (Motion.retreatLoc.x == -1) {
+                    mode = EXPLORE;
+                    exploreCheckMode();
+                }
+                break;
         }
         int b = Clock.getBytecodeNum();
         G.indicatorString.append((b - a) + " ");
@@ -534,28 +545,33 @@ public class Mopper {
             }
             // try attack then move then attack again
             if (allswing[best]) {
-                if (allmax[best] == cmax) {
-                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                if (allmax[best] > 0) {
+                    if (allmax[best] == cmax) {
+                        if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                            G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                        }
                     }
-                }
-                Motion.move(G.ALL_DIRECTIONS[best]);
-                if (allmax[best] != cmax) {
-                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                    Motion.move(G.ALL_DIRECTIONS[best]);
+                    if (allmax[best] != cmax) {
+                        if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                            G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                        }
                     }
                 }
             } else {
-                MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
-                if (G.rc.canAttack(attackLoc)) {
-                    G.rc.attack(attackLoc);
-                }
-                Motion.move(G.ALL_DIRECTIONS[best]);
-                if (G.rc.canAttack(attackLoc)) {
-                    G.rc.attack(attackLoc);
+                if (allmax[best] > 0) {
+                    MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
+                    if (G.rc.canAttack(attackLoc)) {
+                        G.rc.attack(attackLoc);
+                    }
+                    Motion.move(G.ALL_DIRECTIONS[best]);
+                    if (G.rc.canAttack(attackLoc)) {
+                        G.rc.attack(attackLoc);
+                    }
                 }
             }
-        } else {
+        }
+        if (G.rc.isMovementReady()) {
             int best = 8;
             int numBest = 1;
             for (int i = 8; --i >= 0;) {
@@ -1747,10 +1763,10 @@ public class Mopper {
 
     public static void retreatMoveScores() throws Exception {
         Direction bestDir = Motion.retreatDir();
-        moveScores = mopperMicro.micro(bestDir, G.invalidLoc);
+        moveScores = mopperMicro.micro(bestDir, Motion.retreatLoc);
         moveScores[G.dirOrd(bestDir)] += 50;
-        moveScores[(G.dirOrd(bestDir) + 1) % 8] += 40;
-        moveScores[(G.dirOrd(bestDir) + 7) % 8] += 40;
+        moveScores[G.dirOrd(bestDir.rotateLeft())] += 40;
+        moveScores[G.dirOrd(bestDir.rotateRight())] += 40;
     }
 
     // basically the same as exploreAttackScores but with extra bonus for stealing 5
@@ -2073,7 +2089,7 @@ public class Mopper {
                     RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
                     if (bot.team == G.opponentTeam) {
                         for (int i = 9; --i >= 0;) {
-                            if (G.rc.canMove(G.ALL_DIRECTIONS[i])) {
+                            if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
                                 if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(bot.location,
                                         bot.type.actionRadiusSquared)) {
                                     scores[i] -= G.paintPerChips() * 180; // mopper costs 300 paint, and we lose 3/5 hp
