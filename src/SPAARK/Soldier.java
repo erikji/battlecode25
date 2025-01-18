@@ -23,6 +23,8 @@ public class Soldier {
     public static final double MONEY_PAINT_TOWER_RATIO = 1.0;
     // stop building towers if enemy paint interferes too much
     public static final int MAX_TOWER_ENEMY_PAINT = 10;
+    public static final int MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
+    public static final int TOWER_HELP_DIST = 5;
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
     // max build time, max build time if no moppers/splashers to remove paint
     public static final int MAX_TOWER_TIME = 200;
@@ -38,7 +40,7 @@ public class Soldier {
     public static final int INITIAL_SRP_ALT_TOWER_CAP = 6;
     public static final int INITIAL_SRP_ALT_CHIPS = 300;
     // stop building SRP if enemy paint interferes too much
-    public static final int MAX_SRP_ENEMY_PAINT = 2;
+    public static final int MAX_SRP_ENEMY_PAINT = 1;
     public static final int MAX_SRP_BLOCKED_TIME = 5;
     // max build time
     public static final int MAX_SRP_TIME = 50;
@@ -239,7 +241,16 @@ public class Soldier {
             mode = EXPLORE;
             return;
         }
-        // if pattern complete leave lowest bot ID to complete
+        // check for moppers (used later)
+        boolean hasHelp = false;
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            if (G.allyRobots[i].type == UnitType.MOPPER
+                    && G.allyRobots[i].location.isWithinDistanceSquared(G.me, TOWER_HELP_DIST)) {
+                hasHelp = true;
+                break;
+            }
+        }
+        final int maxEnemyPaint = hasHelp ? MAX_TOWER_ENEMY_PAINT : MAX_TOWER_ENEMY_PAINT_NO_HELP;
         int enemyPaint = 0;
         boolean isPatternComplete = true;
         int ox = ruinLocation.x - G.me.x + 2;
@@ -260,7 +271,7 @@ public class Soldier {
                     // stop building if there's lots of enemy paint within the SRP
                     if (curr.isEnemy()) {
                         enemyPaint++;
-                        if (enemyPaint >= MAX_TOWER_ENEMY_PAINT) {
+                        if (enemyPaint >= maxEnemyPaint) {
                             buildBlockedTime++;
                             G.indicatorString.append("BLOCK ");
                             // if pattern has been blocked for a long time just give up
@@ -275,9 +286,9 @@ public class Soldier {
             }
         }
         // pattern not blocked (no return above)
-        if (enemyPaint < MAX_TOWER_ENEMY_PAINT)
+        if (enemyPaint < maxEnemyPaint)
             buildBlockedTime = 0;
-        // leave only the lowest ID robot to complete the pattern
+        // if pattern complete leave lowest bot ID to complete
         if (isPatternComplete) {
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
@@ -448,12 +459,16 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
-            // hard coded movement
-            // if (G.me.isAdjacentTo(ruinLocation)) {
-            //     // try to stick close to the tower instead of relying on nugbav
-            // }
-            Motion.bugnavAround(ruinLocation, 0, 1);
-            G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
+            // try to stick close to the tower instead of relying on nugbav
+            // compresses diagonals to cardinal directions
+            // NORTHEAST -> NORTH, SOUTHEAST -> EAST, etc.
+            MapLocation next = ruinLocation
+                    .add(Direction.cardinalDirections()[((ruinLocation.directionTo(G.me).ordinal() / 2) + 1) % 4]);
+            // go directly to next or just bug bork to the location
+            if (!G.me.isAdjacentTo(ruinLocation) || !Motion.move(G.me.directionTo(next))) {
+                Motion.bugnavTowards(next);
+            }
+            G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
@@ -523,7 +538,7 @@ public class Soldier {
         } else {
             // just sit in the middle of the SRP
             Motion.bugnavTowards(resourceLocation, moveWithPaintMicro);
-            G.rc.setIndicatorLine(G.rc.getLocation(), resourceLocation, 255, 100, 0);
+            G.rc.setIndicatorLine(G.me, resourceLocation, 255, 100, 0);
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
