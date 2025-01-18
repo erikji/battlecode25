@@ -79,11 +79,11 @@ public class Tower {
         // spawning
         if (spawnedRobots == 0) {
             spawnBot(UnitType.SOLDIER);
-            doubleSpawnedSoldiers -= 0.00001;
+            doubleSpawnedSoldiers -= 0.0000002;
         } else if (spawnedRobots == 1) {
             // spawnBot(UnitType.MOPPER);
             spawnBot(UnitType.SPLASHER);
-            doubleSpawnedSplashers -= 0.00002;
+            doubleSpawnedSplashers -= 0.0000001;
         }
         // } else if (spawnedRobots == 2) {
         // spawnBot(UnitType.SOLDIER);
