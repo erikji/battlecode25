@@ -505,202 +505,205 @@ public class Motion {
     public static MapLocation currentObstacle;
     public static StringBuilder visitedList = new StringBuilder();
 
-    // public static Direction bug2Helper(MapLocation target, int mode, int
-    // minCircleDistance1, int maxCircleDistance1)
-    // throws Exception {
-    // boolean stuck = true;
-    // for (int i = 8; --i >= 0;) {
-    // if (G.rc.canMove(G.DIRECTIONS[i])) {
-    // stuck = false;
-    // break;
-    // }
-    // }
+    public static Direction bug2Helper(MapLocation me, MapLocation target, int mode, int
+    minCircleDistance1, int maxCircleDistance1)
+    throws Exception {
+    boolean stuck = true;
+    for (int i = 8; --i >= 0;) {
+    if (G.rc.canMove(G.DIRECTIONS[i])) {
+    stuck = false;
+    break;
+    }
+    }
 
-    // if (stuck) {
-    // return Direction.CENTER;
-    // }
+    if (stuck) {
+    return Direction.CENTER;
+    }
 
-    // if (bugnavTarget == null || !bugnavTarget.equals(target) || bugnavMode !=
-    // mode) {
-    // reset();
-    // }
-    // bugnavTarget = target;
-    // bugnavMode = mode;
-    // minCircleDistance = minCircleDistance1;
-    // maxCircleDistance = maxCircleDistance1;
+    if (bugnavTarget == null || !bugnavTarget.equals(target) || bugnavMode !=
+    mode) {
+    reset();
+    }
+    bugnavTarget = target;
+    bugnavMode = mode;
+    minCircleDistance = minCircleDistance1;
+    maxCircleDistance = maxCircleDistance1;
 
-    // int distanceToTarget = getChebyshevDistance(G.me, target);
-    // switch (bugnavMode) {
-    // case TOWARDS:
-    // if (distanceToTarget < minDistanceToTarget) {
-    // reset();
-    // minDistanceToTarget = distanceToTarget;
-    // }
-    // break;
-    // case AWAY:
-    // if (distanceToTarget > maxDistanceFromTarget) {
-    // reset();
-    // maxDistanceFromTarget = distanceToTarget;
-    // }
-    // break;
-    // case AROUND:
-    // // kind of approximation
-    // // probably wont circle around something with very large radius?
-    // int dist = G.me.distanceSquaredTo(bugnavTarget);
-    // if (dist < minCircleDistance) {
-    // if (distanceToTarget > maxDistanceFromTarget) {
-    // reset();
-    // maxDistanceFromTarget = distanceToTarget;
-    // }
-    // } else if (dist > maxCircleDistance) {
-    // if (distanceToTarget < minDistanceToTarget) {
-    // reset();
-    // minDistanceToTarget = distanceToTarget;
-    // }
-    // }
-    // break;
-    // }
+    int distanceToTarget = getChebyshevDistance(G.me, target);
+    switch (bugnavMode) {
+    case TOWARDS:
+    if (distanceToTarget < minDistanceToTarget) {
+    reset();
+    minDistanceToTarget = distanceToTarget;
+    }
+    break;
+    case AWAY:
+    if (distanceToTarget > maxDistanceFromTarget) {
+    reset();
+    maxDistanceFromTarget = distanceToTarget;
+    }
+    break;
+    case AROUND:
+    // kind of approximation
+    // probably wont circle around something with very large radius?
+    int dist = G.me.distanceSquaredTo(bugnavTarget);
+    if (dist < minCircleDistance) {
+    if (distanceToTarget > maxDistanceFromTarget) {
+    reset();
+    maxDistanceFromTarget = distanceToTarget;
+    }
+    } else if (dist > maxCircleDistance) {
+    if (distanceToTarget < minDistanceToTarget) {
+    reset();
+    minDistanceToTarget = distanceToTarget;
+    }
+    }
+    break;
+    }
 
-    // if (currentObstacle != null && G.rc.canSenseLocation(currentObstacle)
-    // && G.rc.sensePassability(currentObstacle) && !G.rc.canSenseRobotAtLocation(currentObstacle))) {
-    // reset();
-    // }
+    if (currentObstacle != null && G.rc.canSenseLocation(currentObstacle)
+    && G.rc.sensePassability(currentObstacle) && !G.rc.canSenseRobotAtLocation(currentObstacle)) {
+    reset();
+    }
 
-    // if (visitedList.indexOf("" + getState()) != -1) {
-    // reset();
-    // }
-    // visitedList.append("" + getState());
+    if (visitedList.indexOf("" + getState()) != -1) {
+    reset();
+    }
+    visitedList.append("" + getState());
 
-    // Direction targetDirection = getTargetDirection();
+    Direction targetDirection = getTargetDirection();
 
-    // if (currentObstacle == null) {
-    // if (G.rc.canMove(targetDirection)) {
-    // return targetDirection;
-    // }
+    if (currentObstacle == null) {
+    if (canMove(targetDirection)) {
+    return targetDirection;
+    }
 
-    // setInitialDirection(targetDirection);
-    // }
+    setInitialDirection(targetDirection);
+    }
 
-    // return followWall(true);
-    // }
+    return followWall(true);
+    }
 
-    // public static void reset() {
-    // minDistanceToTarget = Integer.MAX_VALUE;
-    // maxDistanceFromTarget = 0;
-    // obstacleOnRight = true;
-    // currentObstacle = null;
-    // visitedList = new StringBuilder();
-    // }
+    public static void reset() {
+    minDistanceToTarget = Integer.MAX_VALUE;
+    maxDistanceFromTarget = 0;
+    obstacleOnRight = true;
+    currentObstacle = null;
+    visitedList = new StringBuilder();
+    }
 
-    // public static Direction getTargetDirection() throws Exception {
-    // if (G.me.equals(bugnavTarget)) {
-    // if (bugnavMode == AROUND) {
-    // return Direction.EAST;
-    // } else {
-    // return Direction.CENTER;
-    // }
-    // }
-    // Direction direction = G.me.directionTo(bugnavTarget);
-    // switch (bugnavMode) {
-    // case AWAY:
-    // direction = direction.opposite();
-    // break;
-    // case AROUND:
-    // int dist = G.me.distanceSquaredTo(bugnavTarget);
-    // if (dist < minCircleDistance) {
-    // direction = direction.opposite();
-    // } else if (dist <= maxCircleDistance) {
-    // direction = direction.rotateLeft().rotateLeft();
-    // if (circleDirection == COUNTER_CLOCKWISE) {
-    // direction = direction.opposite();
-    // }
+    public static Direction getTargetDirection() throws Exception {
+    if (G.me.equals(bugnavTarget)) {
+    if (bugnavMode == AROUND) {
+    return Direction.EAST;
+    } else {
+    return Direction.CENTER;
+    }
+    }
+    Direction direction = G.me.directionTo(bugnavTarget);
+    switch (bugnavMode) {
+    case AWAY:
+    direction = direction.opposite();
+    break;
+    case AROUND:
+    int dist = G.me.distanceSquaredTo(bugnavTarget);
+    if (dist < minCircleDistance) {
+    direction = direction.opposite();
+    } else if (dist <= maxCircleDistance) {
+    direction = direction.rotateLeft().rotateLeft();
+    if (circleDirection == COUNTER_CLOCKWISE) {
+    direction = direction.opposite();
+    }
 
-    // if (!G.rc.canMove(direction)) {
-    // direction = direction.opposite();
-    // circleDirection *= -1;
-    // }
-    // }
-    // break;
-    // }
-    // return direction;
-    // }
+    if (!canMove(direction)) {
+    direction = direction.opposite();
+    circleDirection *= -1;
+    }
+    }
+    break;
+    }
+    return direction;
+    }
 
-    // public static void setInitialDirection(Direction forward) throws Exception {
-    // Direction left = forward.rotateLeft();
-    // for (int i = 8; --i >= 0;) {
-    // MapLocation location = G.rc.adjacentLocation(left);
-    // if (G.rc.onTheMap(location) && G.rc.sensePassability(location) && !G.rc.canSenseRobotAtLocation(location)) {
-    // break;
-    // }
+    public static void setInitialDirection(Direction forward) throws Exception {
+    Direction left = forward.rotateLeft();
+    for (int i = 8; --i >= 0;) {
+    MapLocation location = G.rc.adjacentLocation(left);
+    if (G.rc.onTheMap(location) && G.rc.sensePassability(location) && !G.rc.canSenseRobotAtLocation(location)) {
+    break;
+    }
 
-    // left = left.rotateLeft();
-    // }
+    left = left.rotateLeft();
+    }
 
-    // Direction right = forward.rotateRight();
-    // for (int i = 8; --i >= 0;) {
-    // MapLocation location = G.rc.adjacentLocation(right);
-    // if (G.rc.onTheMap(location) && G.rc.sensePassability(location) && !G.rc.canSenseRobotAtLocation(location)) {
-    // break;
-    // }
+    Direction right = forward.rotateRight();
+    for (int i = 8; --i >= 0;) {
+    MapLocation location = G.rc.adjacentLocation(right);
+    if (G.rc.onTheMap(location) && G.rc.sensePassability(location) && !G.rc.canSenseRobotAtLocation(location)) {
+    break;
+    }
 
-    // right = right.rotateRight();
-    // }
+    right = right.rotateRight();
+    }
 
-    // // TODO: add paint weightings
+    // TODO: add paint weightings
 
-    // MapLocation leftLocation = G.rc.adjacentLocation(left);
-    // MapLocation rightLocation = G.rc.adjacentLocation(right);
+    MapLocation leftLocation = G.rc.adjacentLocation(left);
+    MapLocation rightLocation = G.rc.adjacentLocation(right);
 
-    // int leftDistance = getChebyshevDistance(leftLocation, bugnavTarget);
-    // int rightDistance = getChebyshevDistance(rightLocation, bugnavTarget);
+    int leftDistance = getChebyshevDistance(leftLocation, bugnavTarget);
+    int rightDistance = getChebyshevDistance(rightLocation, bugnavTarget);
 
-    // if (leftDistance < rightDistance) {
-    // obstacleOnRight = true;
-    // } else if (rightDistance < leftDistance) {
-    // obstacleOnRight = false;
-    // } else {
-    // obstacleOnRight = G.me.distanceSquaredTo(leftLocation) <
-    // G.me.distanceSquaredTo(rightLocation);
-    // }
+    if (leftDistance == rightDistance) {
+        obstacleOnRight = (Random.rand() % 2) == 0;
+    }
+    else if (leftDistance < rightDistance) {
+    obstacleOnRight = true;
+    } else if (rightDistance < leftDistance) {
+    obstacleOnRight = false;
+    } else {
+    obstacleOnRight = G.me.distanceSquaredTo(leftLocation) <
+    G.me.distanceSquaredTo(rightLocation);
+    }
 
-    // if (obstacleOnRight) {
-    // currentObstacle = G.rc.adjacentLocation(left.rotateRight());
-    // } else {
-    // currentObstacle = G.rc.adjacentLocation(right.rotateLeft());
-    // }
-    // }
+    if (obstacleOnRight) {
+    currentObstacle = G.rc.adjacentLocation(left.rotateRight());
+    } else {
+    currentObstacle = G.rc.adjacentLocation(right.rotateLeft());
+    }
+    }
 
-    // public static Direction followWall(boolean canRotate) throws Exception {
-    // Direction direction = G.rc.getLocation().directionTo(currentObstacle);
+    public static Direction followWall(boolean canRotate) throws Exception {
+    Direction direction = G.rc.getLocation().directionTo(currentObstacle);
 
-    // for (int i = 8; --i >= 0;) {
-    // direction = obstacleOnRight ? direction.rotateLeft() :
-    // direction.rotateRight();
-    // if (G.rc.canMove(direction)) {
-    // return direction;
-    // }
+    for (int i = 8; --i >= 0;) {
+    direction = obstacleOnRight ? direction.rotateLeft() :
+    direction.rotateRight();
+    if (canMove(direction)) {
+    return direction;
+    }
 
-    // MapLocation location = G.rc.adjacentLocation(direction);
-    // if (canRotate && !G.rc.onTheMap(location)) {
-    // obstacleOnRight = !obstacleOnRight;
-    // return followWall(false);
-    // }
+    MapLocation location = G.rc.adjacentLocation(direction);
+    if (canRotate && !G.rc.onTheMap(location)) {
+    obstacleOnRight = !obstacleOnRight;
+    return followWall(false);
+    }
 
-    // if (G.rc.onTheMap(location) && (!G.rc.sensePassability(location) || G.rc.canSenseRobotAtLocation(location))) {
-    // currentObstacle = location;
-    // }
-    // }
-    // return Direction.CENTER;
-    // }
+    if (G.rc.onTheMap(location) && (!G.rc.sensePassability(location) || G.rc.canSenseRobotAtLocation(location))) {
+    currentObstacle = location;
+    }
+    }
+    return Direction.CENTER;
+    }
 
-    // public static char getState() {
-    // Direction direction = G.me.directionTo(currentObstacle != null ?
-    // currentObstacle : bugnavTarget);
-    // int rotation = obstacleOnRight ? 1 : 0;
+    public static char getState() {
+    Direction direction = G.me.directionTo(currentObstacle != null ?
+    currentObstacle : bugnavTarget);
+    int rotation = obstacleOnRight ? 1 : 0;
 
-    // return (char) ((((G.me.x << 6) | G.me.y) << 4) | (direction.ordinal() << 1) |
-    // rotation);
-    // }
+    return (char) ((((G.me.x << 6) | G.me.y) << 4) | (direction.ordinal() << 1) |
+    rotation);
+    }
 
     public static int[] simulateMovement(MapLocation me, MapLocation dest) throws Exception {
         MapLocation clockwiseLoc = G.rc.getLocation();
@@ -769,7 +772,7 @@ public class Motion {
         return new int[] { clockwiseDist, clockwiseStuck, counterClockwiseDist, counterClockwiseStuck };
     }
 
-    public static Direction bug2Helper(MapLocation me, MapLocation dest, int mode, int minRadiusSquared,
+    public static Direction bug2Helper(MapLocation me, MapLocation me2, MapLocation dest, int mode, int minRadiusSquared,
             int maxRadiusSquared) throws Exception {
         Direction direction = me.directionTo(dest);
         if (me.equals(dest)) {
@@ -810,7 +813,7 @@ public class Motion {
 
         // G.indicatorString.append("DIR=" + direction + " ");
         if (optimalDir != Direction.CENTER && mode != AROUND) {
-            if (G.rc.canMove(optimalDir) && lastDir != optimalDir.opposite()) {
+            if (canMove(optimalDir) && lastDir != optimalDir.opposite()) {
                 optimalDir = Direction.CENTER;
                 rotation = NONE;
                 visitedList = new StringBuilder();
@@ -825,7 +828,7 @@ public class Motion {
         // G.indicatorString.append("OFF: " + G.rc.onTheMap(me.add(direction)) + " ");
 
         if (lastDir != direction.opposite()) {
-            if (G.rc.canMove(direction)) {
+            if (canMove(direction)) {
                 // if (!lastBlocked) {
                 // rotation = NONE;
                 // }
@@ -845,7 +848,7 @@ public class Motion {
                 // }
                 return direction;
             }
-        } else if (G.rc.canMove(direction)) {
+        } else if (canMove(direction)) {
             Direction dir;
             if (rotation == CLOCKWISE) {
                 dir = direction.rotateRight();
@@ -878,7 +881,7 @@ public class Motion {
             } else {
                 direction = me.directionTo(dest);
             }
-            if (G.rc.canMove(direction)) {
+            if (canMove(direction)) {
                 return direction;
             }
         }
@@ -952,16 +955,16 @@ public class Motion {
             // if (G.rc.onTheMap(me.add(direction)) &&
             // G.rc.senseMapInfo(me.add(direction)).isPassable() && lastDir !=
             // direction.opposite()) {
-            // if (G.rc.canMove(direction)) {
+            // if (canMove(direction)) {
             // return direction;
             // }
             // return Direction.CENTER;
             // }
-            if (G.rc.canMove(direction) && lastDir != direction.opposite()) {
+            if (canMove(direction) && lastDir != direction.opposite()) {
                 if (flip) {
                     rotation *= -1;
                 }
-                if (G.rc.canMove(direction)) {
+                if (canMove(direction)) {
                     return direction;
                 }
                 return Direction.CENTER;
@@ -970,7 +973,7 @@ public class Motion {
         if (flip) {
             rotation *= -1;
         }
-        if (G.rc.canMove(lastDir.opposite())) {
+        if (canMove(lastDir.opposite())) {
             return lastDir.opposite();
         }
         return Direction.CENTER;
@@ -1444,6 +1447,15 @@ public class Motion {
             movementCooldown += G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN);
             lastDir = dir;
             RobotPlayer.updateInfo();
+            return true;
+        }
+        return false;
+    }
+    public static boolean canMove(Direction dir) throws Exception {
+        if (G.rc.canMove(dir)) {
+            return true;
+        }
+        if (G.rc.canSenseRobotAtLocation(G.me.add(dir)) && Random.rand() % 10 == 0) {
             return true;
         }
         return false;
