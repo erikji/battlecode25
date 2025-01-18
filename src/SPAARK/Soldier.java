@@ -35,10 +35,6 @@ public class Soldier {
     // balance exploring and building SRPs (don't SRP if near target)
     public static final int SRP_EXPAND_TIMEOUT = 20;
     public static final int SRP_EXP_OVERRIDE_DIST = 100;
-    // encourages building SRPs if waiting for chips on large maps initially
-    public static final int INITIAL_SRP_ALT_MAP_AREA = 1600;
-    public static final int INITIAL_SRP_ALT_TOWER_CAP = 6;
-    public static final int INITIAL_SRP_ALT_CHIPS = 300;
     // stop building SRP if enemy paint interferes too much
     public static final int MAX_SRP_ENEMY_PAINT = 1;
     public static final int MAX_SRP_BLOCKED_TIME = 5;
@@ -309,11 +305,6 @@ public class Soldier {
             }
             // is lowest id
             avoidRetreating = true;
-            // maybe try later if chips low, towers few, and map large
-            if (G.rc.getChips() <= INITIAL_SRP_ALT_CHIPS && G.rc.getNumberTowers() <= INITIAL_SRP_ALT_TOWER_CAP
-                    && G.mapArea >= INITIAL_SRP_ALT_MAP_AREA) {
-                mode = EXPLORE;
-            }
         }
     }
 
