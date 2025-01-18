@@ -219,7 +219,8 @@ public class POI {
     public static void updateRound() throws Exception {
         int a = Clock.getBytecodeNum();
         readMessages();
-        G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         a = Clock.getBytecodeNum();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
@@ -235,7 +236,8 @@ public class POI {
                 addTower(-1, nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
-        G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
 
         drawIndicators(); // uses 5000 bytecode somehow
@@ -266,7 +268,8 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
         }
-        G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
         // a = Clock.getBytecodeNum();
         // int opponentPaintSeen = 0;
         // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
@@ -290,15 +293,17 @@ public class POI {
                 removeValidSymmetry(-1, 2);
             }
         }
-        G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
         sendMessages();
-        G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
-        int w = G.rc.getMapWidth();
-        int h = G.rc.getMapHeight();
+        int w = G.mapWidth;
+        int h = G.mapHeight;
         switch (sym) {
             // only consider bits where we explored both it and its rotation
             case 0: // horz
@@ -338,11 +343,11 @@ public class POI {
         // get the opposite map location according to this symmetry
         switch (sym) {
             case 0:
-                return new MapLocation(m.x, G.rc.getMapHeight() - m.y - 1);
+                return new MapLocation(m.x, G.mapHeight - m.y - 1);
             case 1:
-                return new MapLocation(G.rc.getMapWidth() - m.x - 1, m.y);
+                return new MapLocation(G.mapWidth - m.x - 1, m.y);
             case 2:
-                return new MapLocation(G.rc.getMapWidth() - m.x - 1, G.rc.getMapHeight() - m.y - 1);
+                return new MapLocation(G.mapWidth - m.x - 1, G.mapHeight - m.y - 1);
             default:
                 throw new Exception("invalid symmetry argument");
         }

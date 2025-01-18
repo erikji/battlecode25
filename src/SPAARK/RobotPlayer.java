@@ -47,8 +47,10 @@ public class RobotPlayer {
         try {
             G.rc = rc;
             Random.state = G.rc.getID() * 0x2bda6bc + 0x9734e9;
-            G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
-            G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
+            G.mapWidth = G.rc.getMapWidth();
+            G.mapHeight = G.rc.getMapHeight();
+            G.mapCenter = new MapLocation(G.mapWidth / 2, G.mapHeight / 2);
+            G.mapArea = G.mapWidth * G.mapHeight;
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
             POI.init();
@@ -88,7 +90,7 @@ public class RobotPlayer {
                     G.indicatorString.append("BYTE=" + r + " ");
                 }
                 // for (int i = 0; i <= 50; i++) {
-                //     int a=Random.rand()%G.rc.getMapHeight(),b=Random.rand()%G.rc.getMapWidth(),c=Random.rand()%G.rc.getMapHeight(),d=Random.rand()%G.rc.getMapWidth();
+                //     int a=Random.rand()%G.mapHeight,b=Random.rand()%G.mapWidth,c=Random.rand()%G.mapHeight,d=Random.rand()%G.mapWidth;
                 //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
                 // }
                 Clock.yield();

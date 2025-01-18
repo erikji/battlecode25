@@ -7,6 +7,8 @@ import battlecode.common.*;
 public class G {
     public static RobotController rc;
     public static MapLocation mapCenter;
+    public static int mapWidth;
+    public static int mapHeight;
     public static int mapArea;
     public static Team team;
     public static Team opponentTeam;
@@ -144,9 +146,10 @@ public class G {
     }
 
     // random micro stuff
+    public static final double PAINT_PER_CHIP = 0.5;
     public static double paintPerChips() {
         // how many chips is 1 paint worth
-        return 0.5;
+        return PAINT_PER_CHIP;
     }
 
     public static int cooldown(int paintAmount, int cooldownToAdd) {

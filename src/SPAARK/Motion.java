@@ -231,19 +231,19 @@ public class Motion {
             }
             if (exploreLoc == null) {
                 int sum = G.mapArea;
-                for (int i = G.rc.getMapHeight(); --i >= 0;) {
+                for (int i = G.mapHeight; --i >= 0;) {
                     sum -= Long.bitCount(POI.explored[i]);
                 }
                 // int a = Clock.getBytecodeNum();
                 // for (int j = 10; --j >= 0;) {
                 int rand = Random.rand() % sum;
                 int cur = 0;
-                for (int i = G.rc.getMapHeight(); --i >= 0;) {
-                    cur += G.rc.getMapWidth() - Long.bitCount(POI.explored[i]);
+                for (int i = G.mapHeight; --i >= 0;) {
+                    cur += G.mapWidth - Long.bitCount(POI.explored[i]);
                     if (cur > rand) {
-                        rand -= cur - (G.rc.getMapWidth() - Long.bitCount(POI.explored[i]));
+                        rand -= cur - (G.mapWidth - Long.bitCount(POI.explored[i]));
                         int cur2 = 0;
-                        for (int b = G.rc.getMapWidth(); --b >= 0;) {
+                        for (int b = G.mapWidth; --b >= 0;) {
                             if (((POI.explored[i] >> b) & 1) == 0) {
                                 if (++cur2 > rand) {
                                     // if (exploreLoc == null || getChebyshevDistance(G.me, exploreLoc) >
@@ -465,32 +465,6 @@ public class Motion {
 
     // cownav
     public static StringBuilder lastVisitedLocations = new StringBuilder();
-
-    // use super cow powers navigation to score each direction
-    // public static int[] cownav(MapLocation dest, Micro m) throws Exception {
-    // int[] scores = new int[9];
-    // for (int i = 8; --i >= 0;) {
-    // if (G.me.directionTo(dest) == G.ALL_DIRECTIONS[i]) {
-    // scores[i] += 10;
-    // }
-    // else if (G.me.directionTo(dest).rotateLeft() == G.ALL_DIRECTIONS[i] ||
-    // G.me.directionTo(dest).rotateRight() == G.ALL_DIRECTIONS[i]) {
-    // scores[i] += 5;
-    // }
-    // else if (G.me.directionTo(dest).rotateLeft().rotateLeft() ==
-    // G.ALL_DIRECTIONS[i] || G.me.directionTo(dest).rotateRight().rotateRight() ==
-    // G.ALL_DIRECTIONS[i]) {
-    // scores[i]++;
-    // }
-    // //each MapLocation takes 8 spaces in the string so exclude last 6 locs
-    // int ind =
-    // lastVisitedLocations.indexOf(G.me.add(G.ALL_DIRECTIONS[i]).toString());
-    // if (ind >= 0 && ind + 48 < lastVisitedLocations.length()) {
-    // scores[i] -= 10;
-    // }
-    // }
-    // return m.micro(scores);
-    // }
 
     // bugnav helpers
 
@@ -979,8 +953,6 @@ public class Motion {
         return Direction.CENTER;
     }
 
-    // bugnav
-
     // static int total = 0;
     static int turns = 0;
 
@@ -1046,8 +1018,8 @@ public class Motion {
     public static final int MAX_PATH_LENGTH = 100;
 
     public static void bfsInit() {
-        width = G.rc.getMapWidth();
-        height = G.rc.getMapHeight();
+        width = G.mapWidth;
+        height = G.mapHeight;
         bfsMap = new long[height + 2];
         bfsCurr = new long[height + 2];
         bfsDist = new long[(height + 2) * MAX_PATH_LENGTH];
