@@ -454,7 +454,7 @@ public class Motion {
                         if (!G.me.equals(best)) {
                             Motion.bugnavTowards(best);
                         }
-                        G.rc.setIndicatorLine(G.me, best, 200, 200, 0);
+                        G.rc.setIndicatorLine(G.me, best, 200, 0, 100);
                     }
                 }
             }
@@ -562,7 +562,7 @@ public class Motion {
     // }
 
     // if (currentObstacle != null && G.rc.canSenseLocation(currentObstacle)
-    // && G.rc.sensePassability(currentObstacle)) {
+    // && G.rc.sensePassability(currentObstacle) && !G.rc.canSenseRobotAtLocation(currentObstacle))) {
     // reset();
     // }
 
@@ -629,7 +629,7 @@ public class Motion {
     // Direction left = forward.rotateLeft();
     // for (int i = 8; --i >= 0;) {
     // MapLocation location = G.rc.adjacentLocation(left);
-    // if (G.rc.onTheMap(location) && G.rc.sensePassability(location)) {
+    // if (G.rc.onTheMap(location) && G.rc.sensePassability(location) && !G.rc.canSenseRobotAtLocation(location)) {
     // break;
     // }
 
@@ -639,7 +639,7 @@ public class Motion {
     // Direction right = forward.rotateRight();
     // for (int i = 8; --i >= 0;) {
     // MapLocation location = G.rc.adjacentLocation(right);
-    // if (G.rc.onTheMap(location) && G.rc.sensePassability(location)) {
+    // if (G.rc.onTheMap(location) && G.rc.sensePassability(location) && !G.rc.canSenseRobotAtLocation(location)) {
     // break;
     // }
 
@@ -686,7 +686,7 @@ public class Motion {
     // return followWall(false);
     // }
 
-    // if (G.rc.onTheMap(location) && !G.rc.sensePassability(location)) {
+    // if (G.rc.onTheMap(location) && (!G.rc.sensePassability(location) || G.rc.canSenseRobotAtLocation(location))) {
     // currentObstacle = location;
     // }
     // }
