@@ -1,4 +1,4 @@
-package SPAARK;
+package aggressive;
 
 import battlecode.common.*;
 
@@ -123,9 +123,6 @@ public class Soldier {
      * Try to paint under self when near tower
      */
     public static void run() throws Exception {
-        if (mode == RETREAT) {
-            Motion.tryTransferPaint();
-        }
         if (!avoidRetreating
                 && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1)) {
             mode = RETREAT;
@@ -165,13 +162,11 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                // if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8)) {
-                //     Motion.retreat(moveWithPaintMicro);
-                // } else {
-                //     Motion.retreat();
-                // }
-                Motion.microMove(Motion.defaultMicro.micro(Motion.retreat(), G.invalidLoc));
-                Motion.tryTransferPaint();
+                if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8)) {
+                    Motion.retreat(moveWithPaintMicro);
+                } else {
+                    Motion.retreat();
+                }
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
         }

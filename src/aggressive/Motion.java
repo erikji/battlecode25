@@ -1,4 +1,4 @@
-package SPAARK;
+package aggressive;
 
 import battlecode.common.*;
 
@@ -204,6 +204,7 @@ public class Motion {
                 }
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
+            numValidSymmetries = 1;
             if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() % 4 > 0) {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
@@ -406,8 +407,8 @@ public class Motion {
         return G.invalidLoc;
     }
 
-    public static Direction retreat() throws Exception {
-        return retreat(Motion.defaultMicro);
+    public static void retreat() throws Exception {
+        retreat(Motion.defaultMicro);
     }
     public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
         new MapLocation(2, 2),
@@ -419,7 +420,7 @@ public class Motion {
         new MapLocation(-2, 0),
         new MapLocation(0, -2),
     };
-    public static Direction retreat(Micro micro) throws Exception {
+    public static void retreat(Micro micro) throws Exception {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
             int dist = G.me.distanceSquaredTo(loc);
@@ -428,11 +429,23 @@ public class Motion {
                     RobotInfo r = G.rc.senseRobotAtLocation(loc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     if (r.paintAmount >= amount) {
-                        return bug2Helper(G.me, loc, TOWARDS, 0, 0);
+                        bugnavTowards(loc);
+                        int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                                r.paintAmount);
+                        if (G.rc.canTransferPaint(loc, amt)) {
+                            G.rc.transferPaint(loc, amt);
+                        }
+                        return;
                     }
                     else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
                         if (r.paintAmount != 0) {
-                            return bug2Helper(G.me, loc, TOWARDS, 0, 0);
+                            bugnavTowards(loc);
+                            int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                                    r.paintAmount);
+                            if (G.rc.canTransferPaint(loc, amt)) {
+                                G.rc.transferPaint(loc, amt);
+                            }
+                            return;
                         }
                     }
                 }
@@ -444,30 +457,15 @@ public class Motion {
                     }
                     if (retreatWaitingLoc != null) {
                         G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
-                        // bugnavTowards(retreatWaitingLoc);
-                        return bug2Helper(G.me, retreatWaitingLoc, TOWARDS, 0, 0);
+                        bugnavTowards(retreatWaitingLoc);
                     }
                 }
                 else {
-                    // bugnavTowards(loc);
-                    return bug2Helper(G.me, loc, TOWARDS, 0, 0);
+                    bugnavTowards(loc);
                 }
             }
             // Motion.bugnavAround(loc, 1, 4);
             G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
-        }
-        return Direction.CENTER;
-    }
-
-    public static void tryTransferPaint() throws Exception {
-        MapLocation loc = retreatLoc();
-        if (G.rc.canSenseRobotAtLocation(loc)) {
-            RobotInfo r = G.rc.senseRobotAtLocation(loc);
-            int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
-                    r.paintAmount);
-            if (G.rc.canTransferPaint(loc, amt)) {
-                G.rc.transferPaint(loc, amt);
-            }
         }
     }
 
@@ -1368,7 +1366,6 @@ public class Motion {
         int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
         int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown)
                 / 10);
-        
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i])) {
                 scores[i] = -1000000000;
