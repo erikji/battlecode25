@@ -425,7 +425,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }
@@ -467,7 +467,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }
