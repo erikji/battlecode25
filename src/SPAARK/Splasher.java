@@ -3219,8 +3219,7 @@ public class Splasher {
     }
 
     public static void retreatMoveScores() throws Exception {
-        moveScores = Motion.defaultMicro.micro(Motion.retreat(),
-                G.invalidLoc);
+        moveScores = Motion.defaultMicro.micro(Motion.retreatDir(), G.invalidLoc);
     }
 
     /**

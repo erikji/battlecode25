@@ -1746,7 +1746,7 @@ public class Mopper {
     }
 
     public static void retreatMoveScores() throws Exception {
-        Direction bestDir = Motion.retreat();
+        Direction bestDir = Motion.retreatDir();
         moveScores = mopperMicro.micro(bestDir, G.invalidLoc);
         moveScores[G.dirOrd(bestDir)] += 50;
         moveScores[(G.dirOrd(bestDir) + 1) % 8] += 40;

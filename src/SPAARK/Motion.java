@@ -418,11 +418,7 @@ public class Motion {
         return G.invalidLoc;
     }
 
-    public static Direction retreat() throws Exception {
-        return retreat(Motion.defaultMicro);
-    }
-
-    public static Direction retreat(Micro micro) throws Exception {
+    public static Direction retreatDir() throws Exception {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
             int dist = G.me.distanceSquaredTo(loc);
