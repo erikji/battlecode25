@@ -160,12 +160,12 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                G.rc.setIndicatorDot(G.me, 0, 255, 0);
                 if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8)) {
                     Motion.retreat(moveWithPaintMicro);
                 } else {
                     Motion.retreat();
                 }
+                G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
