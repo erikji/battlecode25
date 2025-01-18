@@ -410,8 +410,10 @@ public class Motion {
                 int bestDistance = 0;
                 for (int i = 8; --i>=0;) {
                     MapLocation waitingLoc = retreatWaitingLocs[i].translate(loc.x, loc.y);
-                    if (G.rc.canSenseLocation(waitingLoc) && !G.rc.sensePassability(waitingLoc)) {
-                        continue;
+                    if (G.rc.canSenseLocation(waitingLoc)) {
+                        if (!G.rc.sensePassability(waitingLoc) || G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                            continue;
+                        }
                     }
                     if (best == null || getChebyshevDistance(G.me, waitingLoc) < bestDistance) {
                         best = waitingLoc;
