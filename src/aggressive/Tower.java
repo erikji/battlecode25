@@ -1,4 +1,4 @@
-package SPAARK;
+package aggressive;
 
 import battlecode.common.*;
 import java.util.*;

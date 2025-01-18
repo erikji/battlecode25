@@ -1,4 +1,4 @@
-package SPAARK;
+package aggressive;
 
 import battlecode.common.*;
 
@@ -35,9 +35,6 @@ public class Mopper {
      * Help soldiers mop enemy paint around ruins
      */
     public static void run() throws Exception {
-        if (mode == RETREAT) {
-            Motion.tryTransferPaint();
-        }
         if (G.rc.getPaint() < Motion.getRetreatPaint()) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
@@ -77,506 +74,506 @@ public class Mopper {
             }
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                if (G.rc.isMovementReady()) {
-                    retreatMoveScores();
-                }
-                if (G.rc.isActionReady()) {
-                    retreatAttackScores();
-                    retreatSwingScores();
-                }
+                // if (G.rc.isMovementReady()) {
+                // retreatMoveScores();
+                // }
+                // if (G.rc.isActionReady()) {
+                // retreatAttackScores();
+                // retreatSwingScores();
+                // }
+                Motion.retreat();
             }
         }
-        boolean swing = false; // whether our attack will be a swing
-        int cmax = attackScores[0];
-        int cx = 0; // if it's a swing, then cx stores index of swing direction
-        int cy = 0;
-        // check every tile within sqrt2 radius
-        // don't need to set swing=false here since it defaults to false
-        if (attackScores[1] > cmax) {
-            cmax = attackScores[1];
-            cx = -1;
-            cy = 0;
-        }
-        if (attackScores[2] > cmax) {
-            cmax = attackScores[2];
-            cx = 0;
-            cy = -1;
-        }
-        if (attackScores[3] > cmax) {
-            cmax = attackScores[3];
-            cx = 0;
-            cy = 1;
-        }
-        if (attackScores[4] > cmax) {
-            cmax = attackScores[4];
-            cx = 1;
-            cy = 0;
-        }
-        if (attackScores[5] > cmax) {
-            cmax = attackScores[5];
-            cx = -1;
-            cy = -1;
-        }
-        if (attackScores[6] > cmax) {
-            cmax = attackScores[6];
-            cx = -1;
-            cy = 1;
-        }
-        if (attackScores[7] > cmax) {
-            cmax = attackScores[7];
-            cx = 1;
-            cy = -1;
-        }
-        if (attackScores[8] > cmax) {
-            cmax = attackScores[8];
-            cx = 1;
-            cy = 1;
-        }
-        if (swingScores[32] > cmax) {
-            cmax = swingScores[32];
-            cx = 1;
-            swing = true;
-        }
-        if (swingScores[33] > cmax) {
-            cmax = swingScores[33];
-            cx = 7;
-            swing = true;
-        }
-        if (swingScores[34] > cmax) {
-            cmax = swingScores[34];
-            cx = 3;
-            swing = true;
-        }
-        if (swingScores[35] > cmax) {
-            cmax = swingScores[35];
-            cx = 5;
-            swing = true;
-        }
-        // store total score and best attack location for each direction (incl
-        // Direction.CENTER)
-        int[] allmax = new int[] {
-                cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax
-        };
-        // if it's a swing, then allx stores index of swing direction
-        int[] allx = new int[] {
-                cx, cx, cx, cx, cx, cx, cx, cx, cx
-        };
-        int[] ally = new int[] {
-                cy, cy, cy, cy, cy, cy, cy, cy, cy
-        };
-        boolean[] allswing = new boolean[] {
-                swing, swing, swing, swing, swing, swing, swing, swing, swing
-        };
-        if (attackScores[21] > allmax[0]) {
-            allmax[0] = attackScores[21];
-            allx[0] = -2;
-            ally[0] = -2;
-            allswing[0] = false;
-        }
-        if (attackScores[13] > allmax[0]) {
-            allmax[0] = attackScores[13];
-            allx[0] = -2;
-            ally[0] = -1;
-            allswing[0] = false;
-        }
-        if (attackScores[9] > allmax[0]) {
-            allmax[0] = attackScores[9];
-            allx[0] = -2;
-            ally[0] = 0;
-            allswing[0] = false;
-        }
-        if (attackScores[15] > allmax[0]) {
-            allmax[0] = attackScores[15];
-            allx[0] = -1;
-            ally[0] = -2;
-            allswing[0] = false;
-        }
-        if (attackScores[10] > allmax[0]) {
-            allmax[0] = attackScores[10];
-            allx[0] = 0;
-            ally[0] = -2;
-            allswing[0] = false;
-        }
-        if (attackScores[15] > allmax[1]) {
-            allmax[1] = attackScores[15];
-            allx[1] = -1;
-            ally[1] = -2;
-            allswing[1] = false;
-        }
-        if (attackScores[10] > allmax[1]) {
-            allmax[1] = attackScores[10];
-            allx[1] = 0;
-            ally[1] = -2;
-            allswing[1] = false;
-        }
-        if (attackScores[17] > allmax[1]) {
-            allmax[1] = attackScores[17];
-            allx[1] = 1;
-            ally[1] = -2;
-            allswing[1] = false;
-        }
-        if (attackScores[10] > allmax[2]) {
-            allmax[2] = attackScores[10];
-            allx[2] = 0;
-            ally[2] = -2;
-            allswing[2] = false;
-        }
-        if (attackScores[17] > allmax[2]) {
-            allmax[2] = attackScores[17];
-            allx[2] = 1;
-            ally[2] = -2;
-            allswing[2] = false;
-        }
-        if (attackScores[23] > allmax[2]) {
-            allmax[2] = attackScores[23];
-            allx[2] = 2;
-            ally[2] = -2;
-            allswing[2] = false;
-        }
-        if (attackScores[19] > allmax[2]) {
-            allmax[2] = attackScores[19];
-            allx[2] = 2;
-            ally[2] = -1;
-            allswing[2] = false;
-        }
-        if (attackScores[12] > allmax[2]) {
-            allmax[2] = attackScores[12];
-            allx[2] = 2;
-            ally[2] = 0;
-            allswing[2] = false;
-        }
-        if (attackScores[19] > allmax[3]) {
-            allmax[3] = attackScores[19];
-            allx[3] = 2;
-            ally[3] = -1;
-            allswing[3] = false;
-        }
-        if (attackScores[12] > allmax[3]) {
-            allmax[3] = attackScores[12];
-            allx[3] = 2;
-            ally[3] = 0;
-            allswing[3] = false;
-        }
-        if (attackScores[20] > allmax[3]) {
-            allmax[3] = attackScores[20];
-            allx[3] = 2;
-            ally[3] = 1;
-            allswing[3] = false;
-        }
-        if (attackScores[11] > allmax[4]) {
-            allmax[4] = attackScores[11];
-            allx[4] = 0;
-            ally[4] = 2;
-            allswing[4] = false;
-        }
-        if (attackScores[18] > allmax[4]) {
-            allmax[4] = attackScores[18];
-            allx[4] = 1;
-            ally[4] = 2;
-            allswing[4] = false;
-        }
-        if (attackScores[12] > allmax[4]) {
-            allmax[4] = attackScores[12];
-            allx[4] = 2;
-            ally[4] = 0;
-            allswing[4] = false;
-        }
-        if (attackScores[20] > allmax[4]) {
-            allmax[4] = attackScores[20];
-            allx[4] = 2;
-            ally[4] = 1;
-            allswing[4] = false;
-        }
-        if (attackScores[24] > allmax[4]) {
-            allmax[4] = attackScores[24];
-            allx[4] = 2;
-            ally[4] = 2;
-            allswing[4] = false;
-        }
-        if (attackScores[16] > allmax[5]) {
-            allmax[5] = attackScores[16];
-            allx[5] = -1;
-            ally[5] = 2;
-            allswing[5] = false;
-        }
-        if (attackScores[11] > allmax[5]) {
-            allmax[5] = attackScores[11];
-            allx[5] = 0;
-            ally[5] = 2;
-            allswing[5] = false;
-        }
-        if (attackScores[18] > allmax[5]) {
-            allmax[5] = attackScores[18];
-            allx[5] = 1;
-            ally[5] = 2;
-            allswing[5] = false;
-        }
-        if (attackScores[9] > allmax[6]) {
-            allmax[6] = attackScores[9];
-            allx[6] = -2;
-            ally[6] = 0;
-            allswing[6] = false;
-        }
-        if (attackScores[14] > allmax[6]) {
-            allmax[6] = attackScores[14];
-            allx[6] = -2;
-            ally[6] = 1;
-            allswing[6] = false;
-        }
-        if (attackScores[22] > allmax[6]) {
-            allmax[6] = attackScores[22];
-            allx[6] = -2;
-            ally[6] = 2;
-            allswing[6] = false;
-        }
-        if (attackScores[16] > allmax[6]) {
-            allmax[6] = attackScores[16];
-            allx[6] = -1;
-            ally[6] = 2;
-            allswing[6] = false;
-        }
-        if (attackScores[11] > allmax[6]) {
-            allmax[6] = attackScores[11];
-            allx[6] = 0;
-            ally[6] = 2;
-            allswing[6] = false;
-        }
-        if (attackScores[13] > allmax[7]) {
-            allmax[7] = attackScores[13];
-            allx[7] = -2;
-            ally[7] = -1;
-            allswing[7] = false;
-        }
-        if (attackScores[9] > allmax[7]) {
-            allmax[7] = attackScores[9];
-            allx[7] = -2;
-            ally[7] = 0;
-            allswing[7] = false;
-        }
-        if (attackScores[14] > allmax[7]) {
-            allmax[7] = attackScores[14];
-            allx[7] = -2;
-            ally[7] = 1;
-            allswing[7] = false;
-        }
-        if (swingScores[0] > allmax[0]) {
-            allmax[0] = swingScores[0];
-            allx[0] = 1;
-            allswing[0] = true;
-        }
-        if (swingScores[1] > allmax[0]) {
-            allmax[0] = swingScores[1];
-            allx[0] = 7;
-            allswing[0] = true;
-        }
-        if (swingScores[2] > allmax[0]) {
-            allmax[0] = swingScores[2];
-            allx[0] = 3;
-            allswing[0] = true;
-        }
-        if (swingScores[3] > allmax[0]) {
-            allmax[0] = swingScores[3];
-            allx[0] = 5;
-            allswing[0] = true;
-        }
-        if (swingScores[4] > allmax[1]) {
-            allmax[1] = swingScores[4];
-            allx[1] = 1;
-            allswing[1] = true;
-        }
-        if (swingScores[5] > allmax[1]) {
-            allmax[1] = swingScores[5];
-            allx[1] = 7;
-            allswing[1] = true;
-        }
-        if (swingScores[6] > allmax[1]) {
-            allmax[1] = swingScores[6];
-            allx[1] = 3;
-            allswing[1] = true;
-        }
-        if (swingScores[7] > allmax[1]) {
-            allmax[1] = swingScores[7];
-            allx[1] = 5;
-            allswing[1] = true;
-        }
-        if (swingScores[8] > allmax[2]) {
-            allmax[2] = swingScores[8];
-            allx[2] = 1;
-            allswing[2] = true;
-        }
-        if (swingScores[9] > allmax[2]) {
-            allmax[2] = swingScores[9];
-            allx[2] = 7;
-            allswing[2] = true;
-        }
-        if (swingScores[10] > allmax[2]) {
-            allmax[2] = swingScores[10];
-            allx[2] = 3;
-            allswing[2] = true;
-        }
-        if (swingScores[11] > allmax[2]) {
-            allmax[2] = swingScores[11];
-            allx[2] = 5;
-            allswing[2] = true;
-        }
-        if (swingScores[12] > allmax[3]) {
-            allmax[3] = swingScores[12];
-            allx[3] = 1;
-            allswing[3] = true;
-        }
-        if (swingScores[13] > allmax[3]) {
-            allmax[3] = swingScores[13];
-            allx[3] = 7;
-            allswing[3] = true;
-        }
-        if (swingScores[14] > allmax[3]) {
-            allmax[3] = swingScores[14];
-            allx[3] = 3;
-            allswing[3] = true;
-        }
-        if (swingScores[15] > allmax[3]) {
-            allmax[3] = swingScores[15];
-            allx[3] = 5;
-            allswing[3] = true;
-        }
-        if (swingScores[16] > allmax[4]) {
-            allmax[4] = swingScores[16];
-            allx[4] = 1;
-            allswing[4] = true;
-        }
-        if (swingScores[17] > allmax[4]) {
-            allmax[4] = swingScores[17];
-            allx[4] = 7;
-            allswing[4] = true;
-        }
-        if (swingScores[18] > allmax[4]) {
-            allmax[4] = swingScores[18];
-            allx[4] = 3;
-            allswing[4] = true;
-        }
-        if (swingScores[19] > allmax[4]) {
-            allmax[4] = swingScores[19];
-            allx[4] = 5;
-            allswing[4] = true;
-        }
-        if (swingScores[20] > allmax[5]) {
-            allmax[5] = swingScores[20];
-            allx[5] = 1;
-            allswing[5] = true;
-        }
-        if (swingScores[21] > allmax[5]) {
-            allmax[5] = swingScores[21];
-            allx[5] = 7;
-            allswing[5] = true;
-        }
-        if (swingScores[22] > allmax[5]) {
-            allmax[5] = swingScores[22];
-            allx[5] = 3;
-            allswing[5] = true;
-        }
-        if (swingScores[23] > allmax[5]) {
-            allmax[5] = swingScores[23];
-            allx[5] = 5;
-            allswing[5] = true;
-        }
-        if (swingScores[24] > allmax[6]) {
-            allmax[6] = swingScores[24];
-            allx[6] = 1;
-            allswing[6] = true;
-        }
-        if (swingScores[25] > allmax[6]) {
-            allmax[6] = swingScores[25];
-            allx[6] = 7;
-            allswing[6] = true;
-        }
-        if (swingScores[26] > allmax[6]) {
-            allmax[6] = swingScores[26];
-            allx[6] = 3;
-            allswing[6] = true;
-        }
-        if (swingScores[27] > allmax[6]) {
-            allmax[6] = swingScores[27];
-            allx[6] = 5;
-            allswing[6] = true;
-        }
-        if (swingScores[28] > allmax[7]) {
-            allmax[7] = swingScores[28];
-            allx[7] = 1;
-            allswing[7] = true;
-        }
-        if (swingScores[29] > allmax[7]) {
-            allmax[7] = swingScores[29];
-            allx[7] = 7;
-            allswing[7] = true;
-        }
-        if (swingScores[30] > allmax[7]) {
-            allmax[7] = swingScores[30];
-            allx[7] = 3;
-            allswing[7] = true;
-        }
-        if (swingScores[31] > allmax[7]) {
-            allmax[7] = swingScores[31];
-            allx[7] = 5;
-            allswing[7] = true;
-        }
-        // copyspaghetti from Motion.microMove but whatever
-        if (G.rc.isActionReady()) {
-            int best = 8;
-            int numBest = 1;
-            for (int i = 8; --i >= 0;) {
-                if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
-                    best = i;
-                    numBest = 1;
-                } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best]
-                        && Random.rand() % ++numBest == 0) {
-                    best = i;
-                }
+        if (mode != RETREAT) {
+            boolean swing = false; // whether our attack will be a swing
+            int cmax = attackScores[0];
+            int cx = 0; // if it's a swing, then cx stores index of swing direction
+            int cy = 0;
+            // check every tile within sqrt2 radius
+            // don't need to set swing=false here since it defaults to false
+            if (attackScores[1] > cmax) {
+                cmax = attackScores[1];
+                cx = -1;
+                cy = 0;
             }
-            // try attack then move then attack again
-            if (allswing[best]) {
-                if (allmax[best] == cmax) {
-                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+            if (attackScores[2] > cmax) {
+                cmax = attackScores[2];
+                cx = 0;
+                cy = -1;
+            }
+            if (attackScores[3] > cmax) {
+                cmax = attackScores[3];
+                cx = 0;
+                cy = 1;
+            }
+            if (attackScores[4] > cmax) {
+                cmax = attackScores[4];
+                cx = 1;
+                cy = 0;
+            }
+            if (attackScores[5] > cmax) {
+                cmax = attackScores[5];
+                cx = -1;
+                cy = -1;
+            }
+            if (attackScores[6] > cmax) {
+                cmax = attackScores[6];
+                cx = -1;
+                cy = 1;
+            }
+            if (attackScores[7] > cmax) {
+                cmax = attackScores[7];
+                cx = 1;
+                cy = -1;
+            }
+            if (attackScores[8] > cmax) {
+                cmax = attackScores[8];
+                cx = 1;
+                cy = 1;
+            }
+            if (swingScores[32] > cmax) {
+                cmax = swingScores[32];
+                cx = 1;
+                swing = true;
+            }
+            if (swingScores[33] > cmax) {
+                cmax = swingScores[33];
+                cx = 7;
+                swing = true;
+            }
+            if (swingScores[34] > cmax) {
+                cmax = swingScores[34];
+                cx = 3;
+                swing = true;
+            }
+            if (swingScores[35] > cmax) {
+                cmax = swingScores[35];
+                cx = 5;
+                swing = true;
+            }
+            // store total score and best attack location for each direction (incl
+            // Direction.CENTER)
+            int[] allmax = new int[] {
+                    cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax, cmax
+            };
+            // if it's a swing, then allx stores index of swing direction
+            int[] allx = new int[] {
+                    cx, cx, cx, cx, cx, cx, cx, cx, cx
+            };
+            int[] ally = new int[] {
+                    cy, cy, cy, cy, cy, cy, cy, cy, cy
+            };
+            boolean[] allswing = new boolean[] {
+                    swing, swing, swing, swing, swing, swing, swing, swing, swing
+            };
+            if (attackScores[21] > allmax[0]) {
+                allmax[0] = attackScores[21];
+                allx[0] = -2;
+                ally[0] = -2;
+                allswing[0] = false;
+            }
+            if (attackScores[13] > allmax[0]) {
+                allmax[0] = attackScores[13];
+                allx[0] = -2;
+                ally[0] = -1;
+                allswing[0] = false;
+            }
+            if (attackScores[9] > allmax[0]) {
+                allmax[0] = attackScores[9];
+                allx[0] = -2;
+                ally[0] = 0;
+                allswing[0] = false;
+            }
+            if (attackScores[15] > allmax[0]) {
+                allmax[0] = attackScores[15];
+                allx[0] = -1;
+                ally[0] = -2;
+                allswing[0] = false;
+            }
+            if (attackScores[10] > allmax[0]) {
+                allmax[0] = attackScores[10];
+                allx[0] = 0;
+                ally[0] = -2;
+                allswing[0] = false;
+            }
+            if (attackScores[15] > allmax[1]) {
+                allmax[1] = attackScores[15];
+                allx[1] = -1;
+                ally[1] = -2;
+                allswing[1] = false;
+            }
+            if (attackScores[10] > allmax[1]) {
+                allmax[1] = attackScores[10];
+                allx[1] = 0;
+                ally[1] = -2;
+                allswing[1] = false;
+            }
+            if (attackScores[17] > allmax[1]) {
+                allmax[1] = attackScores[17];
+                allx[1] = 1;
+                ally[1] = -2;
+                allswing[1] = false;
+            }
+            if (attackScores[10] > allmax[2]) {
+                allmax[2] = attackScores[10];
+                allx[2] = 0;
+                ally[2] = -2;
+                allswing[2] = false;
+            }
+            if (attackScores[17] > allmax[2]) {
+                allmax[2] = attackScores[17];
+                allx[2] = 1;
+                ally[2] = -2;
+                allswing[2] = false;
+            }
+            if (attackScores[23] > allmax[2]) {
+                allmax[2] = attackScores[23];
+                allx[2] = 2;
+                ally[2] = -2;
+                allswing[2] = false;
+            }
+            if (attackScores[19] > allmax[2]) {
+                allmax[2] = attackScores[19];
+                allx[2] = 2;
+                ally[2] = -1;
+                allswing[2] = false;
+            }
+            if (attackScores[12] > allmax[2]) {
+                allmax[2] = attackScores[12];
+                allx[2] = 2;
+                ally[2] = 0;
+                allswing[2] = false;
+            }
+            if (attackScores[19] > allmax[3]) {
+                allmax[3] = attackScores[19];
+                allx[3] = 2;
+                ally[3] = -1;
+                allswing[3] = false;
+            }
+            if (attackScores[12] > allmax[3]) {
+                allmax[3] = attackScores[12];
+                allx[3] = 2;
+                ally[3] = 0;
+                allswing[3] = false;
+            }
+            if (attackScores[20] > allmax[3]) {
+                allmax[3] = attackScores[20];
+                allx[3] = 2;
+                ally[3] = 1;
+                allswing[3] = false;
+            }
+            if (attackScores[11] > allmax[4]) {
+                allmax[4] = attackScores[11];
+                allx[4] = 0;
+                ally[4] = 2;
+                allswing[4] = false;
+            }
+            if (attackScores[18] > allmax[4]) {
+                allmax[4] = attackScores[18];
+                allx[4] = 1;
+                ally[4] = 2;
+                allswing[4] = false;
+            }
+            if (attackScores[12] > allmax[4]) {
+                allmax[4] = attackScores[12];
+                allx[4] = 2;
+                ally[4] = 0;
+                allswing[4] = false;
+            }
+            if (attackScores[20] > allmax[4]) {
+                allmax[4] = attackScores[20];
+                allx[4] = 2;
+                ally[4] = 1;
+                allswing[4] = false;
+            }
+            if (attackScores[24] > allmax[4]) {
+                allmax[4] = attackScores[24];
+                allx[4] = 2;
+                ally[4] = 2;
+                allswing[4] = false;
+            }
+            if (attackScores[16] > allmax[5]) {
+                allmax[5] = attackScores[16];
+                allx[5] = -1;
+                ally[5] = 2;
+                allswing[5] = false;
+            }
+            if (attackScores[11] > allmax[5]) {
+                allmax[5] = attackScores[11];
+                allx[5] = 0;
+                ally[5] = 2;
+                allswing[5] = false;
+            }
+            if (attackScores[18] > allmax[5]) {
+                allmax[5] = attackScores[18];
+                allx[5] = 1;
+                ally[5] = 2;
+                allswing[5] = false;
+            }
+            if (attackScores[9] > allmax[6]) {
+                allmax[6] = attackScores[9];
+                allx[6] = -2;
+                ally[6] = 0;
+                allswing[6] = false;
+            }
+            if (attackScores[14] > allmax[6]) {
+                allmax[6] = attackScores[14];
+                allx[6] = -2;
+                ally[6] = 1;
+                allswing[6] = false;
+            }
+            if (attackScores[22] > allmax[6]) {
+                allmax[6] = attackScores[22];
+                allx[6] = -2;
+                ally[6] = 2;
+                allswing[6] = false;
+            }
+            if (attackScores[16] > allmax[6]) {
+                allmax[6] = attackScores[16];
+                allx[6] = -1;
+                ally[6] = 2;
+                allswing[6] = false;
+            }
+            if (attackScores[11] > allmax[6]) {
+                allmax[6] = attackScores[11];
+                allx[6] = 0;
+                ally[6] = 2;
+                allswing[6] = false;
+            }
+            if (attackScores[13] > allmax[7]) {
+                allmax[7] = attackScores[13];
+                allx[7] = -2;
+                ally[7] = -1;
+                allswing[7] = false;
+            }
+            if (attackScores[9] > allmax[7]) {
+                allmax[7] = attackScores[9];
+                allx[7] = -2;
+                ally[7] = 0;
+                allswing[7] = false;
+            }
+            if (attackScores[14] > allmax[7]) {
+                allmax[7] = attackScores[14];
+                allx[7] = -2;
+                ally[7] = 1;
+                allswing[7] = false;
+            }
+            if (swingScores[0] > allmax[0]) {
+                allmax[0] = swingScores[0];
+                allx[0] = 1;
+                allswing[0] = true;
+            }
+            if (swingScores[1] > allmax[0]) {
+                allmax[0] = swingScores[1];
+                allx[0] = 7;
+                allswing[0] = true;
+            }
+            if (swingScores[2] > allmax[0]) {
+                allmax[0] = swingScores[2];
+                allx[0] = 3;
+                allswing[0] = true;
+            }
+            if (swingScores[3] > allmax[0]) {
+                allmax[0] = swingScores[3];
+                allx[0] = 5;
+                allswing[0] = true;
+            }
+            if (swingScores[4] > allmax[1]) {
+                allmax[1] = swingScores[4];
+                allx[1] = 1;
+                allswing[1] = true;
+            }
+            if (swingScores[5] > allmax[1]) {
+                allmax[1] = swingScores[5];
+                allx[1] = 7;
+                allswing[1] = true;
+            }
+            if (swingScores[6] > allmax[1]) {
+                allmax[1] = swingScores[6];
+                allx[1] = 3;
+                allswing[1] = true;
+            }
+            if (swingScores[7] > allmax[1]) {
+                allmax[1] = swingScores[7];
+                allx[1] = 5;
+                allswing[1] = true;
+            }
+            if (swingScores[8] > allmax[2]) {
+                allmax[2] = swingScores[8];
+                allx[2] = 1;
+                allswing[2] = true;
+            }
+            if (swingScores[9] > allmax[2]) {
+                allmax[2] = swingScores[9];
+                allx[2] = 7;
+                allswing[2] = true;
+            }
+            if (swingScores[10] > allmax[2]) {
+                allmax[2] = swingScores[10];
+                allx[2] = 3;
+                allswing[2] = true;
+            }
+            if (swingScores[11] > allmax[2]) {
+                allmax[2] = swingScores[11];
+                allx[2] = 5;
+                allswing[2] = true;
+            }
+            if (swingScores[12] > allmax[3]) {
+                allmax[3] = swingScores[12];
+                allx[3] = 1;
+                allswing[3] = true;
+            }
+            if (swingScores[13] > allmax[3]) {
+                allmax[3] = swingScores[13];
+                allx[3] = 7;
+                allswing[3] = true;
+            }
+            if (swingScores[14] > allmax[3]) {
+                allmax[3] = swingScores[14];
+                allx[3] = 3;
+                allswing[3] = true;
+            }
+            if (swingScores[15] > allmax[3]) {
+                allmax[3] = swingScores[15];
+                allx[3] = 5;
+                allswing[3] = true;
+            }
+            if (swingScores[16] > allmax[4]) {
+                allmax[4] = swingScores[16];
+                allx[4] = 1;
+                allswing[4] = true;
+            }
+            if (swingScores[17] > allmax[4]) {
+                allmax[4] = swingScores[17];
+                allx[4] = 7;
+                allswing[4] = true;
+            }
+            if (swingScores[18] > allmax[4]) {
+                allmax[4] = swingScores[18];
+                allx[4] = 3;
+                allswing[4] = true;
+            }
+            if (swingScores[19] > allmax[4]) {
+                allmax[4] = swingScores[19];
+                allx[4] = 5;
+                allswing[4] = true;
+            }
+            if (swingScores[20] > allmax[5]) {
+                allmax[5] = swingScores[20];
+                allx[5] = 1;
+                allswing[5] = true;
+            }
+            if (swingScores[21] > allmax[5]) {
+                allmax[5] = swingScores[21];
+                allx[5] = 7;
+                allswing[5] = true;
+            }
+            if (swingScores[22] > allmax[5]) {
+                allmax[5] = swingScores[22];
+                allx[5] = 3;
+                allswing[5] = true;
+            }
+            if (swingScores[23] > allmax[5]) {
+                allmax[5] = swingScores[23];
+                allx[5] = 5;
+                allswing[5] = true;
+            }
+            if (swingScores[24] > allmax[6]) {
+                allmax[6] = swingScores[24];
+                allx[6] = 1;
+                allswing[6] = true;
+            }
+            if (swingScores[25] > allmax[6]) {
+                allmax[6] = swingScores[25];
+                allx[6] = 7;
+                allswing[6] = true;
+            }
+            if (swingScores[26] > allmax[6]) {
+                allmax[6] = swingScores[26];
+                allx[6] = 3;
+                allswing[6] = true;
+            }
+            if (swingScores[27] > allmax[6]) {
+                allmax[6] = swingScores[27];
+                allx[6] = 5;
+                allswing[6] = true;
+            }
+            if (swingScores[28] > allmax[7]) {
+                allmax[7] = swingScores[28];
+                allx[7] = 1;
+                allswing[7] = true;
+            }
+            if (swingScores[29] > allmax[7]) {
+                allmax[7] = swingScores[29];
+                allx[7] = 7;
+                allswing[7] = true;
+            }
+            if (swingScores[30] > allmax[7]) {
+                allmax[7] = swingScores[30];
+                allx[7] = 3;
+                allswing[7] = true;
+            }
+            if (swingScores[31] > allmax[7]) {
+                allmax[7] = swingScores[31];
+                allx[7] = 5;
+                allswing[7] = true;
+            }
+            // copyspaghetti from Motion.microMove but whatever
+            if (G.rc.isActionReady()) {
+                int best = 8;
+                int numBest = 1;
+                for (int i = 8; --i >= 0;) {
+                    if (allmax[i] + moveScores[i] > allmax[best] + moveScores[best]) {
+                        best = i;
+                        numBest = 1;
+                    } else if (allmax[i] + moveScores[i] == allmax[best] + moveScores[best]
+                            && Random.rand() % ++numBest == 0) {
+                        best = i;
                     }
                 }
-                Motion.move(G.ALL_DIRECTIONS[best]);
-                if (allmax[best] != cmax) {
-                    if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
-                        G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                // try attack then move then attack again
+                if (allswing[best]) {
+                    if (allmax[best] == cmax) {
+                        if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                            G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                        }
+                    }
+                    Motion.move(G.ALL_DIRECTIONS[best]);
+                    if (allmax[best] != cmax) {
+                        if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
+                            G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
+                        }
+                    }
+                } else {
+                    MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
+                    if (G.rc.canAttack(attackLoc)) {
+                        G.rc.attack(attackLoc);
+                    }
+                    Motion.move(G.ALL_DIRECTIONS[best]);
+                    if (G.rc.canAttack(attackLoc)) {
+                        G.rc.attack(attackLoc);
                     }
                 }
             } else {
-                MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
-                if (G.rc.canAttack(attackLoc)) {
-                    G.rc.attack(attackLoc);
+                int best = 8;
+                int numBest = 1;
+                for (int i = 8; --i >= 0;) {
+                    if (moveScores[i] > moveScores[best]) {
+                        best = i;
+                        numBest = 1;
+                    } else if (moveScores[i] == moveScores[best] && Random.rand() % ++numBest == 0) {
+                        best = i;
+                    }
                 }
                 Motion.move(G.ALL_DIRECTIONS[best]);
-                if (G.rc.canAttack(attackLoc)) {
-                    G.rc.attack(attackLoc);
-                }
             }
-        } else {
-            int best = 8;
-            int numBest = 1;
-            for (int i = 8; --i >= 0;) {
-                if (moveScores[i] > moveScores[best]) {
-                    best = i;
-                    numBest = 1;
-                } else if (moveScores[i] == moveScores[best] && Random.rand() % ++numBest == 0) {
-                    best = i;
-                }
+            switch (mode) {
+                case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
+                case BUILD -> G.rc.setIndicatorDot(G.me, 0, 0, 255);
+                case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
-            Motion.move(G.ALL_DIRECTIONS[best]);
+            G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
         }
-        if (mode == RETREAT) {
-            Motion.tryTransferPaint();
-        }
-        switch (mode) {
-            case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
-            case BUILD -> G.rc.setIndicatorDot(G.me, 0, 0, 255);
-            case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
-        }
-        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {
@@ -1746,11 +1743,11 @@ public class Mopper {
     }
 
     public static void retreatMoveScores() throws Exception {
-        Direction bestDir = Motion.retreat();
-        moveScores = mopperMicro.micro(bestDir, G.invalidLoc);
-        moveScores[G.dirOrd(bestDir)] += 50;
-        moveScores[(G.dirOrd(bestDir) + 1) % 8] += 40;
-        moveScores[(G.dirOrd(bestDir) + 7) % 8] += 40;
+        MapLocation loc = Motion.retreatLoc();
+        moveScores = mopperMicro.micro(G.me.directionTo(loc), loc);
+        moveScores[G.dirOrd(G.me.directionTo(loc))] += 50;
+        moveScores[(G.dirOrd(G.me.directionTo(loc)) + 1) % 8] += 40;
+        moveScores[(G.dirOrd(G.me.directionTo(loc)) + 7) % 8] += 40;
     }
 
     // basically the same as exploreAttackScores but with extra bonus for stealing 5
