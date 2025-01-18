@@ -127,6 +127,8 @@ public class Tower {
             // else {
             //     trying = UnitType.MOPPER;
             // }
+
+            // IMPORTANT: this prioritizes mopper > splasher > soldier at the start
             if (mopper >= splasher && mopper >= soldier) {
                 trying = UnitType.MOPPER;
             }
