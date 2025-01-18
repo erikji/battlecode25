@@ -384,6 +384,11 @@ public class Splasher {
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
 	}
+    switch (mode) {
+        case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        case ATTACK ->  G.rc.setIndicatorDot(G.me, 255, 0, 0);
+        case RETREAT ->  G.rc.setIndicatorDot(G.me, 255, 0, 255);
+    }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
