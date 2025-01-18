@@ -26,12 +26,8 @@ for i in range(25):
         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores["""+str(i)+"""] += 50 + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint()) * 5;
-                if (bot.getType() == UnitType.MOPPER) {
-                    //double passive paint loss on moppers
-                    attackScores["""+str(i)+"""] += 5;
-                }
-                if (bot.paintAmount <= 10) {
+                attackScores["""+str(i)+"""] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                     //treat freezing bot equivalent to gaining 20 paint
                     attackScores["""+str(i)+"""] += 100;
                 }
@@ -57,19 +53,21 @@ a2 = [
     [(1, 0), (2, 0), (1, 1), (2, 1), (1, -1), (2, -1)],
     [(0, 1), (0, 2), (1, 1), (1, 2), (-1, 1), (-1, 2)]
 ]
-s = []
+s = ['\t\t\tMapLocation loc;\n']
 for d in a:
     for d2 in a2:
         for i in d2:
             try:
-                ind = s.index(f'\t\t\tif (opponentRobotsString.indexOf(G.me.translate({d[0]+i[0]}, {d[1]+i[1]}).toString()) != -1)' + ' {\n')
+                ind = s.index(f'\t\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
                 if ind < 0:
                     raise Exception()
-                s.insert(ind+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 35;\n')
+                s.insert(ind+3, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 7;\n')
             except:
-                s.append(f'\t\t\tif (opponentRobotsString.indexOf(G.me.translate({d[0]+i[0]}, {d[1]+i[1]}).toString()) != -1)' + ' {\n')
-                s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 35;\n')
-                s.append('\t\t\t}\n')
+                s.append(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
+                s.append(f'\t\tif (G.opponentRobotsString.indexOf(loc.toString()) != -1)' + ' {\n')
+                s.append(f'\t\t\tRobotInfo bot = G.rc.senseRobotAtLocation(loc);\n')
+                s.append(f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing\n')
+                s.append('\t\t}\n')
 # s = s.split('\n')
 print(''.join(s))
 
