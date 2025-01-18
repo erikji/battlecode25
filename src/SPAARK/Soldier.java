@@ -14,7 +14,7 @@ public class Soldier {
     // ratio of paint necessary to exit retreat mode
     public static final double RETREAT_PAINT_RATIO = Micro.RETREAT_PAINT_RATIO;
     // ratio to reduce retreat requirement by if building tower/srp
-    public static final double RETREAT_REDUCED_RATIO = Micro.RETREAT_PAINT_RATIO;
+    public static final double RETREAT_REDUCED_RATIO = Micro.RETREAT_REDUCED_RATIO;
     // exploration weight multiplier
     public static final int EXPLORE_OPP_WEIGHT = Micro.EXPLORE_OPP_WEIGHT;
     // controls rounds between visiting ruins
@@ -131,6 +131,7 @@ public class Soldier {
         } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
             mode = EXPLORE;
         }
+        Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         nearbyRuins = G.rc.senseNearbyRuins(-1);
         // map
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
