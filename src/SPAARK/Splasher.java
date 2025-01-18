@@ -43,6 +43,12 @@ public class Splasher {
             mode = EXPLORE;
         }
         Motion.paintNeededToStopRetreating = G.rc.getType().paintCapacity * 3 / 4;
+        if (mode == RETREAT) {
+            Motion.setRetreatLoc();
+            if (Motion.retreatLoc.x == -1) {
+                mode = EXPLORE;
+            }
+        }
         if (mode != RETREAT) {
             updateAttackTarget();
         } else {
@@ -341,8 +347,8 @@ public class Splasher {
             ally[7] = 2;
         }
         // copyspaghetti from Motion.microMove and Mopper but whatever
-        boolean notMoved = true;
-        if (G.rc.isActionReady()) {
+        // spaghetti hardcoding 50 paint
+        if (G.rc.isActionReady() && G.rc.getPaint() > 50) {
             int best = 8;
             int numBest = 1;
             for (int i = 8; --i >= 0;) {
@@ -369,10 +375,9 @@ public class Splasher {
                     }
                     Motion.move(G.ALL_DIRECTIONS[best]);
                 }
-                notMoved = true;
             }
         }
-        if (notMoved) {
+        if (G.rc.isMovementReady()) {
             int best = 8;
             int numBest = 1;
             for (int i = 8; --i >= 0;) {
@@ -3219,7 +3224,7 @@ public class Splasher {
     }
 
     public static void retreatMoveScores() throws Exception {
-        moveScores = Motion.defaultMicro.micro(Motion.retreatDir(), G.invalidLoc);
+        moveScores = Motion.defaultMicro.micro(Motion.retreatDir(), Motion.retreatLoc);
     }
 
     /**

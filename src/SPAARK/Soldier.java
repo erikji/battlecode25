@@ -149,6 +149,11 @@ public class Soldier {
                 // VERY IMPORTANT DO NOT TOUCH
                 buildBlockedTime = 0;
                 buildTime = 0;
+                Motion.setRetreatLoc();
+                if (Motion.retreatLoc.x == -1) {
+                    mode = EXPLORE;
+                    exploreCheckMode();
+                }
             }
         }
         int b = Clock.getBytecodeNum();

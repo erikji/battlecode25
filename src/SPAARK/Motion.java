@@ -1,5 +1,7 @@
 package SPAARK;
 
+import java.util.Map;
+
 import battlecode.common.*;
 
 public class Motion {
@@ -302,11 +304,13 @@ public class Motion {
     }
 
     public static void updateRetreatWaitingLoc() throws Exception {
-        MapLocation loc = POI.towerLocs[retreatTower];
+        if (G.me.distanceSquaredTo(retreatLoc) == 4 || G.me.distanceSquaredTo(retreatLoc) == 8) {
+            return;
+        }
         retreatWaitingLoc = null;
         int bestDistance = 0;
         for (int i = 8; --i >= 0;) {
-            MapLocation waitingLoc = retreatWaitingLocs[i].translate(loc.x, loc.y);
+            MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
             if (G.rc.canSenseLocation(waitingLoc)) {
                 if (!G.rc.sensePassability(waitingLoc) || G.rc.canSenseRobotAtLocation(waitingLoc)) {
                     continue;
@@ -322,7 +326,9 @@ public class Motion {
         }
     }
 
-    public static MapLocation retreatLoc() throws Exception {
+    public static MapLocation retreatLoc = new MapLocation(-1, -1);
+
+    public static void setRetreatLoc() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
         // if no paint towers found it should go to chip tower to update POI and find
@@ -384,6 +390,7 @@ public class Motion {
                 }
                 if (best == -1) {
                     if (triedRetreatTowers.length() == 0) {
+                        // completely out of towers, how is this possible lol
                         retreatTower = -2;
                         break;
                     }
@@ -402,9 +409,12 @@ public class Motion {
         if (retreatTower == -2) {
             // oof no tower
             retreatTower = -1;
-            return Motion.exploreRandomlyLoc();
+            // retreatLoc = Motion.exploreRandomlyLoc();
+            retreatLoc = G.invalidLoc;
+            return;
         } else if (retreatTower != -1) {
-            return POI.towerLocs[retreatTower];
+            retreatLoc = POI.towerLocs[retreatTower];
+            return;
             // Motion.bugnavTowards(loc, micro);
             // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
             // if (G.rc.canSenseRobotAtLocation(loc)) {
@@ -415,17 +425,17 @@ public class Motion {
             // }
             // }
         }
-        return G.invalidLoc;
+        retreatLoc = G.invalidLoc;
     }
 
     public static Direction retreatDir() throws Exception {
-        return retreatDir(retreatLoc());
+        return retreatDir(retreatLoc);
     }
 
     public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
             int dist = G.me.distanceSquaredTo(retreatLoc);
-            if (dist <= 8) {
+            if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
@@ -464,18 +474,16 @@ public class Motion {
     }
 
     public static void retreat(Micro micro) throws Exception {
-        MapLocation loc = retreatLoc();
-        Motion.microMove(micro.micro(Motion.retreatDir(loc), loc));
+        Motion.microMove(micro.micro(Motion.retreatDir(retreatLoc), retreatLoc));
     }
 
     public static void tryTransferPaint() throws Exception {
-        MapLocation loc = retreatLoc();
-        if (G.rc.canSenseRobotAtLocation(loc)) {
-            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+        if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
             int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
                     r.paintAmount);
-            if (G.rc.canTransferPaint(loc, amt)) {
-                G.rc.transferPaint(loc, amt);
+            if (G.rc.canTransferPaint(retreatLoc, amt)) {
+                G.rc.transferPaint(retreatLoc, amt);
             }
         }
     }
@@ -1384,7 +1392,7 @@ public class Motion {
         int neutralPaintPenalty = DEF_MICRO_N_PAINT_PENALTY * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperPenalty
                 * turnsToNext;
         for (int i = 9; --i >= 0;) {
-            if (!G.rc.canMove(G.ALL_DIRECTIONS[i])) {
+            if (!G.rc.canMove(G.ALL_DIRECTIONS[i]) && i != 8) {
                 scores[i] = -1000000000;
             } else {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
@@ -1392,14 +1400,14 @@ public class Motion {
                 if (p.isEnemy()) {
                     scores[i] -= enemyPaintPenalty;
                     for (int j = 8; --j >= 0;) {
-                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
-                            scores[i] -= DEF_MICRO_E_PAINT_BOT_PENALTY; // 2 is hardcoded in the engine oof
+                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[j]).toString()) != -1) {
+                            scores[i] -= DEF_MICRO_E_PAINT_BOT_PENALTY;
                         }
                     }
                 } else if (p == PaintType.EMPTY) {
                     scores[i] -= neutralPaintPenalty;
                     for (int j = 8; --j >= 0;) {
-                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[i]).toString()) != -1) {
+                        if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[j]).toString()) != -1) {
                             scores[i] -= DEF_MICRO_N_PAINT_BOT_PENALTY;
                         }
                     }
