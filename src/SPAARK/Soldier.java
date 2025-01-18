@@ -19,6 +19,8 @@ public class Soldier {
     public static final int EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
     public static final int VISIT_TIMEOUT = 40;
+    // controls ratio of money to paint (higher = more money)
+    public static final double MONEY_PAINT_TOWER_RATIO = 0.6;
     // stop building towers if enemy paint interferes too much
     public static final int MAX_TOWER_ENEMY_PAINT = 10;
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
@@ -200,6 +202,10 @@ public class Soldier {
                 || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP ");
         } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
+            // dont try near edge of map (less bytecode, FIXES CRASHES TOO)
+            if (G.me.x < 1 || G.me.x > G.mapWidth - 2 || G.me.y < 1 || G.me.y > G.mapWidth - 2) {
+                return;
+            }
             // see if SRP is possible nearby
             if (G.round > MIN_SRP_ROUND) {
                 for (int i = 8; --i >= 0;) {
@@ -559,7 +565,7 @@ public class Soldier {
      */
     public static boolean cannotBuildSRPAtLocation(MapLocation center) throws Exception {
         // check if on map first
-        if (center.x < 2 || center.x > G.rc.getMapWidth() - 3 || center.y < 2 || center.y > G.rc.getMapHeight() - 3) {
+        if (center.x < 2 || center.x > G.mapWidth - 3 || center.y < 2 || center.y > G.mapHeight - 3) {
             return true;
         }
         // check for towers that could interfere
@@ -744,12 +750,36 @@ public class Soldier {
             return !cannotBuildSRPAtLocation(center);
     }
 
-    public static int predictTowerType(MapLocation xy) {
+    /**
+     * Marker above = defense (0) (which we will never use lmao)
+     * Marker to left = money (1)
+     * Marker to right = paint (2)
+     * Marker below = rc.disintigrate
+     */
+    public static int predictTowerType(MapLocation loc) throws Exception {
         G.indicatorString.append("(M=" + POI.moneyTowers + ", P=" + POI.paintTowers + ") ");
-        if (POI.moneyTowers > POI.paintTowers) {
-            return 2;
+        // check for marker
+        int ox = loc.x - G.me.x + 4;
+        int oy = loc.y - G.me.y + 4;
+        // make sure can see all 4 sides
+        if (G.me.isWithinDistanceSquared(loc, 9)) {
+            if (mapInfos[oy + 1][ox].getMark() == PaintType.ALLY_PRIMARY)
+                return 0;
+            if (mapInfos[oy][ox - 1].getMark() == PaintType.ALLY_PRIMARY)
+                return 1;
+            if (mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
+                return 2;
+            // no im not adding the rc.disintigrate too much bytecode
         }
-        return 1;
+        int towerType = POI.paintTowers * MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
+        MapLocation place = loc;
+        switch (towerType) {
+            case 1 -> place = loc.translate(-1, 0);
+            case 2 -> place = loc.translate(1, 0);
+        }
+        if (G.rc.canMark(place))
+            G.rc.mark(place, false);
+        return towerType;
     }
 
     // paint neutral tiles if bugnav says to go to it

@@ -297,8 +297,8 @@ public class POI {
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
-        int w = G.rc.getMapWidth();
-        int h = G.rc.getMapHeight();
+        int w = G.mapWidth;
+        int h = G.mapHeight;
         switch (sym) {
             // only consider bits where we explored both it and its rotation
             case 0: // horz
@@ -338,11 +338,11 @@ public class POI {
         // get the opposite map location according to this symmetry
         switch (sym) {
             case 0:
-                return new MapLocation(m.x, G.rc.getMapHeight() - m.y - 1);
+                return new MapLocation(m.x, G.mapHeight - m.y - 1);
             case 1:
-                return new MapLocation(G.rc.getMapWidth() - m.x - 1, m.y);
+                return new MapLocation(G.mapWidth - m.x - 1, m.y);
             case 2:
-                return new MapLocation(G.rc.getMapWidth() - m.x - 1, G.rc.getMapHeight() - m.y - 1);
+                return new MapLocation(G.mapWidth - m.x - 1, G.mapHeight - m.y - 1);
             default:
                 throw new Exception("invalid symmetry argument");
         }

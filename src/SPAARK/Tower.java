@@ -89,7 +89,7 @@ public class Tower {
         else {
             UnitType trying = UnitType.SPLASHER;
             // int mod = 7;
-            // int area = G.rc.getMapHeight() * G.rc.getMapWidth();
+            // int area = G.mapHeight * G.mapWidth;
 
             double soldierWeight = 2;
             double splasherWeight = 2;
@@ -243,13 +243,13 @@ public class Tower {
         //     MapLocation closestOpponentTower = new MapLocation(-1, -1);
         //     if (best == -1) {
         //         if (POI.symmetry[0]) {
-        //             closestOpponentTower = new MapLocation(G.rc.getMapWidth() - 1 - G.me.x, G.me.y);
+        //             closestOpponentTower = new MapLocation(G.mapWidth - 1 - G.me.x, G.me.y);
         //         }
         //         if (POI.symmetry[1]) {
-        //             closestOpponentTower = new MapLocation(G.me.x, G.rc.getMapHeight() - 1 - G.me.y);
+        //             closestOpponentTower = new MapLocation(G.me.x, G.mapHeight - 1 - G.me.y);
         //         }
         //         if (POI.symmetry[2]) {
-        //             closestOpponentTower = new MapLocation(G.rc.getMapWidth() - 1 - G.me.x, G.rc.getMapHeight() - 1 - G.me.y);
+        //             closestOpponentTower = new MapLocation(G.mapWidth - 1 - G.me.x, G.mapHeight - 1 - G.me.y);
         //         }
         //         break destroy;
         //     }
