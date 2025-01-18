@@ -390,14 +390,14 @@ public class Motion {
         retreat(Motion.defaultMicro);
     }
     public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
-        new MapLocation(2, 0),
-        new MapLocation(0, 2),
-        new MapLocation(-2, 0),
-        new MapLocation(0, -2),
         new MapLocation(2, 2),
         new MapLocation(2, -2),
         new MapLocation(-2, 2),
         new MapLocation(-2, -2),
+        new MapLocation(2, 0),
+        new MapLocation(0, 2),
+        new MapLocation(-2, 0),
+        new MapLocation(0, -2),
     };
     public static void retreat(Micro micro) throws Exception {
         if (G.rc.isMovementReady()) {
