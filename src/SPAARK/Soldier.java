@@ -424,6 +424,9 @@ public class Soldier {
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
+        // TODO: micro building
+        // TODO: sit at tower, paint what you can, if need to move to paint, then move
+        // always can reach pattern location by moving 1 if dist^2 is 1
         MapLocation paintLocation = null;
         int ox = ruinLocation.x - G.me.x + 2;
         int oy = ruinLocation.y - G.me.y + 2;
