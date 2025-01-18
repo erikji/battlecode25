@@ -419,24 +419,27 @@ public class Motion {
     }
 
     public static Direction retreatDir() throws Exception {
+        return retreatDir(retreatLoc());
+    }
+
+    public static Direction retreatDir(MapLocation retreatLocation) throws Exception {
         if (G.rc.isMovementReady()) {
-            MapLocation loc = retreatLoc();
-            int dist = G.me.distanceSquaredTo(loc);
+            int dist = G.me.distanceSquaredTo(retreatLocation);
             if (dist <= 8) {
-                if (G.rc.canSenseRobotAtLocation(loc)) {
-                    RobotInfo r = G.rc.senseRobotAtLocation(loc);
+                if (G.rc.canSenseRobotAtLocation(retreatLocation)) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(retreatLocation);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     if (r.paintAmount >= amount) {
-                        return bug2Helper(G.me, loc, TOWARDS, 0, 0);
+                        return bug2Helper(G.me, retreatLocation, TOWARDS, 0, 0);
                     } else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
                         if (r.paintAmount != 0) {
-                            return bug2Helper(G.me, loc, TOWARDS, 0, 0);
+                            return bug2Helper(G.me, retreatLocation, TOWARDS, 0, 0);
                         }
                     }
                 }
             }
             if (dist != 4 && dist != 8) {
-                if (G.rc.canSenseRobotAtLocation(loc)) {
+                if (G.rc.canSenseRobotAtLocation(retreatLocation)) {
                     if (retreatWaitingLoc == null) {
                         updateRetreatWaitingLoc();
                     }
@@ -446,14 +449,23 @@ public class Motion {
                         return bug2Helper(G.me, retreatWaitingLoc, TOWARDS, 0, 0);
                     }
                 } else {
-                    // bugnavTowards(loc);
-                    return bug2Helper(G.me, loc, TOWARDS, 0, 0);
+                    // bugnavTowards(retreatLocation);
+                    return bug2Helper(G.me, retreatLocation, TOWARDS, 0, 0);
                 }
             }
-            // Motion.bugnavAround(loc, 1, 4);
-            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+            // Motion.bugnavAround(retreatLocation, 1, 4);
+            G.rc.setIndicatorLine(G.me, retreatLocation, 200, 0, 200);
         }
         return Direction.CENTER;
+    }
+
+    public static void retreat() throws Exception {
+        retreat(defaultMicro);
+    }
+
+    public static void retreat(Micro micro) throws Exception {
+        MapLocation loc = retreatLoc();
+        Motion.microMove(Motion.defaultMicro.micro(Motion.retreatDir(loc), loc));
     }
 
     public static void tryTransferPaint() throws Exception {
@@ -1349,7 +1361,10 @@ public class Motion {
         }
     }
 
-    // 1 paint = 5 score
+    /**
+     * Default movement micro - avoid clusters of bots, especially on non-allied
+     * paint
+     */
     public static Micro defaultMicro = (Direction d, MapLocation dest) -> {
         int[] scores = new int[9];
         MapLocation nxt;

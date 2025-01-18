@@ -165,7 +165,10 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                Motion.microMove(Motion.defaultMicro.micro(Motion.retreatDir(), G.invalidLoc));
+                if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
+                    Motion.retreat(moveWithPaintMicro);
+                else
+                    Motion.retreat();
                 Motion.tryTransferPaint();
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
