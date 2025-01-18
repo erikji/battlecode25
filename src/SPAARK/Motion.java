@@ -285,6 +285,17 @@ public class Motion {
     public static final int RETREAT_PAINT_OFFSET = 30;
     public static final double RETREAT_PAINT_RATIO = 0.25;
 
+    public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
+            new MapLocation(2, 2),
+            new MapLocation(2, -2),
+            new MapLocation(-2, 2),
+            new MapLocation(-2, -2),
+            new MapLocation(2, 0),
+            new MapLocation(0, 2),
+            new MapLocation(-2, 0),
+            new MapLocation(0, -2),
+    };
+
     public static int getRetreatPaint() throws Exception {
         return Math.max(paintLost + RETREAT_PAINT_OFFSET,
                 (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
@@ -410,17 +421,6 @@ public class Motion {
     public static Direction retreat() throws Exception {
         return retreat(Motion.defaultMicro);
     }
-
-    public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
-            new MapLocation(2, 2),
-            new MapLocation(2, -2),
-            new MapLocation(-2, 2),
-            new MapLocation(-2, -2),
-            new MapLocation(2, 0),
-            new MapLocation(0, 2),
-            new MapLocation(-2, 0),
-            new MapLocation(0, -2),
-    };
 
     public static Direction retreat(Micro micro) throws Exception {
         if (G.rc.isMovementReady()) {
@@ -1362,8 +1362,7 @@ public class Motion {
         scores[(G.dirOrd(d) + 1) % 8] += 15;
         scores[(G.dirOrd(d) + 7) % 8] += 15;
         int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
-        int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown)
-                / 10);
+        int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown) / 10);
 
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i])) {
