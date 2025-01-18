@@ -390,20 +390,20 @@ public class Motion {
         retreat(Motion.defaultMicro);
     }
     public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
-        new MapLocation(2, 0),
-        new MapLocation(0, 2),
-        new MapLocation(-2, 0),
-        new MapLocation(0, -2),
         new MapLocation(2, 2),
         new MapLocation(2, -2),
         new MapLocation(-2, 2),
         new MapLocation(-2, -2),
+        new MapLocation(2, 0),
+        new MapLocation(0, 2),
+        new MapLocation(-2, 0),
+        new MapLocation(0, -2),
     };
     public static void retreat(Micro micro) throws Exception {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
             if (G.me.distanceSquaredTo(loc) > 8) {
-                Motion.bugnavTowards(loc);
+                bugnavTowards(loc);
             }
             else {
                 MapLocation best = null;
@@ -452,7 +452,7 @@ public class Motion {
                     }
                     else {
                         if (!G.me.equals(best)) {
-                            Motion.bugnavTowards(best);
+                            bugnavTowards(best);
                         }
                         G.rc.setIndicatorLine(G.me, best, 200, 0, 100);
                     }

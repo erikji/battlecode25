@@ -224,6 +224,62 @@ public class Tower {
             }
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
+        // TODO: make required chips based on tower level
+        // i really hope all money towers dont go boom
+        // destroy: if (G.rc.getNumberTowers() == 25 && ((G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_PAINT_TOWER && G.rc.getChips() > 25000) || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER && G.rc.getChips() > 100000)) {
+        // // destroy: if (((G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_PAINT_TOWER && G.rc.getChips() > 25000) || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER && G.rc.getChips() > 50000)) {
+        //     int best = -1;
+        //     int bestDistance = 0;
+        //     for (int i = POI.numberOfTowers; --i >= 0;) {
+        //         if (POI.towerTeams[i] != G.opponentTeam) {
+        //             continue;
+        //         }
+        //         int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
+        //         if (best == -1 || distance < bestDistance) {
+        //             best = i;
+        //             bestDistance = distance;
+        //         }
+        //     }
+        //     MapLocation closestOpponentTower = new MapLocation(-1, -1);
+        //     if (best == -1) {
+        //         if (POI.symmetry[0]) {
+        //             closestOpponentTower = new MapLocation(G.rc.getMapWidth() - 1 - G.me.x, G.me.y);
+        //         }
+        //         if (POI.symmetry[1]) {
+        //             closestOpponentTower = new MapLocation(G.me.x, G.rc.getMapHeight() - 1 - G.me.y);
+        //         }
+        //         if (POI.symmetry[2]) {
+        //             closestOpponentTower = new MapLocation(G.rc.getMapWidth() - 1 - G.me.x, G.rc.getMapHeight() - 1 - G.me.y);
+        //         }
+        //         break destroy;
+        //     }
+        //     else {
+        //         closestOpponentTower = POI.towerLocs[best];
+        //     }
+        //     boolean foundFurther = false;
+        //     for (int i = POI.numberOfTowers; --i >= 0;) {
+        //         if (POI.towerTeams[i] != G.team) {
+        //             continue;
+        //         }
+        //         int distance = Motion.getChebyshevDistance(closestOpponentTower, POI.towerLocs[i]);
+        //         if (distance > bestDistance) {
+        //             foundFurther = true;
+        //             break;
+        //         }
+        //         if (Clock.getBytecodesLeft() < 2500) {
+        //             break;
+        //         }
+        //     }
+        //     if (foundFurther) {
+        //         break destroy;
+        //     }
+        //     // better to attack before disintegration
+        //     attack();
+        //     System.out.println("Tower " + G.rc.getID() + " disintegrated!!!!");
+        //     G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
+        //     G.rc.disintegrate();
+        //     return;
+        // }
         while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 5000) {
             attack();
             G.rc.upgradeTower(G.me);
