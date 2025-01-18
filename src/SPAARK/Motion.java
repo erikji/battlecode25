@@ -417,7 +417,7 @@ public class Motion {
                 }
             }
         }
-        if (true)
+        if (ENABLE_EXPLORE_INDICATORS)
             G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }

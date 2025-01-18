@@ -225,7 +225,7 @@ public class Motion {
     //         }
     //         bugnavTowards(exploreLoc, m);
     //         if (ENABLE_EXPLORE_INDICATORS)
-    //             G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+    //           // G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
     //     }
     // }
     
@@ -274,7 +274,7 @@ public class Motion {
     //         }
     //     }
     //     if (ENABLE_EXPLORE_INDICATORS)
-    //         G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+    //       // G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
     //     return exploreLoc;
     // }
 
@@ -343,7 +343,7 @@ public class Motion {
             // if (exploreLoc != null) {
             bugnavTowards(exploreLoc, m);
             //     if (ENABLE_EXPLORE_INDICATORS)
-            //         G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+            //       // G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
             // }
         }
     }
@@ -417,8 +417,8 @@ public class Motion {
                 }
             }
         }
-        if (true)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        // if (true)
+          // G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
     // public static MapLocation exploreRandomlyLoc() throws Exception {
@@ -557,7 +557,7 @@ public class Motion {
     //         }
     //     }
     //     if (ENABLE_EXPLORE_INDICATORS)
-    //         G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+    //       // G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
     //     return exploreLoc;
     // }
 
@@ -683,7 +683,7 @@ public class Motion {
         if (G.rc.isMovementReady()) {
             MapLocation loc = retreatLoc();
             Motion.bugnavAround(loc, 1, 4);
-            G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+          // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
                         G.rc.senseRobotAtLocation(loc).getPaintAmount());
@@ -1298,7 +1298,7 @@ public class Motion {
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
-                    G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
+                  // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
                     for (int j = step - 1; j >= 0; j--) {
                         if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
                             recalculationNeeded = Math.min(j, recalculationNeeded);

@@ -390,7 +390,7 @@ public class Soldier {
 
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
-        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         // do this instead of iterating through nearby map infos
         boolean[][] towerPattern = Robot.towerPatterns[buildTowerType];
         for (int dx = -1; dx++ < 4;) {
@@ -406,7 +406,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exist.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }
@@ -432,7 +432,7 @@ public class Soldier {
     public static void buildResource() throws Exception {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
+        // MapLocation paintLocation = null; // so indicator drawn to bot instead of previous position
         // do this instead of iterating through nearby map infos
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
@@ -445,7 +445,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exist.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exist) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }

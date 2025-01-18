@@ -153,9 +153,9 @@ public class Splasher {
         //     Motion.exploreRandomly();
         // } else {
         //     Motion.bugnavTowards(bestLoc);
-        //     G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
+        //   // G.rc.setIndicatorLine(G.me, bestLoc, 255, 255, 0);
         // }
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
+      // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void attack() throws Exception {
@@ -228,8 +228,8 @@ public class Splasher {
             G.rc.attack(bestLoc, Random.rand() % 2 == 0);
         }
         Motion.bugnavTowards(attackTarget);
-        G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);
-        G.rc.setIndicatorDot(G.me, 255, 0, 0);
+      // G.rc.setIndicatorLine(G.me, attackTarget, 255, 255, 0);
+      // G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     /**
