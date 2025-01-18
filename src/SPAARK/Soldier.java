@@ -20,7 +20,7 @@ public class Soldier {
     // controls rounds between visiting ruins
     public static final int VISIT_TIMEOUT = 40;
     // controls ratio of money to paint (higher = more money)
-    public static final double MONEY_PAINT_TOWER_RATIO = 0.6;
+    public static final double MONEY_PAINT_TOWER_RATIO = 1.0;
     // stop building towers if enemy paint interferes too much
     public static final int MAX_TOWER_ENEMY_PAINT = 10;
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
@@ -448,6 +448,10 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
         } else {
+            // hard coded movement
+            // if (G.me.isAdjacentTo(ruinLocation)) {
+            //     // try to stick close to the tower instead of relying on nugbav
+            // }
             Motion.bugnavAround(ruinLocation, 0, 1);
             G.rc.setIndicatorLine(G.rc.getLocation(), ruinLocation, 255, 200, 0);
         }
@@ -821,16 +825,8 @@ public class Soldier {
                 }
             }
             if (canPaintBest) {
-                // determine which checkerboard pattern to copy
-                int[] cnt = new int[] { 0, 0 };
-                MapLocation loc;
-                for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                    if (G.nearbyMapInfos[i].getPaint() == PaintType.ALLY_SECONDARY) {
-                        loc = G.nearbyMapInfos[i].getMapLocation();
-                        cnt[(loc.x + loc.y) & 1]++;
-                    }
-                }
-                G.rc.attack(bestLoc, cnt[(bestLoc.x + bestLoc.y) & 1] > cnt[(1 + bestLoc.x + bestLoc.y) & 1]);
+                // no more checkerboarding :(
+                G.rc.attack(bestLoc, false);
             } else if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT) {
                 // try to paint nearby
                 MapLocation loc;
