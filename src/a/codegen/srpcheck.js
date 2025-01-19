@@ -1,4 +1,4 @@
-const allowed = ['0,4', '4,0', '0,-4', '-4,0', '0,0']
+const allowed = ['0,4', '4,0', '0,-4', '-4,0']
 let s = '';
 for (let dy = -4; dy <= 4; dy++) {
     for (let dx = -4; dx <= 4; dx++) {
@@ -6,7 +6,7 @@ for (let dy = -4; dy <= 4; dy++) {
         // everything else not allowed
         if (dx ** 2 + dy ** 2 <= 20 && !allowed.includes(dx + ',' + dy)) {
             s += `\n || G.rc.canSenseLocation(center.translate(${dx}, ${dy}))\n&& (`;
-            const a = `[${dy == 0 ? 'oy' : (dy + ' + oy')}][${dx == 0 ? 'ox' : (dx + ' + ox')}]`;
+            const a = `[${dy == -4 ? 'oy' : (dy + 4 + ' + oy')}][${dx == -4 ? 'ox' : (dx + 4 + ' + ox')}]`;
             if (Math.abs(dx) <= 2 && Math.abs(dy) <= 2) {
                 s += `!mapInfos${a}.isPassable() || `;
             }

@@ -1,4 +1,4 @@
-package SPAARK;
+package a;
 
 import battlecode.common.*;
 
@@ -30,8 +30,8 @@ public class Soldier {
     public static final int MAX_TOWER_TIME = 200;
     // don't build SRP early-game, prioritize towers
     public static final int MIN_SRP_ROUND = 20;
-    // controls rounds between repairing/expanding any SRP
-    public static final int SRP_VISIT_TIMEOUT = 80;
+    // controls rounds between repairing/expanding SRP
+    public static final int SRP_VISIT_TIMEOUT = 20;
     // balance exploring and building SRPs (don't SRP if near target)
     public static final int SRP_EXPAND_TIMEOUT = 20;
     public static final int SRP_EXP_OVERRIDE_DIST = 100;
@@ -40,10 +40,8 @@ public class Soldier {
     public static final int MAX_SRP_BLOCKED_TIME = 5;
     // max build time
     public static final int MAX_SRP_TIME = 50;
-    // don't build SRP if not enough paint (runs out quickly)
-    public static final int SRP_MIN_PAINT = 75;
-    // dont run out of paint waiting for paint painting area
-    public static final int RETREAT_PAINT_MIN_PAINT = 20;
+    // don't expand SRP if low on paint, since very slow
+    public static final int EXPAND_SRP_MIN_PAINT = 75;
 
     public static MapLocation exploreLocation = null; // EXPLORE mode
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
@@ -75,14 +73,14 @@ public class Soldier {
      * Always:
      * If low on paint (reduceRetreating halves paint), retreat
      * Default to explore mode
-     * Most motion will attempt to paint under self to reduce passive paint drain
      * 
      * Explore:
      * Run around randomly while painting below self, pick towers from POI
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
-     * If existing SRP found, enter SRP build mode
-     * If can build, queue location and enter SRP expand mode
+     * If can build or repair SRP, queue location and enter SRP expand mode
+     * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
+     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Build tower:
      * Automatically make reducedRetreating true
@@ -91,6 +89,7 @@ public class Soldier {
      * Place stuff
      * If tower pattern obstructed by enemy paint long enougn, return to explore
      * Complete tower, return to explore
+     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Build SRP:
      * Automatically make reducedRetreating true
@@ -98,14 +97,14 @@ public class Soldier {
      * If SRP obstructed by enemy paint long enougn, return to explore
      * Complete SRP, queue 16 expansion locations and enter SRP expand mode
      * - Not as optimal anymore, sad
+     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Expand SRP:
      * Go to queued locations of expansion and see if can build (race conditions)
-     * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
-     * - Tiling is checked
      * If can build
      * - Place secondary marker at center
      * - Enter SRP build mode
+     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Attack:
      * Attack tower until ded lmao
@@ -163,8 +162,7 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                if (G.rc.getPaint() > RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
-                        && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
+                if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
                     Motion.retreat(moveWithPaintMicro);
                 else
                     Motion.retreat();
@@ -205,18 +203,18 @@ public class Soldier {
         if (lastSrpExpansion + SRP_EXPAND_TIMEOUT >= G.round
                 || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP ");
-            G.indicatorString.append(lastSrpExpansion + " " + G.round + " " + exploreLocation + ' ');
-        } else if (G.rc.getPaint() > SRP_MIN_PAINT) {
+        } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
             MapInfo info;
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 info = G.nearbyMapInfos[i];
                 if (G.getLastVisited(info.getMapLocation()) + SRP_VISIT_TIMEOUT < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
-                    resourceLocation = info.getMapLocation();
-                    mode = BUILD_RESOURCE;
+                    srpCheckLocations = new MapLocation[] { info.getMapLocation() };
+                    srpCheckIndex = 0;
+                    mode = EXPAND_RESOURCE;
                     // do this or bugs
-                    buildResourceCheckMode();
+                    expandResourceCheckMode();
                     return;
                 }
             }
@@ -362,6 +360,7 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
+        lastSrpExpansion = G.round;
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
@@ -431,6 +430,7 @@ public class Soldier {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
+        paintNearby();
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
@@ -458,8 +458,7 @@ public class Soldier {
             }
             G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         }
-        // remap map infos because move buh
-        G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
+        // re-map mapinfos buh
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
@@ -503,6 +502,7 @@ public class Soldier {
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        paintNearby();
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
@@ -515,7 +515,6 @@ public class Soldier {
         boolean paint;
         PaintType exists;
         MapLocation loc;
-        boolean isPatternComplete = true;
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 // location guaranteed to be on the map by canBuildSrpHere
@@ -524,22 +523,18 @@ public class Soldier {
                 if (G.rc.canAttack(loc)) {
                     paint = Robot.resourcePattern[dx][dy];
                     exists = mapInfos[oy + dy][ox + dx].getPaint();
-                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                        isPatternComplete = false;
-                        // can't paint enemy paint
-                        if (!exists.isEnemy()) {
-                            G.rc.attack(loc, paint);
-                            paintLocation = loc;
-                            break;
-                        }
+                    // can't paint enemy paint
+                    if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                        G.rc.attack(loc, paint);
+                        paintLocation = loc;
+                        break;
                     }
                 }
             }
         }
-        if (isPatternComplete) {
-            if (G.rc.canCompleteResourcePattern(resourceLocation))
-                G.rc.completeResourcePattern(resourceLocation);
-            if (G.rc.getPaint() < SRP_MIN_PAINT) {
+        if (G.rc.canCompleteResourcePattern(resourceLocation)) {
+            G.rc.completeResourcePattern(resourceLocation);
+            if (G.rc.getPaint() < EXPAND_SRP_MIN_PAINT) {
                 // early retreat since painting more is very slow
                 mode = RETREAT;
             } else {
@@ -578,13 +573,14 @@ public class Soldier {
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        paintNearby();
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
         G.indicatorString.append("EXPAND_RP ");
-        lastSrpExpansion = G.round;
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex], moveWithPaintMicro);
+        paintNearby();
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             if (G.rc.onTheMap(srpCheckLocations[i]))
@@ -614,20 +610,57 @@ public class Soldier {
         G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
+    public static void paintNearby() throws Exception {
+        if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT)
+            return;
+        // try to paint nearby
+        MapLocation loc;
+        for (int dx = -2; ++dx <= 2;) {
+            for (int dy = -2; ++dy <= 2;) {
+                loc = G.me.translate(dx, dy);
+                if (G.rc.onTheMap(loc) && mapInfos[dy + 4][dx + 4].getPaint() == PaintType.EMPTY) {
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+            }
+        }
+        loc = G.me.translate(-3, 0);
+        if (G.rc.onTheMap(loc) && mapInfos[4][1].getPaint() == PaintType.EMPTY) {
+            // still have to check if on map
+            if (G.rc.canAttack(loc))
+                G.rc.attack(loc);
+        }
+        loc = G.me.translate(0, 3);
+        if (G.rc.onTheMap(loc) && mapInfos[7][4].getPaint() == PaintType.EMPTY) {
+            // still have to check if on map
+            if (G.rc.canAttack(loc))
+                G.rc.attack(loc);
+        }
+        loc = G.me.translate(3, 0);
+        if (G.rc.onTheMap(loc) && mapInfos[4][7].getPaint() == PaintType.EMPTY) {
+            // still have to check if on map
+            if (G.rc.canAttack(loc))
+                G.rc.attack(loc);
+        }
+        loc = G.me.translate(0, -3);
+        if (G.rc.onTheMap(loc) && mapInfos[1][4].getPaint() == PaintType.EMPTY) {
+            // still have to check if on map
+            if (G.rc.canAttack(loc))
+                G.rc.attack(loc);
+        }
+    }
+
     /**
      * Checks if an SRP cannot be built at a location. If `false`, doesn't
-     * necessarily mean *can* build, only *can't not* build.
+     * necessarily mean *can* build, only *can't not* build. Allows non-aligned
+     * checkerboarding if not overlapping.
      */
     public static boolean cannotBuildSRPAtLocation(MapLocation center) throws Exception {
         // check if on map first
         if (center.x < 2 || center.x > G.mapWidth - 3 || center.y < 2 || center.y > G.mapHeight - 3) {
             return true;
         }
-        int ox = center.x - G.me.x + 4;
-        int oy = center.y - G.me.y + 4;
-        // if SRP already there, don't
-        if (G.rc.canSenseLocation(center) && mapInfos[oy][ox].isResourcePatternCenter())
-            return true;
         // check for towers that could interfere
         // ignore at first for better SRPs, then only avoid ruins (built towers ok)
         for (int i = nearbyRuins.length; --i >= 0;) {
@@ -636,162 +669,167 @@ public class Soldier {
                 return true;
             }
         }
-        // only 5 allowed locations for SRP markers (center included)
+        // only 4 allowed locations for SRP centers (markers)
         // within vision radius - everything else not allowed
         // also check passibility within 5x5 square
+        int ox = center.x - G.me.x;
+        int oy = center.y - G.me.y;
         // CODEGEN WARNING CODEGEN WARNING CODEGEN WARNING CODEGEN WARNING
         return G.rc.canSenseLocation(center.translate(-2, -4))
-                && (mapInfos[-4 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                && (mapInfos[oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
                 || G.rc.canSenseLocation(center.translate(-1, -4))
-                        && (mapInfos[-4 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, -4))
-                        && (mapInfos[-4 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, -4))
-                        && (mapInfos[-4 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, -3))
-                        && (mapInfos[-3 + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, -3))
-                        && (mapInfos[-3 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, -3))
-                        && (mapInfos[-3 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(0, -3))
-                        && (mapInfos[-3 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, -3))
-                        && (mapInfos[-3 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, -3))
-                        && (mapInfos[-3 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, -3))
-                        && (mapInfos[-3 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-4, -2))
-                        && (mapInfos[-2 + oy][-4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, -2))
-                        && (mapInfos[-2 + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, -2))
-                        && (!mapInfos[-2 + oy][-2 + ox].isPassable()
-                                || mapInfos[-2 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, -2))
-                        && (!mapInfos[-2 + oy][-1 + ox].isPassable()
-                                || mapInfos[-2 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(0, -2))
-                        && (!mapInfos[-2 + oy][ox].isPassable()
-                                || mapInfos[-2 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, -2))
-                        && (!mapInfos[-2 + oy][1 + ox].isPassable()
-                                || mapInfos[-2 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, -2))
-                        && (!mapInfos[-2 + oy][2 + ox].isPassable()
-                                || mapInfos[-2 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, -2))
-                        && (mapInfos[-2 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(4, -2))
-                        && (mapInfos[-2 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-4, -1))
-                        && (mapInfos[-1 + oy][-4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, -1))
-                        && (mapInfos[-1 + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, -1))
-                        && (!mapInfos[-1 + oy][-2 + ox].isPassable()
-                                || mapInfos[-1 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, -1))
-                        && (!mapInfos[-1 + oy][-1 + ox].isPassable()
-                                || mapInfos[-1 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(0, -1))
-                        && (!mapInfos[-1 + oy][ox].isPassable()
-                                || mapInfos[-1 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, -1))
-                        && (!mapInfos[-1 + oy][1 + ox].isPassable()
-                                || mapInfos[-1 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, -1))
-                        && (!mapInfos[-1 + oy][2 + ox].isPassable()
-                                || mapInfos[-1 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, -1))
-                        && (mapInfos[-1 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(4, -1))
-                        && (mapInfos[-1 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, 0))
-                        && (mapInfos[oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, 0))
-                        && (!mapInfos[oy][-2 + ox].isPassable()
-                                || mapInfos[oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, 0))
-                        && (!mapInfos[oy][-1 + ox].isPassable()
-                                || mapInfos[oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, 0))
-                        && (!mapInfos[oy][1 + ox].isPassable()
-                                || mapInfos[oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, 0))
-                        && (!mapInfos[oy][2 + ox].isPassable()
-                                || mapInfos[oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, 0))
                         && (mapInfos[oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-4, 1))
-                        && (mapInfos[1 + oy][-4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, 1))
-                        && (mapInfos[1 + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, 1))
-                        && (!mapInfos[1 + oy][-2 + ox].isPassable()
-                                || mapInfos[1 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, 1))
-                        && (!mapInfos[1 + oy][-1 + ox].isPassable()
-                                || mapInfos[1 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(0, 1))
-                        && (!mapInfos[1 + oy][ox].isPassable()
-                                || mapInfos[1 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, 1))
-                        && (!mapInfos[1 + oy][1 + ox].isPassable()
-                                || mapInfos[1 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, 1))
-                        && (!mapInfos[1 + oy][2 + ox].isPassable()
-                                || mapInfos[1 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, 1))
+                || G.rc.canSenseLocation(center.translate(1, -4))
+                        && (mapInfos[oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, -4))
+                        && (mapInfos[oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-3, -3))
+                        && (mapInfos[1 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, -3))
+                        && (mapInfos[1 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, -3))
                         && (mapInfos[1 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(4, 1))
+                || G.rc.canSenseLocation(center.translate(0, -3))
                         && (mapInfos[1 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-4, 2))
-                        && (mapInfos[2 + oy][-4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, 2))
-                        && (mapInfos[2 + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, 2))
-                        && (!mapInfos[2 + oy][-2 + ox].isPassable()
-                                || mapInfos[2 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, 2))
-                        && (!mapInfos[2 + oy][-1 + ox].isPassable()
-                                || mapInfos[2 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(0, 2))
-                        && (!mapInfos[2 + oy][ox].isPassable()
-                                || mapInfos[2 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, 2))
-                        && (!mapInfos[2 + oy][1 + ox].isPassable()
-                                || mapInfos[2 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, 2))
+                || G.rc.canSenseLocation(center.translate(1, -3))
+                        && (mapInfos[1 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, -3))
+                        && (mapInfos[1 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, -3))
+                        && (mapInfos[1 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-4, -2))
+                        && (mapInfos[2 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-3, -2))
+                        && (mapInfos[2 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, -2))
                         && (!mapInfos[2 + oy][2 + ox].isPassable()
                                 || mapInfos[2 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, 2))
-                        && (mapInfos[2 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(4, 2))
-                        && (mapInfos[2 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-3, 3))
-                        && (mapInfos[3 + oy][-3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, 3))
-                        && (mapInfos[3 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, 3))
-                        && (mapInfos[3 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(0, 3))
+                || G.rc.canSenseLocation(center.translate(-1, -2))
+                        && (!mapInfos[2 + oy][3 + ox].isPassable()
+                                || mapInfos[2 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(0, -2))
+                        && (!mapInfos[2 + oy][4 + ox].isPassable()
+                                || mapInfos[2 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, -2))
+                        && (!mapInfos[2 + oy][5 + ox].isPassable()
+                                || mapInfos[2 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, -2))
+                        && (!mapInfos[2 + oy][6 + ox].isPassable()
+                                || mapInfos[2 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, -2))
+                        && (mapInfos[2 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(4, -2))
+                        && (mapInfos[2 + oy][8 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-4, -1))
                         && (mapInfos[3 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, 3))
+                || G.rc.canSenseLocation(center.translate(-3, -1))
                         && (mapInfos[3 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(2, 3))
-                        && (mapInfos[3 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(3, 3))
-                        && (mapInfos[3 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-2, 4))
-                        && (mapInfos[4 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(-1, 4))
-                        && (mapInfos[4 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
-                || G.rc.canSenseLocation(center.translate(1, 4))
+                || G.rc.canSenseLocation(center.translate(-2, -1))
+                        && (!mapInfos[3 + oy][2 + ox].isPassable()
+                                || mapInfos[3 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, -1))
+                        && (!mapInfos[3 + oy][3 + ox].isPassable()
+                                || mapInfos[3 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(0, -1))
+                        && (!mapInfos[3 + oy][4 + ox].isPassable()
+                                || mapInfos[3 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, -1))
+                        && (!mapInfos[3 + oy][5 + ox].isPassable()
+                                || mapInfos[3 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, -1))
+                        && (!mapInfos[3 + oy][6 + ox].isPassable()
+                                || mapInfos[3 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, -1))
+                        && (mapInfos[3 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(4, -1))
+                        && (mapInfos[3 + oy][8 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-3, 0))
                         && (mapInfos[4 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, 0))
+                        && (!mapInfos[4 + oy][2 + ox].isPassable()
+                                || mapInfos[4 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, 0))
+                        && (!mapInfos[4 + oy][3 + ox].isPassable()
+                                || mapInfos[4 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(0, 0))
+                        && (!mapInfos[4 + oy][4 + ox].isPassable()
+                                || mapInfos[4 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, 0))
+                        && (!mapInfos[4 + oy][5 + ox].isPassable()
+                                || mapInfos[4 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, 0))
+                        && (!mapInfos[4 + oy][6 + ox].isPassable()
+                                || mapInfos[4 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, 0))
+                        && (mapInfos[4 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-4, 1))
+                        && (mapInfos[5 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-3, 1))
+                        && (mapInfos[5 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, 1))
+                        && (!mapInfos[5 + oy][2 + ox].isPassable()
+                                || mapInfos[5 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, 1))
+                        && (!mapInfos[5 + oy][3 + ox].isPassable()
+                                || mapInfos[5 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(0, 1))
+                        && (!mapInfos[5 + oy][4 + ox].isPassable()
+                                || mapInfos[5 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, 1))
+                        && (!mapInfos[5 + oy][5 + ox].isPassable()
+                                || mapInfos[5 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, 1))
+                        && (!mapInfos[5 + oy][6 + ox].isPassable()
+                                || mapInfos[5 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, 1))
+                        && (mapInfos[5 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(4, 1))
+                        && (mapInfos[5 + oy][8 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-4, 2))
+                        && (mapInfos[6 + oy][ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-3, 2))
+                        && (mapInfos[6 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, 2))
+                        && (!mapInfos[6 + oy][2 + ox].isPassable()
+                                || mapInfos[6 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, 2))
+                        && (!mapInfos[6 + oy][3 + ox].isPassable()
+                                || mapInfos[6 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(0, 2))
+                        && (!mapInfos[6 + oy][4 + ox].isPassable()
+                                || mapInfos[6 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, 2))
+                        && (!mapInfos[6 + oy][5 + ox].isPassable()
+                                || mapInfos[6 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, 2))
+                        && (!mapInfos[6 + oy][6 + ox].isPassable()
+                                || mapInfos[6 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, 2))
+                        && (mapInfos[6 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(4, 2))
+                        && (mapInfos[6 + oy][8 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-3, 3))
+                        && (mapInfos[7 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, 3))
+                        && (mapInfos[7 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, 3))
+                        && (mapInfos[7 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(0, 3))
+                        && (mapInfos[7 + oy][4 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, 3))
+                        && (mapInfos[7 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(2, 3))
+                        && (mapInfos[7 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(3, 3))
+                        && (mapInfos[7 + oy][7 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-2, 4))
+                        && (mapInfos[8 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(-1, 4))
+                        && (mapInfos[8 + oy][3 + ox].getMark() == PaintType.ALLY_SECONDARY)
+                || G.rc.canSenseLocation(center.translate(1, 4))
+                        && (mapInfos[8 + oy][5 + ox].getMark() == PaintType.ALLY_SECONDARY)
                 || G.rc.canSenseLocation(center.translate(2, 4))
-                        && (mapInfos[4 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY);
+                        && (mapInfos[8 + oy][6 + ox].getMark() == PaintType.ALLY_SECONDARY);
     }
 
     /**
@@ -845,6 +883,7 @@ public class Soldier {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
             int[] scores = Motion.defaultMicro.micro(d, dest);
+
             MapLocation nxt, bestLoc = G.me;
             int best = -1000000000;
             int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
@@ -869,43 +908,6 @@ public class Soldier {
             if (canPaintBest) {
                 // no more checkerboarding :(
                 G.rc.attack(bestLoc, false);
-            } else if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT) {
-                // try to paint nearby
-                MapLocation loc;
-                for (int dx = -2; ++dx <= 2;) {
-                    for (int dy = -2; ++dy <= 2;) {
-                        loc = G.me.translate(dx, dy);
-                        if (G.rc.onTheMap(loc) && mapInfos[dy + 4][dx + 4].getPaint() == PaintType.EMPTY) {
-                            // still have to check if on map
-                            if (G.rc.canAttack(loc))
-                                G.rc.attack(loc);
-                        }
-                    }
-                }
-                loc = G.me.translate(-3, 0);
-                if (G.rc.onTheMap(loc) && mapInfos[4][1].getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(0, 3);
-                if (G.rc.onTheMap(loc) && mapInfos[7][4].getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(3, 0);
-                if (G.rc.onTheMap(loc) && mapInfos[4][7].getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(0, -3);
-                if (G.rc.onTheMap(loc) && mapInfos[1][4].getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
             }
             return scores;
         }

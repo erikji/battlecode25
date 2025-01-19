@@ -1,4 +1,4 @@
-package TSPAARKJAN14;
+package a;
 
 import battlecode.common.*;
 
@@ -8,8 +8,19 @@ public class RobotPlayer {
         G.me = G.rc.getLocation();
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
+        G.allyRobotsString = new StringBuilder();
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            if (G.allyRobots[i].type.isRobotType()) {
+                G.allyRobotsString.append(G.allyRobots[i].toString());
+            }
+        }
+        G.opponentRobotsString = new StringBuilder();
+        for (int i = G.opponentRobots.length; --i >= 0;) {
+            if (G.opponentRobots[i].type.isRobotType()) {
+                G.opponentRobotsString.append(G.opponentRobots[i].toString());
+            }
+        }
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
-        G.round = G.rc.getRoundNum();
 
         String s = G.me.toString();
         Motion.lastVisitedLocations.append(s);
@@ -25,6 +36,9 @@ public class RobotPlayer {
 
     public static void updateRound() throws Exception {
         // every round
+        Motion.movementCooldown -= GameConstants.COOLDOWNS_PER_TURN * (G.rc.getRoundNum() - G.round);
+        Motion.movementCooldown = Math.max(Motion.movementCooldown, 0);
+        G.round = G.rc.getRoundNum();
         updateInfo();
         POI.updateRound();
     }
@@ -33,11 +47,12 @@ public class RobotPlayer {
         try {
             G.rc = rc;
             Random.state = G.rc.getID() * 0x2bda6bc + 0x9734e9;
-            G.mapCenter = new MapLocation(G.rc.getMapWidth() / 2, G.rc.getMapHeight() / 2);
-            G.mapArea = G.rc.getMapWidth() * G.rc.getMapHeight();
+            G.mapWidth = G.rc.getMapWidth();
+            G.mapHeight = G.rc.getMapHeight();
+            G.mapCenter = new MapLocation(G.mapWidth / 2, G.mapHeight / 2);
+            G.mapArea = G.mapWidth * G.mapHeight;
             G.team = G.rc.getTeam();
             G.opponentTeam = G.team.opponent();
-            POI.init();
             G.indicatorString = new StringBuilder();
             updateInfo();
             switch (G.rc.getType()) {
@@ -57,27 +72,33 @@ public class RobotPlayer {
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
                 } catch (GameActionException e) {
-                    // System.out.println("Unexpected GameActionException");
+                    System.out.println("Unexpected GameActionException");
+                    G.indicatorString.append(" GAErr!");
+                    G.rc.setIndicatorString(G.indicatorString.toString());
+                    G.indicatorString = new StringBuilder();
                     e.printStackTrace();
                 } catch (Exception e) {
-                    // System.out.println("Unexpected Exception");
+                    System.out.println("Unexpected Exception");
+                    G.indicatorString.append(" Err!");
+                    G.rc.setIndicatorString(G.indicatorString.toString());
+                    G.indicatorString = new StringBuilder();
                     e.printStackTrace();
                 }
                 if (G.rc.getRoundNum() != r) {
-                    // System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
+                    System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
                     G.indicatorString.append("BYTE=" + r + " ");
                 }
                 // for (int i = 0; i <= 50; i++) {
-                //     int a=Random.rand()%G.rc.getMapHeight(),b=Random.rand()%G.rc.getMapWidth(),c=Random.rand()%G.rc.getMapHeight(),d=Random.rand()%G.rc.getMapWidth();
-                //   // // G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
+                //     int a=Random.rand()%G.mapHeight,b=Random.rand()%G.mapWidth,c=Random.rand()%G.mapHeight,d=Random.rand()%G.mapWidth;
+                //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
                 // }
                 Clock.yield();
             }
         } catch (GameActionException e) {
-            // System.out.println("Unexpected GameActionException");
+            System.out.println("Unexpected GameActionException");
             e.printStackTrace();
         } catch (Exception e) {
-            // System.out.println("Unexpected Exception");
+            System.out.println("Unexpected Exception");
             e.printStackTrace();
         }
     }
