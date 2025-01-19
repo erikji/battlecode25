@@ -499,18 +499,17 @@ public class Soldier {
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             return;
-        } else {
-            // try to stick close to the tower instead of relying on nugbav
-            // compresses diagonals to cardinal directions
-            // NORTHEAST -> NORTH, SOUTHEAST -> EAST, etc.
-            MapLocation next = ruinLocation
-                    .add(Direction.cardinalDirections()[((ruinLocation.directionTo(G.me).ordinal() / 2) + 1) % 4]);
-            // go directly to next or just bug bork to the location
-            if (!G.me.isAdjacentTo(ruinLocation) || !Motion.move(G.me.directionTo(next))) {
-                Motion.bugnavTowards(next);
-            }
-            G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         }
+        // try to stick close to the tower instead of relying on nugbav
+        // compresses diagonals to cardinal directions
+        // NORTHEAST -> NORTH, SOUTHEAST -> EAST, etc.
+        MapLocation next = ruinLocation
+                .add(Direction.cardinalDirections()[((ruinLocation.directionTo(G.me).ordinal() / 2) + 1) % 4]);
+        // go directly to next or just bug bork to the location
+        if (!G.me.isAdjacentTo(ruinLocation) || !Motion.move(G.me.directionTo(next))) {
+            Motion.bugnavTowards(next);
+        }
+        G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
@@ -557,6 +556,11 @@ public class Soldier {
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
+            G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
+            POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
+            mode = EXPLORE;
+        }
     }
 
     public static void buildResource() throws Exception {
