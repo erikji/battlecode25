@@ -149,6 +149,7 @@ public class G {
     public static final double PAINT_PER_CHIP = 0.5;
     public static double paintPerChips() {
         // how many chips is 1 paint worth
+        // maybe this should be changed depending on the map
         return PAINT_PER_CHIP;
     }
 
