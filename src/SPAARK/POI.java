@@ -326,9 +326,6 @@ public class POI {
             default:
                 break;
         }
-        if (!symmetry[0]&&!symmetry[1]&&!symmetry[2]){
-            System.out.println("buh");
-        }
         if (firstUpdate) {
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
