@@ -270,8 +270,7 @@ public class Tower {
         //     G.rc.disintegrate();
         //     return;
         // }
-        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 5000) {
-            attack();
+        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 3000) {
             G.rc.upgradeTower(G.me);
         }
         // attack after upgrading
