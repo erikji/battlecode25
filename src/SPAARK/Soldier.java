@@ -31,7 +31,7 @@ public class Soldier {
     // don't build SRP early-game, prioritize towers
     public static final int MIN_SRP_ROUND = 20;
     // controls rounds between repairing/expanding any SRP
-    public static final int SRP_VISIT_TIMEOUT = 40;
+    public static final int SRP_VISIT_TIMEOUT = 80;
     // balance exploring and building SRPs (don't SRP if near target)
     public static final int SRP_EXPAND_TIMEOUT = 20;
     public static final int SRP_EXP_OVERRIDE_DIST = 100;
