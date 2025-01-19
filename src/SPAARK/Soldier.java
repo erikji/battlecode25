@@ -73,14 +73,14 @@ public class Soldier {
      * Always:
      * If low on paint (reduceRetreating halves paint), retreat
      * Default to explore mode
+     * Most motion will attempt to paint under self to reduce passive paint drain
      * 
      * Explore:
      * Run around randomly while painting below self, pick towers from POI
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
-     * If can build or repair SRP, queue location and enter SRP expand mode
-     * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
-     * If possible, claim territory by painting nearby empty tiles.
+     * If existing SRP found, enter SRP build mode
+     * If can build, queue location and enter SRP expand mode
      * 
      * Build tower:
      * Automatically make reducedRetreating true
@@ -89,7 +89,6 @@ public class Soldier {
      * Place stuff
      * If tower pattern obstructed by enemy paint long enougn, return to explore
      * Complete tower, return to explore
-     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Build SRP:
      * Automatically make reducedRetreating true
@@ -97,14 +96,14 @@ public class Soldier {
      * If SRP obstructed by enemy paint long enougn, return to explore
      * Complete SRP, queue 16 expansion locations and enter SRP expand mode
      * - Not as optimal anymore, sad
-     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Expand SRP:
      * Go to queued locations of expansion and see if can build (race conditions)
+     * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
+     * - Tiling is checked
      * If can build
      * - Place secondary marker at center
      * - Enter SRP build mode
-     * If possible, claim territory by painting nearby empty tiles.
      * 
      * Attack:
      * Attack tower until ded lmao
@@ -203,6 +202,7 @@ public class Soldier {
         if (lastSrpExpansion + SRP_EXPAND_TIMEOUT >= G.round
                 || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP ");
+            G.indicatorString.append(lastSrpExpansion + " " + G.round + " " + exploreLocation + ' ');
         } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
             MapInfo info;
@@ -210,11 +210,10 @@ public class Soldier {
                 info = G.nearbyMapInfos[i];
                 if (G.getLastVisited(info.getMapLocation()) + SRP_VISIT_TIMEOUT < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
-                    srpCheckLocations = new MapLocation[] { info.getMapLocation() };
-                    srpCheckIndex = 0;
-                    mode = EXPAND_RESOURCE;
+                    resourceLocation = info.getMapLocation();
+                    mode = BUILD_RESOURCE;
                     // do this or bugs
-                    expandResourceCheckMode();
+                    buildResourceCheckMode();
                     return;
                 }
             }
@@ -360,7 +359,6 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
-        lastSrpExpansion = G.round;
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
@@ -430,7 +428,6 @@ public class Soldier {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
-        paintNearby();
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
@@ -458,7 +455,8 @@ public class Soldier {
             }
             G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         }
-        // re-map mapinfos buh
+        // remap map infos because move buh
+        G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
@@ -502,7 +500,6 @@ public class Soldier {
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        paintNearby();
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
@@ -573,14 +570,13 @@ public class Soldier {
         }
         if (paintLocation != null)
             G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        paintNearby();
         G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
         G.indicatorString.append("EXPAND_RP ");
+        lastSrpExpansion = G.round;
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex], moveWithPaintMicro);
-        paintNearby();
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             if (G.rc.onTheMap(srpCheckLocations[i]))
@@ -608,47 +604,6 @@ public class Soldier {
             }
         }
         G.rc.setIndicatorDot(G.me, 255, 0, 0);
-    }
-
-    public static void paintNearby() throws Exception {
-        if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT)
-            return;
-        // try to paint nearby
-        MapLocation loc;
-        for (int dx = -2; ++dx <= 2;) {
-            for (int dy = -2; ++dy <= 2;) {
-                loc = G.me.translate(dx, dy);
-                if (G.rc.onTheMap(loc) && mapInfos[dy + 4][dx + 4].getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-            }
-        }
-        loc = G.me.translate(-3, 0);
-        if (G.rc.onTheMap(loc) && mapInfos[4][1].getPaint() == PaintType.EMPTY) {
-            // still have to check if on map
-            if (G.rc.canAttack(loc))
-                G.rc.attack(loc);
-        }
-        loc = G.me.translate(0, 3);
-        if (G.rc.onTheMap(loc) && mapInfos[7][4].getPaint() == PaintType.EMPTY) {
-            // still have to check if on map
-            if (G.rc.canAttack(loc))
-                G.rc.attack(loc);
-        }
-        loc = G.me.translate(3, 0);
-        if (G.rc.onTheMap(loc) && mapInfos[4][7].getPaint() == PaintType.EMPTY) {
-            // still have to check if on map
-            if (G.rc.canAttack(loc))
-                G.rc.attack(loc);
-        }
-        loc = G.me.translate(0, -3);
-        if (G.rc.onTheMap(loc) && mapInfos[1][4].getPaint() == PaintType.EMPTY) {
-            // still have to check if on map
-            if (G.rc.canAttack(loc))
-                G.rc.attack(loc);
-        }
     }
 
     /**
@@ -883,7 +838,6 @@ public class Soldier {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
             int[] scores = Motion.defaultMicro.micro(d, dest);
-
             MapLocation nxt, bestLoc = G.me;
             int best = -1000000000;
             int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
@@ -908,6 +862,43 @@ public class Soldier {
             if (canPaintBest) {
                 // no more checkerboarding :(
                 G.rc.attack(bestLoc, false);
+            } else if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT) {
+                // try to paint nearby
+                MapLocation loc;
+                for (int dx = -2; ++dx <= 2;) {
+                    for (int dy = -2; ++dy <= 2;) {
+                        loc = G.me.translate(dx, dy);
+                        if (G.rc.onTheMap(loc) && mapInfos[dy + 4][dx + 4].getPaint() == PaintType.EMPTY) {
+                            // still have to check if on map
+                            if (G.rc.canAttack(loc))
+                                G.rc.attack(loc);
+                        }
+                    }
+                }
+                loc = G.me.translate(-3, 0);
+                if (G.rc.onTheMap(loc) && mapInfos[4][1].getPaint() == PaintType.EMPTY) {
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+                loc = G.me.translate(0, 3);
+                if (G.rc.onTheMap(loc) && mapInfos[7][4].getPaint() == PaintType.EMPTY) {
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+                loc = G.me.translate(3, 0);
+                if (G.rc.onTheMap(loc) && mapInfos[4][7].getPaint() == PaintType.EMPTY) {
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
+                loc = G.me.translate(0, -3);
+                if (G.rc.onTheMap(loc) && mapInfos[1][4].getPaint() == PaintType.EMPTY) {
+                    // still have to check if on map
+                    if (G.rc.canAttack(loc))
+                        G.rc.attack(loc);
+                }
             }
             return scores;
         }
