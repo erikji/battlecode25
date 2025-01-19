@@ -272,7 +272,7 @@ public class Soldier {
         }
         final int maxEnemyPaint = hasHelp ? MAX_TOWER_ENEMY_PAINT : MAX_TOWER_ENEMY_PAINT_NO_HELP;
         int enemyPaint = 0;
-        boolean isPatternComplete = true;
+        int tilesThatNeedToBePainted = 0;
         int ox = ruinLocation.x - G.me.x + 2;
         int oy = ruinLocation.y - G.me.y + 2;
         boolean[][] pattern = Robot.towerPatterns[buildTowerType];
@@ -287,7 +287,7 @@ public class Soldier {
                 if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))) {
                     curr = mapInfos[oy + dy][ox + dx].getPaint();
                     if (curr != paint)
-                        isPatternComplete = false;
+                        tilesThatNeedToBePainted++;
                     // stop building if there's lots of enemy paint within the SRP
                     if (curr.isEnemy()) {
                         enemyPaint++;
@@ -313,7 +313,7 @@ public class Soldier {
         if (enemyPaint < maxEnemyPaint)
             buildBlockedTime = 0;
         // if pattern complete leave lowest bot ID to complete
-        if (isPatternComplete) {
+        if (tilesThatNeedToBePainted == 0) {
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
                     if (G.allyRobots[i].ID < G.rc.getID()) {
@@ -325,6 +325,37 @@ public class Soldier {
             }
             // is lowest id
             avoidRetreating = true;
+        }
+        else if (enemyPaint == 0) {
+            int totalPaintSquares = 0;
+            if (!G.me.equals(ruinLocation.add(Direction.NORTH)) && G.rc.canSenseRobotAtLocation(ruinLocation.add(Direction.NORTH))) {
+                RobotInfo r = G.rc.senseRobotAtLocation(ruinLocation.add(Direction.NORTH));
+                if (r.type == UnitType.SOLDIER) {
+                    totalPaintSquares += (r.paintAmount - 1) / 5;
+                }
+            }
+            if (!G.me.equals(ruinLocation.add(Direction.EAST)) && G.rc.canSenseRobotAtLocation(ruinLocation.add(Direction.EAST))) {
+                RobotInfo r = G.rc.senseRobotAtLocation(ruinLocation.add(Direction.EAST));
+                if (r.type == UnitType.SOLDIER) {
+                    totalPaintSquares += (r.paintAmount - 1) / 5;
+                }
+            }
+            if (!G.me.equals(ruinLocation.add(Direction.SOUTH)) && G.rc.canSenseRobotAtLocation(ruinLocation.add(Direction.SOUTH))) {
+                RobotInfo r = G.rc.senseRobotAtLocation(ruinLocation.add(Direction.SOUTH));
+                if (r.type == UnitType.SOLDIER) {
+                    totalPaintSquares += (r.paintAmount - 1) / 5;
+                }
+            }
+            if (!G.me.equals(ruinLocation.add(Direction.WEST)) && G.rc.canSenseRobotAtLocation(ruinLocation.add(Direction.WEST))) {
+                RobotInfo r = G.rc.senseRobotAtLocation(ruinLocation.add(Direction.WEST));
+                if (r.type == UnitType.SOLDIER) {
+                    totalPaintSquares += (r.paintAmount - 1) / 5;
+                }
+            }
+            totalPaintSquares += G.rc.getPaint() / 5;
+            if (totalPaintSquares >= tilesThatNeedToBePainted) {
+                avoidRetreating = true;
+            }
         }
     }
 
@@ -827,16 +858,13 @@ public class Soldier {
         // check for marker
         int ox = loc.x - G.me.x + 4;
         int oy = loc.y - G.me.y + 4;
-        // make sure can see all 4 sides
-        if (G.me.isWithinDistanceSquared(loc, 9)) {
-            if (mapInfos[oy + 1][ox].getMark() == PaintType.ALLY_PRIMARY)
-                return 0;
-            if (mapInfos[oy][ox - 1].getMark() == PaintType.ALLY_PRIMARY)
-                return 1;
-            if (mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
-                return 2;
-            // no im not adding the rc.disintigrate too much bytecode
-        }
+        // if (mapInfos[oy + 1][ox].getMark() == PaintType.ALLY_PRIMARY)
+        //     return 0;
+        if (G.me.isWithinDistanceSquared(loc.add(Direction.WEST), 20) && mapInfos[oy][ox - 1].getMark() == PaintType.ALLY_PRIMARY)
+            return 1;
+        if (G.me.isWithinDistanceSquared(loc.add(Direction.EAST), 20) && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
+            return 2;
+        // no im not adding the rc.disintigrate too much bytecode
         int towerType = POI.paintTowers * MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
