@@ -27,6 +27,8 @@ public class Soldier {
     public static final int MAX_TOWER_ENEMY_PAINT_HARD = 16;
     public static final int TOWER_HELP_DIST = 5;
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
+    // max soldiers that will build a tower
+    public static final int MAX_TOWER_BUILDING_SOLDIERS = 3;
     // max build time
     public static final int MAX_TOWER_TIME = 200;
     // don't build SRP immediately after spawning or in early game
@@ -261,6 +263,22 @@ public class Soldier {
             mode = EXPLORE;
             return;
         }
+        // if too many soldiers trying to build, we can leave
+        Direction[] cardinals = Direction.cardinalDirections();
+        MapLocation loc;
+        int robotsTryingToBuild = 0;
+        if (G.me.isWithinDistanceSquared(ruinLocation, 1)) {
+            for (int i = 4; --i >= 0;) {
+                loc = ruinLocation.add(cardinals[i]);
+                if (G.rc.canSenseRobotAtLocation(loc) && G.rc.senseRobotAtLocation(loc).type == UnitType.SOLDIER) {
+                    robotsTryingToBuild++;
+                    if (robotsTryingToBuild > MAX_TOWER_BUILDING_SOLDIERS) {
+                        mode = EXPLORE;
+                        return;
+                    }
+                }
+            }
+        }
         // check for moppers (used later)
         boolean hasHelp = false;
         for (int i = G.allyRobots.length; --i >= 0;) {
@@ -325,10 +343,8 @@ public class Soldier {
             avoidRetreating = true;
         } else if (enemyPaint == 0) {
             // if soldiers at tower have enough paint to complete pattern, DO NOT RETREAT
-            int totalPaintSquares = 0;
-            Direction[] cardinals = Direction.cardinalDirections();
-            MapLocation loc;
             RobotInfo r;
+            int totalPaintSquares = 0;
             for (int i = 4; --i >= 0;) {
                 loc = ruinLocation.add(cardinals[i]);
                 if (!G.me.equals(loc) && G.rc.canSenseRobotAtLocation(loc)) {
