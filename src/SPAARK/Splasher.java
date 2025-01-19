@@ -3241,7 +3241,7 @@ public class Splasher {
     public static void updateAttackTarget() throws Exception {
         if (attackTargetTower != -1) {
             if (POI.towerTeams[attackTargetTower] != G.opponentTeam) {
-                attackTarget = G.invalidLoc;
+                attackTarget = null;
             } else {
                 MapLocation loc = POI.towerLocs[attackTargetTower];
                 search: if (G.me.distanceSquaredTo(loc) <= 4) {
@@ -3252,13 +3252,13 @@ public class Splasher {
                             }
                         }
                     }
-                    attackTarget = G.invalidLoc;
+                    attackTarget = null;
                 }
             }
             // TODO: make it change targets if it finds ruin with 24 empty/ally paint
             // TODO: STOP CIRCLING AROUND OUR OWN TOWERS ALREADY
         }
-        if (attackTarget.x == -1) {
+        if (attackTarget == null) {
             int best = -1;
             int bestWeight = 0;
             for (int i = POI.numberOfTowers; --i >= 0;) {
