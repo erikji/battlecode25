@@ -1,4 +1,4 @@
-package TSPAARKJAN17;
+package MASON;
 
 import battlecode.common.*;
 
@@ -18,27 +18,57 @@ public class POI {
     public static MapLocation[] towerLocs = new MapLocation[144];
     public static Team[] towerTeams = new Team[144];
     public static UnitType[] towerTypes = new UnitType[144];
-    public static int[][] towerGrid = new int[12][12];
+    public static int[][] towerGrid = new int[][]{
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        },
+    };
     // public static int[] towers = new int[] {
-    //         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    //         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    //         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    //         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    //         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    //         -1, -1, -1, -1, -1, -1, -1, -1, -1
+    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1,
+    // -1, -1, -1, -1, -1, -1, -1, -1, -1
     // };
-
-    public static void init() throws Exception {
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                towerGrid[i][j] = -1;
-            }
-        }
-        for (int i = 0; i < 144; i++) {
-            towerTeams[i] = null;
-            towerTypes[i] = null;
-        }
-    }
 
     // symmetry detection
     // set bit if its a wall, ruin, or we explored it, and use bit operators to
@@ -143,13 +173,11 @@ public class POI {
                 } else {
                     critical[i] = false;
                 }
-            }
-            else {
+            } else {
                 robotsThatKnowInformation[i].append(":" + source);
                 critical[i] = false;
             }
-        }
-        else {
+        } else {
             towerGrid[loc.y / 5][loc.x / 5] = numberOfTowers;
             towerLocs[numberOfTowers] = loc;
             numberOfTowers++;
@@ -157,41 +185,41 @@ public class POI {
             addTower(source, loc, team, type);
         }
         // for (int i = 144; --i >= 0;) {
-        //     if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
-        //         if (towers[i] != data) {
-        //             if (towers[i] != -1 && parseTowerTeam(towers[i]) == G.team) {
-        //                 switch (parseTowerType(towers[i])) {
-        //                     case LEVEL_ONE_PAINT_TOWER:
-        //                         paintTowers--;
-        //                         break;
-        //                     case LEVEL_ONE_MONEY_TOWER:
-        //                         moneyTowers--;
-        //                         break;
-        //                 }
-        //             }
-        //             towers[i] = data;
-        //             if (parseTowerTeam(data) == G.team) {
-        //                 switch (parseTowerType(data)) {
-        //                     case LEVEL_ONE_PAINT_TOWER:
-        //                         paintTowers++;
-        //                         break;
-        //                     case LEVEL_ONE_MONEY_TOWER:
-        //                         moneyTowers++;
-        //                         break;
-        //                 }
-        //             }
-        //             robotsThatKnowInformation[i] = new StringBuilder(":" + source);
-        //             if (source == -1) {
-        //                 critical[i] = true;
-        //             } else {
-        //                 critical[i] = false;
-        //             }
-        //         } else if (source != -1) {
-        //             robotsThatKnowInformation[i].append(":" + source);
-        //             critical[i] = false;
-        //         }
-        //         break;
-        //     }
+        // if (((towers[i] ^ data) & 0b111111111111) == 0 || towers[i] == -1) {
+        // if (towers[i] != data) {
+        // if (towers[i] != -1 && parseTowerTeam(towers[i]) == G.team) {
+        // switch (parseTowerType(towers[i])) {
+        // case LEVEL_ONE_PAINT_TOWER:
+        // paintTowers--;
+        // break;
+        // case LEVEL_ONE_MONEY_TOWER:
+        // moneyTowers--;
+        // break;
+        // }
+        // }
+        // towers[i] = data;
+        // if (parseTowerTeam(data) == G.team) {
+        // switch (parseTowerType(data)) {
+        // case LEVEL_ONE_PAINT_TOWER:
+        // paintTowers++;
+        // break;
+        // case LEVEL_ONE_MONEY_TOWER:
+        // moneyTowers++;
+        // break;
+        // }
+        // }
+        // robotsThatKnowInformation[i] = new StringBuilder(":" + source);
+        // if (source == -1) {
+        // critical[i] = true;
+        // } else {
+        // critical[i] = false;
+        // }
+        // } else if (source != -1) {
+        // robotsThatKnowInformation[i].append(":" + source);
+        // critical[i] = false;
+        // }
+        // break;
+        // }
         // }
     };
 
@@ -216,21 +244,25 @@ public class POI {
     public static void updateRound() throws Exception {
         int a = Clock.getBytecodeNum();
         readMessages();
-        G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         a = Clock.getBytecodeNum();
         MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
         for (int i = nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
                 RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
-                // addTower(-1, intifyTower(info.getTeam(), info.getType()) | intifyLocation(nearbyRuins[i]));
+                // addTower(-1, intifyTower(info.getTeam(), info.getType()) |
+                // intifyLocation(nearbyRuins[i]));
                 addTower(-1, nearbyRuins[i], info.getTeam(), info.getType().getBaseType());
             } else {
-                // addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) | intifyLocation(nearbyRuins[i]));
+                // addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) |
+                // intifyLocation(nearbyRuins[i]));
                 addTower(-1, nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
-        G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
 
         drawIndicators(); // uses 5000 bytecode somehow
@@ -261,16 +293,17 @@ public class POI {
                 explored[xy.y] |= 1L << xy.x;
             }
         }
-        G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
         // a = Clock.getBytecodeNum();
         // int opponentPaintSeen = 0;
         // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-        //     if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
-        //         opponentPaintSeen++;
-        //     }
+        // if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+        // opponentPaintSeen++;
+        // }
         // }
         // if (opponentPaintSeen > maxOpponentPaintSeen) {
-        //     maxOpponentPaintSeen = opponentPaintSeen;
+        // maxOpponentPaintSeen = opponentPaintSeen;
         // }
         // G.indicatorString.append("PAINT-BT " + (Clock.getBytecodeNum() - a) + " ");
         int numValidSymmetries = (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) + (symmetry[2] ? 1 : 0);
@@ -285,15 +318,17 @@ public class POI {
                 removeValidSymmetry(-1, 2);
             }
         }
-        G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
         sendMessages();
-        G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+            G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
-        int w = G.rc.getMapWidth();
-        int h = G.rc.getMapHeight();
+        int w = G.mapWidth;
+        int h = G.mapHeight;
         switch (sym) {
             // only consider bits where we explored both it and its rotation
             case 0: // horz
@@ -328,15 +363,16 @@ public class POI {
                 throw new Exception("invalid symmetry argument");
         }
     }
+
     public static MapLocation getOppositeMapLocation(MapLocation m, int sym) throws Exception {
-        //get the opposite map location according to this symmetry
+        // get the opposite map location according to this symmetry
         switch (sym) {
             case 0:
-                return new MapLocation(m.x, G.rc.getMapHeight() - m.y - 1);
+                return new MapLocation(m.x, G.mapHeight - m.y - 1);
             case 1:
-                return new MapLocation(G.rc.getMapWidth() - m.x - 1, m.y);
+                return new MapLocation(G.mapWidth - m.x - 1, m.y);
             case 2:
-                return new MapLocation(G.rc.getMapWidth() - m.x - 1, G.rc.getMapHeight() - m.y - 1);
+                return new MapLocation(G.mapWidth - m.x - 1, G.mapHeight - m.y - 1);
             default:
                 throw new Exception("invalid symmetry argument");
         }
@@ -365,7 +401,8 @@ public class POI {
                 for (int i = numberOfTowers; --i >= 0;) {
                     if (robotsThatKnowInformation[i].indexOf(id) == -1) {
                         // message = appendToMessage(message, towers[i]);
-                        message = appendToMessage(message, intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
+                        message = appendToMessage(message,
+                                intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
                         messages++;
                         robotsThatKnowInformation[i].append(id);
                         if (messages == 2) {
@@ -390,30 +427,31 @@ public class POI {
                     return;
             }
             // if (totalMessages < 20) {
-            //     int offset = Random.rand();
-            //     int message = -1;
-            //     int messages = 0;
-            //     for (int i = numberOfTowers; --i >= 0;) {
-            //         int j = (i + offset) % numberOfTowers;
-            //         message = appendToMessage(message, intifyTower(towerTeams[j], towerTypes[j]) | intifyLocation(towerLocs[j]));
-            //         messages++;
-            //         if (messages == 2) {
-            //             G.rc.broadcastMessage(message);
-            //             totalMessages++;
-            //             if (totalMessages == 20) {
-            //                 return;
-            //             }
-            //             message = -1;
-            //             messages = 0;
-            //         }
-            //     }
-            //     if (messages != 0) {
-            //         G.rc.broadcastMessage(message);
-            //         totalMessages++;
-            //         if (totalMessages == 20) {
-            //             return;
-            //         }
-            //     }
+            // int offset = Random.rand();
+            // int message = -1;
+            // int messages = 0;
+            // for (int i = numberOfTowers; --i >= 0;) {
+            // int j = (i + offset) % numberOfTowers;
+            // message = appendToMessage(message, intifyTower(towerTeams[j], towerTypes[j])
+            // | intifyLocation(towerLocs[j]));
+            // messages++;
+            // if (messages == 2) {
+            // G.rc.broadcastMessage(message);
+            // totalMessages++;
+            // if (totalMessages == 20) {
+            // return;
+            // }
+            // message = -1;
+            // messages = 0;
+            // }
+            // }
+            // if (messages != 0) {
+            // G.rc.broadcastMessage(message);
+            // totalMessages++;
+            // if (totalMessages == 20) {
+            // return;
+            // }
+            // }
             // }
         } else {
             int message = -1;
@@ -430,7 +468,8 @@ public class POI {
                             String id = ":" + r.getID();
                             for (int i = numberOfTowers; --i >= 0;) {
                                 if (critical[i] && !towerLocs[i].equals(r.getLocation())) {
-                                    message = appendToMessage(message, intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
+                                    message = appendToMessage(message,
+                                            intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
                                     messages++;
                                     critical[i] = false;
                                     robotsThatKnowInformation[i].append(id);
@@ -440,18 +479,18 @@ public class POI {
                                 }
                             }
                             // for (int i = 144; --i >= 0;) {
-                            //     if (towers[i] == -1) {
-                            //         break;
-                            //     }
-                            //     if (critical[i]
-                            //             && ((intifyLocation(r.getLocation()) ^ towers[i]) & 0b111111111111) != 0) {
-                            //         message = appendToMessage(message, towers[i]);
-                            //         messages++;
-                            //         critical[i] = false;
-                            //         if (messages == 2) {
-                            //             break;
-                            //         }
-                            //     }
+                            // if (towers[i] == -1) {
+                            // break;
+                            // }
+                            // if (critical[i]
+                            // && ((intifyLocation(r.getLocation()) ^ towers[i]) & 0b111111111111) != 0) {
+                            // message = appendToMessage(message, towers[i]);
+                            // messages++;
+                            // critical[i] = false;
+                            // if (messages == 2) {
+                            // break;
+                            // }
+                            // }
                             // }
                             if (messages < 2) {
                                 if (robotsThatKnowInformation[144].indexOf(id) == -1) {
@@ -463,7 +502,8 @@ public class POI {
                             if (messages < 2) {
                                 for (int i = numberOfTowers; --i >= 0;) {
                                     if (robotsThatKnowInformation[i].indexOf(id) == -1) {
-                                        message = appendToMessage(message, intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
+                                        message = appendToMessage(message, intifyTower(towerTeams[i], towerTypes[i])
+                                                | intifyLocation(towerLocs[i]));
                                         messages++;
                                         robotsThatKnowInformation[i].append(id);
                                         if (messages == 2) {
@@ -591,51 +631,51 @@ public class POI {
     public static void drawIndicators() {
         if (ENABLE_INDICATORS) {
             for (int i = numberOfTowers; --i >= 0;) {
-            // for (int i = 144; --i >= 0;) {
-            //     if (towers[i] == -1) {
-            //         break;
-            //     }
-                // // System.out.println(parseLocation(towers[i]));
+                // for (int i = 144; --i >= 0;) {
+                // if (towers[i] == -1) {
+                // break;
+                // }
+                // System.out.println(parseLocation(towers[i]));
                 // G.indicatorString.append(i + " ");
                 try {
                     // if (parseTowerTeam(towers[i]) == G.team) {
                     if (towerTeams[i] == G.team) {
                         if (towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                          // // G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 100, 0);
+                            G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 100, 0);
                             MapLocation loc = towerLocs[i];
                             for (int j = 8; --j >= 0;) {
-                              // // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 255, 0);
+                                G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 255, 0);
                             }
                         } else {
-                          // // G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 150, 0);
+                            G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 150, 0);
                             MapLocation loc = towerLocs[i];
                             for (int j = 8; --j >= 0;) {
-                              // // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 100, 0);
+                                G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 100, 0);
                             }
                             // MapLocation loc = parseLocation(towers[i]);
                             // for (int j = 8; --j >= 0;) {
-                            //   // // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 255);
+                            // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 255);
                             // }
                         }
                     } else if (towerTeams[i] == G.opponentTeam) {
-                      // // G.rc.setIndicatorLine(G.me, towerLocs[i], 150, 0, 0);
+                        G.rc.setIndicatorLine(G.me, towerLocs[i], 150, 0, 0);
                         MapLocation loc = towerLocs[i];
                         for (int j = 8; --j >= 0;) {
-                          // // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 255, 0, 0);
+                            G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 255, 0, 0);
                         }
                         // MapLocation loc = parseLocation(towers[i]);
                         // for (int j = 8; --j >= 0;) {
-                        //   // // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 255, 0, 0);
+                        // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 255, 0, 0);
                         // }
                     } else {
-                      // // G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 0, 150);
+                        G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 0, 150);
                         MapLocation loc = towerLocs[i];
                         for (int j = 8; --j >= 0;) {
-                          // // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 0, 255);
+                            G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 0, 255);
                         }
                         // MapLocation loc = parseLocation(towers[i]);
                         // for (int j = 8; --j >= 0;) {
-                        //   // // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 0, 255);
+                        // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 0, 255);
                         // }
                     }
                 } catch (Exception e) {

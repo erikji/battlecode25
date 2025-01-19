@@ -110,7 +110,7 @@ public class POI {
             if (towers[i] == -1) {
                 break;
             }
-            // System.out.println(parseLocation(towers[i]));
+            // // System.out.println(parseLocation(towers[i]));
             try {
                 if (parseTowerTeam(towers[i]) == G.rc.getTeam()) {
                     // // G.rc.setIndicatorLine(G.me, parseLocation(towers[i]), 0, 100, 0);
@@ -173,7 +173,7 @@ public class POI {
                 }
                 return true;
         }
-        System.out.println("invalid symmetry argument");
+        // System.out.println("invalid symmetry argument");
         return false;
     }
 

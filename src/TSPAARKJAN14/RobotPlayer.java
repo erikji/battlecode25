@@ -57,14 +57,14 @@ public class RobotPlayer {
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
                 } catch (GameActionException e) {
-                    System.out.println("Unexpected GameActionException");
+                    // System.out.println("Unexpected GameActionException");
                     e.printStackTrace();
                 } catch (Exception e) {
-                    System.out.println("Unexpected Exception");
+                    // System.out.println("Unexpected Exception");
                     e.printStackTrace();
                 }
                 if (G.rc.getRoundNum() != r) {
-                    System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
+                    // System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
                     G.indicatorString.append("BYTE=" + r + " ");
                 }
                 // for (int i = 0; i <= 50; i++) {
@@ -74,10 +74,10 @@ public class RobotPlayer {
                 Clock.yield();
             }
         } catch (GameActionException e) {
-            System.out.println("Unexpected GameActionException");
+            // System.out.println("Unexpected GameActionException");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Unexpected Exception");
+            // System.out.println("Unexpected Exception");
             e.printStackTrace();
         }
     }
