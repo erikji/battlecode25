@@ -38,7 +38,7 @@ public class Mopper {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        if (G.rc.getPaint() < Motion.getRetreatPaint()) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.rc.getChips() < 5000) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
             mode = EXPLORE;
