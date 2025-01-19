@@ -278,7 +278,6 @@ public class Motion {
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
     public static MapLocation retreatWaitingLoc = null;
-    public static boolean isLowestPaint = false;
 
     public static int paintNeededToStopRetreating;
 
