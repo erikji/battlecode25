@@ -22,8 +22,9 @@ public class Soldier {
     // controls ratio of money to paint (higher = more money)
     public static final double MONEY_PAINT_TOWER_RATIO = 1.0;
     // stop building towers if enemy paint interferes too much
-    public static final int MAX_TOWER_ENEMY_PAINT = 10;
+    public static final int MAX_TOWER_ENEMY_PAINT = 8;
     public static final int MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
+    public static final int MAX_TOWER_ENEMY_PAINT_HARD = 16;
     public static final int TOWER_HELP_DIST = 5;
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
     // max build time
@@ -38,6 +39,7 @@ public class Soldier {
     // stop building SRP if enemy paint interferes too much
     public static final int MAX_SRP_ENEMY_PAINT = 1;
     public static final int MAX_SRP_BLOCKED_TIME = 5;
+    public static final int MAX_SRP_ENEMY_PAINT_HARD = 8;
     // max build time
     public static final int MAX_SRP_TIME = 50;
     // don't build SRP if not enough paint (runs out quickly)
@@ -297,6 +299,10 @@ public class Soldier {
                                 return;
                             }
                             break checkPattern;
+                        } else if (enemyPaint >= MAX_TOWER_ENEMY_PAINT_HARD) {
+                            G.indicatorString.append("BLOCK-H ");
+                            // immediately give up if there's way too much paint
+                            mode = EXPLORE;
                         }
                     }
                 }
@@ -351,6 +357,10 @@ public class Soldier {
                             mode = EXPLORE;
                         }
                         return;
+                    } else if (enemyPaint >= MAX_SRP_ENEMY_PAINT_HARD) {
+                        G.indicatorString.append("BLOCK-H ");
+                        // immediately give up if there's way too much paint
+                        mode = EXPLORE;
                     }
                 }
             }
