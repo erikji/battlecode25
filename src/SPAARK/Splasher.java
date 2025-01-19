@@ -10,7 +10,7 @@ public class Splasher {
     // controls round between visiting ruins
     public static final int VISIT_TIMEOUT = 75;
 
-    public static MapLocation attackTarget = new MapLocation(-1, -1);
+    public static MapLocation attackTarget = null;
     public static int attackTargetTower;
     public static StringBuilder triedAttackTargets = new StringBuilder();
 

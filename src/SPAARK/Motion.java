@@ -6,6 +6,7 @@ public class Motion {
     public static final boolean ENABLE_EXPLORE_INDICATORS = false;
 
     public static int movementCooldown = 0;
+    public static int lastMove = -1;
 
     public static final int TOWARDS = 0;
     public static final int AWAY = 1;
@@ -1472,6 +1473,7 @@ public class Motion {
             G.rc.move(dir);
             movementCooldown += G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN);
             lastDir = dir;
+            lastMove = G.rc.getRoundNum();
             RobotPlayer.updateInfo();
             return true;
         }

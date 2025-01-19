@@ -75,7 +75,8 @@ public class POI {
     // check symmetry
     public static long[] wall = new long[60]; // wall[xy.y] |= 1L << xy.x;
     public static long[] ruin = new long[60];
-    public static long[] explored = new long[60];
+    public static long[] explored = new long[64];
+    public static long[] explored2 = new long[64];
     public static boolean[] symmetry = new boolean[] { true, true, true };
     public static boolean criticalSymmetry = false;
     // 0: horz (the line of symmetry is horizontal and parallel to the x axis)
@@ -272,25 +273,73 @@ public class POI {
             MapLocation xy = nearbyRuins[i];
             ruin[xy.y] |= 1L << xy.x;
         }
+        switch (Math.min(G.me.y, 4)) {
+            case 4:
+                explored[G.me.y-4] |= 0b11111L << G.me.x - 2;
+            case 3:
+                explored[G.me.y-3] |= 0b1111111L << G.me.x - 3;
+            case 2:
+                explored[G.me.y-2] |= 0b111111111L << G.me.x - 4;
+            case 1:
+                explored[G.me.y-1] |= 0b111111111L << G.me.x - 4;
+            default:
+                explored[G.me.y] |= 0b111111111L << G.me.x - 4;
+                explored[G.me.y+1] |= 0b111111111L << G.me.x - 4;
+                explored[G.me.y+2] |= 0b111111111L << G.me.x - 4;
+                explored[G.me.y+3] |= 0b1111111L << G.me.x - 3;
+                explored[G.me.y+4] |= 0b11111L << G.me.x - 2;
+        }
+        switch (G.me.x) {
+            case 3:
+                explored[G.me.y] |= 0b111L << G.me.x - 3;
+                explored[G.me.y-1] |= 0b111L << G.me.x - 3;
+                explored[G.me.y+1] |= 0b111L << G.me.x - 3;
+                explored[G.me.y-2] |= 0b111L << G.me.x - 3;
+                explored[G.me.y+2] |= 0b111L << G.me.x - 3;
+                explored[G.me.y-3] |= 0b111L << G.me.x - 3;
+                explored[G.me.y+3] |= 0b111L << G.me.x - 3;
+                explored[G.me.y-4] |= 3L << G.me.x - 2;
+                explored[G.me.y+4] |= 3L << G.me.x - 2;
+                break;
+            case 2:
+                explored[G.me.y] |= 3L << G.me.x - 2;
+                explored[G.me.y-1] |= 3L << G.me.x - 2;
+                explored[G.me.y+1] |= 3L << G.me.x - 2;
+                explored[G.me.y-2] |= 3L << G.me.x - 2;
+                explored[G.me.y+2] |= 3L << G.me.x - 2;
+                explored[G.me.y-3] |= 3L << G.me.x - 2;
+                explored[G.me.y+3] |= 3L << G.me.x - 2;
+                explored[G.me.y-4] |= 3L << G.me.x - 2;
+                explored[G.me.y+4] |= 3L << G.me.x - 2;
+                break;
+            case 1:
+                explored[G.me.y] |= 1L << G.me.x - 1;
+                explored[G.me.y-1] |= 1L << G.me.x - 1;
+                explored[G.me.y+1] |= 1L << G.me.x - 1;
+                explored[G.me.y-2] |= 1L << G.me.x - 1;
+                explored[G.me.y+2] |= 1L << G.me.x - 1;
+                explored[G.me.y-3] |= 1L << G.me.x - 1;
+                explored[G.me.y+3] |= 1L << G.me.x - 1;
+                explored[G.me.y-4] |= 1L << G.me.x - 1;
+                explored[G.me.y+4] |= 1L << G.me.x - 1;
+                break;
+            default:
+                break;
+        }
         if (firstUpdate) {
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
                 if (G.nearbyMapInfos[i].isWall()) {
                     wall[xy.y] |= 1L << xy.x;
                 }
-                explored[xy.y] |= 1L << xy.x;
             }
             firstUpdate = false;
         } else {
             for (int i = 69; --i >= 37;) {
                 MapLocation xy = G.me.translate(G.range20X[i], G.range20Y[i]);
-                if (!G.rc.onTheMap(xy)) {
-                    continue;
-                }
-                if (G.rc.senseMapInfo(xy).isWall()) {
+                if (G.rc.onTheMap(xy) && G.rc.senseMapInfo(xy).isWall()) {
                     wall[xy.y] |= 1L << xy.x;
                 }
-                explored[xy.y] |= 1L << xy.x;
             }
         }
         if (ENABLE_INDICATORS)
