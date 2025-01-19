@@ -29,8 +29,9 @@ public class Soldier {
     public static final int MAX_TOWER_BLOCKED_TIME = 30;
     // max build time
     public static final int MAX_TOWER_TIME = 200;
-    // don't build SRP early-game, prioritize towers
+    // don't build SRP immediately after spawning or in early game
     public static final int MIN_SRP_ROUND = 20;
+    public static final int SPAWN_SRP_MIN_ROUNDS = 10;
     // controls rounds between repairing/expanding any SRP
     public static final int SRP_VISIT_TIMEOUT = 200;
     // balance exploring and building SRPs (don't SRP if near target)
@@ -62,7 +63,7 @@ public class Soldier {
     // (goes into expand mode, reaches the target location, and starts building)
     public static MapLocation[] srpCheckLocations = new MapLocation[] {};
     public static int srpCheckIndex = 0;
-    public static int lastSrpExpansion = -SRP_EXPAND_TIMEOUT;
+    public static int lastSrpExpansion = -SRP_EXPAND_TIMEOUT + SPAWN_SRP_MIN_ROUNDS;
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
@@ -121,13 +122,13 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
+        Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         if (!avoidRetreating
                 && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1)) {
             mode = RETREAT;
-        } else if (mode == RETREAT && G.rc.getPaint() > G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO) {
+        } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
         }
-        Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         nearbyRuins = G.rc.senseNearbyRuins(-1);
         // map
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
