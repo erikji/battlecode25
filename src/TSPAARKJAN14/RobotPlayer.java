@@ -57,10 +57,10 @@ public class RobotPlayer {
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
                 } catch (GameActionException e) {
-                    System.out.println("Unexpected GameActionException");
+                    // System.out.println("Unexpected GameActionException");
                     e.printStackTrace();
                 } catch (Exception e) {
-                    System.out.println("Unexpected Exception");
+                    // System.out.println("Unexpected Exception");
                     e.printStackTrace();
                 }
                 if (G.rc.getRoundNum() != r) {
@@ -74,10 +74,10 @@ public class RobotPlayer {
                 Clock.yield();
             }
         } catch (GameActionException e) {
-            System.out.println("Unexpected GameActionException");
+            // System.out.println("Unexpected GameActionException");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Unexpected Exception");
+            // System.out.println("Unexpected Exception");
             e.printStackTrace();
         }
     }

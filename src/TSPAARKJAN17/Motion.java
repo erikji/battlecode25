@@ -489,7 +489,7 @@ public class Motion {
     //                 //     break;
     //                 // }
     //                 // }
-    //                 // System.out.println(Clock.getBytecodeNum() - a);
+    //                 // // System.out.println(Clock.getBytecodeNum() - a);
     //                 // tested: +50, 50/90 wins
     //                 exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
     //                 // exploreTime = 20;
@@ -546,10 +546,10 @@ public class Motion {
     //                 // if (!G.rc.onTheMap(exploreLoc)) {
     //                 //     MapLocation loc = exploreLoc;
     //                 //     exploreLoc = null;
-    //                 //     System.out.println("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
-    //                 //     System.out.println(tx + " " + ty);
-    //                 //     System.out.println((G.me.x + tx * dx) + " " + (G.me.y + tx * dy));
-    //                 //     System.out.println((G.me.x + ty * dx) + " " + (G.me.y + ty * dy));
+    //                 //     // System.out.println("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
+    //                 //     // System.out.println(tx + " " + ty);
+    //                 //     // System.out.println((G.me.x + tx * dx) + " " + (G.me.y + tx * dy));
+    //                 //     // System.out.println((G.me.x + ty * dx) + " " + (G.me.y + ty * dy));
     //                 //     G.rc.resign();
     //                 //     throw new Exception("Explore edges loc: " + loc + ", dx=" + dx + ",dy=" + dy);
     //                 // }

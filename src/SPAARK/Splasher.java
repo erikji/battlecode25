@@ -82,7 +82,6 @@ public class Splasher {
                 if (G.rc.isActionReady()) {
                     attackAttackScores();
                 }
-                G.rc.setIndicatorLine(G.me, attackTarget, 0, 0, 255);
             }
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
@@ -394,9 +393,16 @@ public class Splasher {
             Motion.tryTransferPaint();
         }
         switch (mode) {
-            case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
-            case ATTACK -> G.rc.setIndicatorDot(G.me, 255, 0, 0);
-            case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
+            case EXPLORE -> {
+                G.rc.setIndicatorDot(G.me, 0, 255, 0);
+            }
+            case ATTACK -> {
+                G.rc.setIndicatorDot(G.me, 255, 0, 0);
+                G.rc.setIndicatorLine(G.me, attackTarget, 255, 0, 0);
+            }
+            case RETREAT -> {
+                G.rc.setIndicatorDot(G.me, 255, 0, 255);
+            }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }

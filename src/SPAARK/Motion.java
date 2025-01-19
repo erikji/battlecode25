@@ -1,7 +1,5 @@
 package SPAARK;
 
-import java.util.Map;
-
 import battlecode.common.*;
 
 public class Motion {

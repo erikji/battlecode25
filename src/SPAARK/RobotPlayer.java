@@ -73,13 +73,13 @@ public class RobotPlayer {
                     G.indicatorString = new StringBuilder();
                 } catch (GameActionException e) {
                     System.out.println("Unexpected GameActionException");
-                    G.indicatorString.append(" GAException!");
+                    G.indicatorString.append(" GAErr!");
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
                     e.printStackTrace();
                 } catch (Exception e) {
                     System.out.println("Unexpected Exception");
-                    G.indicatorString.append(" Exception!");
+                    G.indicatorString.append(" Err!");
                     G.rc.setIndicatorString(G.indicatorString.toString());
                     G.indicatorString = new StringBuilder();
                     e.printStackTrace();
