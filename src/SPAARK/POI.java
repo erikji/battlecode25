@@ -292,35 +292,35 @@ public class POI {
         switch (G.me.x) {
             case 3:
                 explored[G.me.y] |= 0b111L << G.me.x - 3;
-                explored[G.me.y-1] |= 0b111L << G.me.x - 3;
+                explored[(G.me.y+63)%64] |= 0b111L << G.me.x - 3;
                 explored[G.me.y+1] |= 0b111L << G.me.x - 3;
-                explored[G.me.y-2] |= 0b111L << G.me.x - 3;
+                explored[(G.me.y+62)%64] |= 0b111L << G.me.x - 3;
                 explored[G.me.y+2] |= 0b111L << G.me.x - 3;
-                explored[G.me.y-3] |= 0b111L << G.me.x - 3;
+                explored[(G.me.y+61)%64] |= 0b111L << G.me.x - 3;
                 explored[G.me.y+3] |= 0b111L << G.me.x - 3;
-                explored[G.me.y-4] |= 3L << G.me.x - 2;
+                explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
                 explored[G.me.y+4] |= 3L << G.me.x - 2;
                 break;
             case 2:
                 explored[G.me.y] |= 3L << G.me.x - 2;
-                explored[G.me.y-1] |= 3L << G.me.x - 2;
+                explored[(G.me.y+63)%64] |= 3L << G.me.x - 2;
                 explored[G.me.y+1] |= 3L << G.me.x - 2;
-                explored[G.me.y-2] |= 3L << G.me.x - 2;
+                explored[(G.me.y+62)%64] |= 3L << G.me.x - 2;
                 explored[G.me.y+2] |= 3L << G.me.x - 2;
-                explored[G.me.y-3] |= 3L << G.me.x - 2;
+                explored[(G.me.y+61)%64] |= 3L << G.me.x - 2;
                 explored[G.me.y+3] |= 3L << G.me.x - 2;
-                explored[G.me.y-4] |= 3L << G.me.x - 2;
+                explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
                 explored[G.me.y+4] |= 3L << G.me.x - 2;
                 break;
             case 1:
                 explored[G.me.y] |= 1L << G.me.x - 1;
-                explored[G.me.y-1] |= 1L << G.me.x - 1;
+                explored[(G.me.y+63)%64] |= 1L << G.me.x - 1;
                 explored[G.me.y+1] |= 1L << G.me.x - 1;
-                explored[G.me.y-2] |= 1L << G.me.x - 1;
+                explored[(G.me.y+62)%64] |= 1L << G.me.x - 1;
                 explored[G.me.y+2] |= 1L << G.me.x - 1;
-                explored[G.me.y-3] |= 1L << G.me.x - 1;
+                explored[(G.me.y+61)%64] |= 1L << G.me.x - 1;
                 explored[G.me.y+3] |= 1L << G.me.x - 1;
-                explored[G.me.y-4] |= 1L << G.me.x - 1;
+                explored[(G.me.y+60)%64] |= 1L << G.me.x - 1;
                 explored[G.me.y+4] |= 1L << G.me.x - 1;
                 break;
             default:

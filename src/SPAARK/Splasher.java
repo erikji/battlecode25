@@ -11,8 +11,6 @@ public class Splasher {
     public static final int VISIT_TIMEOUT = 75;
 
     public static MapLocation attackTarget = null;
-    public static int attackTargetTower;
-    public static StringBuilder triedAttackTargets = new StringBuilder();
 
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[37]; // score for attacking this square
@@ -49,11 +47,14 @@ public class Splasher {
                 mode = EXPLORE;
             }
         }
-        if (mode != RETREAT) {
-            updateAttackTarget();
-        } else {
-            triedAttackTargets = new StringBuilder();
-        }
+		switch (mode) {
+			case EXPLORE -> {
+				
+			}
+			case ATTACK -> {
+
+			}
+		}
         // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES
@@ -359,7 +360,7 @@ public class Splasher {
                     best = i;
                 }
             }
-            if (allmax[best] > 250) {
+            if (allmax[best] > 5000 / G.rc.getRoundNum() + 250) {
                 MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
                 // try to move before attacking if possible so the paint we used in the attack
                 // isn't factored into movement cooldown
@@ -3239,6 +3240,9 @@ public class Splasher {
      * target
      */
     public static void updateAttackTarget() throws Exception {
+		if (attackTarget == null) {
+
+		}
         if (attackTargetTower != -1) {
             if (POI.towerTeams[attackTargetTower] != G.opponentTeam) {
                 attackTarget = null;
