@@ -1,4 +1,4 @@
-package SPAARK;
+package MASON;
 
 import battlecode.common.*;
 
@@ -660,7 +660,7 @@ public class Mopper {
             dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
             G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
-        moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
+        moveScores = mopperMicro.micro(dir, G.invalidLoc);
         if (G.rc.onTheMap(microDir))
             G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
     }
@@ -1373,7 +1373,7 @@ public class Mopper {
         // TODO: FIND AND MOP ENEMY PAINT OFF SRP
         // get 2 best locations to build stuff on
         // so if the first one is already there just go to the next one
-        moveScores = Motion.defaultMicro.micro(G.me.directionTo(target), target);
+        moveScores = mopperMicro.micro(G.me.directionTo(target), target);
         moveScores[G.dirOrd(G.me.directionTo(target))] -= 18;
         moveScores[(G.dirOrd(G.me.directionTo(target)) + 1) % 8] -= 14;
         moveScores[(G.dirOrd(G.me.directionTo(target)) + 7) % 8] -= 14;
@@ -1763,7 +1763,7 @@ public class Mopper {
 
     public static void retreatMoveScores() throws Exception {
         Direction bestDir = Motion.retreatDir();
-        moveScores = Motion.defaultMicro.micro(bestDir, Motion.retreatLoc);
+        moveScores = mopperMicro.micro(bestDir, Motion.retreatLoc);
         moveScores[G.dirOrd(bestDir)] += 50;
         moveScores[G.dirOrd(bestDir.rotateLeft())] += 40;
         moveScores[G.dirOrd(bestDir.rotateRight())] += 40;
@@ -2077,4 +2077,29 @@ public class Mopper {
     public static void retreatSwingScores() throws Exception {
         exploreSwingScores();
     }
+
+    public static Micro mopperMicro = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            // run away from towers
+            MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
+            for (int r = ruins.length; --r >= 0;) {
+                if (G.rc.canSenseRobotAtLocation(ruins[r])) {
+                    RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
+                    if (bot.team == G.opponentTeam) {
+                        for (int i = 9; --i >= 0;) {
+                            if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
+                                if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(bot.location,
+                                        bot.type.actionRadiusSquared)) {
+                                    scores[i] -= G.paintPerChips() * 180; // mopper costs 300 paint, and we lose 3/5 hp
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return scores;
+        }
+    };
 }

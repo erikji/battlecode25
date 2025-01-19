@@ -1,4 +1,4 @@
-package SPAARK;
+package MASON;
 
 import battlecode.common.*;
 
@@ -278,7 +278,6 @@ public class Motion {
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
     public static MapLocation retreatWaitingLoc = null;
-    public static boolean isLowestPaint = false;
 
     public static int paintNeededToStopRetreating;
 
@@ -438,15 +437,7 @@ public class Motion {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
-                    boolean lowest = true;
-                    for (int i = 8; --i >= 0;) {
-                        MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
-                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
-                            lowest = false;
-                            break;
-                        }
-                    }
-                    if (lowest && r.paintAmount >= amount) {
+                    if (r.paintAmount >= amount) {
                         return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
                     } else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
                         if (r.paintAmount != 0) {
@@ -1426,23 +1417,6 @@ public class Motion {
                 for (int j = 9; --j >= 0;) {
                     if (G.me.add(G.ALL_DIRECTIONS[j]).isWithinDistanceSquared(G.opponentRobots[i].location, 8)) {
                         scores[j] -= 20; // lose 4 paint?
-                    }
-                }
-            }
-        }
-        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
-        for (int r = ruins.length; --r >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(ruins[r])) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
-                if (bot.team == G.opponentTeam) {
-                    int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
-                    for (int i = 9; --i >= 0;) {
-                        if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
-                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(ruins[r],
-                                    bot.type.actionRadiusSquared)) {
-                                scores[i] -= toSubtract;
-                            }
-                        }
                     }
                 }
             }

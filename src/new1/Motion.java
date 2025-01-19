@@ -1,4 +1,6 @@
-package SPAARK;
+package new1;
+
+import java.util.Map;
 
 import battlecode.common.*;
 
@@ -326,7 +328,6 @@ public class Motion {
     }
 
     public static MapLocation retreatLoc = new MapLocation(-1, -1);
-
     public static void setRetreatLoc() throws Exception {
         // retreats to an ally tower
         // depends on which information needs to be transmitted and if tower has paint
@@ -439,11 +440,30 @@ public class Motion {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     boolean lowest = true;
+                    // higher weight = more in danger bot
+                    int weight = -G.rc.getPaint();
+                    PaintType p = G.rc.senseMapInfo(G.me).getPaint();
+                    if (p.isEnemy()) {
+                        weight += 2000;
+                    }
+                    else if (!p.isAlly()) {
+                        weight += 1000;
+                    }
                     for (int i = 8; --i >= 0;) {
                         MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
-                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
-                            lowest = false;
-                            break;
+                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                            int curWeight = -G.rc.senseRobotAtLocation(waitingLoc).paintAmount;
+                            PaintType p2 = G.rc.senseMapInfo(waitingLoc).getPaint();
+                            if (p2.isEnemy()) {
+                                curWeight += 2000;
+                            }
+                            else if (!p2.isAlly()) {
+                                curWeight += 1000;
+                            }
+                            if (curWeight > weight) {
+                                lowest = false;
+                                break;
+                            }
                         }
                     }
                     if (lowest && r.paintAmount >= amount) {
@@ -1376,11 +1396,6 @@ public class Motion {
         }
     }
 
-    public static final int DEF_MICRO_E_PAINT_PENALTY = 5;
-    public static final int DEF_MICRO_E_PAINT_BOT_PENALTY = 10;
-    public static final int DEF_MICRO_N_PAINT_PENALTY = 5;
-    public static final int DEF_MICRO_N_PAINT_BOT_PENALTY = 5;
-
     /**
      * Default movement micro - avoid clusters of bots, especially on non-allied
      * paint
@@ -1392,12 +1407,10 @@ public class Motion {
         scores[G.dirOrd(d)] += 20;
         scores[(G.dirOrd(d) + 1) % 8] += 15;
         scores[(G.dirOrd(d) + 7) % 8] += 15;
-        int mopperPenalty = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
-        int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown) / 10);
-        int enemyPaintPenalty = DEF_MICRO_E_PAINT_PENALTY * GameConstants.PENALTY_ENEMY_TERRITORY * mopperPenalty
-                * turnsToNext;
-        int neutralPaintPenalty = DEF_MICRO_N_PAINT_PENALTY * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperPenalty
-                * turnsToNext;
+        int mopperMultiplier = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
+        int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown)
+                / 10);
+
         for (int i = 9; --i >= 0;) {
             if (!G.rc.canMove(G.ALL_DIRECTIONS[i]) && i != 8) {
                 scores[i] = -1000000000;
@@ -1405,17 +1418,17 @@ public class Motion {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
-                    scores[i] -= enemyPaintPenalty;
+                    scores[i] -= 5 * GameConstants.PENALTY_ENEMY_TERRITORY * mopperMultiplier * numTurnsUntilNextMove;
                     for (int j = 8; --j >= 0;) {
                         if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[j]).toString()) != -1) {
-                            scores[i] -= DEF_MICRO_E_PAINT_BOT_PENALTY;
+                            scores[i] -= 10; // 2 is hardcoded in the engine oof
                         }
                     }
                 } else if (p == PaintType.EMPTY) {
-                    scores[i] -= neutralPaintPenalty;
+                    scores[i] -= 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * mopperMultiplier * numTurnsUntilNextMove;
                     for (int j = 8; --j >= 0;) {
                         if (G.allyRobotsString.indexOf(nxt.add(G.DIRECTIONS[j]).toString()) != -1) {
-                            scores[i] -= DEF_MICRO_N_PAINT_BOT_PENALTY;
+                            scores[i] -= 5;
                         }
                     }
                 }
@@ -1426,23 +1439,6 @@ public class Motion {
                 for (int j = 9; --j >= 0;) {
                     if (G.me.add(G.ALL_DIRECTIONS[j]).isWithinDistanceSquared(G.opponentRobots[i].location, 8)) {
                         scores[j] -= 20; // lose 4 paint?
-                    }
-                }
-            }
-        }
-        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
-        for (int r = ruins.length; --r >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(ruins[r])) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
-                if (bot.team == G.opponentTeam) {
-                    int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
-                    for (int i = 9; --i >= 0;) {
-                        if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
-                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(ruins[r],
-                                    bot.type.actionRadiusSquared)) {
-                                scores[i] -= toSubtract;
-                            }
-                        }
                     }
                 }
             }
