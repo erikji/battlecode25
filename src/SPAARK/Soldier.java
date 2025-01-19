@@ -826,16 +826,13 @@ public class Soldier {
         // check for marker
         int ox = loc.x - G.me.x + 4;
         int oy = loc.y - G.me.y + 4;
-        // make sure can see all 4 sides
-        if (G.me.isWithinDistanceSquared(loc, 9)) {
-            if (mapInfos[oy + 1][ox].getMark() == PaintType.ALLY_PRIMARY)
-                return 0;
-            if (mapInfos[oy][ox - 1].getMark() == PaintType.ALLY_PRIMARY)
-                return 1;
-            if (mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
-                return 2;
-            // no im not adding the rc.disintigrate too much bytecode
-        }
+        // if (mapInfos[oy + 1][ox].getMark() == PaintType.ALLY_PRIMARY)
+        //     return 0;
+        if (G.me.isWithinDistanceSquared(loc.add(Direction.WEST), 20) && mapInfos[oy][ox - 1].getMark() == PaintType.ALLY_PRIMARY)
+            return 1;
+        if (G.me.isWithinDistanceSquared(loc.add(Direction.EAST), 20) && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
+            return 2;
+        // no im not adding the rc.disintigrate too much bytecode
         int towerType = POI.paintTowers * MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
