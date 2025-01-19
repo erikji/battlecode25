@@ -3258,7 +3258,7 @@ public class Splasher {
             // TODO: make it change targets if it finds ruin with 24 empty/ally paint
             // TODO: STOP CIRCLING AROUND OUR OWN TOWERS ALREADY
         }
-        if (attackTarget.x == -1) {
+        if (attackTarget == null) {
             int best = -1;
             int bestWeight = 0;
             for (int i = POI.numberOfTowers; --i >= 0;) {
