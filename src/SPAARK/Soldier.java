@@ -215,8 +215,8 @@ public class Soldier {
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
                     resourceLocation = info.getMapLocation();
                     mode = BUILD_RESOURCE;
-                    // do this or bugs
-                    buildResourceCheckMode();
+                    if (Clock.getBytecodesLeft() > 8000)
+                        buildResourceCheckMode();
                     return;
                 }
             }
