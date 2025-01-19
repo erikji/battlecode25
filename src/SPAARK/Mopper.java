@@ -1096,401 +1096,707 @@ public class Mopper {
     public static void exploreSwingScores() throws Exception {
         MapLocation loc;
         loc = G.me.translate(-1, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-1, -3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[1] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, -3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[2] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, -3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-3, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-3, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[3] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-3, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[6] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[3] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[6] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[6] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[4] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-1, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[5] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-1, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[15] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[7] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, -3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[4] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-1, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[33] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[32] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[28] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[24] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[20] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[13] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[9] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[5] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[10] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[16] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[10] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[12] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[10] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[8] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[30] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[15] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[11] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[7] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, -3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[8] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(3, -1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(3, 0);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(3, -2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[34] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[15] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[14] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[11] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(3, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[14] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[19] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[22] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[19] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[18] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[26] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[19] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[17] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-1, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[35] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[21] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[17] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(3, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[18] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(1, 3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(2, 3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(0, 3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[23] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[31] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[25] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[21] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-1, 3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[27] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[23] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-3, 1);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[29] += Math.min(5, bot.paintAmount) * 7;
-            swingScores[25] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-3, 2);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[25] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
-        loc = G.me.translate(-2, 3);
-        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-            swingScores[27] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
-        }
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[32] += 100;
+				swingScores[28] += 100;
+				swingScores[9] += 100;
+				swingScores[5] += 100;
+				swingScores[4] += 100;
+				swingScores[0] += 100;
+			}
+		}
+		loc = G.me.translate(-1, -3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[4] += 100;
+				swingScores[0] += 100;
+			}
+		}
+		loc = G.me.translate(-2, -2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[1] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[28] += 100;
+				swingScores[5] += 100;
+				swingScores[1] += 100;
+				swingScores[0] += 100;
+			}
+		}
+		loc = G.me.translate(-2, -3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[0] += 100;
+			}
+		}
+		loc = G.me.translate(0, -2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[2] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[32] += 100;
+				swingScores[28] += 100;
+				swingScores[12] += 100;
+				swingScores[9] += 100;
+				swingScores[8] += 100;
+				swingScores[4] += 100;
+				swingScores[2] += 100;
+				swingScores[0] += 100;
+			}
+		}
+		loc = G.me.translate(0, -3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[0] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[8] += 100;
+				swingScores[4] += 100;
+				swingScores[0] += 100;
+			}
+		}
+		loc = G.me.translate(-2, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[33] += 100;
+				swingScores[29] += 100;
+				swingScores[28] += 100;
+				swingScores[24] += 100;
+				swingScores[5] += 100;
+				swingScores[1] += 100;
+			}
+		}
+		loc = G.me.translate(-3, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[29] += 100;
+				swingScores[1] += 100;
+			}
+		}
+		loc = G.me.translate(-3, -2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[1] += 100;
+			}
+		}
+		loc = G.me.translate(-2, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[3] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[33] += 100;
+				swingScores[29] += 100;
+				swingScores[25] += 100;
+				swingScores[24] += 100;
+				swingScores[21] += 100;
+				swingScores[5] += 100;
+				swingScores[3] += 100;
+				swingScores[1] += 100;
+			}
+		}
+		loc = G.me.translate(-3, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[1] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[29] += 100;
+				swingScores[25] += 100;
+				swingScores[1] += 100;
+			}
+		}
+		loc = G.me.translate(0, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[32] += 100;
+				swingScores[30] += 100;
+				swingScores[28] += 100;
+				swingScores[24] += 100;
+				swingScores[20] += 100;
+				swingScores[16] += 100;
+				swingScores[13] += 100;
+				swingScores[12] += 100;
+				swingScores[9] += 100;
+				swingScores[2] += 100;
+			}
+		}
+		loc = G.me.translate(1, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[6] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[34] += 100;
+				swingScores[32] += 100;
+				swingScores[30] += 100;
+				swingScores[20] += 100;
+				swingScores[16] += 100;
+				swingScores[12] += 100;
+				swingScores[6] += 100;
+				swingScores[2] += 100;
+			}
+		}
+		loc = G.me.translate(0, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[3] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[30] += 100;
+				swingScores[26] += 100;
+				swingScores[24] += 100;
+				swingScores[20] += 100;
+				swingScores[17] += 100;
+				swingScores[16] += 100;
+				swingScores[13] += 100;
+				swingScores[11] += 100;
+				swingScores[9] += 100;
+				swingScores[7] += 100;
+				swingScores[3] += 100;
+				swingScores[2] += 100;
+			}
+		}
+		loc = G.me.translate(1, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[6] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[34] += 100;
+				swingScores[30] += 100;
+				swingScores[26] += 100;
+				swingScores[22] += 100;
+				swingScores[20] += 100;
+				swingScores[16] += 100;
+				swingScores[11] += 100;
+				swingScores[7] += 100;
+				swingScores[6] += 100;
+				swingScores[2] += 100;
+			}
+		}
+		loc = G.me.translate(1, -2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[6] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[4] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[2] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[32] += 100;
+				swingScores[12] += 100;
+				swingScores[8] += 100;
+				swingScores[6] += 100;
+				swingScores[4] += 100;
+				swingScores[2] += 100;
+			}
+		}
+		loc = G.me.translate(-1, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[5] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[33] += 100;
+				swingScores[24] += 100;
+				swingScores[21] += 100;
+				swingScores[20] += 100;
+				swingScores[17] += 100;
+				swingScores[13] += 100;
+				swingScores[9] += 100;
+				swingScores[7] += 100;
+				swingScores[5] += 100;
+				swingScores[3] += 100;
+			}
+		}
+		loc = G.me.translate(-1, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[35] += 100;
+				swingScores[33] += 100;
+				swingScores[31] += 100;
+				swingScores[21] += 100;
+				swingScores[17] += 100;
+				swingScores[13] += 100;
+				swingScores[7] += 100;
+				swingScores[3] += 100;
+			}
+		}
+		loc = G.me.translate(0, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[15] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[7] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[35] += 100;
+				swingScores[31] += 100;
+				swingScores[30] += 100;
+				swingScores[26] += 100;
+				swingScores[17] += 100;
+				swingScores[15] += 100;
+				swingScores[13] += 100;
+				swingScores[11] += 100;
+				swingScores[7] += 100;
+				swingScores[3] += 100;
+			}
+		}
+		loc = G.me.translate(-2, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[3] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[33] += 100;
+				swingScores[31] += 100;
+				swingScores[29] += 100;
+				swingScores[25] += 100;
+				swingScores[21] += 100;
+				swingScores[3] += 100;
+			}
+		}
+		loc = G.me.translate(1, -3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[4] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[8] += 100;
+				swingScores[4] += 100;
+			}
+		}
+		loc = G.me.translate(-1, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[33] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[32] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[28] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[24] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[20] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[13] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[9] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[5] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[33] += 100;
+				swingScores[32] += 100;
+				swingScores[28] += 100;
+				swingScores[24] += 100;
+				swingScores[20] += 100;
+				swingScores[13] += 100;
+				swingScores[9] += 100;
+				swingScores[5] += 100;
+			}
+		}
+		loc = G.me.translate(2, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[10] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[34] += 100;
+				swingScores[16] += 100;
+				swingScores[14] += 100;
+				swingScores[12] += 100;
+				swingScores[10] += 100;
+				swingScores[6] += 100;
+			}
+		}
+		loc = G.me.translate(2, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[16] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[10] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[34] += 100;
+				swingScores[22] += 100;
+				swingScores[18] += 100;
+				swingScores[16] += 100;
+				swingScores[14] += 100;
+				swingScores[11] += 100;
+				swingScores[10] += 100;
+				swingScores[6] += 100;
+			}
+		}
+		loc = G.me.translate(2, -2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[12] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[10] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[8] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[6] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[12] += 100;
+				swingScores[10] += 100;
+				swingScores[8] += 100;
+				swingScores[6] += 100;
+			}
+		}
+		loc = G.me.translate(1, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[30] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[15] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[11] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[7] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[35] += 100;
+				swingScores[34] += 100;
+				swingScores[30] += 100;
+				swingScores[26] += 100;
+				swingScores[22] += 100;
+				swingScores[15] += 100;
+				swingScores[11] += 100;
+				swingScores[7] += 100;
+			}
+		}
+		loc = G.me.translate(2, -3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[8] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[8] += 100;
+			}
+		}
+		loc = G.me.translate(3, -1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[14] += 100;
+				swingScores[10] += 100;
+			}
+		}
+		loc = G.me.translate(3, 0);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[18] += 100;
+				swingScores[14] += 100;
+				swingScores[10] += 100;
+			}
+		}
+		loc = G.me.translate(3, -2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[10] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[10] += 100;
+			}
+		}
+		loc = G.me.translate(2, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[34] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[15] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[14] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[11] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[34] += 100;
+				swingScores[22] += 100;
+				swingScores[18] += 100;
+				swingScores[15] += 100;
+				swingScores[14] += 100;
+				swingScores[11] += 100;
+			}
+		}
+		loc = G.me.translate(3, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[14] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[18] += 100;
+				swingScores[14] += 100;
+			}
+		}
+		loc = G.me.translate(1, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[19] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[35] += 100;
+				swingScores[26] += 100;
+				swingScores[23] += 100;
+				swingScores[22] += 100;
+				swingScores[19] += 100;
+				swingScores[15] += 100;
+			}
+		}
+		loc = G.me.translate(2, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[22] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[19] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[18] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[22] += 100;
+				swingScores[19] += 100;
+				swingScores[18] += 100;
+				swingScores[15] += 100;
+			}
+		}
+		loc = G.me.translate(0, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[26] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[19] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[17] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[15] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[35] += 100;
+				swingScores[31] += 100;
+				swingScores[27] += 100;
+				swingScores[26] += 100;
+				swingScores[23] += 100;
+				swingScores[19] += 100;
+				swingScores[17] += 100;
+				swingScores[15] += 100;
+			}
+		}
+		loc = G.me.translate(-1, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[35] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[21] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[17] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[35] += 100;
+				swingScores[31] += 100;
+				swingScores[27] += 100;
+				swingScores[23] += 100;
+				swingScores[21] += 100;
+				swingScores[17] += 100;
+			}
+		}
+		loc = G.me.translate(3, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[18] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[18] += 100;
+			}
+		}
+		loc = G.me.translate(1, 3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[23] += 100;
+				swingScores[19] += 100;
+			}
+		}
+		loc = G.me.translate(2, 3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[19] += 100;
+			}
+		}
+		loc = G.me.translate(0, 3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[23] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[19] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[27] += 100;
+				swingScores[23] += 100;
+				swingScores[19] += 100;
+			}
+		}
+		loc = G.me.translate(-2, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[31] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[25] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[21] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[31] += 100;
+				swingScores[27] += 100;
+				swingScores[25] += 100;
+				swingScores[21] += 100;
+			}
+		}
+		loc = G.me.translate(-1, 3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[27] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[23] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[27] += 100;
+				swingScores[23] += 100;
+			}
+		}
+		loc = G.me.translate(-3, 1);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[29] += Math.min(5, bot.paintAmount) * 7;
+			swingScores[25] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[29] += 100;
+				swingScores[25] += 100;
+			}
+		}
+		loc = G.me.translate(-3, 2);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[25] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[25] += 100;
+			}
+		}
+		loc = G.me.translate(-2, 3);
+		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+			swingScores[27] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing
+			if (bot.paintAmount <= 5) {
+				swingScores[27] += 100;
+			}
+		}
     }
 
     public static void buildMoveScores() throws Exception {
