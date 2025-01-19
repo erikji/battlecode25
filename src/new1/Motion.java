@@ -1,4 +1,4 @@
-package SPAARK;
+package new1;
 
 import java.util.Map;
 
@@ -440,11 +440,30 @@ public class Motion {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     boolean lowest = true;
+                    // higher weight = more in danger bot
+                    int weight = -G.rc.getPaint();
+                    PaintType p = G.rc.senseMapInfo(G.me).getPaint();
+                    if (p.isEnemy()) {
+                        weight += 2000;
+                    }
+                    else if (!p.isAlly()) {
+                        weight += 1000;
+                    }
                     for (int i = 8; --i >= 0;) {
                         MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
-                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
-                            lowest = false;
-                            break;
+                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                            int curWeight = -G.rc.senseRobotAtLocation(waitingLoc).paintAmount;
+                            PaintType p2 = G.rc.senseMapInfo(waitingLoc).getPaint();
+                            if (p2.isEnemy()) {
+                                curWeight += 2000;
+                            }
+                            else if (!p2.isAlly()) {
+                                curWeight += 1000;
+                            }
+                            if (curWeight > weight) {
+                                lowest = false;
+                                break;
+                            }
                         }
                     }
                     if (lowest && r.paintAmount >= amount) {

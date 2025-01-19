@@ -1,4 +1,4 @@
-package SPAARK;
+package aggressive2;
 
 import java.util.Map;
 
@@ -206,6 +206,7 @@ public class Motion {
                 }
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
+            numValidSymmetries = 1;
             if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() % 4 > 0) {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
@@ -280,7 +281,6 @@ public class Motion {
     public static StringBuilder triedRetreatTowers = new StringBuilder();
 
     public static MapLocation retreatWaitingLoc = null;
-    public static boolean isLowestPaint = false;
 
     public static int paintNeededToStopRetreating;
 
@@ -439,15 +439,7 @@ public class Motion {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
-                    boolean lowest = true;
-                    for (int i = 8; --i >= 0;) {
-                        MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
-                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
-                            lowest = false;
-                            break;
-                        }
-                    }
-                    if (lowest && r.paintAmount >= amount) {
+                    if (r.paintAmount >= amount) {
                         return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
                     } else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
                         if (r.paintAmount != 0) {
