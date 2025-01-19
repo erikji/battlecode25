@@ -12,8 +12,6 @@ public class Mopper {
 
     public static MapLocation target = null;
 
-    public static int lastBuild = -BUILD_TIMEOUT;
-
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[25]; // mopping
     public static int[] swingScores = new int[36]; // swinging
@@ -77,7 +75,6 @@ public class Mopper {
             }
             case BUILD -> {
                 G.indicatorString.append("BUILD ");
-                lastBuild = G.round;
                 if (G.rc.isMovementReady()) {
                     buildMoveScores();
                 }
@@ -598,10 +595,13 @@ public class Mopper {
     public static void exploreCheckMode() throws Exception {
         G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
-        if (lastBuild + BUILD_TIMEOUT < G.round && G.rc.getNumberTowers() < 25) {
+        if (G.rc.getNumberTowers() < 25) {
             MapLocation[] locs = G.rc.senseNearbyRuins(-1);
             for (int i = locs.length; --i >= 0;) {
                 if (G.rc.canSenseRobotAtLocation(locs[i])) {
+                    continue;
+                }
+                if (G.getLastVisited(locs[i]) + BUILD_TIMEOUT >= G.round) {
                     continue;
                 }
                 target = locs[i];
@@ -613,6 +613,7 @@ public class Mopper {
 
     public static void buildCheckMode() throws Exception {
         G.indicatorString.append("CHK_B ");
+        G.setLastVisited(target, G.round);
         if (!G.rc.canSenseLocation(target) || G.rc.canSenseRobotAtLocation(target) || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
             target = null;

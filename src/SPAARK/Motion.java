@@ -15,7 +15,7 @@ public class Motion {
     public static final int CLOCKWISE = 1;
     public static final int COUNTER_CLOCKWISE = -1;
 
-    public static final int DEFAULT_RETREAT_HP = 999;
+    public static final int MAX_RETREAT_ROBOTS = 4;
 
     public static Direction lastDir = Direction.CENTER;
     public static Direction optimalDir = Direction.CENTER;
@@ -379,21 +379,60 @@ public class Motion {
     }
 
     public static void updateRetreatWaitingLoc() throws Exception {
+        int ourWeight = -G.rc.getPaint();
+        int robotsWithHigherWeight = 0;
         if (G.me.distanceSquaredTo(retreatLoc) == 4 || G.me.distanceSquaredTo(retreatLoc) == 8) {
+            for (int i = 8; --i >= 0;) {
+                MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
+                if (waitingLoc.equals(G.me)) {
+                    continue;
+                }
+                if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(waitingLoc);
+                    int weight = -r.paintAmount;
+                    if (weight > ourWeight) {
+                        robotsWithHigherWeight++;
+                        if (robotsWithHigherWeight >= MAX_RETREAT_ROBOTS) {
+                            retreatTower = -1;
+                            return;
+                        }
+                    }
+                }
+            }
             return;
         }
         retreatWaitingLoc = null;
-        int bestDistance = 0;
+        int bestWeight = 0;
         for (int i = 8; --i >= 0;) {
             MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
+            int weight = -G.me.distanceSquaredTo(waitingLoc);
             if (G.rc.canSenseLocation(waitingLoc)) {
-                if (!G.rc.sensePassability(waitingLoc) || G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                if (!G.rc.sensePassability(waitingLoc)) {
                     continue;
                 }
+                if (G.rc.canSenseRobotAtLocation(waitingLoc)) {
+                    RobotInfo r = G.rc.senseRobotAtLocation(waitingLoc);
+                    int robotWeight = -r.paintAmount;
+                    if (robotWeight > ourWeight) {
+                        robotsWithHigherWeight++;
+                        if (robotsWithHigherWeight >= MAX_RETREAT_ROBOTS) {
+                            retreatTower = -1;
+                            return;
+                        }
+                    }
+                    continue;
+                }
+                PaintType paint = G.rc.senseMapInfo(waitingLoc).getPaint();
+                if (paint.isEnemy()) {
+                    weight -= 200;
+                }
+                else if (!paint.isAlly()) {
+                    weight -= 200;
+                }
             }
-            if (retreatWaitingLoc == null || G.me.distanceSquaredTo(waitingLoc) < bestDistance) {
+            if (retreatWaitingLoc == null || weight > bestWeight) {
                 retreatWaitingLoc = waitingLoc;
-                bestDistance = G.me.distanceSquaredTo(waitingLoc);
+                bestWeight = weight;
             }
         }
         if (retreatWaitingLoc == null) {
@@ -518,6 +557,7 @@ public class Motion {
                     for (int i = 8; --i >= 0;) {
                         MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
                         if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
+                        // if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).ID < G.rc.getID()) {
                             lowest = false;
                             break;
                         }
