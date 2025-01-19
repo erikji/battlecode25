@@ -266,6 +266,82 @@ public class Motion {
         return exploreLoc;
     }
 
+    public static MapLocation exploreRandomlyAggressiveLoc() throws Exception {
+        //only use symmetryexplore
+        if (G.rc.isMovementReady()) {
+            --exploreTime;
+            if (exploreLoc != null) {
+                if (G.rc.canSenseLocation(exploreLoc)) {
+                    exploreLoc = null;
+                }
+                if (exploreTime == 0) {
+                    exploreLoc = null;
+                }
+                if (Random.rand() % 35 == 0) {
+                    exploreLoc = null;
+                }
+            }
+            if (exploreLoc == null) {
+                int rand = Random.rand() % POI.numberOfTowers;
+                search: for (int j = POI.numberOfTowers; --j >= 0;) {
+                    int i = (j + rand) % POI.numberOfTowers;
+                    if (POI.towerTeams[i] == G.opponentTeam
+                            && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                        exploreLoc = POI.towerLocs[i];
+                        break;
+                    }
+                    if (POI.towerTeams[i] == G.team) {
+                        int rand2 = Random.rand() % 3;
+                        for (int j2 = 3; --j2 >= 0;) {
+                            int i2 = (j2 + rand2) % 3;
+                            if (POI.symmetry[i2]) {
+                                MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
+                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                    exploreLoc = loc;
+                                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                    break search;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (exploreLoc == null) {
+                int sum = G.mapArea;
+                for (int i = G.mapHeight; --i >= 0;) {
+                    sum -= Long.bitCount(POI.explored[i]);
+                }
+                // int a = Clock.getBytecodeNum();
+                // for (int j = 10; --j >= 0;) {
+                int rand = Random.rand() % sum;
+                int cur = 0;
+                for (int i = G.mapHeight; --i >= 0;) {
+                    cur += G.mapWidth - Long.bitCount(POI.explored[i]);
+                    if (cur > rand) {
+                        rand -= cur - (G.mapWidth - Long.bitCount(POI.explored[i]));
+                        int cur2 = 0;
+                        for (int b = G.mapWidth; --b >= 0;) {
+                            if (((POI.explored[i] >> b) & 1) == 0) {
+                                if (++cur2 > rand) {
+                                    // if (exploreLoc == null || getChebyshevDistance(G.me, exploreLoc) >
+                                    // getChebyshevDistance(G.me, new MapLocation(b, i))) {
+                                    exploreLoc = new MapLocation(b, i);
+                                    // }
+                                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        if (ENABLE_EXPLORE_INDICATORS)
+            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        return exploreLoc;
+    }
+
     // lastPaint stores how much paint has been lost to neutral/opponent territory
     // used to determine how much paint until retreating
     public static int lastPaint = 0;

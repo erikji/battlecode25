@@ -20,6 +20,14 @@ for i in range(69):
                 s += f'\t\t\t\t\t\t\tattackScores[{ind}] += G.paintPerChips() * 100;\n'
         except:
             pass
+    s += '\t\t\t\t\t\t} else {\n'
+    for j in [(2, 0), (0, 2), (-2, 0), (0, -2)]+a:
+        try:
+            ind = works.index((j[0]+works[i][0], j[1]+works[i][1]))
+            if ind < 37:
+                s += f'\t\t\t\t\t\t\tattackScores[{ind}] += 100;\n'
+        except:
+            pass
     s += '\t\t\t\t\t\t}\n'
     s += '\t\t\t\t\t} else {\n'
     for j in [(2, 0), (0, 2), (-2, 0), (0, -2)]+a:
