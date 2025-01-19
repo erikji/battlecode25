@@ -19,11 +19,7 @@ public class Robot {
                 G.rc.getTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER)
         };
     }
-
-    // public static MapLocation a=null;
-    // public static MapLocation b=null;
-    // public static MapLocation c=null;
-
+    
     public static void run() throws Exception {
         Motion.paintLost += Math.max(Motion.lastPaint - G.rc.getPaint(), 0);
         if (G.rc.getPaint() == 0) {
@@ -33,10 +29,6 @@ public class Robot {
                 }
             }
         }
-        // a=b;
-        // b=c;
-        // c=G.me;
-        // System.out.println('e');
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
