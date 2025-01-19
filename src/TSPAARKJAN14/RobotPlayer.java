@@ -64,7 +64,7 @@ public class RobotPlayer {
                     e.printStackTrace();
                 }
                 if (G.rc.getRoundNum() != r) {
-                    System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
+                    // System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
                     G.indicatorString.append("BYTE=" + r + " ");
                 }
                 // for (int i = 0; i <= 50; i++) {
