@@ -23,19 +23,21 @@ for d in a:
 #calculating scores
 for i in range(25):
     print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores["""+str(i)+"""] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores["""+str(i)+"""] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    //treat freezing bot equivalent to gaining 20 paint
-                    attackScores["""+str(i)+"""] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores["""+str(i)+"""] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores["""+str(i)+"""] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores["""+str(i)+"""] += 50;
-            }
-            attackScores["""+str(i)+"""] += 25;
         }""")
 
             # if (target.distanceSquaredTo(loc) <= 8) {

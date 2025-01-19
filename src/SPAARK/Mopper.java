@@ -667,304 +667,429 @@ public class Mopper {
 
     public static void exploreAttackScores() throws Exception {
         MapLocation loc = G.me;
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[0] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[0] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[0] += 100;
+                    }
                 }
             }
-            attackScores[0] += 25;
         }
-        loc = G.me.translate(-1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[1] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[1] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[1] += 100;
+                    }
                 }
             }
-            attackScores[1] += 25;
         }
-        loc = G.me.translate(0, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[2] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[2] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[2] += 100;
+                    }
                 }
             }
-            attackScores[2] += 25;
         }
-        loc = G.me.translate(0, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[3] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[3] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[3] += 100;
+                    }
                 }
             }
-            attackScores[3] += 25;
         }
-        loc = G.me.translate(1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[4] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[4] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[4] += 100;
+                    }
                 }
             }
-            attackScores[4] += 25;
         }
-        loc = G.me.translate(-1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[5] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[5] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[5] += 100;
+                    }
                 }
             }
-            attackScores[5] += 25;
         }
-        loc = G.me.translate(-1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[6] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[6] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[6] += 100;
+                    }
                 }
             }
-            attackScores[6] += 25;
         }
-        loc = G.me.translate(1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[7] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[7] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[7] += 100;
+                    }
                 }
             }
-            attackScores[7] += 25;
         }
-        loc = G.me.translate(1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[8] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[8] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[8] += 100;
+                    }
                 }
             }
-            attackScores[8] += 25;
         }
-        loc = G.me.translate(-2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[9] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[9] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[9] += 100;
+                    }
                 }
             }
-            attackScores[9] += 25;
         }
-        loc = G.me.translate(0, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[10] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[10] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[10] += 100;
+                    }
                 }
             }
-            attackScores[10] += 25;
         }
-        loc = G.me.translate(0, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[11] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[11] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[11] += 100;
+                    }
                 }
             }
-            attackScores[11] += 25;
         }
-        loc = G.me.translate(2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[12] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[12] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[12] += 100;
+                    }
                 }
             }
-            attackScores[12] += 25;
         }
-        loc = G.me.translate(-2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[13] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[13] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[13] += 100;
+                    }
                 }
             }
-            attackScores[13] += 25;
         }
-        loc = G.me.translate(-2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[14] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[14] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[14] += 100;
+                    }
                 }
             }
-            attackScores[14] += 25;
         }
-        loc = G.me.translate(-1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[15] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[15] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[15] += 100;
+                    }
                 }
             }
-            attackScores[15] += 25;
         }
-        loc = G.me.translate(-1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[16] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[16] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[16] += 100;
+                    }
                 }
             }
-            attackScores[16] += 25;
         }
-        loc = G.me.translate(1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[17] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[17] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[17] += 100;
+                    }
                 }
             }
-            attackScores[17] += 25;
         }
-        loc = G.me.translate(1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[18] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[18] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[18] += 100;
+                    }
                 }
             }
-            attackScores[18] += 25;
         }
-        loc = G.me.translate(2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[19] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[19] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[19] += 100;
+                    }
                 }
             }
-            attackScores[19] += 25;
         }
-        loc = G.me.translate(2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[20] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[20] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[20] += 100;
+                    }
                 }
             }
-            attackScores[20] += 25;
         }
-        loc = G.me.translate(-2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[21] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[21] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[21] += 100;
+                    }
                 }
             }
-            attackScores[21] += 25;
         }
-        loc = G.me.translate(-2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[22] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[22] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[22] += 100;
+                    }
                 }
             }
-            attackScores[22] += 25;
         }
-        loc = G.me.translate(2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[23] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[23] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[23] += 100;
+                    }
                 }
             }
-            attackScores[23] += 25;
         }
-        loc = G.me.translate(2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[24] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[24] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[24] += 100;
+                    }
                 }
             }
-            attackScores[24] += 25;
         }
     }
 
@@ -1381,379 +1506,504 @@ public class Mopper {
 
     public static void buildAttackScores() throws Exception {
         MapLocation loc = G.me;
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[0] += 50;
+                }
+                attackScores[0] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[0] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[0] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[0] += 50;
-            }
-            attackScores[0] += 25;
         }
-        loc = G.me.translate(-1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[1] += 50;
+                }
+                attackScores[1] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[1] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[1] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[1] += 50;
-            }
-            attackScores[1] += 25;
         }
-        loc = G.me.translate(0, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[2] += 50;
+                }
+                attackScores[2] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[2] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[2] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[2] += 50;
-            }
-            attackScores[2] += 25;
         }
-        loc = G.me.translate(0, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[3] += 50;
+                }
+                attackScores[3] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[3] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[3] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[3] += 50;
-            }
-            attackScores[3] += 25;
         }
-        loc = G.me.translate(1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[4] += 50;
+                }
+                attackScores[4] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[4] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[4] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[4] += 50;
-            }
-            attackScores[4] += 25;
         }
-        loc = G.me.translate(-1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[5] += 50;
+                }
+                attackScores[5] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[5] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[5] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[5] += 50;
-            }
-            attackScores[5] += 25;
         }
-        loc = G.me.translate(-1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[6] += 50;
+                }
+                attackScores[6] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[6] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[6] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[6] += 50;
-            }
-            attackScores[6] += 25;
         }
-        loc = G.me.translate(1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[7] += 50;
+                }
+                attackScores[7] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[7] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[7] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[7] += 50;
-            }
-            attackScores[7] += 25;
         }
-        loc = G.me.translate(1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[8] += 50;
+                }
+                attackScores[8] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[8] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[8] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[8] += 50;
-            }
-            attackScores[8] += 25;
         }
-        loc = G.me.translate(-2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[9] += 50;
+                }
+                attackScores[9] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[9] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[9] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[9] += 50;
-            }
-            attackScores[9] += 25;
         }
-        loc = G.me.translate(0, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[10] += 50;
+                }
+                attackScores[10] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[10] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[10] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[10] += 50;
-            }
-            attackScores[10] += 25;
         }
-        loc = G.me.translate(0, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[11] += 50;
+                }
+                attackScores[11] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[11] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[11] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[11] += 50;
-            }
-            attackScores[11] += 25;
         }
-        loc = G.me.translate(2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[12] += 50;
+                }
+                attackScores[12] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[12] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[12] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[12] += 50;
-            }
-            attackScores[12] += 25;
         }
-        loc = G.me.translate(-2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[13] += 50;
+                }
+                attackScores[13] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[13] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[13] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[13] += 50;
-            }
-            attackScores[13] += 25;
         }
-        loc = G.me.translate(-2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[14] += 50;
+                }
+                attackScores[14] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[14] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[14] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[14] += 50;
-            }
-            attackScores[14] += 25;
         }
-        loc = G.me.translate(-1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[15] += 50;
+                }
+                attackScores[15] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[15] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[15] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[15] += 50;
-            }
-            attackScores[15] += 25;
         }
-        loc = G.me.translate(-1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[16] += 50;
+                }
+                attackScores[16] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[16] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[16] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[16] += 50;
-            }
-            attackScores[16] += 25;
         }
-        loc = G.me.translate(1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[17] += 50;
+                }
+                attackScores[17] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[17] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[17] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[17] += 50;
-            }
-            attackScores[17] += 25;
         }
-        loc = G.me.translate(1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[18] += 50;
+                }
+                attackScores[18] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[18] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[18] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[18] += 50;
-            }
-            attackScores[18] += 25;
         }
-        loc = G.me.translate(2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[19] += 50;
+                }
+                attackScores[19] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[19] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[19] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[19] += 50;
-            }
-            attackScores[19] += 25;
         }
-        loc = G.me.translate(2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[20] += 50;
+                }
+                attackScores[20] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[20] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[20] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[20] += 50;
-            }
-            attackScores[20] += 25;
         }
-        loc = G.me.translate(-2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[21] += 50;
+                }
+                attackScores[21] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[21] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[21] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[21] += 50;
-            }
-            attackScores[21] += 25;
         }
-        loc = G.me.translate(-2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[22] += 50;
+                }
+                attackScores[22] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[22] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[22] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[22] += 50;
-            }
-            attackScores[22] += 25;
         }
-        loc = G.me.translate(2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[23] += 50;
+                }
+                attackScores[23] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[23] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[23] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[23] += 50;
-            }
-            attackScores[23] += 25;
         }
-        loc = G.me.translate(2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                if (target.distanceSquaredTo(loc) <= 8) {
+                    attackScores[24] += 50;
+                }
+                attackScores[24] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 25 + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
-                    attackScores[24] += 100;
+                if (bot.team == G.opponentTeam) {
+                    attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[24] += 100;
+                    }
                 }
             }
-            if (target.distanceSquaredTo(loc) <= 8) {
-                attackScores[24] += 50;
-            }
-            attackScores[24] += 25;
         }
     }
 
@@ -1773,304 +2023,429 @@ public class Mopper {
     // paint
     public static void retreatAttackScores() throws Exception {
         MapLocation loc = G.me;
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[0] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[0] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[0] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[0] += 100;
+                    }
                 }
             }
-            attackScores[0] += 25;
         }
-        loc = G.me.translate(-1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[1] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[1] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[1] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[1] += 100;
+                    }
                 }
             }
-            attackScores[1] += 25;
         }
-        loc = G.me.translate(0, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[2] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[2] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[2] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[2] += 100;
+                    }
                 }
             }
-            attackScores[2] += 25;
         }
-        loc = G.me.translate(0, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[3] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[3] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[3] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[3] += 100;
+                    }
                 }
             }
-            attackScores[3] += 25;
         }
-        loc = G.me.translate(1, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[4] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[4] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[4] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[4] += 100;
+                    }
                 }
             }
-            attackScores[4] += 25;
         }
-        loc = G.me.translate(-1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[5] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[5] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[5] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[5] += 100;
+                    }
                 }
             }
-            attackScores[5] += 25;
         }
-        loc = G.me.translate(-1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[6] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[6] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[6] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[6] += 100;
+                    }
                 }
             }
-            attackScores[6] += 25;
         }
-        loc = G.me.translate(1, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[7] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[7] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[7] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[7] += 100;
+                    }
                 }
             }
-            attackScores[7] += 25;
         }
-        loc = G.me.translate(1, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[8] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[8] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[8] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[8] += 100;
+                    }
                 }
             }
-            attackScores[8] += 25;
         }
-        loc = G.me.translate(-2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[9] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[9] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[9] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[9] += 100;
+                    }
                 }
             }
-            attackScores[9] += 25;
         }
-        loc = G.me.translate(0, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[10] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[10] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[10] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[10] += 100;
+                    }
                 }
             }
-            attackScores[10] += 25;
         }
-        loc = G.me.translate(0, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(0, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[11] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[11] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[11] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[11] += 100;
+                    }
                 }
             }
-            attackScores[11] += 25;
         }
-        loc = G.me.translate(2, 0);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 0);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[12] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[12] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[12] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[12] += 100;
+                    }
                 }
             }
-            attackScores[12] += 25;
         }
-        loc = G.me.translate(-2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[13] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[13] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[13] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[13] += 100;
+                    }
                 }
             }
-            attackScores[13] += 25;
         }
-        loc = G.me.translate(-2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[14] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[14] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[14] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[14] += 100;
+                    }
                 }
             }
-            attackScores[14] += 25;
         }
-        loc = G.me.translate(-1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[15] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[15] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[15] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[15] += 100;
+                    }
                 }
             }
-            attackScores[15] += 25;
         }
-        loc = G.me.translate(-1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-1, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[16] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[16] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[16] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[16] += 100;
+                    }
                 }
             }
-            attackScores[16] += 25;
         }
-        loc = G.me.translate(1, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[17] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[17] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[17] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[17] += 100;
+                    }
                 }
             }
-            attackScores[17] += 25;
         }
-        loc = G.me.translate(1, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(1, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[18] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[18] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[18] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[18] += 100;
+                    }
                 }
             }
-            attackScores[18] += 25;
         }
-        loc = G.me.translate(2, -1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, -1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[19] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[19] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[19] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[19] += 100;
+                    }
                 }
             }
-            attackScores[19] += 25;
         }
-        loc = G.me.translate(2, 1);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 1);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[20] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[20] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[20] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[20] += 100;
+                    }
                 }
             }
-            attackScores[20] += 25;
         }
-        loc = G.me.translate(-2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[21] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[21] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[21] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[21] += 100;
+                    }
                 }
             }
-            attackScores[21] += 25;
         }
-        loc = G.me.translate(-2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(-2, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[22] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[22] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[22] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[22] += 100;
+                    }
                 }
             }
-            attackScores[22] += 25;
         }
-        loc = G.me.translate(2, -2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, -2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[23] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[23] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[23] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[23] += 100;
+                    }
                 }
             }
-            attackScores[23] += 25;
         }
-        loc = G.me.translate(2, 2);
-        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint().isEnemy()) {
+		loc = G.me.translate(2, 2);
+        if (G.rc.onTheMap(loc)) {
+            PaintType paint = G.rc.senseMapInfo(loc).getPaint();
+            if (paint.isEnemy()) {
+                attackScores[24] += 25;
+            }
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                attackScores[24] += 100;
-                if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
-                    // treat freezing bot equivalent to gaining 20 paint
+                if (bot.team == G.opponentTeam) {
                     attackScores[24] += 100;
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores[24] += 100;
+                    }
                 }
             }
-            attackScores[24] += 25;
         }
     }
 
