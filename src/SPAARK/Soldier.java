@@ -40,8 +40,10 @@ public class Soldier {
     public static final int MAX_SRP_BLOCKED_TIME = 5;
     // max build time
     public static final int MAX_SRP_TIME = 50;
-    // don't expand SRP if low on paint, since very slow
-    public static final int EXPAND_SRP_MIN_PAINT = 75;
+    // don't build SRP if not enough paint (runs out quickly)
+    public static final int SRP_MIN_PAINT = 100;
+    // dont run out of paint waiting for paint painting area
+    public static final int RETREAT_PAINT_MIN_PAINT = 20;
 
     public static MapLocation exploreLocation = null; // EXPLORE mode
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
@@ -161,7 +163,8 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                if (Motion.retreatTower >= 0 && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
+                if (G.rc.getPaint() > RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
+                        && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
                     Motion.retreat(moveWithPaintMicro);
                 else
                     Motion.retreat();
@@ -203,7 +206,7 @@ public class Soldier {
                 || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP ");
             G.indicatorString.append(lastSrpExpansion + " " + G.round + " " + exploreLocation + ' ');
-        } else if (G.rc.getPaint() > EXPAND_SRP_MIN_PAINT) {
+        } else if (G.rc.getPaint() > SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
             MapInfo info;
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
@@ -536,7 +539,7 @@ public class Soldier {
         if (isPatternComplete) {
             if (G.rc.canCompleteResourcePattern(resourceLocation))
                 G.rc.completeResourcePattern(resourceLocation);
-            if (G.rc.getPaint() < EXPAND_SRP_MIN_PAINT) {
+            if (G.rc.getPaint() < SRP_MIN_PAINT) {
                 // early retreat since painting more is very slow
                 mode = RETREAT;
             } else {
