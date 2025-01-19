@@ -512,6 +512,7 @@ public class Soldier {
         boolean paint;
         PaintType exists;
         MapLocation loc;
+        boolean isPatternComplete = true;
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 // location guaranteed to be on the map by canBuildSrpHere
@@ -520,17 +521,21 @@ public class Soldier {
                 if (G.rc.canAttack(loc)) {
                     paint = Robot.resourcePattern[dx][dy];
                     exists = mapInfos[oy + dy][ox + dx].getPaint();
-                    // can't paint enemy paint
-                    if (!exists.isEnemy() && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
+                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                        isPatternComplete = false;
+                        // can't paint enemy paint
+                        if (!exists.isEnemy()) {
+                            G.rc.attack(loc, paint);
+                            paintLocation = loc;
+                            break;
+                        }
                     }
                 }
             }
         }
-        if (G.rc.canCompleteResourcePattern(resourceLocation)) {
-            G.rc.completeResourcePattern(resourceLocation);
+        if (isPatternComplete) {
+            if (G.rc.canCompleteResourcePattern(resourceLocation))
+                G.rc.completeResourcePattern(resourceLocation);
             if (G.rc.getPaint() < EXPAND_SRP_MIN_PAINT) {
                 // early retreat since painting more is very slow
                 mode = RETREAT;
