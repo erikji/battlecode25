@@ -36,7 +36,7 @@ maps += ['MoneyTower']
 maps += ['Racetrack']
 maps += ['Restart']
 # 42% +1 -1 mopperpoi2
-maps += ['SMILE']
+# maps += ['SMILE'] literally takes like 20 minutes to run
 maps += ['SaltyPepper']
 maps += ['TargetPractice']
 maps += ['Thirds']
