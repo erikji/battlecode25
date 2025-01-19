@@ -38,10 +38,9 @@ public class Mopper {
         }
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.rc.getChips() < 5000) {
             mode = RETREAT;
-        } else if (G.rc.getPaint() > G.rc.getType().paintCapacity * 3 / 4 && mode == RETREAT) {
+        } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
             mode = EXPLORE;
         }
-        Motion.paintNeededToStopRetreating = G.rc.getType().paintCapacity * 3 / 4;
         int a = Clock.getBytecodeNum();
         switch (mode) {
             case EXPLORE:

@@ -190,6 +190,8 @@ public class Motion {
 
     public static int exploreTime = 0;
 
+    public static final int SYMMETRY_EXPLORE_PERCENT = 536870912; // MICRO_PARAM
+
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {
             --exploreTime;
@@ -205,7 +207,7 @@ public class Motion {
                 }
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
-            if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() % 4 > 0) {
+            if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;

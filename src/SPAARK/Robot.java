@@ -11,6 +11,8 @@ public class Robot {
             UnitType.LEVEL_ONE_PAINT_TOWER
     };
 
+    public static final double RETREAT_PAINT_RATIO = 0.75; // MICRO_PARAM
+
     public static void init() throws Exception {
         resourcePattern = G.rc.getResourcePattern();
         towerPatterns = new boolean[][][] {
@@ -18,6 +20,7 @@ public class Robot {
                 G.rc.getTowerPattern(UnitType.LEVEL_ONE_MONEY_TOWER),
                 G.rc.getTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER)
         };
+        Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
     }
     
     public static void run() throws Exception {
