@@ -12,7 +12,7 @@ public class Soldier {
     public static int mode = EXPLORE;
 
     // ratio of paint necessary to exit retreat mode
-    public static final double RETREAT_PAINT_RATIO = 0.85;
+    // public static final double RETREAT_PAINT_RATIO = 0.85;
     // ratio to reduce retreat requirement by if building tower/srp
     public static final double RETREAT_REDUCED_RATIO = 0.5;
     // exploration weight multiplier
@@ -124,7 +124,7 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
+        // Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         if (!avoidRetreating
                 && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1) && G.rc.getChips() < 5000) {
             mode = RETREAT;

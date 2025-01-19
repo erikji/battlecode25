@@ -60,15 +60,19 @@ for d in a:
     for d2 in a2:
         for i in d2:
             try:
-                ind = s.index(f'\t\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
+                ind = s.index(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
                 if ind < 0:
                     raise Exception()
-                s.insert(ind+3, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 7;\n')
+                s.insert(s.index(f'\t\t\tif (bot.paintAmount <= 5) {{\n',ind)+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 100;\n')
+                s.insert(ind+3, f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 7;\n')
             except:
                 s.append(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
                 s.append(f'\t\tif (G.opponentRobotsString.indexOf(loc.toString()) != -1)' + ' {\n')
                 s.append(f'\t\t\tRobotInfo bot = G.rc.senseRobotAtLocation(loc);\n')
                 s.append(f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 7; //7 because the cooldown is lower for swing\n')
+                s.append(f'\t\t\tif (bot.paintAmount <= 5) {{\n')
+                s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += 100;\n')
+                s.append('\t\t\t}\n')
                 s.append('\t\t}\n')
 # s = s.split('\n')
 print(''.join(s))
