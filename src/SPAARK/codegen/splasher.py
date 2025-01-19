@@ -11,7 +11,17 @@ for i in range(69):
     s += '\t\t\tMapInfo info = G.rc.senseMapInfo(loc);\n'
     s += '\t\t\tif (!info.isWall()) {\n'
     s += '\t\t\t\tif (info.getPaint() == PaintType.EMPTY) {\n'
-    s += '\t\t\t\t\tif (!info.hasRuin()) {\n'
+    s += '\t\t\t\t\tif (info.hasRuin()) {\n'
+    s += '\t\t\t\t\t\tif (G.rc.canSenseRobotAtLocation(loc) && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {\n'
+    for j in [(2, 0), (0, 2), (-2, 0), (0, -2)]+a:
+        try:
+            ind = works.index((j[0]+works[i][0], j[1]+works[i][1]))
+            if ind < 37:
+                s += f'\t\t\t\t\t\t\tattackScores[{ind}] += G.paintPerChips() * 100;\n'
+        except:
+            pass
+    s += '\t\t\t\t\t\t}\n'
+    s += '\t\t\t\t\t} else {\n'
     for j in [(2, 0), (0, 2), (-2, 0), (0, -2)]+a:
         try:
             ind = works.index((j[0]+works[i][0], j[1]+works[i][1]))
@@ -21,23 +31,13 @@ for i in range(69):
             pass
     s += '\t\t\t\t\t}\n'
     s += '\t\t\t\t\tif (G.opponentRobotsString.indexOf(loc.toString()) != -1) {\n'
-    s += '\t\t\t\t\t\tif (info.hasRuin()) {\n'
-    for j in [(2, 0), (0, 2), (-2, 0), (0, -2)]+a:
-        try:
-            ind = works.index((j[0]+works[i][0], j[1]+works[i][1]))
-            if ind < 37:
-                s += f'\t\t\t\t\t\t\tattackScores[{ind}] += G.paintPerChips() * 100;\n'
-        except:
-            pass
-    s += '\t\t\t\t\t\t} else {\n'
     for j in a[:1]:
         try:
             ind = works.index((j[0]+works[i][0], j[1]+works[i][1]))
             if ind < 37:
-                s += f'\t\t\t\t\t\t\tattackScores[{ind}] += 25;\n'
+                s += f'\t\t\t\t\t\tattackScores[{ind}] += 25;\n'
         except:
             pass
-    s += '\t\t\t\t\t\t}\n'
     s += '\t\t\t\t\t} else if (G.allyRobotsString.indexOf(loc.toString()) != -1) {\n'
     for j in a[:1]:
         try:
