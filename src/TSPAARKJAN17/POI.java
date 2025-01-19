@@ -595,7 +595,7 @@ public class POI {
             //     if (towers[i] == -1) {
             //         break;
             //     }
-                // System.out.println(parseLocation(towers[i]));
+                // // System.out.println(parseLocation(towers[i]));
                 // G.indicatorString.append(i + " ");
                 try {
                     // if (parseTowerTeam(towers[i]) == G.team) {

@@ -46,18 +46,18 @@ public class RobotPlayer {
                     G.indicatorString = new StringBuilder();
                     Clock.yield();
                 } catch (GameActionException e) {
-                    System.out.println("Unexpected GameActionException");
+                    // System.out.println("Unexpected GameActionException");
                     e.printStackTrace();
                 } catch (Exception e) {
-                    System.out.println("Unexpected Exception");
+                    // System.out.println("Unexpected Exception");
                     e.printStackTrace();
                 }
             }
         } catch (GameActionException e) {
-            System.out.println("Unexpected GameActionException");
+            // System.out.println("Unexpected GameActionException");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Unexpected Exception");
+            // System.out.println("Unexpected Exception");
             e.printStackTrace();
         }
     }
