@@ -338,6 +338,7 @@ public class Soldier {
             buildBlockedTime = 0;
         }
         if (incorrectPaint == 0) {
+            G.indicatorString.append("COMPLETE ");
             // if pattern complete leave lowest bot ID to complete
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
@@ -353,19 +354,21 @@ public class Soldier {
         } else if (enemyPaint == 0) {
             // if soldiers at tower have enough paint to complete pattern, DO NOT RETREAT
             RobotInfo r;
-            int totalPaintSquares = 0;
+            int totalPaint = 0;
             for (int i = 4; --i >= 0;) {
                 loc = ruinLocation.add(cardinals[i]);
                 if (!G.me.equals(loc) && G.rc.canSenseRobotAtLocation(loc)) {
                     r = G.rc.senseRobotAtLocation(loc);
                     if (r.type == UnitType.SOLDIER)
-                        totalPaintSquares += (r.paintAmount - 1) / UnitType.SOLDIER.attackCost;
+                        totalPaint += (r.paintAmount - 1) / UnitType.SOLDIER.attackCost;
                 }
             }
-            totalPaintSquares += G.rc.getPaint() / UnitType.SOLDIER.attackCost;
-            G.indicatorString.append("TPS=" + totalPaintSquares + " IP=" + incorrectPaint + " ");
-            if (totalPaintSquares >= incorrectPaint)
+            totalPaint += G.rc.getPaint() / UnitType.SOLDIER.attackCost;
+            G.indicatorString.append("TP=" + totalPaint + ",IP=" + incorrectPaint + " ");
+            if (totalPaint >= incorrectPaint)
                 avoidRetreating = true;
+        } else {
+            G.indicatorString.append("EP=" + enemyPaint + ",IP=" + incorrectPaint + " ");
         }
     }
 
