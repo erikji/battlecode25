@@ -222,7 +222,7 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
                                     break search;
@@ -298,7 +298,7 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
                                     break search;
