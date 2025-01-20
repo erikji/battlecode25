@@ -1,4 +1,4 @@
-package SPAARK;
+package defensetower;
 
 import battlecode.common.*;
 
@@ -473,7 +473,7 @@ public class Motion {
             int best = -1;
             while (best == -1) {
                 int bestWeight = Integer.MIN_VALUE;
-                // boolean hasCritical = false;
+                boolean hasCritical = false;
                 for (int i = POI.numberOfTowers; --i >= 0;) {
                     // if (POI.critical[i]) {
                     //     hasCritical = true;
@@ -513,11 +513,7 @@ public class Motion {
                     triedRetreatTowers = new StringBuilder();
                     continue;
                 }
-                // if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
-                //     retreatTower = -2;
-                //     break;
-                // }
-                if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
+                if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
                     retreatTower = -2;
                     break;
                 }
