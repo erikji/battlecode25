@@ -315,15 +315,7 @@ public class Soldier {
                     // stop building if there's lots of enemy paint
                     if (curr.isEnemy()) {
                         enemyPaint++;
-                        if (enemyPaint >= maxEnemyPaint) {
-                            buildBlockedTime++;
-                            G.indicatorString.append("BLOCK ");
-                            // if pattern has been blocked for a long time just give up
-                            if (buildBlockedTime > SOL_MAX_TOWER_BLOCKED_TIME) {
-                                mode = EXPLORE;
-                                return;
-                            }
-                        } else if (enemyPaint >= SOL_MAX_TOWER_ENEMY_PAINT_HARD) {
+                        if (enemyPaint >= SOL_MAX_TOWER_ENEMY_PAINT_HARD) {
                             G.indicatorString.append("BLOCK-H ");
                             // immediately give up if there's way too much paint
                             mode = EXPLORE;
@@ -333,9 +325,18 @@ public class Soldier {
                 }
             }
         }
-        // pattern not blocked (no return above)
-        if (enemyPaint < maxEnemyPaint)
+        // check blocked by enemy paint
+        if (enemyPaint >= maxEnemyPaint) {
+            buildBlockedTime++;
+            G.indicatorString.append("BLOCK ");
+            // if pattern has been blocked for a long time just give up
+            if (buildBlockedTime > SOL_MAX_TOWER_BLOCKED_TIME) {
+                mode = EXPLORE;
+                return;
+            }
+        } else {
             buildBlockedTime = 0;
+        }
         if (incorrectPaint == 0) {
             // if pattern complete leave lowest bot ID to complete
             for (int i = G.allyRobots.length; --i >= 0;) {
@@ -395,15 +396,7 @@ public class Soldier {
                     // stop building if there's lots of enemy paint
                     if (curr.isEnemy()) {
                         enemyPaint++;
-                        if (enemyPaint >= SOL_MAX_SRP_ENEMY_PAINT) {
-                            buildBlockedTime++;
-                            G.indicatorString.append("BLOCK ");
-                            // if pattern has been blocked for a long time just give up
-                            if (buildBlockedTime > SOL_MAX_SRP_BLOCKED_TIME) {
-                                mode = EXPLORE;
-                                return;
-                            }
-                        } else if (enemyPaint >= SOL_MAX_SRP_ENEMY_PAINT_HARD) {
+                        if (enemyPaint >= SOL_MAX_SRP_ENEMY_PAINT_HARD) {
                             G.indicatorString.append("BLOCK-H ");
                             // immediately give up if there's way too much paint
                             mode = EXPLORE;
@@ -413,9 +406,18 @@ public class Soldier {
                 }
             }
         }
-        // SRP not blocked (no return above)
-        if (enemyPaint < SOL_MAX_SRP_ENEMY_PAINT)
+        // check blocked by enemy paint
+        if (enemyPaint >= SOL_MAX_SRP_ENEMY_PAINT) {
+            buildBlockedTime++;
+            G.indicatorString.append("BLOCK ");
+            // if pattern has been blocked for a long time just give up
+            if (buildBlockedTime > SOL_MAX_SRP_BLOCKED_TIME) {
+                mode = EXPLORE;
+                return;
+            }
+        } else {
             buildBlockedTime = 0;
+        }
         // don't retreat if enough paint to finish building
         if (enemyPaint == 0 && G.rc.getPaint() / UnitType.SOLDIER.attackCost >= incorrectPaint)
             avoidRetreating = true;
