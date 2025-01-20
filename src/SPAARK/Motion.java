@@ -475,9 +475,9 @@ public class Motion {
                 int bestWeight = Integer.MIN_VALUE;
                 boolean hasCritical = false;
                 for (int i = POI.numberOfTowers; --i >= 0;) {
-                    if (POI.critical[i]) {
-                        hasCritical = true;
-                    }
+                    // if (POI.critical[i]) {
+                    //     hasCritical = true;
+                    // }
                     if (POI.towerTeams[i] != G.team)
                         continue;
                     // this needs to change
@@ -495,9 +495,9 @@ public class Motion {
                     if (paint) {
                         weight += 100;
                     }
-                    if (!POI.critical[i]) {
-                        weight += 200;
-                    }
+                    // if (!POI.critical[i]) {
+                    //     weight += 200;
+                    // }
 
                     if (best == -1 || weight > bestWeight) {
                         best = i;
