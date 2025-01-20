@@ -420,9 +420,6 @@ public class Motion {
             MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
             int weight = -G.me.distanceSquaredTo(waitingLoc);
             if (G.rc.canSenseLocation(waitingLoc)) {
-                if (!G.rc.sensePassability(waitingLoc)) {
-                    continue;
-                }
                 if (G.rc.canSenseRobotAtLocation(waitingLoc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(waitingLoc);
                     int robotWeight = -r.paintAmount;

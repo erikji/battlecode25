@@ -331,7 +331,7 @@ public class Soldier {
         if (incorrectPaint == 0) {
             // if pattern complete leave lowest bot ID to complete
             for (int i = G.allyRobots.length; --i >= 0;) {
-                if (G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
+                if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
                     if (G.allyRobots[i].ID < G.rc.getID()) {
                         // not lowest ID, leave
                         mode = EXPLORE;
@@ -354,6 +354,7 @@ public class Soldier {
                 }
             }
             totalPaintSquares += G.rc.getPaint() / UnitType.SOLDIER.attackCost;
+            G.indicatorString.append("TPS=" + totalPaintSquares + " IP=" + incorrectPaint + " ");
             if (totalPaintSquares >= incorrectPaint)
                 avoidRetreating = true;
         }
