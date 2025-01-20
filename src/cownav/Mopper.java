@@ -1,4 +1,4 @@
-package SPAARK;
+package cownav;
 
 import battlecode.common.*;
 

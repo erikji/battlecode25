@@ -1,4 +1,4 @@
-package SPAARK;
+package cownav;
 
 import battlecode.common.*;
 
@@ -1546,6 +1546,9 @@ public class Motion {
                             scores[i] -= DEF_MICRO_N_PAINT_BOT_PENALTY;
                         }
                     }
+                }
+                if (lastVisitedLocations.lastIndexOf(nxt.toString()) != -1) {
+                    scores[i] += Math.min((lastVisitedLocations.length() - lastVisitedLocations.lastIndexOf(nxt.toString())) / 8 * 1 - 10, 0);
                 }
             }
         }
