@@ -85,6 +85,9 @@ public class POI {
 
     public static int maxOpponentPaintSeen = 0;
 
+    public static final int BROADCAST_FREQUENCY = 100;
+    public static int[] lastBroadcastRounds = new int[144];
+
     // stores all tower and ruin data
 
     // upto 144 robots
@@ -244,6 +247,7 @@ public class POI {
 
     public static void updateRound() throws Exception {
         int a = Clock.getBytecodeNum();
+        totalMessages = 0;
         readMessages();
         if (ENABLE_INDICATORS)
             G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
@@ -269,76 +273,78 @@ public class POI {
         drawIndicators(); // uses 5000 bytecode somehow
 
         // update symmetry array
-        for (int i = nearbyRuins.length; --i >= 0;) {
-            MapLocation xy = nearbyRuins[i];
-            ruin[xy.y] |= 1L << xy.x;
-        }
-        switch (Math.min(G.me.y, 4)) {
-            case 4:
-                explored[G.me.y-4] |= 0b11111L << G.me.x - 2;
-            case 3:
-                explored[G.me.y-3] |= 0b1111111L << G.me.x - 3;
-            case 2:
-                explored[G.me.y-2] |= 0b111111111L << G.me.x - 4;
-            case 1:
-                explored[G.me.y-1] |= 0b111111111L << G.me.x - 4;
-            default:
-                explored[G.me.y] |= 0b111111111L << G.me.x - 4;
-                explored[G.me.y+1] |= 0b111111111L << G.me.x - 4;
-                explored[G.me.y+2] |= 0b111111111L << G.me.x - 4;
-                explored[G.me.y+3] |= 0b1111111L << G.me.x - 3;
-                explored[G.me.y+4] |= 0b11111L << G.me.x - 2;
-        }
-        switch (G.me.x) {
-            case 3:
-                explored[G.me.y] |= 0b111L << G.me.x - 3;
-                explored[(G.me.y+63)%64] |= 0b111L << G.me.x - 3;
-                explored[G.me.y+1] |= 0b111L << G.me.x - 3;
-                explored[(G.me.y+62)%64] |= 0b111L << G.me.x - 3;
-                explored[G.me.y+2] |= 0b111L << G.me.x - 3;
-                explored[(G.me.y+61)%64] |= 0b111L << G.me.x - 3;
-                explored[G.me.y+3] |= 0b111L << G.me.x - 3;
-                explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
-                explored[G.me.y+4] |= 3L << G.me.x - 2;
-                break;
-            case 2:
-                explored[G.me.y] |= 3L << G.me.x - 2;
-                explored[(G.me.y+63)%64] |= 3L << G.me.x - 2;
-                explored[G.me.y+1] |= 3L << G.me.x - 2;
-                explored[(G.me.y+62)%64] |= 3L << G.me.x - 2;
-                explored[G.me.y+2] |= 3L << G.me.x - 2;
-                explored[(G.me.y+61)%64] |= 3L << G.me.x - 2;
-                explored[G.me.y+3] |= 3L << G.me.x - 2;
-                explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
-                explored[G.me.y+4] |= 3L << G.me.x - 2;
-                break;
-            case 1:
-                explored[G.me.y] |= 1L << G.me.x - 1;
-                explored[(G.me.y+63)%64] |= 1L << G.me.x - 1;
-                explored[G.me.y+1] |= 1L << G.me.x - 1;
-                explored[(G.me.y+62)%64] |= 1L << G.me.x - 1;
-                explored[G.me.y+2] |= 1L << G.me.x - 1;
-                explored[(G.me.y+61)%64] |= 1L << G.me.x - 1;
-                explored[G.me.y+3] |= 1L << G.me.x - 1;
-                explored[(G.me.y+60)%64] |= 1L << G.me.x - 1;
-                explored[G.me.y+4] |= 1L << G.me.x - 1;
-                break;
-            default:
-                break;
-        }
-        if (firstUpdate) {
-            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
-                if (G.nearbyMapInfos[i].isWall()) {
-                    wall[xy.y] |= 1L << xy.x;
-                }
+        if (G.rc.getType().isRobotType()) {
+            for (int i = nearbyRuins.length; --i >= 0;) {
+                MapLocation xy = nearbyRuins[i];
+                ruin[xy.y] |= 1L << xy.x;
             }
-            firstUpdate = false;
-        } else {
-            for (int i = 69; --i >= 37;) {
-                MapLocation xy = G.me.translate(G.range20X[i], G.range20Y[i]);
-                if (G.rc.onTheMap(xy) && G.rc.senseMapInfo(xy).isWall()) {
-                    wall[xy.y] |= 1L << xy.x;
+            switch (Math.min(G.me.y, 4)) {
+                case 4:
+                    explored[G.me.y-4] |= 0b11111L << G.me.x - 2;
+                case 3:
+                    explored[G.me.y-3] |= 0b1111111L << G.me.x - 3;
+                case 2:
+                    explored[G.me.y-2] |= 0b111111111L << G.me.x - 4;
+                case 1:
+                    explored[G.me.y-1] |= 0b111111111L << G.me.x - 4;
+                default:
+                    explored[G.me.y] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y+1] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y+2] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y+3] |= 0b1111111L << G.me.x - 3;
+                    explored[G.me.y+4] |= 0b11111L << G.me.x - 2;
+            }
+            switch (G.me.x) {
+                case 3:
+                    explored[G.me.y] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y+63)%64] |= 0b111L << G.me.x - 3;
+                    explored[G.me.y+1] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y+62)%64] |= 0b111L << G.me.x - 3;
+                    explored[G.me.y+2] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y+61)%64] |= 0b111L << G.me.x - 3;
+                    explored[G.me.y+3] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
+                    explored[G.me.y+4] |= 3L << G.me.x - 2;
+                    break;
+                case 2:
+                    explored[G.me.y] |= 3L << G.me.x - 2;
+                    explored[(G.me.y+63)%64] |= 3L << G.me.x - 2;
+                    explored[G.me.y+1] |= 3L << G.me.x - 2;
+                    explored[(G.me.y+62)%64] |= 3L << G.me.x - 2;
+                    explored[G.me.y+2] |= 3L << G.me.x - 2;
+                    explored[(G.me.y+61)%64] |= 3L << G.me.x - 2;
+                    explored[G.me.y+3] |= 3L << G.me.x - 2;
+                    explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
+                    explored[G.me.y+4] |= 3L << G.me.x - 2;
+                    break;
+                case 1:
+                    explored[G.me.y] |= 1L << G.me.x - 1;
+                    explored[(G.me.y+63)%64] |= 1L << G.me.x - 1;
+                    explored[G.me.y+1] |= 1L << G.me.x - 1;
+                    explored[(G.me.y+62)%64] |= 1L << G.me.x - 1;
+                    explored[G.me.y+2] |= 1L << G.me.x - 1;
+                    explored[(G.me.y+61)%64] |= 1L << G.me.x - 1;
+                    explored[G.me.y+3] |= 1L << G.me.x - 1;
+                    explored[(G.me.y+60)%64] |= 1L << G.me.x - 1;
+                    explored[G.me.y+4] |= 1L << G.me.x - 1;
+                    break;
+                default:
+                    break;
+            }
+            if (firstUpdate) {
+                for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                    MapLocation xy = G.nearbyMapInfos[i].getMapLocation();
+                    if (G.nearbyMapInfos[i].isWall()) {
+                        wall[xy.y] |= 1L << xy.x;
+                    }
+                }
+                firstUpdate = false;
+            } else {
+                for (int i = 69; --i >= 37;) {
+                    MapLocation xy = G.me.translate(G.range20X[i], G.range20Y[i]);
+                    if (G.rc.onTheMap(xy) && G.rc.senseMapInfo(xy).isWall()) {
+                        wall[xy.y] |= 1L << xy.x;
+                    }
                 }
             }
         }
@@ -429,10 +435,10 @@ public class POI {
 
     // each message contains 2 towers/symmetries
     // because its 32 bit integer so it gets split into 2 16 bit integers
+    public static int totalMessages = 0;
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
-            int totalMessages = 0;
             for (int j = G.allyRobots.length; --j >= 0;) {
                 RobotInfo r = G.allyRobots[Random.rand() % G.allyRobots.length];
                 if (!G.rc.canSendMessage(r.getLocation())) {
@@ -575,9 +581,24 @@ public class POI {
         }
     };
 
+    public static int relayMessage = -1;
+    public static int relayMessages = 0;
     public static void readMessages() throws Exception {
         // what hapepns if message is sent in same round?? oof oof oof
         Message[] messages = G.rc.readMessages(G.round - 1);
+        relayMessage = -1;
+        relayMessages = 0;
+        if (G.rc.getType().isTowerType() && G.round + 2000 >= lastBroadcastRounds[towerGrid[G.me.y / 5][G.me.x / 5]] + BROADCAST_FREQUENCY) {
+            lastBroadcastRounds[towerGrid[G.me.y / 5][G.me.x / 5]] = G.round + 2000;
+            relayMessage = intifyTower(G.rc.getTeam(), G.rc.getType()) | intifyLocation(G.me) | (1 << 15);
+            relayMessages++;
+            if (ENABLE_INDICATORS) {
+                G.indicatorString.append("SENT-MESSAGE=" + G.me);
+                for (Direction d : G.DIRECTIONS) {
+                    G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+                }
+            }
+        }
         for (Message m : messages) {
             if (Clock.getBytecodesLeft() < 2000)
                 break;
@@ -586,10 +607,16 @@ public class POI {
                 read16BitMessage(m.getSenderID(), (m.getBytes() >> 16) & 0b1111111111111111);
             }
         }
+        if (relayMessages != 0) {
+            G.rc.broadcastMessage(relayMessage);
+            totalMessages++;
+        }
     };
 
+    // basically bit 15 is used for relay messages between towers
+    // dont want message spam
     public static void read16BitMessage(int id, int n) throws Exception {
-        if ((n >> 12) >= 7) {
+        if ((n >> 12) == 7) {
             int n2 = (n >> 12) - 7;
             if (n2 % 2 == 0) {
                 removeValidSymmetry(id, 0);
@@ -602,6 +629,29 @@ public class POI {
             }
         } else {
             addTower(id, parseLocation(n), parseTowerTeam(n), parseTowerType(n));
+            // if (G.rc.getType().isTowerType() && (n >> 15) == 1) {
+            //     G.indicatorString.append("REC-MESSAGE=" + parseLocation(n));
+            // }
+            if (G.rc.getType().isTowerType() && totalMessages < 20 && (n >> 15) == 1) {
+                MapLocation loc = parseLocation(n);
+                if (G.round + 2000 >= lastBroadcastRounds[towerGrid[loc.y / 5][loc.x / 5]] + BROADCAST_FREQUENCY) {
+                    lastBroadcastRounds[towerGrid[loc.y / 5][loc.x / 5]] = G.round + 2000;
+                    relayMessage = appendToMessage(relayMessage, n);
+                    relayMessages++;
+                    if (ENABLE_INDICATORS) {
+                        G.indicatorString.append("SENT-MESSAGE=" + parseLocation(n));
+                        for (Direction d : G.DIRECTIONS) {
+                            G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+                        }
+                    }
+                    if (relayMessages == 2) {
+                        G.rc.broadcastMessage(relayMessage);
+                        totalMessages++;
+                        relayMessage = -1;
+                        relayMessages = 0;
+                    }
+                }
+            }
         }
     };
 
@@ -619,7 +669,7 @@ public class POI {
     // team 1 for opp
     // team 2 for neutral
     public static Team parseTowerTeam(int n) {
-        int t = n >> 12;
+        int t = (n >> 12) & 0b111;
         if (t == 0) {
             return Team.NEUTRAL;
         }
@@ -634,7 +684,7 @@ public class POI {
     // 2: chip
     // 3: defense
     public static UnitType parseTowerType(int n) {
-        int t = n >> 12;
+        int t = (n >> 12) & 0b111;
         if (t == 0) {
             return UnitType.LEVEL_TWO_PAINT_TOWER;
         }
@@ -667,7 +717,7 @@ public class POI {
     }
 
     public static int intifySymmetry() {
-        return ((symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7) << 12;
+        return (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7 + (7 << 12);
     }
 
     public static int appendToMessage(int message, int a) {

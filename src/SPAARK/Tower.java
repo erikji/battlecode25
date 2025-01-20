@@ -101,9 +101,9 @@ public class Tower {
         splasherWeight /= sum;
         mopperWeight /= sum;
 
-        G.indicatorString = new StringBuilder();
-        G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " " + doubleSpawnedSplashers + " "
-                + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + " ");
+        // G.indicatorString = new StringBuilder();
+        // G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " " + doubleSpawnedSplashers + " "
+        //         + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + " ");
 
         double soldier = doubleSpawnedSoldiers + soldierWeight - spawnedSoldiers;
         double splasher = doubleSpawnedSplashers + splasherWeight - spawnedSplashers;
