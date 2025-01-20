@@ -13,13 +13,13 @@ public class Mopper {
     public static MapLocation target = null;
     
     //how much to weight swings more
-    public static final double MOP_SWING_MULT = 1.4;
+    public static final double MOP_SWING_MULT = 1.4; // OPTNET_PARAM
     //if a bot freezes (0 paint) because of action
-    public static final int MOP_FREEZE_BOT_WEIGHT = 100;
+    public static final int MOP_FREEZE_BOT_WEIGHT = 100; // OPTNET_PARAM
     //extra weight to stealing paint from enemy in retreat mode
-    public static final int MOP_RETREAT_STEAL_WEIGHT = 30;
+    public static final int MOP_RETREAT_STEAL_WEIGHT = 30; // OPTNET_PARAM
     //extra weight to mopping paint next to a tower
-    public static final int MOP_TOWER_WEIGHT = 50;
+    public static final int MOP_TOWER_WEIGHT = 50; // OPTNET_PARAM
 
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[25]; // mopping

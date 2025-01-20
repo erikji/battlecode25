@@ -190,7 +190,7 @@ public class Motion {
 
     public static int exploreTime = 0;
 
-    public static final int SYMMETRY_EXPLORE_PERCENT = 536870912; // MICRO_PARAM
+    public static final int SYMMETRY_EXPLORE_PERCENT = 536870912; // OPTNET_PARAM
 
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {
@@ -361,8 +361,8 @@ public class Motion {
     public static int paintNeededToStopRetreating;
 
     // retreat calculations
-    public static final int RETREAT_PAINT_OFFSET = 30;
-    public static final double RETREAT_PAINT_RATIO = 0.25;
+    public static final int RETREAT_PAINT_OFFSET = 30; // OPTNET_PARAM
+    public static final double RETREAT_PAINT_RATIO = 0.25; // OPTNET_PARAM
 
     public static MapLocation[] retreatWaitingLocs = new MapLocation[] {
             new MapLocation(2, 2),

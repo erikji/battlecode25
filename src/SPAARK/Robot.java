@@ -11,7 +11,7 @@ public class Robot {
             UnitType.LEVEL_ONE_PAINT_TOWER
     };
 
-    public static final double RETREAT_PAINT_RATIO = 0.75; // MICRO_PARAM
+    public static final double RETREAT_PAINT_RATIO = 0.75; // OPTNET_PARAM
 
     public static void init() throws Exception {
         resourcePattern = G.rc.getResourcePattern();
