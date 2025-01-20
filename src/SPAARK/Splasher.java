@@ -9,6 +9,8 @@ public class Splasher {
     // controls round between visiting ruins
     public static final int VISIT_TIMEOUT = 75;
 
+	public static final int SPL_INITIAL_ATK_MULT = 3;
+
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[37]; // score for attacking this square
 
@@ -336,7 +338,7 @@ public class Splasher {
                     best = i;
                 }
             }
-            if (allmax[best] > 4000 / G.rc.getRoundNum() + 250) {
+            if (allmax[best] > G.mapArea * SPL_INITIAL_ATK_MULT / G.rc.getRoundNum() + 300) {
                 MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
                 // try to move before attacking if possible so the paint we used in the attack
                 // isn't factored into movement cooldown
