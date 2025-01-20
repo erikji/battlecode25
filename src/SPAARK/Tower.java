@@ -4,6 +4,13 @@ import battlecode.common.*;
 import java.util.*;
 
 public class Tower {
+    // initial weights for bots
+    public static final double TOW_SPAWN_SOLDIER_WEIGHT = 2;
+    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 2;
+    public static final double TOW_SPAWN_MOPPER_WEIGHT = 2;
+    // reduce the weight of soldiers if max towers reached
+    public static final double TOW_MAXED_REDUCE_SOLDIER_WEIGHT = 1;
+
     public static int spawnedSoldiers = 0;
     public static int spawnedSplashers = 0;
     public static int spawnedMoppers = 0;
@@ -82,9 +89,9 @@ public class Tower {
         // int mod = 7;
         // int area = G.mapHeight * G.mapWidth;
 
-        double soldierWeight = 2;
-        double splasherWeight = 2;
-        double mopperWeight = 2;
+        double soldierWeight = TOW_SPAWN_SOLDIER_WEIGHT;
+        double splasherWeight = TOW_SPAWN_SPLASHER_WEIGHT;
+        double mopperWeight = TOW_SPAWN_MOPPER_WEIGHT;
 
         // if (G.rc.getNumberTowers() < 25) {
         // for (int i = POI.numberOfTowers; --i >= 0;) {
@@ -95,7 +102,7 @@ public class Tower {
         // }
         // }
         if (G.rc.getNumberTowers() == 25) {
-            soldierWeight -= 1;
+            soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
         }
         double sum = soldierWeight + splasherWeight + mopperWeight;
         soldierWeight /= sum;

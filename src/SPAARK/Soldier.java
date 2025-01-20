@@ -208,8 +208,8 @@ public class Soldier {
                 return;
             }
         }
-        if (lastSrpExpansion + SOL_SRP_EXPAND_TIMEOUT >= G.round
-                || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SOL_SRP_EXP_OVERRIDE_DIST))) {
+        if (lastSrpExpansion + SOL_SRP_EXPAND_TIMEOUT >= G.round || (exploreLocation != null
+                && G.me.isWithinDistanceSquared(exploreLocation, SOL_SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP:" + lastSrpExpansion + ":" + exploreLocation + " ");
         } else if (G.rc.getPaint() > SOL_SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
