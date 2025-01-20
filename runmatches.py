@@ -14,7 +14,7 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'soldierexplore' #bot to test
+currentBot = 'soldiersoldier' #bot to test
 #SPAARK IS THE BASELINE
 
 # bots = [chr(ord('a')+i) for i in range(1)]
