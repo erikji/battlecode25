@@ -209,8 +209,7 @@ public class Soldier {
         }
         if (lastSrpExpansion + SRP_EXPAND_TIMEOUT >= G.round
                 || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
-            G.indicatorString.append("SKIP_CHK_RP ");
-            G.indicatorString.append(lastSrpExpansion + " " + G.round + " " + exploreLocation + ' ');
+            G.indicatorString.append("SKIP_CHK_RP:" + lastSrpExpansion + ":" + exploreLocation + " ");
         } else if (G.rc.getPaint() > SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
             MapInfo info;
