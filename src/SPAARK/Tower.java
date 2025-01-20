@@ -35,6 +35,7 @@ public class Tower {
         };
         Arrays.sort(spawnLocs,
                 (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
+        POI.addTower(-1, G.me, G.team, G.rc.getType());
     }
 
     public static void spawnBot(UnitType t) throws Exception {
