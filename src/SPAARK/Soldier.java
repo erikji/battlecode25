@@ -1,6 +1,14 @@
 package SPAARK;
 
-import battlecode.common.*;
+import battlecode.common.Clock;
+import battlecode.common.Direction;
+import battlecode.common.GameConstants;
+import battlecode.common.MapInfo;
+import battlecode.common.MapLocation;
+import battlecode.common.PaintType;
+import battlecode.common.RobotInfo;
+import battlecode.common.Team;
+import battlecode.common.UnitType;
 
 public class Soldier {
     public static final int EXPLORE = 0;
@@ -11,44 +19,44 @@ public class Soldier {
     public static final int RETREAT = 5;
     public static int mode = EXPLORE;
 
-    // ratio of paint necessary to exit retreat mode
-    // public static final double RETREAT_PAINT_RATIO = 0.85;
     // ratio to reduce retreat requirement by if building tower/srp
-    public static final double RETREAT_REDUCED_RATIO = 0.5;
+    public static final double SOL_RETREAT_REDUCED_RATIO = 0.5;
+    // don't retreat if have enough chips to spam bots
+    public static final int SOL_RETREAT_MAX_CHIPS = 5000;
     // exploration weight multiplier
-    public static final int EXPLORE_OPP_WEIGHT = 5;
+    public static final int SOL_EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
-    public static final int TOWER_VISIT_TIMEOUT = 40;
+    public static final int SOL_TOWER_VISIT_TIMEOUT = 40;
     // controls ratio of money to paint (higher = more money)
-    public static final double MONEY_PAINT_TOWER_RATIO = 1.0;
+    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 1.0;
     // stop building towers if enemy paint interferes too much
-    public static final int MAX_TOWER_ENEMY_PAINT = 8;
-    public static final int MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int MAX_TOWER_ENEMY_PAINT_HARD = 16;
-    public static final int TOWER_HELP_DIST = 5;
-    public static final int MAX_TOWER_BLOCKED_TIME = 30;
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 16;
+    public static final int SOL_TOWER_HELP_DIST = 5;
+    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
     // max soldiers that will build a tower
-    public static final int MAX_TOWER_BUILDING_SOLDIERS = 3;
+    public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 3;
     // max build time
-    public static final int MAX_TOWER_TIME = 200;
+    public static final int SOL_MAX_TOWER_TIME = 200;
     // don't build SRP immediately after spawning or in early game
-    public static final int MIN_SRP_ROUND = 20;
-    public static final int SPAWN_SRP_MIN_ROUNDS = 10;
+    public static final int SOL_MIN_SRP_ROUND = 20;
+    public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 10;
     // controls rounds between repairing/expanding an SRP
-    public static final int SRP_VISIT_TIMEOUT = 100;
+    public static final int SOL_SRP_VISIT_TIMEOUT = 100;
     // balance exploring and building SRPs (don't SRP if near target)
-    public static final int SRP_EXPAND_TIMEOUT = 20;
-    public static final int SRP_EXP_OVERRIDE_DIST = 100;
+    public static final int SOL_SRP_EXPAND_TIMEOUT = 20;
+    public static final int SOL_SRP_EXP_OVERRIDE_DIST = 100;
     // stop building SRP if enemy paint interferes too much
-    public static final int MAX_SRP_ENEMY_PAINT = 1;
-    public static final int MAX_SRP_BLOCKED_TIME = 5;
-    public static final int MAX_SRP_ENEMY_PAINT_HARD = 8;
+    public static final int SOL_MAX_SRP_ENEMY_PAINT = 1;
+    public static final int SOL_MAX_SRP_BLOCKED_TIME = 5;
+    public static final int SOL_MAX_SRP_ENEMY_PAINT_HARD = 8;
     // max build time
-    public static final int MAX_SRP_TIME = 50;
+    public static final int SOL_MAX_SRP_TIME = 50;
     // don't build SRP if not enough paint (runs out quickly)
-    public static final int SRP_MIN_PAINT = 75;
+    public static final int SOL_SRP_MIN_PAINT = 75;
     // dont run out of paint waiting for paint painting area
-    public static final int RETREAT_PAINT_MIN_PAINT = 20;
+    public static final int SOL_RETREAT_PAINT_MIN_PAINT = 20;
 
     public static MapLocation exploreLocation = null; // EXPLORE mode
     public static MapLocation ruinLocation = null; // BUILD_TOWER mode
@@ -65,7 +73,7 @@ public class Soldier {
     // (goes into expand mode, reaches the target location, and starts building)
     public static MapLocation[] srpCheckLocations = new MapLocation[] {};
     public static int srpCheckIndex = 0;
-    public static int lastSrpExpansion = -SRP_EXPAND_TIMEOUT + SPAWN_SRP_MIN_ROUNDS;
+    public static int lastSrpExpansion = -SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
@@ -124,9 +132,9 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        // Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         if (!avoidRetreating
-                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? RETREAT_REDUCED_RATIO : 1) && G.rc.getChips() < 5000) {
+                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
+                && G.rc.getChips() < SOL_RETREAT_MAX_CHIPS) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
@@ -169,7 +177,7 @@ public class Soldier {
             case ATTACK -> attack();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
-                if (G.rc.getPaint() > RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
+                if (G.rc.getPaint() > SOL_RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
                         && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
                     Motion.retreat(moveWithPaintMicro);
                 else
@@ -208,15 +216,15 @@ public class Soldier {
                 return;
             }
         }
-        if (lastSrpExpansion + SRP_EXPAND_TIMEOUT >= G.round
-                || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SRP_EXP_OVERRIDE_DIST))) {
+        if (lastSrpExpansion + SOL_SRP_EXPAND_TIMEOUT >= G.round
+                || (exploreLocation != null && G.me.isWithinDistanceSquared(exploreLocation, SOL_SRP_EXP_OVERRIDE_DIST))) {
             G.indicatorString.append("SKIP_CHK_RP:" + lastSrpExpansion + ":" + exploreLocation + " ");
-        } else if (G.rc.getPaint() > SRP_MIN_PAINT) {
+        } else if (G.rc.getPaint() > SOL_SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
             MapInfo info;
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 info = G.nearbyMapInfos[i];
-                if (G.getLastVisited(info.getMapLocation()) + SRP_VISIT_TIMEOUT < G.round
+                if (G.getLastVisited(info.getMapLocation()) + SOL_SRP_VISIT_TIMEOUT < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
                     resourceLocation = info.getMapLocation();
                     mode = BUILD_RESOURCE;
@@ -230,10 +238,10 @@ public class Soldier {
                 return;
             }
             // see if SRP is possible nearby
-            if (G.round > MIN_SRP_ROUND) {
+            if (G.round > SOL_MIN_SRP_ROUND) {
                 for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-                    if (G.getLastVisited(loc) + SRP_VISIT_TIMEOUT < G.round && canBuildSRPAtLocation(loc)) {
+                    if (G.getLastVisited(loc) + SOL_SRP_VISIT_TIMEOUT < G.round && canBuildSRPAtLocation(loc)) {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
                         mode = EXPAND_RESOURCE;
@@ -251,7 +259,7 @@ public class Soldier {
         reducedRetreating = true;
         G.setLastVisited(ruinLocation, G.round);
         // if been building for a long time stop
-        if (buildTime > MAX_TOWER_TIME) {
+        if (buildTime > SOL_MAX_TOWER_TIME) {
             mode = EXPLORE;
             return;
         }
@@ -272,7 +280,7 @@ public class Soldier {
                 loc = ruinLocation.add(cardinals[i]);
                 if (G.rc.canSenseRobotAtLocation(loc) && G.rc.senseRobotAtLocation(loc).type == UnitType.SOLDIER) {
                     robotsTryingToBuild++;
-                    if (robotsTryingToBuild > MAX_TOWER_BUILDING_SOLDIERS) {
+                    if (robotsTryingToBuild > SOL_MAX_TOWER_BUILDING_SOLDIERS) {
                         mode = EXPLORE;
                         return;
                     }
@@ -283,12 +291,12 @@ public class Soldier {
         boolean hasHelp = false;
         for (int i = G.allyRobots.length; --i >= 0;) {
             if (G.allyRobots[i].type == UnitType.MOPPER
-                    && G.allyRobots[i].location.isWithinDistanceSquared(G.me, TOWER_HELP_DIST)) {
+                    && G.allyRobots[i].location.isWithinDistanceSquared(G.me, SOL_TOWER_HELP_DIST)) {
                 hasHelp = true;
                 break;
             }
         }
-        final int maxEnemyPaint = hasHelp ? MAX_TOWER_ENEMY_PAINT : MAX_TOWER_ENEMY_PAINT_NO_HELP;
+        final int maxEnemyPaint = hasHelp ? SOL_MAX_TOWER_ENEMY_PAINT : SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP;
         int enemyPaint = 0;
         int incorrectPaint = 0;
         int ox = ruinLocation.x - G.me.x + 2;
@@ -311,11 +319,11 @@ public class Soldier {
                             buildBlockedTime++;
                             G.indicatorString.append("BLOCK ");
                             // if pattern has been blocked for a long time just give up
-                            if (buildBlockedTime > MAX_TOWER_BLOCKED_TIME) {
+                            if (buildBlockedTime > SOL_MAX_TOWER_BLOCKED_TIME) {
                                 mode = EXPLORE;
                                 return;
                             }
-                        } else if (enemyPaint >= MAX_TOWER_ENEMY_PAINT_HARD) {
+                        } else if (enemyPaint >= SOL_MAX_TOWER_ENEMY_PAINT_HARD) {
                             G.indicatorString.append("BLOCK-H ");
                             // immediately give up if there's way too much paint
                             mode = EXPLORE;
@@ -365,7 +373,7 @@ public class Soldier {
         // shouldn't interfere with towers here either, same as expand RP
         G.setLastVisited(resourceLocation, G.round);
         // if been building for a long time stop
-        if (buildTime > MAX_SRP_TIME) {
+        if (buildTime > SOL_MAX_SRP_TIME) {
             mode = EXPLORE;
             return;
         }
@@ -387,15 +395,15 @@ public class Soldier {
                     // stop building if there's lots of enemy paint
                     if (curr.isEnemy()) {
                         enemyPaint++;
-                        if (enemyPaint >= MAX_SRP_ENEMY_PAINT) {
+                        if (enemyPaint >= SOL_MAX_SRP_ENEMY_PAINT) {
                             buildBlockedTime++;
                             G.indicatorString.append("BLOCK ");
                             // if pattern has been blocked for a long time just give up
-                            if (buildBlockedTime > MAX_SRP_BLOCKED_TIME) {
+                            if (buildBlockedTime > SOL_MAX_SRP_BLOCKED_TIME) {
                                 mode = EXPLORE;
                                 return;
                             }
-                        } else if (enemyPaint >= MAX_SRP_ENEMY_PAINT_HARD) {
+                        } else if (enemyPaint >= SOL_MAX_SRP_ENEMY_PAINT_HARD) {
                             G.indicatorString.append("BLOCK-H ");
                             // immediately give up if there's way too much paint
                             mode = EXPLORE;
@@ -406,7 +414,7 @@ public class Soldier {
             }
         }
         // SRP not blocked (no return above)
-        if (enemyPaint < MAX_SRP_ENEMY_PAINT)
+        if (enemyPaint < SOL_MAX_SRP_ENEMY_PAINT)
             buildBlockedTime = 0;
         // don't retreat if enough paint to finish building
         if (enemyPaint == 0 && G.rc.getPaint() / UnitType.SOLDIER.attackCost >= incorrectPaint)
@@ -418,7 +426,7 @@ public class Soldier {
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
-        while (!G.rc.onTheMap(target) || G.getLastVisited(target) + SRP_VISIT_TIMEOUT >= G.round
+        while (!G.rc.onTheMap(target) || G.getLastVisited(target) + SOL_SRP_VISIT_TIMEOUT >= G.round
                 || cannotBuildSRPAtLocation(target)) {
             if (G.rc.onTheMap(target))
                 G.rc.setIndicatorDot(target, 255, 100, 0);
@@ -463,7 +471,7 @@ public class Soldier {
                 // attack these
                 MapLocation pos = POI.towerLocs[i];
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
-                        && G.getLastVisited(pos) + TOWER_VISIT_TIMEOUT < G.round) {
+                        && G.getLastVisited(pos) + SOL_TOWER_VISIT_TIMEOUT < G.round) {
                     bestDistanceSquared = G.me.distanceSquaredTo(pos);
                     exploreLocation = pos;
                 }
@@ -471,9 +479,9 @@ public class Soldier {
                 // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.towerLocs[i];
                 // prioritize opponent towers more than ruins, so it has to be REALLY close
-                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / EXPLORE_OPP_WEIGHT)
-                        && G.getLastVisited(pos) + TOWER_VISIT_TIMEOUT < G.round) {
-                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * EXPLORE_OPP_WEIGHT; // lol
+                if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared / SOL_EXPLORE_OPP_WEIGHT)
+                        && G.getLastVisited(pos) + SOL_TOWER_VISIT_TIMEOUT < G.round) {
+                    bestDistanceSquared = G.me.distanceSquaredTo(pos) * SOL_EXPLORE_OPP_WEIGHT; // lol
                     exploreLocation = pos;
                 }
             }
@@ -597,7 +605,7 @@ public class Soldier {
         if (isPatternComplete) {
             if (G.rc.canCompleteResourcePattern(resourceLocation))
                 G.rc.completeResourcePattern(resourceLocation);
-            if (G.rc.getPaint() < SRP_MIN_PAINT) {
+            if (G.rc.getPaint() < SOL_SRP_MIN_PAINT) {
                 // early retreat since painting more is very slow
                 mode = RETREAT;
             } else {
@@ -886,7 +894,7 @@ public class Soldier {
                 && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = POI.paintTowers * MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
+        int towerType = POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
