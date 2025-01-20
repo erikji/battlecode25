@@ -4,7 +4,7 @@ import battlecode.common.*;
 
 public class RobotPlayer {
     public static void updateInfo() throws Exception {
-        // every time we move
+        // every time we move, and every round
         G.me = G.rc.getLocation();
         G.allyRobots = G.rc.senseNearbyRobots(-1, G.team);
         G.opponentRobots = G.rc.senseNearbyRobots(-1, G.opponentTeam);
@@ -21,10 +21,13 @@ public class RobotPlayer {
             }
         }
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
+    }
 
-        String s = G.me.toString();
-        Motion.lastVisitedLocations.append(s);
-        switch (s.length()) {
+    public static void updateMove() throws Exception {
+        //every time we move
+        updateInfo();
+        Motion.lastVisitedLocations.append(G.me.toString());
+        switch (Motion.lastVisitedLocations.length() % 8) {
             case 6:
                 Motion.lastVisitedLocations.append("  ");
                 break;

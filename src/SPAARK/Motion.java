@@ -1531,6 +1531,12 @@ public class Motion {
                 scores[i] = -1000000000;
             } else {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
+                int index = Motion.lastVisitedLocations.lastIndexOf(nxt.toString());
+                if (index != -1) {
+                    //penalizes sitting still
+                    int numTurnsVisitedAgo = (Motion.lastVisitedLocations.length() - index) / 8;
+                    if (numTurnsVisitedAgo < 5) scores[i]--;
+                }
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
                     scores[i] -= enemyPaintPenalty;
@@ -1602,7 +1608,7 @@ public class Motion {
             movementCooldown += G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN);
             lastDir = dir;
             lastMove = G.rc.getRoundNum();
-            RobotPlayer.updateInfo();
+            RobotPlayer.updateMove();
             return true;
         }
         return false;
