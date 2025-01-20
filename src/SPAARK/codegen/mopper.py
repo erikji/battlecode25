@@ -34,14 +34,14 @@ for i in range(25):
                     attackScores["""+str(i)+"""] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores["""+str(i)+"""] += FREEZING_BOT_WEIGHT;
+                        attackScores["""+str(i)+"""] += MOP_FREEZE_BOT_WEIGHT;
                     }
                 }
             }
         }""")
 
             # if (target.distanceSquaredTo(loc) <= 8) {
-            #     attackScores["""+str(i)+"""] += 50;
+            #     attackScores["""+str(i)+"""] += MOP_TOWER_WEIGHT;
             # }
 print()
 print()
@@ -63,7 +63,7 @@ for d in a:
                 ind = s.index(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
                 if ind < 0:
                     raise Exception()
-                s.insert(s.index(f'\t\t\tif (bot.paintAmount <= 5 && bot.paintAmount > 0) {{\n',ind)+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += FREEZING_BOT_WEIGHT;\n')
+                s.insert(s.index(f'\t\t\tif (bot.paintAmount <= 5 && bot.paintAmount > 0) {{\n',ind)+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += MOP_FREEZE_BOT_WEIGHT;\n')
                 s.insert(ind+3, f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 5;\n')
             except:
                 s.append(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
@@ -71,10 +71,10 @@ for d in a:
                 s.append(f'\t\t\tRobotInfo bot = G.rc.senseRobotAtLocation(loc);\n')
                 s.append(f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing\n')
                 s.append(f'\t\t\tif (bot.paintAmount <= 5 && bot.paintAmount > 0) {{\n')
-                s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += FREEZING_BOT_WEIGHT;\n')
+                s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += MOP_FREEZE_BOT_WEIGHT;\n')
                 s.append('\t\t\t}\n')
                 s.append('\t\t}\n')
-s+= [f'\t\tswingScores[{i}] *= SWING_MULT;\n' for i in range(36)]
+s+= [f'\t\tswingScores[{i}] *= MOP_SWING_MULT;\n' for i in range(36)]
 # s = s.split('\n')
 print(''.join(s))
 
