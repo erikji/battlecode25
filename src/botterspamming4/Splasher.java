@@ -1,4 +1,4 @@
-package SPAARK;
+package botterspamming4;
 
 import battlecode.common.*;
 
@@ -33,11 +33,10 @@ public class Splasher {
             mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
             mode = EXPLORE;
-            Motion.retreatTower = -1;
         }
         if (mode == RETREAT) {
             Motion.setRetreatLoc();
-            if (Motion.retreatTower == -1) {
+            if (Motion.retreatLoc.x == -1) {
                 mode = EXPLORE;
             }
         }

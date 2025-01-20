@@ -1,4 +1,4 @@
-package SPAARK;
+package botterspamming4;
 
 import battlecode.common.*;
 
@@ -49,7 +49,6 @@ public class Mopper {
             mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
             mode = EXPLORE;
-            Motion.retreatTower = -1;
         }
         int a = Clock.getBytecodeNum();
         switch (mode) {
@@ -61,7 +60,7 @@ public class Mopper {
                 break;
             case RETREAT: 
                 Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1) {
+                if (Motion.retreatLoc.x == -1) {
                     mode = EXPLORE;
                     exploreCheckMode();
                 }
