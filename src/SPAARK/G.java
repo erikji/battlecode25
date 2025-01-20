@@ -2,9 +2,12 @@ package SPAARK;
 
 import battlecode.common.*;
 
-//store global stuff that you dont want to pass around
-//and doesnt fit anywhere else
+/**
+ * Stores global stuff that all bots use (more or less) and don't want to pass
+ * around, and doesn't fit anywhere else
+ */
 public class G {
+    // stuff that doesn't change
     public static RobotController rc;
     public static MapLocation mapCenter;
     public static int mapWidth;
@@ -12,6 +15,7 @@ public class G {
     public static int mapArea;
     public static Team team;
     public static Team opponentTeam;
+    public static int roundSpawned;
 
     public static UnitType[] towerTypes = new UnitType[] {
             UnitType.LEVEL_ONE_DEFENSE_TOWER,
@@ -147,6 +151,7 @@ public class G {
 
     // random micro stuff
     public static final double PAINT_PER_CHIP = 0.5;
+
     public static double paintPerChips() {
         // how many chips is 1 paint worth
         // maybe this should be changed depending on the map
