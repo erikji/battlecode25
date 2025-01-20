@@ -2,6 +2,7 @@ from itertools import product
 import re
 import subprocess
 import platform
+import sys
 from time import gmtime, strftime, time
 
 emojiMode = True
@@ -15,11 +16,17 @@ emojiMap = {
 errors = []
 
 currentBot = 'splasherchase' #bot to test
-#SPAARK IS THE BASELINE
+try:
+    currentBot = sys.argv[1]
+except:
+    pass
 
 # bots = [chr(ord('a')+i) for i in range(1)]
 bots = ["SPAARK"]
-# bots = ['MASON']
+try:
+    bots = sys.argv[2:]
+except:
+    pass
 
 maps = []
 maps += ['DefaultSmall']
