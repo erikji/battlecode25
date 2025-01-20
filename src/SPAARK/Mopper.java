@@ -1852,8 +1852,10 @@ public class Mopper {
         // so if the first one is already there just go to the next one
         moveScores = Motion.defaultMicro.micro(G.me.directionTo(target), target);
         moveScores[G.dirOrd(G.me.directionTo(target))] -= 18;
-        moveScores[G.dirOrd(G.me.directionTo(target).rotateLeft())] -= 14;
-        moveScores[G.dirOrd(G.me.directionTo(target).rotateRight())] -= 14;
+        if (G.me.directionTo(target) != Direction.CENTER) {
+            moveScores[G.dirOrd(G.me.directionTo(target).rotateLeft())] -= 14;
+            moveScores[G.dirOrd(G.me.directionTo(target).rotateRight())] -= 14;
+        }
     }
 
     public static void buildAttackScores() throws Exception {

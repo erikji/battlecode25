@@ -1518,8 +1518,10 @@ public class Motion {
         MapLocation nxt;
         PaintType p;
         scores[G.dirOrd(d)] += 20;
-        scores[G.dirOrd(d.rotateLeft())] += 15;
-        scores[G.dirOrd(d.rotateRight())] += 15;
+        if (d != Direction.CENTER) {
+            scores[G.dirOrd(d.rotateLeft())] += 15;
+            scores[G.dirOrd(d.rotateRight())] += 15;
+        }
         int mopperPenalty = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
         int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown) / 10);
         int enemyPaintPenalty = DEF_MICRO_E_PAINT_PENALTY * GameConstants.PENALTY_ENEMY_TERRITORY * mopperPenalty
