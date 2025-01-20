@@ -1,14 +1,6 @@
 package SPAARK;
 
-import battlecode.common.Clock;
-import battlecode.common.Direction;
-import battlecode.common.GameConstants;
-import battlecode.common.MapInfo;
-import battlecode.common.MapLocation;
-import battlecode.common.PaintType;
-import battlecode.common.RobotInfo;
-import battlecode.common.Team;
-import battlecode.common.UnitType;
+import battlecode.common.*;
 
 public class Soldier {
     public static final int EXPLORE = 0;
