@@ -193,6 +193,10 @@ public class Soldier {
         // VERY IMPORTANT DO NOT TOUCH
         buildBlockedTime = 0;
         buildTime = 0;
+        // dont build tower that bot was just building
+        final double towerVisitTimeout = SOL_RUIN_VISIT_TIMEOUT_BASE
+                + SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea
+                + SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE * G.rc.getNumberTowers();
         // switch modes if seeing towers/ruins
         for (int i = nearbyRuins.length; --i >= 0;) {
             MapLocation loc = nearbyRuins[i];
@@ -205,7 +209,7 @@ public class Soldier {
                     mode = ATTACK;
                     return;
                 }
-            } else {
+            } else if (G.getLastVisited(loc) + towerVisitTimeout < G.round) {
                 ruinLocation = loc;
                 mode = BUILD_TOWER;
                 // if the tower doesn't need more help it'll return to explore mode
@@ -220,11 +224,11 @@ public class Soldier {
             G.indicatorString.append("SKIP_CHK_RP:" + lastSrpExpansion + ":" + exploreLocation + " ");
         } else if (G.rc.getPaint() > SOL_SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
-            final double visitTimeout = SOL_SRP_VISIT_TIMEOUT + SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea;
+            final double srpVisitTimeout = SOL_SRP_VISIT_TIMEOUT + SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea;
             MapInfo info;
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 info = G.nearbyMapInfos[i];
-                if (G.getLastVisited(info.getMapLocation()) + visitTimeout < G.round
+                if (G.getLastVisited(info.getMapLocation()) + srpVisitTimeout < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
                     resourceLocation = info.getMapLocation();
                     mode = BUILD_RESOURCE;
@@ -241,7 +245,7 @@ public class Soldier {
             if (G.round > SOL_MIN_SRP_ROUND) {
                 for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-                    if (G.getLastVisited(loc) + visitTimeout < G.round && canBuildSRPAtLocation(loc)) {
+                    if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSRPAtLocation(loc)) {
                         srpCheckLocations = new MapLocation[] { loc };
                         srpCheckIndex = 0;
                         mode = EXPAND_RESOURCE;
@@ -341,7 +345,8 @@ public class Soldier {
             G.indicatorString.append("COMPLETE ");
             // if pattern complete leave lowest bot ID to complete
             for (int i = G.allyRobots.length; --i >= 0;) {
-                if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
+                if (G.allyRobots[i].type == UnitType.SOLDIER
+                        && G.allyRobots[i].getLocation().isWithinDistanceSquared(ruinLocation, 8)) {
                     if (G.allyRobots[i].ID < G.rc.getID()) {
                         // not lowest ID, leave
                         mode = EXPLORE;
