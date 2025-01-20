@@ -1,4 +1,4 @@
-package SPAARK;
+package botterspamming4;
 
 import battlecode.common.*;
 
@@ -8,8 +8,6 @@ public class Splasher {
     public static int mode = EXPLORE;
     // controls round between visiting ruins
     public static final int VISIT_TIMEOUT = 75;
-
-	public static final int SPL_INITIAL_ATK_MULT = 3;
 
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[37]; // score for attacking this square
@@ -35,11 +33,10 @@ public class Splasher {
             mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
             mode = EXPLORE;
-            Motion.retreatTower = -1;
         }
         if (mode == RETREAT) {
             Motion.setRetreatLoc();
-            if (Motion.retreatTower == -1) {
+            if (Motion.retreatLoc.x == -1) {
                 mode = EXPLORE;
             }
         }
@@ -339,7 +336,7 @@ public class Splasher {
                     best = i;
                 }
             }
-            if (allmax[best] > G.mapArea * SPL_INITIAL_ATK_MULT / G.rc.getRoundNum() + 300) {
+            if (allmax[best] > 4000 / G.rc.getRoundNum() + 250) {
                 MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
                 // try to move before attacking if possible so the paint we used in the attack
                 // isn't factored into movement cooldown

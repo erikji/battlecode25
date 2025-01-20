@@ -1,4 +1,4 @@
-package SPAARK;
+package botterspamming4;
 
 import battlecode.common.*;
 

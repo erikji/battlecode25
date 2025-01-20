@@ -1,4 +1,4 @@
-package SPAARK;
+package botterspamming4;
 
 import battlecode.common.*;
 
@@ -541,6 +541,7 @@ public class Motion {
             // oof no tower
             retreatTower = -1;
             // retreatLoc = Motion.exploreRandomlyLoc();
+            retreatLoc = G.invalidLoc;
             return;
         } else if (retreatTower != -1) {
             retreatLoc = POI.towerLocs[retreatTower];
@@ -555,6 +556,7 @@ public class Motion {
             // }
             // }
         }
+        retreatLoc = G.invalidLoc;
     }
 
     public static Direction retreatDir() throws Exception {
@@ -563,7 +565,6 @@ public class Motion {
 
     public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
-            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
             int dist = G.me.distanceSquaredTo(retreatLoc);
             if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
@@ -603,6 +604,7 @@ public class Motion {
                 }
             }
             // Motion.bugnavAround(retreatLoc, 1, 4);
+            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
         }
         return Direction.CENTER;
     }

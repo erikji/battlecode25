@@ -1,4 +1,4 @@
-package SPAARK;
+package defensetower;
 
 import battlecode.common.*;
 
@@ -126,7 +126,7 @@ public class POI {
     // basically critical array means this robot found this information, not
     // received through message
     // robot prioritizes critical informatoin to be sent first
-    // public static boolean[] critical = new boolean[144];
+    public static boolean[] critical = new boolean[144];
 
     public static int paintTowers = 0;
     public static int moneyTowers = 0;
@@ -172,14 +172,14 @@ public class POI {
                 towerTeams[i] = team;
                 towerTypes[i] = type;
                 robotsThatKnowInformation[i] = new StringBuilder(":" + source);
-                // if (source == -1) {
-                //     critical[i] = true;
-                // } else {
-                //     critical[i] = false;
-                // }
+                if (source == -1) {
+                    critical[i] = true;
+                } else {
+                    critical[i] = false;
+                }
             } else {
                 robotsThatKnowInformation[i].append(":" + source);
-                // critical[i] = false;
+                critical[i] = false;
             }
         } else {
             towerGrid[loc.y / 5][loc.x / 5] = numberOfTowers;
@@ -521,18 +521,18 @@ public class POI {
                     if (G.rc.canSendMessage(r.getLocation())) {
                         if (messages < 2) {
                             String id = ":" + r.getID();
-                            // for (int i = numberOfTowers; --i >= 0;) {
-                            //     if (critical[i] && !towerLocs[i].equals(r.getLocation())) {
-                            //         message = appendToMessage(message,
-                            //                 intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
-                            //         messages++;
-                            //         critical[i] = false;
-                            //         robotsThatKnowInformation[i].append(id);
-                            //         if (messages == 2) {
-                            //             break;
-                            //         }
-                            //     }
-                            // }
+                            for (int i = numberOfTowers; --i >= 0;) {
+                                if (critical[i] && !towerLocs[i].equals(r.getLocation())) {
+                                    message = appendToMessage(message,
+                                            intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
+                                    messages++;
+                                    critical[i] = false;
+                                    robotsThatKnowInformation[i].append(id);
+                                    if (messages == 2) {
+                                        break;
+                                    }
+                                }
+                            }
                             // for (int i = 144; --i >= 0;) {
                             // if (towers[i] == -1) {
                             // break;
@@ -617,7 +617,7 @@ public class POI {
     // dont want message spam
     public static void read16BitMessage(int id, int n) throws Exception {
         if ((n >> 12) == 7) {
-            int n2 = n % 8;
+            int n2 = (n >> 12) - 7;
             if (n2 % 2 == 0) {
                 removeValidSymmetry(id, 0);
             }

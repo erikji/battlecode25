@@ -1,4 +1,4 @@
-package SPAARK;
+package defensetower;
 
 import battlecode.common.*;
 
@@ -376,19 +376,8 @@ public class Motion {
     };
 
     public static int getRetreatPaint() throws Exception {
-        switch (G.rc.getType()) {
-            case SOLDIER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
-            case SPLASHER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
-            case MOPPER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
-            default:
-                return 0;
-        }
+        return Math.max(paintLost + RETREAT_PAINT_OFFSET,
+                (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
     }
 
     public static void updateRetreatWaitingLoc() throws Exception {
@@ -484,7 +473,7 @@ public class Motion {
             int best = -1;
             while (best == -1) {
                 int bestWeight = Integer.MIN_VALUE;
-                // boolean hasCritical = false;
+                boolean hasCritical = false;
                 for (int i = POI.numberOfTowers; --i >= 0;) {
                     // if (POI.critical[i]) {
                     //     hasCritical = true;
@@ -524,11 +513,7 @@ public class Motion {
                     triedRetreatTowers = new StringBuilder();
                     continue;
                 }
-                // if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
-                //     retreatTower = -2;
-                //     break;
-                // }
-                if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
+                if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
                     retreatTower = -2;
                     break;
                 }
@@ -541,6 +526,7 @@ public class Motion {
             // oof no tower
             retreatTower = -1;
             // retreatLoc = Motion.exploreRandomlyLoc();
+            retreatLoc = G.invalidLoc;
             return;
         } else if (retreatTower != -1) {
             retreatLoc = POI.towerLocs[retreatTower];
@@ -555,6 +541,7 @@ public class Motion {
             // }
             // }
         }
+        retreatLoc = G.invalidLoc;
     }
 
     public static Direction retreatDir() throws Exception {
@@ -563,7 +550,6 @@ public class Motion {
 
     public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
-            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
             int dist = G.me.distanceSquaredTo(retreatLoc);
             if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
@@ -603,6 +589,7 @@ public class Motion {
                 }
             }
             // Motion.bugnavAround(retreatLoc, 1, 4);
+            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
         }
         return Direction.CENTER;
     }

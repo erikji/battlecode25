@@ -1,4 +1,4 @@
-package SPAARK;
+package defensetower;
 
 import battlecode.common.*;
 
@@ -130,7 +130,6 @@ public class Soldier {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
-            Motion.retreatTower = -1;
         }
         nearbyRuins = G.rc.senseNearbyRuins(-1);
         // map
@@ -153,7 +152,7 @@ public class Soldier {
                 buildBlockedTime = 0;
                 buildTime = 0;
                 Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1) {
+                if (Motion.retreatLoc.x == -1) {
                     mode = EXPLORE;
                     exploreCheckMode();
                 }
@@ -887,6 +886,7 @@ public class Soldier {
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
         int towerType = POI.paintTowers * MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
+        towerType = 0;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
