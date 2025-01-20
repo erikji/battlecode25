@@ -717,7 +717,7 @@ public class POI {
     }
 
     public static int intifySymmetry() {
-        return (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7 + (7 << 12);
+        return (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + (7 << 12);
     }
 
     public static int appendToMessage(int message, int a) {
