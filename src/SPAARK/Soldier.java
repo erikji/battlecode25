@@ -225,7 +225,8 @@ public class Soldier {
             MapInfo info;
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 info = G.nearbyMapInfos[i];
-                if (G.getLastVisited(info.getMapLocation()) + srpVisitTimeout < G.round
+                if (!info.isResourcePatternCenter()
+                        && G.getLastVisited(info.getMapLocation()) + srpVisitTimeout < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
                     resourceLocation = info.getMapLocation();
                     mode = BUILD_RESOURCE;
@@ -243,11 +244,8 @@ public class Soldier {
                 for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                     if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSRPAtLocation(loc)) {
-                        srpCheckLocations = new MapLocation[] { loc };
-                        srpCheckIndex = 0;
-                        mode = EXPAND_RESOURCE;
-                        // do this or bugs
-                        expandResourceCheckMode();
+                        resourceLocation = loc;
+                        mode = BUILD_RESOURCE;
                         return;
                     }
                 }
