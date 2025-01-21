@@ -599,7 +599,7 @@ public class POI {
             }
         }
         for (Message m : messages) {
-            if (Clock.getBytecodesLeft() < 2000)
+            if (Clock.getBytecodesLeft() < 10000)
                 break;
             read16BitMessage(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             if ((m.getBytes() >> 16) != 0) {
