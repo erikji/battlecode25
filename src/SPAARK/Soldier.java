@@ -18,7 +18,7 @@ public class Soldier {
     // exploration weight multiplier
     public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
     // controls rounds between visiting ruins
-    public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -300;
+    public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -100;
     // increase timeout based on number of towers and map area
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
