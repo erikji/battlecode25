@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKSP2;
 
 import battlecode.common.*;
 
@@ -16,7 +16,7 @@ public class Soldier {
     // don't retreat if have enough chips to spam bots
     public static final int SOL_RETREAT_MAX_CHIPS = 5000;
     // exploration weight multiplier
-    public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
+    public static final int SOL_EXPLORE_OPP_WEIGHT = 5;
     // controls rounds between visiting ruins
     public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -300;
     // increase timeout based on number of towers and map area
@@ -27,7 +27,7 @@ public class Soldier {
     // stop building towers if enemy paint interferes too much
     public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 12; // tested: 12 against 16 (52/94)
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 16;
     public static final int SOL_TOWER_HELP_DIST = 5;
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
     // max soldiers that will build a tower
@@ -75,6 +75,7 @@ public class Soldier {
     public static int buildTime = 0;
 
     // commonly used stuff
+    public static MapLocation[] nearbyRuins;
     // map nearby map infos into 2d array in (y, x) form
     // used for tower building, SRP detection, expansion, building
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
@@ -138,7 +139,8 @@ public class Soldier {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
-        // map mapinfos infos
+        nearbyRuins = G.rc.senseNearbyRuins(-1);
+        // map mapinfos
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
@@ -196,11 +198,12 @@ public class Soldier {
                 + SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea
                 + SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE * G.rc.getNumberTowers();
         // switch modes if seeing towers/ruins
-        for (int i = G.nearbyRuins.length; --i >= 0;) {
-            MapLocation loc = G.nearbyRuins[i];
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = nearbyRuins[i];
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                if (bot.team == G.opponentTeam) {
+                if (bot.team == G.opponentTeam
+                        && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
                     towerLocation = loc;
                     towerType = bot.type;
                     mode = ATTACK;
@@ -704,8 +707,8 @@ public class Soldier {
             return true;
         // check for ruins/towers that could interfere
         MapLocation ruinLoc;
-        for (int i = G.nearbyRuins.length; --i >= 0;) {
-            ruinLoc = G.nearbyRuins[i];
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            ruinLoc = nearbyRuins[i];
             if (center.equals(ruinLoc) || !G.rc.canSenseRobotAtLocation(ruinLoc)
                     && Math.abs(center.x - ruinLoc.x) <= 4 && Math.abs(center.y - ruinLoc.y) <= 4) {
                 return true;

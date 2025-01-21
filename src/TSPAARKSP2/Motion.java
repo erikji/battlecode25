@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKSP2;
 
 import battlecode.common.*;
 
@@ -1566,15 +1566,15 @@ public class Motion {
                 }
             }
         }
-        for (int r = G.nearbyRuins.length; --r >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[r])) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(G.nearbyRuins[r]);
+        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
+        for (int r = ruins.length; --r >= 0;) {
+            if (G.rc.canSenseRobotAtLocation(ruins[r])) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
                 if (bot.team == G.opponentTeam) {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
-                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 100;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
-                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
+                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(ruins[r],
                                     bot.type.actionRadiusSquared)) {
                                 scores[i] -= toSubtract;
                             }
