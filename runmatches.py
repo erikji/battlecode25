@@ -15,7 +15,7 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'sacrificialsplashers' #bot to test
+currentBot = 'bottersploshers' #bot to test
 if len(sys.argv) > 1:
     currentBot = sys.argv[1]
 
