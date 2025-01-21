@@ -1,4 +1,4 @@
-package SPAARK;
+package splasherchase;
 
 import battlecode.common.*;
 
@@ -3730,8 +3730,24 @@ public class Splasher {
     }
 
     public static void exploreMoveScores() throws Exception {
-        moveScores = Motion.defaultMicro
-                .micro(Motion.bug2Helper(G.me, Motion.exploreRandomlyAggressiveLoc(), Motion.TOWARDS, 0, 0), Motion.exploreLoc);
+		MapLocation best = null;
+		int bestDistance = 0;
+		for (int i = G.opponentRobots.length; --i >= 0;) {
+			if (G.opponentRobots[i].type != UnitType.SOLDIER) {
+				continue;
+			}
+			if (best == null || G.me.distanceSquaredTo(G.opponentRobots[i].location) < bestDistance) {
+				best = G.opponentRobots[i].location;
+				bestDistance = G.me.distanceSquaredTo(G.opponentRobots[i].location);
+			}
+		}
+		// if (best != null && (Motion.exploreLoc == null || best.isWithinDistanceSquared(Motion.exploreLoc, 40))) {
+		if (best != null) {
+			moveScores = Motion.defaultMicro.micro(Motion.bug2Helper(G.me, best, Motion.TOWARDS, 0, 0), Motion.exploreLoc);
+		}
+		else {
+			moveScores = Motion.defaultMicro.micro(Motion.bug2Helper(G.me, Motion.exploreRandomlyAggressiveLoc(), Motion.TOWARDS, 0, 0), Motion.exploreLoc);
+		}
     }
 
     public static void retreatMoveScores() throws Exception {
