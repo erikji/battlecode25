@@ -3735,14 +3735,15 @@ public class Splasher {
 
     public static void exploreMoveScores() throws Exception {
 		MapLocation best = null;
-		int bestDistance = 0;
+		int bestWeight = 0;
 		for (int i = G.opponentRobots.length; --i >= 0;) {
 			if (G.opponentRobots[i].type != UnitType.SOLDIER) {
 				continue;
 			}
-			if (best == null || G.me.distanceSquaredTo(G.opponentRobots[i].location) < bestDistance) {
+			int weight = G.opponentRobots[i].paintAmount - G.me.distanceSquaredTo(G.opponentRobots[i].location);
+			if (best == null || weight > bestWeight) {
 				best = G.opponentRobots[i].location;
-				bestDistance = G.me.distanceSquaredTo(G.opponentRobots[i].location);
+				bestWeight = weight;
 			}
 		}
 		// if (best != null && (Motion.exploreLoc == null || best.isWithinDistanceSquared(Motion.exploreLoc, 40))) {
