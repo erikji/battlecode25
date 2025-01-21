@@ -21,6 +21,7 @@ public class RobotPlayer {
             }
         }
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
+        G.nearbyRuins = G.rc.senseNearbyRuins(-1);
     }
 
     public static void updateMove() throws Exception {

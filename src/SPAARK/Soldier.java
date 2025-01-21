@@ -75,7 +75,6 @@ public class Soldier {
     public static int buildTime = 0;
 
     // commonly used stuff
-    public static MapLocation[] nearbyRuins;
     // map nearby map infos into 2d array in (y, x) form
     // used for tower building, SRP detection, expansion, building
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
@@ -139,7 +138,6 @@ public class Soldier {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
-        nearbyRuins = G.rc.senseNearbyRuins(-1);
         // map mapinfos
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
@@ -198,8 +196,8 @@ public class Soldier {
                 + SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea
                 + SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE * G.rc.getNumberTowers();
         // switch modes if seeing towers/ruins
-        for (int i = nearbyRuins.length; --i >= 0;) {
-            MapLocation loc = nearbyRuins[i];
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = G.nearbyRuins[i];
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam
@@ -707,8 +705,8 @@ public class Soldier {
             return true;
         // check for ruins/towers that could interfere
         MapLocation ruinLoc;
-        for (int i = nearbyRuins.length; --i >= 0;) {
-            ruinLoc = nearbyRuins[i];
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            ruinLoc = G.nearbyRuins[i];
             if (center.equals(ruinLoc) || !G.rc.canSenseRobotAtLocation(ruinLoc)
                     && Math.abs(center.x - ruinLoc.x) <= 4 && Math.abs(center.y - ruinLoc.y) <= 4) {
                 return true;

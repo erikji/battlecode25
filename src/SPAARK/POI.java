@@ -253,17 +253,16 @@ public class POI {
             G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         a = Clock.getBytecodeNum();
-        MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
-        for (int i = nearbyRuins.length; --i >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
-                RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                RobotInfo info = G.rc.senseRobotAtLocation(G.nearbyRuins[i]);
                 // addTower(-1, intifyTower(info.getTeam(), info.getType()) |
                 // intifyLocation(nearbyRuins[i]));
-                addTower(-1, nearbyRuins[i], info.getTeam(), info.getType().getBaseType());
+                addTower(-1, G.nearbyRuins[i], info.getTeam(), info.getType().getBaseType());
             } else {
                 // addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) |
                 // intifyLocation(nearbyRuins[i]));
-                addTower(-1, nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
+                addTower(-1, G.nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
         if (ENABLE_INDICATORS)
@@ -274,8 +273,8 @@ public class POI {
 
         // update symmetry array
         if (G.rc.getType().isRobotType()) {
-            for (int i = nearbyRuins.length; --i >= 0;) {
-                MapLocation xy = nearbyRuins[i];
+            for (int i = G.nearbyRuins.length; --i >= 0;) {
+                MapLocation xy = G.nearbyRuins[i];
                 ruin[xy.y] |= 1L << xy.x;
             }
             switch (Math.min(G.me.y, 4)) {

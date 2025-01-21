@@ -1566,15 +1566,14 @@ public class Motion {
                 }
             }
         }
-        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
-        for (int r = ruins.length; --r >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(ruins[r])) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
+        for (int r = G.nearbyRuins.length; --r >= 0;) {
+            if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[r])) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(G.nearbyRuins[r]);
                 if (bot.team == G.opponentTeam) {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
-                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(ruins[r],
+                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
                                     bot.type.actionRadiusSquared)) {
                                 scores[i] -= toSubtract;
                             }

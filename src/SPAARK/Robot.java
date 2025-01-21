@@ -32,11 +32,27 @@ public class Robot {
                 }
             }
         }
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            for (int j = 0; j < 2; j++) {
+                if (G.rc.canCompleteTowerPattern(Robot.towers[j], G.nearbyRuins[i])) {
+                    G.rc.completeTowerPattern(Robot.towers[j], G.nearbyRuins[i]);
+                    POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[j]);
+                }
+            }
+        }
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
             case SPLASHER -> Splasher.run();
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
+        }
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            for (int j = 0; j < 2; j++) {
+                if (G.rc.canCompleteTowerPattern(Robot.towers[j], G.nearbyRuins[i])) {
+                    G.rc.completeTowerPattern(Robot.towers[j], G.nearbyRuins[i]);
+                    POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[j]);
+                }
+            }
         }
         Motion.lastPaint = G.rc.getPaint();
         G.indicatorString.append("SYM="

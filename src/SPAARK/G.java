@@ -128,6 +128,7 @@ public class G {
     public static StringBuilder allyRobotsString;
     public static StringBuilder opponentRobotsString;
     public static MapInfo[] nearbyMapInfos;
+    public static MapLocation[] nearbyRuins;
     public static int round;
     // divide all coordinates by 2, now 30x30
     // 1/4th the size of 60x60, don't need the resolution

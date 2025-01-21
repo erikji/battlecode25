@@ -605,15 +605,14 @@ public class Mopper {
         G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
         if (G.rc.getNumberTowers() < 25) {
-            MapLocation[] locs = G.rc.senseNearbyRuins(-1);
-            for (int i = locs.length; --i >= 0;) {
-                if (G.rc.canSenseRobotAtLocation(locs[i])) {
+            for (int i = G.nearbyRuins.length; --i >= 0;) {
+                if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
                     continue;
                 }
-                if (G.getLastVisited(locs[i]) + BUILD_TIMEOUT >= G.round) {
+                if (G.getLastVisited(G.nearbyRuins[i]) + BUILD_TIMEOUT >= G.round) {
                     continue;
                 }
-                target = locs[i];
+                target = G.nearbyRuins[i];
                 mode = BUILD;
                 break;
             }
