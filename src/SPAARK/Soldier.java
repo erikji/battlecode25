@@ -91,7 +91,7 @@ public class Soldier {
      * Run around randomly while painting below self, pick towers from POI
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
-     * If existing SRP found, enter SRP build mode
+     * If existing SRP found, enter SRP expand mode
      * If can build, queue location and enter SRP expand mode
      * 
      * Build tower:
@@ -230,7 +230,6 @@ public class Soldier {
                 if (!info.isResourcePatternCenter()
                         && G.getLastVisited(info.getMapLocation()) + srpVisitTimeout < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
-                    // still have to use EXPAND_RESOURCE here due to marker placement
                     srpCheckLocations = new MapLocation[] { info.getMapLocation() };
                     srpCheckIndex = 0;
                     mode = EXPAND_RESOURCE;
@@ -248,12 +247,11 @@ public class Soldier {
                 for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                     if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSrpAtLocation(loc)) {
-                        resourceLocation = loc;
-                        // markers
-                        G.rc.mark(resourceLocation, true);
-                        G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
-                        G.indicatorString.append("MK_SRP ");
-                        mode = BUILD_RESOURCE;
+                        srpCheckLocations = new MapLocation[] { loc };
+                        srpCheckIndex = 0;
+                        mode = EXPAND_RESOURCE;
+                        // do this or bugs
+                        expandResourceCheckMode();
                         return;
                     }
                 }
