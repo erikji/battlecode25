@@ -70,6 +70,7 @@ public class Soldier {
     public static MapLocation[] srpCheckLocations = new MapLocation[] {};
     public static int srpCheckIndex = 0;
     public static int lastSrpExpansion = -SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
+    public static long[] cannotBuildSRPAtLocation = new long[64];
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
@@ -691,20 +692,27 @@ public class Soldier {
      */
     public static boolean cannotBuildSRPAtLocation(MapLocation center) throws Exception {
         // check if on map first
+        if (((cannotBuildSRPAtLocation[center.y] >> center.x) & 1) == 1) {
+            return true;
+        }
         if (center.x < 2 || center.x > G.mapWidth - 3 || center.y < 2 || center.y > G.mapHeight - 3) {
+            cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
             return true;
         }
         int ox = center.x - G.me.x + 4;
         int oy = center.y - G.me.y + 4;
         // if SRP already there, don't
-        if (G.rc.canSenseLocation(center) && mapInfos[oy][ox].isResourcePatternCenter())
+        if (G.rc.canSenseLocation(center) && mapInfos[oy][ox].isResourcePatternCenter()) {
+            cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
             return true;
+        }
         // check for ruins/towers that could interfere
         MapLocation ruinLoc;
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             ruinLoc = G.nearbyRuins[i];
             if (center.equals(ruinLoc) || !G.rc.canSenseRobotAtLocation(ruinLoc)
                     && Math.abs(center.x - ruinLoc.x) <= 4 && Math.abs(center.y - ruinLoc.y) <= 4) {
+                cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
                 return true;
             }
         }
@@ -712,7 +720,7 @@ public class Soldier {
         // within vision radius - everything else not allowed
         // also check passibility within 5x5 square
         // CODEGEN WARNING CODEGEN WARNING CODEGEN WARNING CODEGEN WARNING
-        return G.rc.canSenseLocation(center.translate(-2, -4))
+        if (G.rc.canSenseLocation(center.translate(-2, -4))
                 && (mapInfos[-4 + oy][-2 + ox].getMark() == PaintType.ALLY_SECONDARY)
                 || G.rc.canSenseLocation(center.translate(-1, -4))
                         && (mapInfos[-4 + oy][-1 + ox].getMark() == PaintType.ALLY_SECONDARY)
@@ -865,7 +873,12 @@ public class Soldier {
                 || G.rc.canSenseLocation(center.translate(1, 4))
                         && (mapInfos[4 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
                 || G.rc.canSenseLocation(center.translate(2, 4))
-                        && (mapInfos[4 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY);
+                        && (mapInfos[4 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)) {
+                            
+            cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
+            return true;
+        }
+        return false;
     }
 
     /**
