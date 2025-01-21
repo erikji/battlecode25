@@ -229,10 +229,12 @@ public class Soldier {
                 if (!info.isResourcePatternCenter()
                         && G.getLastVisited(info.getMapLocation()) + srpVisitTimeout < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
-                    resourceLocation = info.getMapLocation();
-                    mode = BUILD_RESOURCE;
-                    if (Clock.getBytecodesLeft() > 8000)
-                        buildResourceCheckMode();
+                    // still have to use EXPAND_RESOURCE here due to marker placement
+                    srpCheckLocations = new MapLocation[] { info.getMapLocation() };
+                    srpCheckIndex = 0;
+                    mode = EXPAND_RESOURCE;
+                    // do this or bugs
+                    expandResourceCheckMode();
                     return;
                 }
             }
@@ -246,6 +248,10 @@ public class Soldier {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                     if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSRPAtLocation(loc)) {
                         resourceLocation = loc;
+                        // markers
+                        G.rc.mark(resourceLocation, true);
+                        G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+                        G.indicatorString.append("MK_SRP ");
                         mode = BUILD_RESOURCE;
                         return;
                     }
@@ -451,8 +457,8 @@ public class Soldier {
         if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
             resourceLocation = G.me;
             // only place one marker
-            G.rc.mark(target, true);
-            G.rc.setIndicatorDot(target, 255, 200, 0);
+            G.rc.mark(resourceLocation, true);
+            G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
             G.indicatorString.append("MK_SRP ");
             mode = BUILD_RESOURCE;
         }
