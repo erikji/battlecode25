@@ -506,6 +506,9 @@ public class Motion {
                     if (paint) {
                         weight += 100;
                     }
+                    else if (G.rc.canSenseRobotAtLocation(POI.towerLocs[i]) && G.rc.senseRobotAtLocation(POI.towerLocs[i]).paintAmount > 0) {
+                        weight += 100;
+                    }
                     // if (!POI.critical[i]) {
                     //     weight += 200;
                     // }
@@ -528,7 +531,7 @@ public class Motion {
                 //     retreatTower = -2;
                 //     break;
                 // }
-                if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
+                if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER && !G.rc.canSenseRobotAtLocation(POI.towerLocs[best])) {
                     retreatTower = -2;
                     break;
                 }
