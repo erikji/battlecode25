@@ -18,7 +18,7 @@ public class Soldier {
     // exploration weight multiplier
     public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
     // controls rounds between visiting ruins
-    public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -300;
+    public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -100;
     // increase timeout based on number of towers and map area
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
@@ -70,7 +70,8 @@ public class Soldier {
     public static MapLocation[] srpCheckLocations = new MapLocation[] {};
     public static int srpCheckIndex = 0;
     public static int lastSrpExpansion = -SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-    public static long[] cannotBuildSRPAtLocation = new long[64];
+    // cache using 2d boolean array using bitshifting
+    public static long[] disqualifiedSrpLocations = new long[64];
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
@@ -90,7 +91,7 @@ public class Soldier {
      * Run around randomly while painting below self, pick towers from POI
      * If seeing opponent tower or ruin, go to attack/tower build mode
      * - tower build mode then checks if actually needed, may switch back to explore
-     * If existing SRP found, enter SRP build mode
+     * If existing SRP found, enter SRP expand mode
      * If can build, queue location and enter SRP expand mode
      * 
      * Build tower:
@@ -229,7 +230,6 @@ public class Soldier {
                 if (!info.isResourcePatternCenter()
                         && G.getLastVisited(info.getMapLocation()) + srpVisitTimeout < G.round
                         && info.getMark() == PaintType.ALLY_SECONDARY) {
-                    // still have to use EXPAND_RESOURCE here due to marker placement
                     srpCheckLocations = new MapLocation[] { info.getMapLocation() };
                     srpCheckIndex = 0;
                     mode = EXPAND_RESOURCE;
@@ -246,13 +246,12 @@ public class Soldier {
             if (G.round > SOL_MIN_SRP_ROUND) {
                 for (int i = 8; --i >= 0;) {
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
-                    if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSRPAtLocation(loc)) {
-                        resourceLocation = loc;
-                        // markers
-                        G.rc.mark(resourceLocation, true);
-                        G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
-                        G.indicatorString.append("MK_SRP ");
-                        mode = BUILD_RESOURCE;
+                    if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSrpAtLocation(loc)) {
+                        srpCheckLocations = new MapLocation[] { loc };
+                        srpCheckIndex = 0;
+                        mode = EXPAND_RESOURCE;
+                        // do this or bugs
+                        expandResourceCheckMode();
                         return;
                     }
                 }
@@ -441,7 +440,7 @@ public class Soldier {
         // done ASAP, don't waste time going to SRPs that can be disqualified
         final double visitTimeout = SOL_SRP_VISIT_TIMEOUT + SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea;
         while (!G.rc.onTheMap(target) || G.getLastVisited(target) + visitTimeout >= G.round
-                || cannotBuildSRPAtLocation(target)) {
+                || cannotBuildSrpAtLocation(target)) {
             if (G.rc.onTheMap(target))
                 G.rc.setIndicatorDot(target, 255, 100, 0);
             if (++srpCheckIndex >= srpCheckLocations.length) {
@@ -454,7 +453,7 @@ public class Soldier {
             target = srpCheckLocations[srpCheckIndex];
         }
         // markers
-        if (G.me.equals(target) && canBuildSRPAtLocation(G.me)) {
+        if (G.me.equals(target) && canBuildSrpAtLocation(G.me)) {
             resourceLocation = G.me;
             // only place one marker
             G.rc.mark(resourceLocation, true);
@@ -697,20 +696,21 @@ public class Soldier {
      * Checks if an SRP cannot be built at a location. If `false`, doesn't
      * necessarily mean *can* build, only *can't not* build.
      */
-    public static boolean cannotBuildSRPAtLocation(MapLocation center) throws Exception {
-        // check if on map first
-        if (((cannotBuildSRPAtLocation[center.y] >> center.x) & 1) == 1) {
+    public static boolean cannotBuildSrpAtLocation(MapLocation center) throws Exception {
+        // cache
+        if (((disqualifiedSrpLocations[center.y] >> center.x) & 1) == 1) {
             return true;
         }
+        // check if on map first
         if (center.x < 2 || center.x > G.mapWidth - 3 || center.y < 2 || center.y > G.mapHeight - 3) {
-            cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
+            disqualifiedSrpLocations[center.y] |= 1L << center.x;
             return true;
         }
         int ox = center.x - G.me.x + 4;
         int oy = center.y - G.me.y + 4;
         // if SRP already there, don't
         if (G.rc.canSenseLocation(center) && mapInfos[oy][ox].isResourcePatternCenter()) {
-            cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
+            disqualifiedSrpLocations[center.y] |= 1L << center.x;
             return true;
         }
         // check for ruins/towers that could interfere
@@ -719,7 +719,7 @@ public class Soldier {
             ruinLoc = G.nearbyRuins[i];
             if (center.equals(ruinLoc) || !G.rc.canSenseRobotAtLocation(ruinLoc)
                     && Math.abs(center.x - ruinLoc.x) <= 4 && Math.abs(center.y - ruinLoc.y) <= 4) {
-                cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
+                disqualifiedSrpLocations[center.y] |= 1L << center.x;
                 return true;
             }
         }
@@ -881,8 +881,7 @@ public class Soldier {
                         && (mapInfos[4 + oy][1 + ox].getMark() == PaintType.ALLY_SECONDARY)
                 || G.rc.canSenseLocation(center.translate(2, 4))
                         && (mapInfos[4 + oy][2 + ox].getMark() == PaintType.ALLY_SECONDARY)) {
-                            
-            cannotBuildSRPAtLocation[center.y] |= 1L << center.x;
+            disqualifiedSrpLocations[center.y] |= 1L << center.x;
             return true;
         }
         return false;
@@ -891,12 +890,12 @@ public class Soldier {
     /**
      * Check if an SRP can be built or repaired at location.
      */
-    public static boolean canBuildSRPAtLocation(MapLocation center) throws Exception {
+    public static boolean canBuildSrpAtLocation(MapLocation center) throws Exception {
         // if on top of a current SRP, yes
         if (G.rc.canSenseLocation(center) && G.rc.senseMapInfo(center).getMark() == PaintType.ALLY_SECONDARY)
             return true;
         else
-            return !cannotBuildSRPAtLocation(center);
+            return !cannotBuildSrpAtLocation(center);
     }
 
     /**
