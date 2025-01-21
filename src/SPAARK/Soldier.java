@@ -138,7 +138,7 @@ public class Soldier {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
-        // map mapinfos
+        // map mapinfos infos
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
