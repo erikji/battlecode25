@@ -200,8 +200,7 @@ public class Soldier {
             MapLocation loc = G.nearbyRuins[i];
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                if (bot.team == G.opponentTeam
-                        && bot.type.actionRadiusSquared <= G.rc.getType().actionRadiusSquared) {
+                if (bot.team == G.opponentTeam) {
                     towerLocation = loc;
                     towerType = bot.type;
                     mode = ATTACK;
