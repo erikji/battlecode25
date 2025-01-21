@@ -15,18 +15,18 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'splasherchase' #bot to test
-try:
-    currentBot = sys.argv[1]
-except:
-    pass
+currentBot = 'SPAARK' #bot to test
+# try:
+#     currentBot = sys.argv[1]
+# except:
+#     pass
 
 # bots = [chr(ord('a')+i) for i in range(1)]
-bots = ["SPAARK"]
-try:
-    bots = sys.argv[2:]
-except:
-    pass
+bots = ["solexpoppwei", "solexpoppwei2", "solexpoppwei3", "solexpoppwei4"]
+# try:
+#     bots = sys.argv[2:]
+# except:
+#     pass
 
 maps = []
 maps += ['DefaultSmall']

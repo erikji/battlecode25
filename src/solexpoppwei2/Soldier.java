@@ -1,4 +1,4 @@
-package SPAARK;
+package solexpoppwei2;
 
 import battlecode.common.*;
 
@@ -16,7 +16,7 @@ public class Soldier {
     // don't retreat if have enough chips to spam bots
     public static final int SOL_RETREAT_MAX_CHIPS = 5000;
     // exploration weight multiplier
-    public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
+    public static final int SOL_EXPLORE_OPP_WEIGHT = 4;
     // controls rounds between visiting ruins
     public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -300;
     // increase timeout based on number of towers and map area
@@ -27,7 +27,7 @@ public class Soldier {
     // stop building towers if enemy paint interferes too much
     public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 12; // tested: 12 against 16 (52/94)
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 16;
     public static final int SOL_TOWER_HELP_DIST = 5;
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
     // max soldiers that will build a tower
