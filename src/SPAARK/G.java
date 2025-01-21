@@ -124,6 +124,7 @@ public class G {
     public static MapLocation me;
     public static RobotInfo[] allyRobots;
     public static RobotInfo[] opponentRobots;
+    public static int maxChips;
     // doesn't include towers
     public static StringBuilder allyRobotsString;
     public static StringBuilder opponentRobotsString;

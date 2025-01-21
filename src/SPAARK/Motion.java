@@ -207,7 +207,7 @@ public class Motion {
                 }
             }
             if (G.round > 800) {
-                G.rc.resign();
+                // G.rc.resign();
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
             if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
@@ -388,19 +388,18 @@ public class Motion {
     };
 
     public static int getRetreatPaint() throws Exception {
+        //if paint is less than getRetreatPaint, the robot may retreat
+        int paint = Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
         switch (G.rc.getType()) {
             case SOLDIER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+                return paint;
             case SPLASHER:
                 if (G.mapArea > 1600 && G.rc.getNumberTowers() == 2) {
                     return 50;
                 }
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+                return paint;
             case MOPPER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+                return paint;
             default:
                 return 0;
         }

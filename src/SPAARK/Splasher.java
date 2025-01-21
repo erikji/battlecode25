@@ -31,8 +31,8 @@ public class Splasher {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.rc.getChips() < 5000) {
-            mode = RETREAT;
+        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+			mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
