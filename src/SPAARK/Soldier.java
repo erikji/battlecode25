@@ -527,7 +527,6 @@ public class Soldier {
         }
         G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
-        G.nearbyMapInfos = G.rc.senseNearbyMapInfos();
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
             MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
