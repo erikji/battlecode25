@@ -1,5 +1,4 @@
 from range20 import works
-import sys
 #mop
 #weighing scores
 a = [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0)]
@@ -33,12 +32,9 @@ for i in range(25):
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
                     attackScores["""+str(i)+"""] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
-                    if (bot.paintAmount > 0) {
-                        if (bot.paintAmount <= 10) {
-                            attackScores["""+str(i)+"""] += (int) G.paintPerChips() * bot.type.moneyCost;
-                        } else {
-                            attackScores["""+str(i)+"""] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
-                        }
+                    if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
+                        //treat freezing bot equivalent to gaining 20 paint
+                        attackScores["""+str(i)+"""] += MOP_FREEZE_BOT_WEIGHT;
                     }
                 }
             }
@@ -67,23 +63,15 @@ for d in a:
                 ind = s.index(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
                 if ind < 0:
                     raise Exception()
-                s.insert(s.index(f'\t\t\t\tif (bot.paintAmount <= 5){{\n',ind)+2, f'\t\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += toAdd;\n')
-                s.insert(s.index(f'\t\t\t\t}} else {{\n',ind)+2, f'\t\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += toAdd;\n')
-                s.insert(ind+4, f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += toAdd2;\n')
+                s.insert(s.index(f'\t\t\tif (bot.paintAmount <= 5 && bot.paintAmount > 0) {{\n',ind)+1, f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += MOP_FREEZE_BOT_WEIGHT;\n')
+                s.insert(ind+3, f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 5;\n')
             except:
                 s.append(f'\t\tloc = G.me.translate({d[0]+i[0]}, {d[1]+i[1]});\n')
                 s.append(f'\t\tif (G.opponentRobotsString.indexOf(loc.toString()) != -1)' + ' {\n')
                 s.append(f'\t\t\tRobotInfo bot = G.rc.senseRobotAtLocation(loc);\n')
-                s.append(f'\t\t\tint toAdd2 = Math.min(5, bot.paintAmount) * 5;\n')
-                s.append(f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += toAdd2;\n')
-                s.append(f'\t\t\tif (bot.paintAmount > 0) {{\n')
-                s.append(f'\t\t\t\tif (bot.paintAmount <= 5){{\n')
-                s.append(f'\t\t\t\t\tint toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);\n')
-                s.append(f'\t\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += toAdd;\n')
-                s.append(f'\t\t\t\t}} else {{\n')
-                s.append(f'\t\t\t\t\tint toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());\n')
-                s.append(f'\t\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += toAdd;\n')
-                s.append(f'\t\t\t\t}}\n')
+                s.append(f'\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing\n')
+                s.append(f'\t\t\tif (bot.paintAmount <= 5 && bot.paintAmount > 0) {{\n')
+                s.append(f'\t\t\t\tswingScores[{a.index(d)*4+a2.index(d2)}] += MOP_FREEZE_BOT_WEIGHT;\n')
                 s.append('\t\t\t}\n')
                 s.append('\t\t}\n')
 s+= [f'\t\tswingScores[{i}] *= MOP_SWING_MULT;\n' for i in range(36)]

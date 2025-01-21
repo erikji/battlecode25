@@ -1,4 +1,4 @@
-package SPAARK;
+package solexpoppwei3;
 
 import battlecode.common.*;
 
@@ -1571,7 +1571,6 @@ public class Motion {
                 RobotInfo bot = G.rc.senseRobotAtLocation(G.nearbyRuins[r]);
                 if (bot.team == G.opponentTeam) {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
-                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 100;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
                             if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],

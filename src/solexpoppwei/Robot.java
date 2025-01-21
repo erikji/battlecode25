@@ -1,4 +1,4 @@
-package SPAARK;
+package solexpoppwei;
 
 import battlecode.common.*;
 
@@ -33,16 +33,11 @@ public class Robot {
             }
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 2; j++) {
                 if (G.rc.canCompleteTowerPattern(Robot.towers[j], G.nearbyRuins[i])) {
                     G.rc.completeTowerPattern(Robot.towers[j], G.nearbyRuins[i]);
                     POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[j]);
                 }
-            }
-        }
-        for (int i = 9; --i >= 0;) {
-            if (G.rc.canCompleteResourcePattern(G.me.translate(G.range20X[i], G.range20Y[i]))) {
-                G.rc.completeResourcePattern(G.me.translate(G.range20X[i], G.range20Y[i]));
             }
         }
         switch (G.rc.getType()) {
@@ -52,16 +47,11 @@ public class Robot {
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 2; j++) {
                 if (G.rc.canCompleteTowerPattern(Robot.towers[j], G.nearbyRuins[i])) {
                     G.rc.completeTowerPattern(Robot.towers[j], G.nearbyRuins[i]);
                     POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[j]);
                 }
-            }
-        }
-        for (int i = 9; --i >= 0;) {
-            if (G.rc.canCompleteResourcePattern(G.me.translate(G.range20X[i], G.range20Y[i]))) {
-                G.rc.completeResourcePattern(G.me.translate(G.range20X[i], G.range20Y[i]));
             }
         }
         Motion.lastPaint = G.rc.getPaint();

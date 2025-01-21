@@ -1,4 +1,4 @@
-package SPAARK;
+package cownav2;
 
 import battlecode.common.*;
 
@@ -222,7 +222,7 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
                                     break search;
@@ -298,7 +298,7 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
                                     break search;
@@ -1518,10 +1518,8 @@ public class Motion {
         MapLocation nxt;
         PaintType p;
         scores[G.dirOrd(d)] += 20;
-        if (d != Direction.CENTER) {
-            scores[G.dirOrd(d.rotateLeft())] += 15;
-            scores[G.dirOrd(d.rotateRight())] += 15;
-        }
+        scores[G.dirOrd(d.rotateLeft())] += 15;
+        scores[G.dirOrd(d.rotateRight())] += 15;
         int mopperPenalty = G.rc.getType() == UnitType.MOPPER ? GameConstants.MOPPER_PAINT_PENALTY_MULTIPLIER : 1;
         int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + movementCooldown) / 10);
         int enemyPaintPenalty = DEF_MICRO_E_PAINT_PENALTY * GameConstants.PENALTY_ENEMY_TERRITORY * mopperPenalty
@@ -1566,15 +1564,15 @@ public class Motion {
                 }
             }
         }
-        for (int r = G.nearbyRuins.length; --r >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[r])) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(G.nearbyRuins[r]);
+        MapLocation[] ruins = G.rc.senseNearbyRuins(-1);
+        for (int r = ruins.length; --r >= 0;) {
+            if (G.rc.canSenseRobotAtLocation(ruins[r])) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(ruins[r]);
                 if (bot.team == G.opponentTeam) {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
-                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 100;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
-                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
+                            if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(ruins[r],
                                     bot.type.actionRadiusSquared)) {
                                 scores[i] -= toSubtract;
                             }

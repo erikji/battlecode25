@@ -1,4 +1,4 @@
-package SPAARK;
+package cownav2;
 
 import battlecode.common.*;
 
@@ -253,16 +253,17 @@ public class POI {
             G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         a = Clock.getBytecodeNum();
-        for (int i = G.nearbyRuins.length; --i >= 0;) {
-            if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
-                RobotInfo info = G.rc.senseRobotAtLocation(G.nearbyRuins[i]);
+        MapLocation[] nearbyRuins = G.rc.senseNearbyRuins(-1);
+        for (int i = nearbyRuins.length; --i >= 0;) {
+            if (G.rc.canSenseRobotAtLocation(nearbyRuins[i])) {
+                RobotInfo info = G.rc.senseRobotAtLocation(nearbyRuins[i]);
                 // addTower(-1, intifyTower(info.getTeam(), info.getType()) |
                 // intifyLocation(nearbyRuins[i]));
-                addTower(-1, G.nearbyRuins[i], info.getTeam(), info.getType().getBaseType());
+                addTower(-1, nearbyRuins[i], info.getTeam(), info.getType().getBaseType());
             } else {
                 // addTower(-1, intifyTower(Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER) |
                 // intifyLocation(nearbyRuins[i]));
-                addTower(-1, G.nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
+                addTower(-1, nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
         if (ENABLE_INDICATORS)
@@ -273,8 +274,8 @@ public class POI {
 
         // update symmetry array
         if (G.rc.getType().isRobotType()) {
-            for (int i = G.nearbyRuins.length; --i >= 0;) {
-                MapLocation xy = G.nearbyRuins[i];
+            for (int i = nearbyRuins.length; --i >= 0;) {
+                MapLocation xy = nearbyRuins[i];
                 ruin[xy.y] |= 1L << xy.x;
             }
             switch (Math.min(G.me.y, 4)) {
@@ -599,7 +600,7 @@ public class POI {
             }
         }
         for (Message m : messages) {
-            if (Clock.getBytecodesLeft() < 10000)
+            if (Clock.getBytecodesLeft() < 2000)
                 break;
             read16BitMessage(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             if ((m.getBytes() >> 16) != 0) {
@@ -716,7 +717,7 @@ public class POI {
     }
 
     public static int intifySymmetry() {
-        return (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + (7 << 12);
+        return (symmetry[0] ? 1 : 0) + (symmetry[1] ? 1 : 0) * 2 + (symmetry[2] ? 1 : 0) * 4 + 7 + (7 << 12);
     }
 
     public static int appendToMessage(int message, int a) {

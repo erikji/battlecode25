@@ -1,4 +1,4 @@
-package SPAARK;
+package solexpoppwei2;
 
 import battlecode.common.*;
 
@@ -151,31 +151,21 @@ public class G {
     }
 
     // random micro stuff
-    public static final double PAINT_PER_CHIP = 0.25;
-    public static final double PAINT_PER_COOLDOWN = 0.1;
+    public static final double PAINT_PER_CHIP = 0.5;
 
     public static double paintPerChips() {
-        // how many paint is 1 chip worth
+        // how many chips is 1 paint worth
         // maybe this should be changed depending on the map
         return PAINT_PER_CHIP;
     }
 
-    public static double paintPerCooldown() {
-        // how many paint is 1 cooldown (move/action) worth
-        return PAINT_PER_COOLDOWN;
-    }
-
     public static int cooldown(int paintAmount, int cooldownToAdd) {
-        return cooldown(paintAmount, cooldownToAdd, G.rc.getType().paintCapacity);
-    }
-
-    public static int cooldown(int paintAmount, int cooldownToAdd, int paintCapacity) {
         // how much cooldown is added if we have this much paint left?
         // basically copy pasted from
         // https://github.com/battlecode/battlecode25/blob/master/engine/src/main/battlecode/world/InternalRobot.java#L277
-        if (paintAmount * 2 > paintCapacity)
+        if (paintAmount * 2 > G.rc.getType().paintCapacity)
             return cooldownToAdd;
-        int paintPercentage = (int) Math.round(paintAmount * 100.0 / paintCapacity);
+        int paintPercentage = (int) Math.round(paintAmount * 100.0 / G.rc.getType().paintCapacity);
         return cooldownToAdd + (int) Math.round(cooldownToAdd * (GameConstants.INCREASED_COOLDOWN_INTERCEPT
                 + GameConstants.INCREASED_COOLDOWN_SLOPE * paintPercentage) / 100.0);
     }
