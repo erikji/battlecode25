@@ -1,4 +1,4 @@
-package splasherchase;
+package SPAARK;
 
 import battlecode.common.*;
 
