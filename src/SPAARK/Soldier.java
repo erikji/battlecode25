@@ -489,6 +489,7 @@ public class Soldier {
                     exploreLocation = pos;
                 }
             } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
+            // } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 8) {
                 // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.towerLocs[i];
                 // prioritize opponent towers more than ruins, so it has to be REALLY close

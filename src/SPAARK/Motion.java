@@ -206,6 +206,9 @@ public class Motion {
                     exploreLoc = null;
                 }
             }
+            if (G.round > 800) {
+                G.rc.resign();
+            }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
             if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
                 int rand = Random.rand() % POI.numberOfTowers;
@@ -261,6 +264,15 @@ public class Motion {
                         break;
                     }
                 }
+                // if (exploreLoc != null && G.allyRobots.length > 5) {
+                //     MapLocation otherBots = G.me;
+                //     for (int i = G.allyRobots.length; --i >= 0;) {
+                //         otherBots = otherBots.translate(G.allyRobots[i].location.x, G.allyRobots[i].location.y);
+                //     }
+                //     if (((double) (otherBots.x * exploreLoc.x + otherBots.y * exploreLoc.y)) / ((double) otherBots.distanceSquaredTo(new MapLocation(0, 0)) * G.me.distanceSquaredTo(new MapLocation(0, 0))) > 0) {
+                //         exploreLoc = null;
+                //     }
+                // }
             }
         }
         if (ENABLE_EXPLORE_INDICATORS)
