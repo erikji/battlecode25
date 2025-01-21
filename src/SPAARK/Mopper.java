@@ -14,8 +14,6 @@ public class Mopper {
     
     //how much to weight swings more
     public static final double MOP_SWING_MULT = 1.4; // OPTNET_PARAM
-    //if a bot freezes (0 paint) because of action
-    public static final int MOP_FREEZE_BOT_WEIGHT = 100; // OPTNET_PARAM
     //extra weight to stealing paint from enemy in retreat mode
     public static final int MOP_RETREAT_STEAL_WEIGHT = 30; // OPTNET_PARAM
     //extra weight to mopping paint next to a tower
@@ -687,7 +685,7 @@ public class Mopper {
                     attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[0] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -704,7 +702,7 @@ public class Mopper {
                     attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[1] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -721,7 +719,7 @@ public class Mopper {
                     attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[2] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -738,7 +736,7 @@ public class Mopper {
                     attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[3] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -755,7 +753,7 @@ public class Mopper {
                     attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[4] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -772,7 +770,7 @@ public class Mopper {
                     attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[5] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -789,7 +787,7 @@ public class Mopper {
                     attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[6] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -806,7 +804,7 @@ public class Mopper {
                     attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[7] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -823,7 +821,7 @@ public class Mopper {
                     attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[8] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -840,7 +838,7 @@ public class Mopper {
                     attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[9] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -857,7 +855,7 @@ public class Mopper {
                     attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[10] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -874,7 +872,7 @@ public class Mopper {
                     attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[11] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -891,7 +889,7 @@ public class Mopper {
                     attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[12] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -908,7 +906,7 @@ public class Mopper {
                     attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[13] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -925,7 +923,7 @@ public class Mopper {
                     attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[14] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -942,7 +940,7 @@ public class Mopper {
                     attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[15] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -959,7 +957,7 @@ public class Mopper {
                     attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[16] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -976,7 +974,7 @@ public class Mopper {
                     attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[17] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -993,7 +991,7 @@ public class Mopper {
                     attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[18] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1010,7 +1008,7 @@ public class Mopper {
                     attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[19] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1027,7 +1025,7 @@ public class Mopper {
                     attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[20] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1044,7 +1042,7 @@ public class Mopper {
                     attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[21] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1061,7 +1059,7 @@ public class Mopper {
                     attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[22] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1078,7 +1076,7 @@ public class Mopper {
                     attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[23] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1095,7 +1093,7 @@ public class Mopper {
                     attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[24] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1114,12 +1112,12 @@ public class Mopper {
 			swingScores[4] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[0] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[32] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[28] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[9] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[5] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[4] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[0] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[32] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[28] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-1, -3);
@@ -1128,8 +1126,8 @@ public class Mopper {
 			swingScores[4] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[0] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[4] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[0] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, -2);
@@ -1140,10 +1138,10 @@ public class Mopper {
 			swingScores[1] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[0] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[28] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[5] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[1] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[0] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[28] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, -3);
@@ -1151,7 +1149,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[0] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[0] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, -2);
@@ -1166,14 +1164,14 @@ public class Mopper {
 			swingScores[2] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[0] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[32] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[28] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[12] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[9] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[8] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[4] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[2] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[0] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[32] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[28] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, -3);
@@ -1183,9 +1181,9 @@ public class Mopper {
 			swingScores[4] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[0] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[8] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[4] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[0] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, -1);
@@ -1198,12 +1196,12 @@ public class Mopper {
 			swingScores[5] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[1] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[33] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[29] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[28] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[24] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[5] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[1] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[33] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[29] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[28] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-3, -1);
@@ -1212,8 +1210,8 @@ public class Mopper {
 			swingScores[29] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[1] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[29] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[1] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[29] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-3, -2);
@@ -1221,7 +1219,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[1] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[1] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, 0);
@@ -1236,14 +1234,14 @@ public class Mopper {
 			swingScores[3] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[1] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[33] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[29] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[25] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[24] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[21] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[5] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[3] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[1] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[33] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[29] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[25] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-3, 0);
@@ -1253,9 +1251,9 @@ public class Mopper {
 			swingScores[25] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[1] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[29] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[25] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[1] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[29] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[25] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, -1);
@@ -1272,16 +1270,16 @@ public class Mopper {
 			swingScores[9] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[2] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[32] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[30] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[28] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[24] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[20] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[16] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[13] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[12] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[9] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[2] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[32] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[30] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[28] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, -1);
@@ -1296,14 +1294,14 @@ public class Mopper {
 			swingScores[6] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[2] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[34] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[32] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[30] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[20] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[16] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[12] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[6] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[2] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[34] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[32] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[30] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, 0);
@@ -1322,18 +1320,18 @@ public class Mopper {
 			swingScores[3] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[2] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[30] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[26] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[24] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[20] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[17] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[16] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[13] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[11] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[9] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[7] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[3] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[2] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[30] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[26] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, 0);
@@ -1350,16 +1348,16 @@ public class Mopper {
 			swingScores[6] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[2] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[34] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[30] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[26] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[22] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[20] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[16] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[11] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[7] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[6] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[2] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[34] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[30] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[26] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, -2);
@@ -1372,12 +1370,12 @@ public class Mopper {
 			swingScores[4] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[2] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[32] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[12] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[8] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[6] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[4] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[2] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[32] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-1, 0);
@@ -1394,16 +1392,16 @@ public class Mopper {
 			swingScores[5] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[3] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[33] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[24] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[21] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[20] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[17] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[13] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[9] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[7] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[5] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[3] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[33] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-1, 1);
@@ -1418,14 +1416,14 @@ public class Mopper {
 			swingScores[7] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[3] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[35] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[33] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[31] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[21] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[17] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[13] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[7] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[3] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[35] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[33] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[31] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, 1);
@@ -1442,16 +1440,16 @@ public class Mopper {
 			swingScores[7] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[3] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[35] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[31] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[30] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[26] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[17] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[15] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[13] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[11] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[7] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[3] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[35] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[31] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[30] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[26] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, 1);
@@ -1464,12 +1462,12 @@ public class Mopper {
 			swingScores[21] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[3] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[33] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[31] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[29] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[25] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[21] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[3] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[33] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[31] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[29] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[25] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, -3);
@@ -1478,8 +1476,8 @@ public class Mopper {
 			swingScores[8] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[4] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[8] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[4] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-1, -1);
@@ -1494,14 +1492,14 @@ public class Mopper {
 			swingScores[9] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[5] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[33] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[32] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[28] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[24] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[20] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[13] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[9] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[5] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[33] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[32] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[28] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, -1);
@@ -1514,12 +1512,12 @@ public class Mopper {
 			swingScores[10] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[6] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[34] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[16] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[14] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[12] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[10] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[6] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[34] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, 0);
@@ -1534,14 +1532,14 @@ public class Mopper {
 			swingScores[10] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[6] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[34] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[22] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[18] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[16] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[14] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[11] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[10] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[6] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[34] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, -2);
@@ -1552,10 +1550,10 @@ public class Mopper {
 			swingScores[8] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[6] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[12] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[10] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[8] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[6] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, 1);
@@ -1570,14 +1568,14 @@ public class Mopper {
 			swingScores[11] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[7] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[35] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[34] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[30] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[26] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[22] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[15] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[11] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[7] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[35] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[34] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[30] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[26] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, -3);
@@ -1585,7 +1583,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[8] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[8] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(3, -1);
@@ -1594,8 +1592,8 @@ public class Mopper {
 			swingScores[14] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[10] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[14] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[10] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(3, 0);
@@ -1605,9 +1603,9 @@ public class Mopper {
 			swingScores[14] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[10] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[18] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[14] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[10] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(3, -2);
@@ -1615,7 +1613,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[10] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[10] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, 1);
@@ -1628,12 +1626,12 @@ public class Mopper {
 			swingScores[14] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[11] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[34] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[22] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[18] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[15] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[14] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[11] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[34] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(3, 1);
@@ -1642,8 +1640,8 @@ public class Mopper {
 			swingScores[18] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[14] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[18] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[14] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, 2);
@@ -1656,12 +1654,12 @@ public class Mopper {
 			swingScores[19] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[15] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[35] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[26] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[23] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[22] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[19] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[15] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[35] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[26] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, 2);
@@ -1672,10 +1670,10 @@ public class Mopper {
 			swingScores[18] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[15] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[22] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[19] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[18] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[15] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, 2);
@@ -1690,14 +1688,14 @@ public class Mopper {
 			swingScores[17] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[15] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[35] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[31] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[27] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[26] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[23] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[19] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[17] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[15] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[35] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[31] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[27] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[26] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-1, 2);
@@ -1710,12 +1708,12 @@ public class Mopper {
 			swingScores[21] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[17] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[35] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[31] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[27] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[23] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[21] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[17] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[35] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[31] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[27] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(3, 2);
@@ -1723,7 +1721,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[18] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[18] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(1, 3);
@@ -1732,8 +1730,8 @@ public class Mopper {
 			swingScores[23] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[19] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[23] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[19] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(2, 3);
@@ -1741,7 +1739,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[19] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[19] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(0, 3);
@@ -1751,9 +1749,9 @@ public class Mopper {
 			swingScores[23] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[19] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[27] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[23] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[19] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[27] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, 2);
@@ -1764,10 +1762,10 @@ public class Mopper {
 			swingScores[25] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[21] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[31] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[27] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[25] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[21] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[31] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[27] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[25] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-1, 3);
@@ -1776,8 +1774,8 @@ public class Mopper {
 			swingScores[27] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[23] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[27] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[23] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[27] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-3, 1);
@@ -1786,8 +1784,8 @@ public class Mopper {
 			swingScores[29] += Math.min(5, bot.paintAmount) * 5;
 			swingScores[25] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[29] += MOP_FREEZE_BOT_WEIGHT;
-				swingScores[25] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[29] += (int) G.paintPerChips() * bot.type.moneyCost;
+				swingScores[25] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-3, 2);
@@ -1795,7 +1793,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[25] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[25] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[25] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
 		loc = G.me.translate(-2, 3);
@@ -1803,7 +1801,7 @@ public class Mopper {
 			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
 			swingScores[27] += Math.min(5, bot.paintAmount) * 5; //7 because the cooldown is lower for swing
 			if (bot.paintAmount <= 5 && bot.paintAmount > 0) {
-				swingScores[27] += MOP_FREEZE_BOT_WEIGHT;
+				swingScores[27] += (int) G.paintPerChips() * bot.type.moneyCost;
 			}
 		}
         swingScores[0] *= MOP_SWING_MULT;
@@ -1873,7 +1871,7 @@ public class Mopper {
                     attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[0] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1893,7 +1891,7 @@ public class Mopper {
                     attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[1] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1913,7 +1911,7 @@ public class Mopper {
                     attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[2] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1933,7 +1931,7 @@ public class Mopper {
                     attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[3] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1953,7 +1951,7 @@ public class Mopper {
                     attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[4] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1973,7 +1971,7 @@ public class Mopper {
                     attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[5] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -1993,7 +1991,7 @@ public class Mopper {
                     attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[6] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2013,7 +2011,7 @@ public class Mopper {
                     attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[7] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2033,7 +2031,7 @@ public class Mopper {
                     attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[8] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2053,7 +2051,7 @@ public class Mopper {
                     attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[9] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2073,7 +2071,7 @@ public class Mopper {
                     attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[10] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2093,7 +2091,7 @@ public class Mopper {
                     attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[11] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2113,7 +2111,7 @@ public class Mopper {
                     attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[12] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2133,7 +2131,7 @@ public class Mopper {
                     attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[13] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2153,7 +2151,7 @@ public class Mopper {
                     attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[14] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2173,7 +2171,7 @@ public class Mopper {
                     attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[15] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2193,7 +2191,7 @@ public class Mopper {
                     attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[16] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2213,7 +2211,7 @@ public class Mopper {
                     attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[17] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2233,7 +2231,7 @@ public class Mopper {
                     attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[18] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2253,7 +2251,7 @@ public class Mopper {
                     attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[19] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2273,7 +2271,7 @@ public class Mopper {
                     attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[20] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2293,7 +2291,7 @@ public class Mopper {
                     attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[21] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2313,7 +2311,7 @@ public class Mopper {
                     attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[22] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2333,7 +2331,7 @@ public class Mopper {
                     attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[23] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2353,7 +2351,7 @@ public class Mopper {
                     attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[24] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2387,7 +2385,7 @@ public class Mopper {
                     attackScores[0] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[0] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2404,7 +2402,7 @@ public class Mopper {
                     attackScores[1] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[1] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2421,7 +2419,7 @@ public class Mopper {
                     attackScores[2] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[2] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2438,7 +2436,7 @@ public class Mopper {
                     attackScores[3] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[3] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2455,7 +2453,7 @@ public class Mopper {
                     attackScores[4] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[4] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2472,7 +2470,7 @@ public class Mopper {
                     attackScores[5] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[5] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2489,7 +2487,7 @@ public class Mopper {
                     attackScores[6] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[6] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2506,7 +2504,7 @@ public class Mopper {
                     attackScores[7] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[7] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2523,7 +2521,7 @@ public class Mopper {
                     attackScores[8] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[8] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2540,7 +2538,7 @@ public class Mopper {
                     attackScores[9] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[9] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2557,7 +2555,7 @@ public class Mopper {
                     attackScores[10] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[10] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2574,7 +2572,7 @@ public class Mopper {
                     attackScores[11] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[11] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2591,7 +2589,7 @@ public class Mopper {
                     attackScores[12] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[12] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2608,7 +2606,7 @@ public class Mopper {
                     attackScores[13] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[13] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2625,7 +2623,7 @@ public class Mopper {
                     attackScores[14] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[14] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2642,7 +2640,7 @@ public class Mopper {
                     attackScores[15] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[15] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2659,7 +2657,7 @@ public class Mopper {
                     attackScores[16] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[16] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2676,7 +2674,7 @@ public class Mopper {
                     attackScores[17] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[17] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2693,7 +2691,7 @@ public class Mopper {
                     attackScores[18] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[18] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2710,7 +2708,7 @@ public class Mopper {
                     attackScores[19] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[19] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2727,7 +2725,7 @@ public class Mopper {
                     attackScores[20] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[20] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2744,7 +2742,7 @@ public class Mopper {
                     attackScores[21] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[21] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2761,7 +2759,7 @@ public class Mopper {
                     attackScores[22] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[22] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2778,7 +2776,7 @@ public class Mopper {
                     attackScores[23] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[23] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
@@ -2795,7 +2793,7 @@ public class Mopper {
                     attackScores[24] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 5;
                     if (bot.paintAmount <= 10 && bot.paintAmount > 0) {
                         //treat freezing bot equivalent to gaining 20 paint
-                        attackScores[24] += MOP_FREEZE_BOT_WEIGHT;
+                        attackScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
                     }
                 }
             }
