@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildtakepaint4;
 
 import battlecode.common.*;
 
@@ -127,9 +127,6 @@ public class Soldier {
         // somewhat spaghetti fix for soldiers
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-        if (mode == RETREAT) {
-            Motion.tryTransferPaint();
-        }
         // if (!avoidRetreating
         //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
         //         && G.maxChips < 6000
@@ -181,7 +178,6 @@ public class Soldier {
                     Motion.retreat(moveWithPaintMicro);
                 else
                     Motion.retreat();
-                Motion.tryTransferPaint();
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
         }

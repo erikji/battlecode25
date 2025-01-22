@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildtakepaint;
 
 import battlecode.common.*;
 
@@ -61,6 +61,8 @@ public class Soldier {
 
     public static boolean reducedRetreating = false;
     public static boolean avoidRetreating = false;
+
+    public static boolean justCreatedTower = false;
 
     // queue of next locations to check for expanding SRP
     // used in explore mode to mark initial build since needs centered for markers
@@ -130,6 +132,18 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
+        if (justCreatedTower) {
+            for (int i = G.nearbyRuins.length; --i >= 0;) {
+                if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                    int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                    G.rc.senseRobotAtLocation(G.nearbyRuins[i]).getPaintAmount());
+                    if (G.rc.canTransferPaint(G.nearbyRuins[i], amt)) {
+                        G.rc.transferPaint(G.nearbyRuins[i], amt);
+                    }
+                }
+            }
+        }
+        justCreatedTower = false;
         // if (!avoidRetreating
         //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
         //         && G.maxChips < 6000
@@ -517,12 +531,18 @@ public class Soldier {
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
         G.indicatorString.append("TYPE=" + buildTowerType + " ");
-        int startX = G.me.x;
-        int startY = G.me.y;
         // move first, then paint, helps avoid passive paint drain
         if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
             POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
+            justCreatedTower = true;
+            if (G.rc.canSenseRobotAtLocation(ruinLocation)) {
+                int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                G.rc.senseRobotAtLocation(ruinLocation).getPaintAmount());
+                if (G.rc.canTransferPaint(ruinLocation, amt)) {
+                    G.rc.transferPaint(ruinLocation, amt);
+                }
+            }
             mode = EXPLORE;
             Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
@@ -540,31 +560,28 @@ public class Soldier {
         }
         G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
-        if (G.rc.isActionReady() && G.rc.getPaint() >= 5) {
-            // int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
-            // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            //     MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
-            //     mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
-            // }
-            // paint second
-            MapLocation paintLocation = null;
-            boolean[][] pattern = Robot.towerPatterns[buildTowerType];
-            if (G.me.isWithinDistanceSquared(ruinLocation, 8) && mapInfos[4 + G.me.y - startY][4 + G.me.x - startX].getPaint() == PaintType.EMPTY) {
-                // paint under self first (passive paint drain)
-                boolean paint = pattern[G.me.x - ruinLocation.x + 2][G.me.y - ruinLocation.y + 2];
-                if (G.rc.canAttack(G.me))
-                    G.rc.attack(G.me, paint);
-            } else {
-                // paint pattern otherwise
-                // int ox = ruinLocation.x - startX + 2;
-                // int oy = ruinLocation.y - startY + 2;
-                boolean paint;
-                PaintType exists;
-                MapLocation loc;
-                int offset = Random.rand() % 25;
-                for (int i = 25; --i >= 0;) {
-                    int dx = (i + offset) % 5;
-                    int dy = ((i + offset) % 25) / 5;
+        int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
+        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
+            mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
+        }
+        // paint second
+        MapLocation paintLocation = null;
+        boolean[][] pattern = Robot.towerPatterns[buildTowerType];
+        if (G.me.isWithinDistanceSquared(ruinLocation, 8) && mapInfos[4][4].getPaint() == PaintType.EMPTY) {
+            // paint under self first (passive paint drain)
+            boolean paint = pattern[G.me.x - ruinLocation.x + 2][G.me.y - ruinLocation.y + 2];
+            if (G.rc.canAttack(G.me))
+                G.rc.attack(G.me, paint);
+        } else {
+            // paint pattern otherwise
+            int ox = ruinLocation.x - G.me.x + 2;
+            int oy = ruinLocation.y - G.me.y + 2;
+            boolean paint;
+            PaintType exists;
+            MapLocation loc;
+            for (int dx = -1; dx++ < 4;) {
+                for (int dy = -1; dy++ < 4;) {
                     if (dx == 2 && dy == 2)
                         continue;
                     // location guaranteed to be on the map, unless ruinLocation isn't a ruin
@@ -572,7 +589,7 @@ public class Soldier {
                     loc = ruinLocation.translate(dx - 2, dy - 2);
                     if (G.rc.canAttack(loc)) {
                         paint = pattern[dx][dy];
-                        exists = G.rc.senseMapInfo(loc).getPaint();
+                        exists = mapInfos[oy + dy][ox + dx].getPaint();
                         // can't paint enemy paint
                         if (!exists.isEnemy()
                                 && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
@@ -582,36 +599,16 @@ public class Soldier {
                         }
                     }
                 }
-                // for (int dx = -1; dx++ < 4;) {
-                //     for (int dy = -1; dy++ < 4;) {
-                //         if (dx == 2 && dy == 2)
-                //             continue;
-                //         // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                //         // guaranteed within vision radius if can attack there
-                //         loc = ruinLocation.translate(dx - 2, dy - 2);
-                //         if (G.rc.canAttack(loc)) {
-                //             paint = pattern[dx][dy];
-                //             exists = mapInfos[oy + dy][ox + dx].getPaint();
-                //             // can't paint enemy paint
-                //             if (!exists.isEnemy()
-                //                     && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                //                 G.rc.attack(loc, paint);
-                //                 paintLocation = loc;
-                //                 break;
-                //             }
-                //         }
-                //     }
-                // }
-            }
-            if (paintLocation != null)
-                G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-            if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
-                G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
-                POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
-                mode = EXPLORE;
             }
         }
+        if (paintLocation != null)
+            G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
         G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
+            G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
+            POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
+            mode = EXPLORE;
+        }
     }
 
     public static void buildResource() throws Exception {
