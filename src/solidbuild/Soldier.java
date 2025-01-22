@@ -994,7 +994,7 @@ public class Soldier {
             if (canPaintBest) {
                 // no more checkerboarding :(
                 G.rc.attack(bestLoc, false);
-            } else if (G.rc.getActionCooldownTurns() < GameConstants.COOLDOWN_LIMIT) {
+            } else if (G.rc.isActionReady()) {
                 // try to paint nearby
                 MapLocation loc;
                 for (int dx = -2; ++dx <= 2;) {
@@ -1063,7 +1063,7 @@ public class Soldier {
     public static Micro suicide = new Micro() {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
-            // try to stay out of range if on cd, otherwise try to get in range
+            //just run toward the enemy lol
             int[] scores = Motion.defaultMicro.micro(d, dest);
             scores[G.dirOrd(d)] += 20;
             if (d != Direction.CENTER) {
