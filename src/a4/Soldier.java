@@ -1,4 +1,4 @@
-package SPAARK;
+package a4;
 
 import battlecode.common.*;
 
@@ -25,7 +25,7 @@ public class Soldier {
     // stop building towers if enemy paint interferes too much
     public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 8; // tested: 12 against 16 (52/94), 8 against 12 (53/94)
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 12; // tested: 12 against 16 (52/94)
     public static final int SOL_TOWER_HELP_DIST = 5;
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
     // max soldiers that will build a tower
