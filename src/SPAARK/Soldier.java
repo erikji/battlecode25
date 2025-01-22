@@ -471,6 +471,11 @@ public class Soldier {
     public static void attackCheckMode() throws Exception {
         G.indicatorString.append("CHK_ATK ");
         // nothing for now
+        if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation) || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
+            mode = EXPLORE;
+            exploreCheckMode();
+            return;
+        }
     }
 
     public static void explore() throws Exception {
