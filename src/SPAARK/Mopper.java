@@ -43,7 +43,7 @@ public class Mopper {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 5000 && G.allyRobots.length < 9) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
             mode = EXPLORE;

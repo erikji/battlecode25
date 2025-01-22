@@ -278,6 +278,12 @@ public class Tower {
         //     G.rc.disintegrate();
         //     return;
         // }
+        if (G.rc.getNumberTowers() == 25 && G.rc.getChips() > 20000 && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+            attack();
+            // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
+            G.rc.disintegrate();
+            return;
+        }
         while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 1000) {
             G.rc.upgradeTower(G.me);
         }
