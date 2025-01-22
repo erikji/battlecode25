@@ -526,8 +526,6 @@ public class Soldier {
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
         G.indicatorString.append("TYPE=" + buildTowerType + " ");
-        int startX = G.me.x;
-        int startY = G.me.y;
         // move first, then paint, helps avoid passive paint drain
         if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
@@ -627,8 +625,6 @@ public class Soldier {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
         MapLocation paintLocation = null;
-        int ox = resourceLocation.x - G.me.x + 2;
-        int oy = resourceLocation.y - G.me.y + 2;
         boolean paint;
         PaintType exists;
         MapLocation loc;
@@ -1049,14 +1045,14 @@ public class Soldier {
                 for (int i = 8; --i >= 0;) {
                     if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             G.rc.getType().actionRadiusSquared)) {
-                        scores[i] += 40;
+                        scores[i] += 400;
                     }
                 }
             } else {
                 for (int i = 8; --i >= 0;) {
                     if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             towerType.actionRadiusSquared)) {
-                        scores[i] += 40;
+                        scores[i] += 400;
                     }
                 }
             }

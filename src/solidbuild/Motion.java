@@ -1641,7 +1641,7 @@ public class Motion {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
                     int toSubtract2 = toSubtract;
                     if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 100;
-                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2) toSubtract2 += 100;
+                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2) toSubtract2 += 200;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
                             if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
