@@ -132,7 +132,7 @@ public class Soldier {
         }
         if (!avoidRetreating
                 && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-                && G.maxChips < 5000
+                && G.maxChips < 6000
                 && G.allyRobots.length < 9) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
