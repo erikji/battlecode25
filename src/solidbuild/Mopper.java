@@ -639,40 +639,49 @@ public class Mopper {
         MapLocation bestBot = null;
         MapLocation bestEmpty = null;
         MapLocation microDir = G.me;
-        for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            MapInfo info = G.nearbyMapInfos[i];
-            MapLocation loc = info.getMapLocation();
-            // stuff we can't hit immediately cuz thats considered in attack micro
-            if (G.me.distanceSquaredTo(loc) > 2 && info.getPaint().isEnemy()) {
-                microDir = microDir.add(G.me.directionTo(loc));
-                if (G.rc.canSenseRobotAtLocation(loc)) {
-                    if (G.rc.senseRobotAtLocation(loc).team == G.opponentTeam
-                            && (bestBot == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestBot))) {
-                        bestBot = loc;
-                    }
-                } else {
-                    if (bestEmpty == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
-                        bestEmpty = loc;
+        int lowestSoldierID = 1000000;
+        RobotInfo lowestSoldier = null;
+        for (int i = G.allyRobots.length; --i >= 0;) {
+            if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].team == G.team && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
+                lowestSoldier = G.allyRobots[i];
+            }
+        }
+        if (lowestSoldier == null) {
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                MapInfo info = G.nearbyMapInfos[i];
+                MapLocation loc = info.getMapLocation();
+                // stuff we can't hit immediately cuz thats considered in attack micro
+                if (G.me.distanceSquaredTo(loc) > 2 && info.getPaint().isEnemy()) {
+                    microDir = microDir.add(G.me.directionTo(loc));
+                    if (G.rc.canSenseRobotAtLocation(loc)) {
+                        if (G.rc.senseRobotAtLocation(loc).team == G.opponentTeam
+                                && (bestBot == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestBot))) {
+                            bestBot = loc;
+                        }
+                    } else {
+                        if (bestEmpty == null || G.me.distanceSquaredTo(loc) < G.me.distanceSquaredTo(bestEmpty)) {
+                            bestEmpty = loc;
+                        }
                     }
                 }
             }
-            if (G.rc.canSenseRobotAtLocation(loc) && G.rc.senseRobotAtLocation(loc).type == UnitType.SOLDIER) {
-                microDir = microDir.add(G.me.directionTo(loc));
+            Direction dir = Direction.CENTER;
+            if (bestEmpty == null && bestBot == null) {
+                G.indicatorString.append("RAND ");
+                dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+            } else {
+                if (bestBot != null)
+                    bestEmpty = bestBot;
+                dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
+                G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
             }
-        }
-        Direction dir = Direction.CENTER;
-        if (bestEmpty == null && bestBot == null) {
-            G.indicatorString.append("RAND ");
-            dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+            moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
+            if (G.rc.onTheMap(microDir))
+                G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         } else {
-            if (bestBot != null)
-                bestEmpty = bestBot;
-            dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-            G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+            Direction dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+            moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
         }
-        moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
-        if (G.rc.onTheMap(microDir))
-            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
     }
 
     public static void exploreAttackScores() throws Exception {
