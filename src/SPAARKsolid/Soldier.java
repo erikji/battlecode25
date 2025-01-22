@@ -137,6 +137,12 @@ public class Soldier {
                 && G.maxChips < 6000
                 && G.allyRobots.length < 9) {
             mode = RETREAT;
+            if (ruinLocation != null) {
+                G.setLastVisited(ruinLocation, -2000);
+            }
+            if (resourceLocation != null) {
+                G.setLastVisited(resourceLocation, -2000);
+            }
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
