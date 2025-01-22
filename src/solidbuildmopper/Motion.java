@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildmopper;
 
 import battlecode.common.*;
 
@@ -631,25 +631,14 @@ public class Motion {
     }
 
     public static void tryTransferPaint() throws Exception {
-        for (int i = G.nearbyRuins.length; --i >= 0;) {
-            MapLocation loc = G.nearbyRuins[i];
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                RobotInfo r = G.rc.senseRobotAtLocation(loc);
-                int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
-                        r.paintAmount);
-                if (amt != 0 && G.rc.canTransferPaint(loc, amt)) {
-                    G.rc.transferPaint(loc, amt);
-                }
+        if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
+            int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+                    r.paintAmount);
+            if (G.rc.canTransferPaint(retreatLoc, amt)) {
+                G.rc.transferPaint(retreatLoc, amt);
             }
         }
-        // if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
-        //     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
-        //     int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
-        //             r.paintAmount);
-        //     if (G.rc.canTransferPaint(retreatLoc, amt)) {
-        //         G.rc.transferPaint(retreatLoc, amt);
-        //     }
-        // }
     }
 
     // cownav

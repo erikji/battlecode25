@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildmopper;
 
 import battlecode.common.*;
 
@@ -28,6 +28,9 @@ public class Splasher {
      */
     public static void run() throws Exception {
         // occasionally clear ruins to not oof forever
+        if (mode == RETREAT) {
+            Motion.tryTransferPaint();
+        }
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
 			mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
@@ -369,6 +372,9 @@ public class Splasher {
                 }
             }
             Motion.move(G.ALL_DIRECTIONS[best]);
+        }
+        if (mode == RETREAT) {
+            Motion.tryTransferPaint();
         }
         switch (mode) {
             case EXPLORE -> {

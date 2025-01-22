@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildmopper;
 
 import battlecode.common.*;
 
@@ -40,6 +40,9 @@ public class Mopper {
      * Help soldiers mop enemy paint around ruins
      */
     public static void run() throws Exception {
+        if (mode == RETREAT) {
+            Motion.tryTransferPaint();
+        }
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
             mode = RETREAT;
         } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
@@ -585,6 +588,9 @@ public class Mopper {
             }
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
+        if (mode == RETREAT) {
+            Motion.tryTransferPaint();
+        }
         switch (mode) {
             case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
             case BUILD -> G.rc.setIndicatorDot(G.me, 0, 0, 255);
@@ -630,17 +636,33 @@ public class Mopper {
     }
 
     public static void exploreMoveScores() throws Exception {
+		MapLocation best = null;
+		int bestWeight = 0;
+		for (int i = G.allyRobots.length; --i >= 0;) {
+			if (G.allyRobots[i].type != UnitType.SOLDIER) {
+				continue;
+			}
+			// int weight = G.allyRobots[i].paintAmount - G.me.distanceSquaredTo(G.allyRobots[i].location);
+			int weight = G.allyRobots[i].paintAmount;
+            if (weight <= 20) {
+                continue;
+            }
+			if (best == null || weight > bestWeight) {
+				best = G.allyRobots[i].location;
+				bestWeight = weight;
+			}
+		}
         MapLocation bestBot = null;
         MapLocation bestEmpty = null;
         MapLocation microDir = G.me;
-        int lowestSoldierID = 1000000;
-        RobotInfo lowestSoldier = null;
-        for (int i = G.allyRobots.length; --i >= 0;) {
-            if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].team == G.team && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
-                lowestSoldier = G.allyRobots[i];
-            }
-        }
-        if (lowestSoldier == null) {
+        // int lowestSoldierID = 1000000;
+        // RobotInfo lowestSoldier = null;
+        // for (int i = G.allyRobots.length; --i >= 0;) {
+        //     if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].team == G.team && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
+        //         lowestSoldier = G.allyRobots[i];
+        //     }
+        // }
+        if (best == null) {
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 MapInfo info = G.nearbyMapInfos[i];
                 MapLocation loc = info.getMapLocation();
@@ -673,7 +695,7 @@ public class Mopper {
             if (G.rc.onTheMap(microDir))
                 G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         } else {
-            Direction dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+            Direction dir = Motion.bug2Helper(G.me, best, Motion.TOWARDS, 0, 0);
             moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
         }
     }
