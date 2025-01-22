@@ -21,7 +21,7 @@ if len(sys.argv) > 1:
 
 # bots = [chr(ord('a')+i) for i in range(14)]
 bots = [('a' +str((i + 1))) for i in range(14)]
-bots = ['solidbuildretreat']
+bots = ['solidbuild2']
 print(bots)
 # bots = ["a"]
 if len(sys.argv) > 2:

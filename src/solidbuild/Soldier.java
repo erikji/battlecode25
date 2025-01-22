@@ -48,7 +48,7 @@ public class Soldier {
     // max build time
     public static final int SOL_MAX_SRP_TIME = 50;
     // don't build SRP if not enough paint (runs out quickly)
-    public static final int SOL_SRP_MIN_PAINT = 50;
+    public static final int SOL_SRP_MIN_PAINT = 0;
     // dont run out of paint waiting for paint painting area
     public static final int SOL_RETREAT_PAINT_MIN_PAINT = 20;
 
@@ -128,11 +128,11 @@ public class Soldier {
         // somewhat spaghetti fix for soldiers
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-        if (!avoidRetreating
-                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-                && G.maxChips < 6000
-                && G.allyRobots.length < 9) {
-        // if (false) {
+        // if (!avoidRetreating
+        //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
+        //         && G.maxChips < 6000
+        //         && G.allyRobots.length < 9) {
+        if (false) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
