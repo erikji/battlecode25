@@ -45,6 +45,7 @@ public class Robot {
                 G.rc.completeResourcePattern(G.me.translate(G.range20X[i], G.range20Y[i]));
             }
         }
+        Motion.tryTransferPaint();
         switch (G.rc.getType()) {
             case MOPPER -> Mopper.run();
             case SOLDIER -> Soldier.run();
@@ -64,6 +65,7 @@ public class Robot {
                 G.rc.completeResourcePattern(G.me.translate(G.range20X[i], G.range20Y[i]));
             }
         }
+        Motion.tryTransferPaint();
         Motion.lastPaint = G.rc.getPaint();
         G.indicatorString.append("SYM="
                 + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
