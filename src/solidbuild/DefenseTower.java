@@ -1,6 +1,6 @@
-package SPAARKsolid;
+package solidbuild;
 
-public class MoneyTower {
+public class DefenseTower {
 
     public static void run() throws Exception {
     }

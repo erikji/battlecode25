@@ -1,4 +1,4 @@
-package SPAARKsolid;
+package solidbuild;
 
 import battlecode.common.*;
 
@@ -9,7 +9,6 @@ public class Soldier {
     public static final int EXPAND_RESOURCE = 3;
     public static final int ATTACK = 4;
     public static final int RETREAT = 5;
-    public static final int MESSING_UP = 6;
     public static int mode = EXPLORE;
 
     // ratio to reduce retreat requirement by if building tower/srp
@@ -22,19 +21,19 @@ public class Soldier {
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
     // controls ratio of money to paint (higher = more money)
-    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 1.0;
+    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 3;
     // stop building towers if enemy paint interferes too much
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 4;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 12; // tested: 12 against 16 (52/94)
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 8; // tested: 12 against 16 (52/94)
     public static final int SOL_TOWER_HELP_DIST = 5;
-    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
+    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
     // max soldiers that will build a tower
     public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 3;
     // max build time
-    public static final int SOL_MAX_TOWER_TIME = 200;
+    public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
-    public static final int SOL_MIN_SRP_ROUND = 20;
+    public static final int SOL_MIN_SRP_ROUND = 50;
     public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 10;
     // controls rounds between repairing/expanding an SRP
     public static final int SOL_SRP_VISIT_TIMEOUT = 100;
@@ -59,7 +58,6 @@ public class Soldier {
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
-    public static MapLocation messingUpLocation = null;
 
     public static boolean reducedRetreating = false;
     public static boolean avoidRetreating = false;
@@ -132,17 +130,12 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        if (!avoidRetreating && G.rc.getRoundNum() > 60
-                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-                && G.maxChips < 6000
-                && G.allyRobots.length < 9) {
+        // if (!avoidRetreating
+        //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
+        //         && G.maxChips < 6000
+        //         && G.allyRobots.length < 9) {
+        if (false) {
             mode = RETREAT;
-            if (ruinLocation != null) {
-                G.setLastVisited(ruinLocation, -2000);
-            }
-            if (resourceLocation != null) {
-                G.setLastVisited(resourceLocation, -2000);
-            }
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
@@ -162,7 +155,6 @@ public class Soldier {
             case BUILD_RESOURCE -> buildResourceCheckMode();
             case EXPAND_RESOURCE -> expandResourceCheckMode();
             case ATTACK -> attackCheckMode();
-            case MESSING_UP -> messingUpCheckMode();
             case RETREAT -> {
                 // VERY IMPORTANT DO NOT TOUCH
                 buildBlockedTime = 0;
@@ -182,7 +174,6 @@ public class Soldier {
             case BUILD_RESOURCE -> buildResource();
             case EXPAND_RESOURCE -> expandResource();
             case ATTACK -> attack();
-            case MESSING_UP -> messingUp();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 if (G.rc.getPaint() > SOL_RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
@@ -200,11 +191,6 @@ public class Soldier {
     public static void exploreCheckMode() throws Exception {
         G.indicatorString.append("CHK_E ");
         // VERY IMPORTANT DO NOT TOUCH
-        //ok touching it
-        if (G.rc.getRoundNum() < 60) {
-            mode = MESSING_UP;
-            return;
-        }
         buildBlockedTime = 0;
         buildTime = 0;
         // dont build tower that bot was just building
@@ -482,61 +468,6 @@ public class Soldier {
         // nothing for now
     }
 
-    public static void messingUpCheckMode() throws Exception {
-        G.indicatorString.append("CHK_MESS ");
-        for (int i = G.nearbyRuins.length; --i >= 0;) {
-            MapLocation loc = G.nearbyRuins[i];
-            if (G.rc.canSenseRobotAtLocation(loc)) {
-                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                if (bot.team == G.opponentTeam) {
-                    towerLocation = loc;
-                    towerType = bot.type;
-                    messingUpLocation = null;
-                    mode = ATTACK;
-                    return;
-                }
-            }
-        }
-        if (G.rc.getRoundNum() > 100) {
-            messingUpLocation = null;
-            mode = EXPLORE;
-            return;
-        }
-        //no remaining tower spots
-        for (int i = POI.numberOfTowers; --i >= 0;) {
-            if (POI.towerTeams[i] == G.opponentTeam
-                    && ((POI.explored[POI.towerLocs[i].y] >> POI.towerLocs[i].x) & 1) == 0) {
-                return;
-            }
-            if (POI.towerTeams[i] == G.team) {
-                int rand2 = Random.rand() % 3;
-                for (int j2 = 3; --j2 >= 0;) {
-                    int i2 = (j2 + rand2) % 3;
-                    if (POI.symmetry[i2]) {
-                        MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                        if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-        messingUpLocation = null;
-        mode = EXPLORE;
-    }
-
-    public static void messingUp() throws Exception {
-        G.indicatorString.append("MESS ");
-        // if (messingUpLocation == null) {
-            messingUpLocation = Motion.exploreRandomlyAggressiveLocFixed();
-            if (messingUpLocation == null) {
-                messingUpLocation = Motion.exploreRandomlyLoc();
-            }
-        // }
-        Motion.bugnavTowards(messingUpLocation);
-        G.rc.setIndicatorLine(G.me, messingUpLocation, 0, 0, 255);
-    }
-
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
         // here instead of checkMode since checkMode may skip this if tower/SRP checked
@@ -569,7 +500,13 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            Motion.exploreRandomly(moveWithPaintMicro);
+            if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
+                exploreLocation = Motion.exploreRandomlyAggressiveLoc();
+                Motion.bugnavTowards(exploreLocation, suicide);
+                G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
+            } else {
+                Motion.exploreRandomly(moveWithPaintMicro);
+            }
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
@@ -745,22 +682,14 @@ public class Soldier {
         G.indicatorString.append("ATTACK ");
         // attack micro moment
         if (towerLocation.isWithinDistanceSquared(G.me, towerType.actionRadiusSquared)) {
-            if (G.rc.canAttack(towerLocation)) {
+            if (G.rc.canAttack(towerLocation))
                 G.rc.attack(towerLocation);
-                if (!G.rc.canSenseRobotAtLocation(towerLocation)) {
-                    mode = EXPLORE;
-                }
-            }
             Motion.bugnavAway(towerLocation, attackMicro);
         } else {
             if (G.rc.isActionReady()) {
                 Motion.bugnavTowards(towerLocation, attackMicro);
-                if (G.rc.canAttack(towerLocation)) {
+                if (G.rc.canAttack(towerLocation))
                     G.rc.attack(towerLocation);
-                    if (!G.rc.canSenseRobotAtLocation(towerLocation)) {
-                        mode = EXPLORE;
-                    }
-                }
             } else {
                 Motion.bugnavAround(towerLocation, towerType.actionRadiusSquared + 1,
                         towerType.actionRadiusSquared + 1, moveWithPaintMicro);
@@ -995,7 +924,7 @@ public class Soldier {
                 && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = G.rc.getChips() < 20000 && POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);

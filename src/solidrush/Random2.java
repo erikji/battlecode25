@@ -1,6 +1,6 @@
-package SPAARKsolid;
+package solidrush;
 
-public class Random {
+public class Random2 {
     public static int state;
     public static int rand() throws Exception {
         //xorshift32
