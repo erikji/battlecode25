@@ -1,4 +1,4 @@
-package SPAARKsolid;
+package solidbuild;
 
 import battlecode.common.*;
 import java.util.*;
@@ -6,7 +6,7 @@ import java.util.*;
 public class Tower {
     // initial weights for bots
     public static final double TOW_SPAWN_SOLDIER_WEIGHT = 2;
-    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 2;
+    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 1;
     public static final double TOW_SPAWN_MOPPER_WEIGHT = 2;
     // reduce the weight of soldiers if max towers reached
     public static final double TOW_MAXED_REDUCE_SOLDIER_WEIGHT = 1;
@@ -120,11 +120,11 @@ public class Tower {
         if (soldier >= splasher && soldier >= mopper) {
             trying = UnitType.SOLDIER;
         }
-        else if (splasher >= mopper) {
-            trying = UnitType.SPLASHER;
+        else if (mopper >= splasher) {
+            trying = UnitType.MOPPER;
         }
         else {
-            trying = UnitType.MOPPER;
+            trying = UnitType.SPLASHER;
         }
 
         // IMPORTANT: this prioritizes mopper > splasher > soldier at the start
@@ -136,14 +136,8 @@ public class Tower {
         //     trying = UnitType.SOLDIER;
         // }
 
-        if (spawnedRobots == 0) {
-            trying = UnitType.SOLDIER;
-        }
-        else if (spawnedRobots == 1) {
-            trying = UnitType.SOLDIER;
-        }
-        else if (spawnedRobots == 2 && G.mapArea <= 900) {
-            trying = UnitType.SOLDIER;
+        if (spawnedRobots<2){
+            trying=UnitType.SOLDIER;
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
