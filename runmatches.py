@@ -15,12 +15,14 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'a' #bot to test
+currentBot = 'SPAARK' #bot to test
 if len(sys.argv) > 1:
     currentBot = sys.argv[1]
 
-# bots = [chr(ord('a')+i) for i in range(1)]
-bots = ["SPAARK"]
+# bots = [chr(ord('a')+i) for i in range(14)]
+bots = [('a' +str((i + 1))) for i in range(14)]
+print(bots)
+# bots = ["a"]
 if len(sys.argv) > 2:
     bots = sys.argv[2:]
 
@@ -28,7 +30,7 @@ maps = []
 maps += ['DefaultSmall']
 maps += ['DefaultMedium']
 maps += ['DefaultLarge']
-# maps += ['DefaultHuge']
+maps += ['DefaultHuge']
 
 maps += ['Fossil']
 maps += ['Gears']
@@ -79,17 +81,17 @@ maps += ['[SP2] Duolingo']
 maps += ['[SP2] Narrow']
 maps += ['[SP2] NotMyMap']
 
-maps=[]
+# maps=[]
 
-maps += ['DefaultSmall']
-maps += ['DefaultMedium']
-maps += ['Justice']
-maps += ['Mirage']
-maps += ['[SP] Lingo']
-maps += ['[SP] 2025']
-maps += ['Fossil']
-maps += ['Racetrack']
-maps += ['catface']
+# maps += ['DefaultSmall']
+# maps += ['DefaultMedium']
+# maps += ['Justice']
+# maps += ['Mirage']
+# maps += ['[SP] Lingo']
+# maps += ['[SP] 2025']
+# maps += ['Fossil']
+# maps += ['Racetrack']
+# maps += ['catface']
 
 #maps.reverse()
 matches = list(product(bots, maps))
