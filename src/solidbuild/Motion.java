@@ -188,6 +188,45 @@ public class Motion {
         }
     }
 
+    public static void exploreCorners(Micro m) throws Exception {
+        MapLocation best = null;
+        int bestDist = 1000000;
+        int dist = G.me.distanceSquaredTo(new MapLocation(0,0));
+        String s = "";
+        s+=dist;
+        s+= " ";
+        if (dist > 25 && dist < bestDist && (((POI.explored[0] >> 0) & 1) == 0)) {
+            bestDist = dist;
+            best = new MapLocation(0,0);
+        }
+        dist = G.me.distanceSquaredTo(new MapLocation(0,G.mapHeight-1));
+        s+=dist;
+        s+= " ";
+        if (dist > 25 && dist < bestDist && (((POI.explored[G.mapHeight-1] >> 0) & 1) == 0)) {
+            bestDist = dist;
+            best = new MapLocation(0,G.mapHeight-1);
+        }
+        dist = G.me.distanceSquaredTo(new MapLocation(G.mapWidth-1,0));
+        s+=dist;
+        s+= " ";
+        if (dist > 25 && dist < bestDist && (((POI.explored[0] >> G.mapWidth-1) & 1) == 0)) {
+            bestDist = dist;
+            best = new MapLocation(G.mapWidth-1,0);
+        }
+        dist = G.me.distanceSquaredTo(new MapLocation(G.mapWidth-1,G.mapHeight-1));
+        s+=dist;
+        s+= " ";
+        System.out.println(s);
+        if (dist > 25 && dist < bestDist && ((((POI.explored[G.mapHeight-1] >> G.mapWidth-1)) & 1) == 0)) {
+            bestDist = dist;
+            best = new MapLocation(G.mapWidth-1,G.mapHeight-1);
+        }
+        if(best!=null) {
+            exploreLoc = best;
+        }
+        exploreRandomly(m);
+    }
+
     public static int exploreTime = 0;
 
     public static final int SYMMETRY_EXPLORE_PERCENT = Integer.MAX_VALUE; // OPTNET_PARAM
