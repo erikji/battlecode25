@@ -1,4 +1,4 @@
-package SPAARK;
+package SPAARKsolid;
 
 import battlecode.common.*;
 
@@ -9,6 +9,7 @@ public class Soldier {
     public static final int EXPAND_RESOURCE = 3;
     public static final int ATTACK = 4;
     public static final int RETREAT = 5;
+    public static final int MESSING_UP = 6;
     public static int mode = EXPLORE;
 
     // ratio to reduce retreat requirement by if building tower/srp
@@ -58,6 +59,7 @@ public class Soldier {
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
+    public static MapLocation messingUpLocation = null;
 
     public static boolean reducedRetreating = false;
     public static boolean avoidRetreating = false;
@@ -130,7 +132,7 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        if (!avoidRetreating
+        if (!avoidRetreating && G.rc.getRoundNum() > 60
                 && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
                 && G.maxChips < 6000
                 && G.allyRobots.length < 9) {
@@ -160,6 +162,7 @@ public class Soldier {
             case BUILD_RESOURCE -> buildResourceCheckMode();
             case EXPAND_RESOURCE -> expandResourceCheckMode();
             case ATTACK -> attackCheckMode();
+            case MESSING_UP -> messingUpCheckMode();
             case RETREAT -> {
                 // VERY IMPORTANT DO NOT TOUCH
                 buildBlockedTime = 0;
@@ -179,6 +182,7 @@ public class Soldier {
             case BUILD_RESOURCE -> buildResource();
             case EXPAND_RESOURCE -> expandResource();
             case ATTACK -> attack();
+            case MESSING_UP -> messingUp();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 if (G.rc.getPaint() > SOL_RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
@@ -196,6 +200,11 @@ public class Soldier {
     public static void exploreCheckMode() throws Exception {
         G.indicatorString.append("CHK_E ");
         // VERY IMPORTANT DO NOT TOUCH
+        //ok touching it
+        if (G.rc.getRoundNum() < 60) {
+            mode = MESSING_UP;
+            return;
+        }
         buildBlockedTime = 0;
         buildTime = 0;
         // dont build tower that bot was just building
@@ -473,6 +482,61 @@ public class Soldier {
         // nothing for now
     }
 
+    public static void messingUpCheckMode() throws Exception {
+        G.indicatorString.append("CHK_MESS ");
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = G.nearbyRuins[i];
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                if (bot.team == G.opponentTeam) {
+                    towerLocation = loc;
+                    towerType = bot.type;
+                    messingUpLocation = null;
+                    mode = ATTACK;
+                    return;
+                }
+            }
+        }
+        if (G.rc.getRoundNum() > 100) {
+            messingUpLocation = null;
+            mode = EXPLORE;
+            return;
+        }
+        //no remaining tower spots
+        for (int i = POI.numberOfTowers; --i >= 0;) {
+            if (POI.towerTeams[i] == G.opponentTeam
+                    && ((POI.explored[POI.towerLocs[i].y] >> POI.towerLocs[i].x) & 1) == 0) {
+                return;
+            }
+            if (POI.towerTeams[i] == G.team) {
+                int rand2 = Random.rand() % 3;
+                for (int j2 = 3; --j2 >= 0;) {
+                    int i2 = (j2 + rand2) % 3;
+                    if (POI.symmetry[i2]) {
+                        MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
+                        if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        messingUpLocation = null;
+        mode = EXPLORE;
+    }
+
+    public static void messingUp() throws Exception {
+        G.indicatorString.append("MESS ");
+        // if (messingUpLocation == null) {
+            messingUpLocation = Motion.exploreRandomlyAggressiveLocFixed();
+            if (messingUpLocation == null) {
+                messingUpLocation = Motion.exploreRandomlyLoc();
+            }
+        // }
+        Motion.bugnavTowards(messingUpLocation);
+        G.rc.setIndicatorLine(G.me, messingUpLocation, 0, 0, 255);
+    }
+
     public static void explore() throws Exception {
         G.indicatorString.append("EXPLORE ");
         // here instead of checkMode since checkMode may skip this if tower/SRP checked
@@ -557,24 +621,23 @@ public class Soldier {
             boolean paint;
             PaintType exists;
             MapLocation loc;
-            int offset = Random.rand() % 25;
-            for (int i = 25; --i >= 0;) {
-                int dx = (i + offset) % 5;
-                int dy = ((i + offset) % 25) / 5;
-                if (dx == 2 && dy == 2)
-                    continue;
-                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                // guaranteed within vision radius if can attack there
-                loc = ruinLocation.translate(dx - 2, dy - 2);
-                if (G.rc.canAttack(loc)) {
-                    paint = pattern[dx][dy];
-                    exists = mapInfos[oy + dy][ox + dx].getPaint();
-                    // can't paint enemy paint
-                    if (!exists.isEnemy()
-                            && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
+            for (int dx = -1; dx++ < 4;) {
+                for (int dy = -1; dy++ < 4;) {
+                    if (dx == 2 && dy == 2)
+                        continue;
+                    // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                    // guaranteed within vision radius if can attack there
+                    loc = ruinLocation.translate(dx - 2, dy - 2);
+                    if (G.rc.canAttack(loc)) {
+                        paint = pattern[dx][dy];
+                        exists = mapInfos[oy + dy][ox + dx].getPaint();
+                        // can't paint enemy paint
+                        if (!exists.isEnemy()
+                                && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                            G.rc.attack(loc, paint);
+                            paintLocation = loc;
+                            break;
+                        }
                     }
                 }
             }
@@ -599,23 +662,22 @@ public class Soldier {
         PaintType exists;
         MapLocation loc;
         boolean isPatternComplete = true;
-        int offset = Random.rand() % 25;
-        for (int i = 25; --i >= 0;) {
-            int dx = (i + offset) % 5;
-            int dy = ((i + offset) % 25) / 5;
-            // location guaranteed to be on the map by canBuildSrpHere
-            // guaranteed within vision radius if can attack there
-            loc = resourceLocation.translate(dx - 2, dy - 2);
-            if (G.rc.canAttack(loc)) {
-                paint = Robot.resourcePattern[dx][dy];
-                exists = mapInfos[oy + dy][ox + dx].getPaint();
-                if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                    isPatternComplete = false;
-                    // can't paint enemy paint
-                    if (!exists.isEnemy()) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
+                // location guaranteed to be on the map by canBuildSrpHere
+                // guaranteed within vision radius if can attack there
+                loc = resourceLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canAttack(loc)) {
+                    paint = Robot.resourcePattern[dx][dy];
+                    exists = mapInfos[oy + dy][ox + dx].getPaint();
+                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                        isPatternComplete = false;
+                        // can't paint enemy paint
+                        if (!exists.isEnemy()) {
+                            G.rc.attack(loc, paint);
+                            paintLocation = loc;
+                            break;
+                        }
                     }
                 }
             }
@@ -683,14 +745,22 @@ public class Soldier {
         G.indicatorString.append("ATTACK ");
         // attack micro moment
         if (towerLocation.isWithinDistanceSquared(G.me, towerType.actionRadiusSquared)) {
-            if (G.rc.canAttack(towerLocation))
+            if (G.rc.canAttack(towerLocation)) {
                 G.rc.attack(towerLocation);
+                if (!G.rc.canSenseRobotAtLocation(towerLocation)) {
+                    mode = EXPLORE;
+                }
+            }
             Motion.bugnavAway(towerLocation, attackMicro);
         } else {
             if (G.rc.isActionReady()) {
                 Motion.bugnavTowards(towerLocation, attackMicro);
-                if (G.rc.canAttack(towerLocation))
+                if (G.rc.canAttack(towerLocation)) {
                     G.rc.attack(towerLocation);
+                    if (!G.rc.canSenseRobotAtLocation(towerLocation)) {
+                        mode = EXPLORE;
+                    }
+                }
             } else {
                 Motion.bugnavAround(towerLocation, towerType.actionRadiusSquared + 1,
                         towerType.actionRadiusSquared + 1, moveWithPaintMicro);
@@ -1029,6 +1099,20 @@ public class Soldier {
                         scores[i] += 40;
                     }
                 }
+            }
+            return scores;
+        }
+    };
+
+    public static Micro suicide = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            // try to stay out of range if on cd, otherwise try to get in range
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            scores[G.dirOrd(d)] += 20;
+            if (d != Direction.CENTER) {
+                scores[G.dirOrd(d.rotateLeft())] += 15;
+                scores[G.dirOrd(d.rotateRight())] += 15;
             }
             return scores;
         }

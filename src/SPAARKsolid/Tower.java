@@ -1,4 +1,4 @@
-package SPAARK;
+package SPAARKsolid;
 
 import battlecode.common.*;
 import java.util.*;
@@ -135,6 +135,16 @@ public class Tower {
         // } else {
         //     trying = UnitType.SOLDIER;
         // }
+
+        if (spawnedRobots == 0) {
+            trying = UnitType.SOLDIER;
+        }
+        else if (spawnedRobots == 1) {
+            trying = UnitType.SOLDIER;
+        }
+        else if (spawnedRobots == 2 && G.mapArea <= 900) {
+            trying = UnitType.SOLDIER;
+        }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
         if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900) {

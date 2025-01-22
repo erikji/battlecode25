@@ -1,4 +1,4 @@
-package SPAARK;
+package SPAARKsolid;
 
 import battlecode.common.*;
 
@@ -296,9 +296,8 @@ public class Motion {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
-                    // if (POI.towerTeams[i] == G.opponentTeam
-                    //         && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
-                    if (POI.towerTeams[i] == G.opponentTeam) {
+                    if (POI.towerTeams[i] == G.opponentTeam
+                            && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
                         exploreLoc = POI.towerLocs[i];
                         break;
                     }
@@ -308,11 +307,11 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                // if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
                                     break search;
-                                // }
+                                }
                             }
                         }
                     }
@@ -353,6 +352,94 @@ public class Motion {
             G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
+    public static MapLocation exploreRandomlyAggressiveLocFixed() throws Exception {
+        //only use symmetryexplore
+        //fixed version
+        if (G.rc.isMovementReady()) {
+            exploreLoc=null;
+            // --exploreTime;
+            // if (exploreLoc != null) {
+            //     if (G.rc.canSenseLocation(exploreLoc)) {
+            //         exploreLoc = null;
+            //     }
+            //     if (exploreTime == 0) {
+            //         exploreLoc = null;
+            //     }
+            //     if (Random.rand() % 35 == 0) {
+            //         exploreLoc = null;
+            //     }
+            // }
+            if (exploreLoc == null) {
+                int rand = Random.rand() % POI.numberOfTowers;
+                UnitType bestTowerType = UnitType.LEVEL_ONE_DEFENSE_TOWER;
+                MapLocation bestLoc = null;
+                for (int j = POI.numberOfTowers; --j >= 0;) {
+                    int i = (j + rand) % POI.numberOfTowers;
+                    if (POI.towerTeams[i] == G.opponentTeam) {
+                        switch (bestTowerType) {
+                            case UnitType.LEVEL_ONE_DEFENSE_TOWER:
+                                if (POI.towerTypes[i] != UnitType.LEVEL_ONE_DEFENSE_TOWER || G.me.distanceSquaredTo(POI.towerLocs[i]) < G.me.distanceSquaredTo(bestLoc)) {
+                                    bestTowerType = POI.towerTypes[i];
+                                    bestLoc = POI.towerLocs[i];
+                                }
+                            case UnitType.LEVEL_ONE_MONEY_TOWER:
+                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER && G.me.distanceSquaredTo(POI.towerLocs[i]) < G.me.distanceSquaredTo(bestLoc)) {
+                                    bestTowerType = POI.towerTypes[i];
+                                    bestLoc = POI.towerLocs[i];
+                                }
+                            case UnitType.LEVEL_ONE_PAINT_TOWER:
+                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER || (POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER && G.me.distanceSquaredTo(POI.towerLocs[i]) < G.me.distanceSquaredTo(bestLoc))) {
+                                    bestTowerType = POI.towerTypes[i];
+                                    bestLoc = POI.towerLocs[i];
+                                }
+
+                        }
+                    }
+                }
+                if (bestLoc == null) {
+                    for (int j = POI.numberOfTowers; --j >= 0;) {
+                        int i = (j + rand) % POI.numberOfTowers;
+                        if (POI.towerTeams[i] == G.team) {
+                            Random2.state = G.mapArea;
+                            int rand2 = Random2.rand() % 3;
+                            for (int j2 = 3; --j2 >= 0;) {
+                                int i2 = (j2 + rand2) % 3;
+                                if (POI.symmetry[i2]) {
+                                    MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
+                                    if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
+                                        switch (bestTowerType) {
+                                            case UnitType.LEVEL_ONE_DEFENSE_TOWER:
+                                                if (POI.towerTypes[i] != UnitType.LEVEL_ONE_DEFENSE_TOWER || G.me.distanceSquaredTo(loc) > G.me.distanceSquaredTo(bestLoc)) {
+                                                    bestTowerType = POI.towerTypes[i];
+                                                    bestLoc = loc;
+                                                }
+                                            case UnitType.LEVEL_ONE_MONEY_TOWER:
+                                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER && G.me.distanceSquaredTo(loc) > G.me.distanceSquaredTo(bestLoc)) {
+                                                    bestTowerType = POI.towerTypes[i];
+                                                    bestLoc = loc;
+                                                }
+                                            case UnitType.LEVEL_ONE_PAINT_TOWER:
+                                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER || (POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER && G.me.distanceSquaredTo(loc) > G.me.distanceSquaredTo(bestLoc))) {
+                                                    bestTowerType = POI.towerTypes[i];
+                                                    bestLoc = loc;
+                                                }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (bestLoc != null) {
+                    exploreLoc = bestLoc;
+                }
+            }
+        }
+        if (ENABLE_EXPLORE_INDICATORS)
+            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        return exploreLoc;
+    }
 
     // lastPaint stores how much paint has been lost to neutral/opponent territory
     // used to determine how much paint until retreating
@@ -386,16 +473,13 @@ public class Motion {
     };
 
     public static int getRetreatPaint() throws Exception {
-        if (G.allyRobots.length > 10) {
-            return 0;
-        }
         //if paint is less than getRetreatPaint, the robot may retreat
         int paint = Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
         switch (G.rc.getType()) {
             case SOLDIER:
                 return paint;
             case SPLASHER:
-                if (G.mapArea > 1600 && G.rc.getNumberTowers() <= 4) {
+                if (G.mapArea > 1600 && G.rc.getNumberTowers() == 2) {
                     return 50;
                 }
                 return paint;

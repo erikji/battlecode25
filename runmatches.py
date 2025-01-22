@@ -15,7 +15,7 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'bottersploshers' #bot to test
+currentBot = 'a' #bot to test
 if len(sys.argv) > 1:
     currentBot = sys.argv[1]
 
@@ -28,7 +28,7 @@ maps = []
 maps += ['DefaultSmall']
 maps += ['DefaultMedium']
 maps += ['DefaultLarge']
-maps += ['DefaultHuge']
+# maps += ['DefaultHuge']
 
 maps += ['Fossil']
 maps += ['Gears']
@@ -78,6 +78,18 @@ maps += ['[SP2] Corners']
 maps += ['[SP2] Duolingo']
 maps += ['[SP2] Narrow']
 maps += ['[SP2] NotMyMap']
+
+maps=[]
+
+maps += ['DefaultSmall']
+maps += ['DefaultMedium']
+maps += ['Justice']
+maps += ['Mirage']
+maps += ['[SP] Lingo']
+maps += ['[SP] 2025']
+maps += ['Fossil']
+maps += ['Racetrack']
+maps += ['catface']
 
 #maps.reverse()
 matches = list(product(bots, maps))
