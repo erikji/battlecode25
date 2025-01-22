@@ -1,4 +1,4 @@
-package SPAARK;
+package a;
 
 import battlecode.common.*;
 
@@ -185,7 +185,6 @@ public class Motion {
         exploreLoc = exploreRandomlyLoc();
         if (G.rc.isMovementReady()) {
             bugnavTowards(exploreLoc, m);
-            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
 
