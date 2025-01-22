@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildspawning;
 
 import battlecode.common.*;
 
@@ -1589,16 +1589,10 @@ public class Motion {
                 RobotInfo bot = G.rc.senseRobotAtLocation(G.nearbyRuins[r]);
                 if (bot.team == G.opponentTeam) {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
-                    int toSubtract2 = toSubtract;
                     if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 100;
-                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2) toSubtract2 += 100;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
                             if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
-                                    2)) {
-                                scores[i] -= toSubtract2;
-                            }
-                            else if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
                                     bot.type.actionRadiusSquared)) {
                                 scores[i] -= toSubtract;
                             }

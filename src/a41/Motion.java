@@ -1,4 +1,4 @@
-package solidbuild;
+package a41;
 
 import battlecode.common.*;
 
@@ -185,12 +185,13 @@ public class Motion {
         exploreLoc = exploreRandomlyLoc();
         if (G.rc.isMovementReady()) {
             bugnavTowards(exploreLoc, m);
+            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
 
     public static int exploreTime = 0;
 
-    public static final int SYMMETRY_EXPLORE_PERCENT = Integer.MAX_VALUE; // OPTNET_PARAM
+    public static final int SYMMETRY_EXPLORE_PERCENT = 536870912; // OPTNET_PARAM
 
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {

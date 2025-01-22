@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildspawning;
 
 import battlecode.common.*;
 
@@ -48,7 +48,7 @@ public class Soldier {
     // max build time
     public static final int SOL_MAX_SRP_TIME = 50;
     // don't build SRP if not enough paint (runs out quickly)
-    public static final int SOL_SRP_MIN_PAINT = 50;
+    public static final int SOL_SRP_MIN_PAINT = 75;
     // dont run out of paint waiting for paint painting area
     public static final int SOL_RETREAT_PAINT_MIN_PAINT = 20;
 

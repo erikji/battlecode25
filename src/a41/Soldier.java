@@ -1,4 +1,4 @@
-package solidbuild;
+package a41;
 
 import battlecode.common.*;
 
@@ -21,19 +21,19 @@ public class Soldier {
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
     // controls ratio of money to paint (higher = more money)
-    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 3;
+    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 1.0;
     // stop building towers if enemy paint interferes too much
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 4;
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 8; // tested: 12 against 16 (52/94)
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 8; // tested: 12 against 16 (52/94), 8 against 12 (53/94)
     public static final int SOL_TOWER_HELP_DIST = 5;
-    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
+    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
     // max soldiers that will build a tower
     public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 3;
     // max build time
-    public static final int SOL_MAX_TOWER_TIME = 80;
+    public static final int SOL_MAX_TOWER_TIME = 200;
     // don't build SRP immediately after spawning or in early game
-    public static final int SOL_MIN_SRP_ROUND = 50;
+    public static final int SOL_MIN_SRP_ROUND = 20;
     public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 10;
     // controls rounds between repairing/expanding an SRP
     public static final int SOL_SRP_VISIT_TIMEOUT = 100;
@@ -48,7 +48,7 @@ public class Soldier {
     // max build time
     public static final int SOL_MAX_SRP_TIME = 50;
     // don't build SRP if not enough paint (runs out quickly)
-    public static final int SOL_SRP_MIN_PAINT = 50;
+    public static final int SOL_SRP_MIN_PAINT = 75;
     // dont run out of paint waiting for paint painting area
     public static final int SOL_RETREAT_PAINT_MIN_PAINT = 20;
 
@@ -130,12 +130,17 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        // if (!avoidRetreating
-        //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-        //         && G.maxChips < 6000
-        //         && G.allyRobots.length < 9) {
-        if (false) {
+        if (!avoidRetreating
+                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
+                && G.maxChips < 6000
+                && G.allyRobots.length < 9) {
             mode = RETREAT;
+            if (ruinLocation != null) {
+                G.setLastVisited(ruinLocation, -2000);
+            }
+            if (resourceLocation != null) {
+                G.setLastVisited(resourceLocation, -2000);
+            }
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
@@ -500,13 +505,7 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
-                exploreLocation = Motion.exploreRandomlyAggressiveLoc();
-                Motion.bugnavTowards(exploreLocation, suicide);
-                G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
-            } else {
-                Motion.exploreRandomly(moveWithPaintMicro);
-            }
+            Motion.exploreRandomly(moveWithPaintMicro);
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
@@ -558,23 +557,24 @@ public class Soldier {
             boolean paint;
             PaintType exists;
             MapLocation loc;
-            for (int dx = -1; dx++ < 4;) {
-                for (int dy = -1; dy++ < 4;) {
-                    if (dx == 2 && dy == 2)
-                        continue;
-                    // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                    // guaranteed within vision radius if can attack there
-                    loc = ruinLocation.translate(dx - 2, dy - 2);
-                    if (G.rc.canAttack(loc)) {
-                        paint = pattern[dx][dy];
-                        exists = mapInfos[oy + dy][ox + dx].getPaint();
-                        // can't paint enemy paint
-                        if (!exists.isEnemy()
-                                && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                            G.rc.attack(loc, paint);
-                            paintLocation = loc;
-                            break;
-                        }
+            int offset = Random.rand() % 25;
+            for (int i = 25; --i >= 0;) {
+                int dx = (i + offset) % 5;
+                int dy = ((i + offset) % 25) / 5;
+                if (dx == 2 && dy == 2)
+                    continue;
+                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // guaranteed within vision radius if can attack there
+                loc = ruinLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canAttack(loc)) {
+                    paint = pattern[dx][dy];
+                    exists = mapInfos[oy + dy][ox + dx].getPaint();
+                    // can't paint enemy paint
+                    if (!exists.isEnemy()
+                            && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                        G.rc.attack(loc, paint);
+                        paintLocation = loc;
+                        break;
                     }
                 }
             }
@@ -599,22 +599,23 @@ public class Soldier {
         PaintType exists;
         MapLocation loc;
         boolean isPatternComplete = true;
-        for (int dx = -1; dx++ < 4;) {
-            for (int dy = -1; dy++ < 4;) {
-                // location guaranteed to be on the map by canBuildSrpHere
-                // guaranteed within vision radius if can attack there
-                loc = resourceLocation.translate(dx - 2, dy - 2);
-                if (G.rc.canAttack(loc)) {
-                    paint = Robot.resourcePattern[dx][dy];
-                    exists = mapInfos[oy + dy][ox + dx].getPaint();
-                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                        isPatternComplete = false;
-                        // can't paint enemy paint
-                        if (!exists.isEnemy()) {
-                            G.rc.attack(loc, paint);
-                            paintLocation = loc;
-                            break;
-                        }
+        int offset = Random.rand() % 25;
+        for (int i = 25; --i >= 0;) {
+            int dx = (i + offset) % 5;
+            int dy = ((i + offset) % 25) / 5;
+            // location guaranteed to be on the map by canBuildSrpHere
+            // guaranteed within vision radius if can attack there
+            loc = resourceLocation.translate(dx - 2, dy - 2);
+            if (G.rc.canAttack(loc)) {
+                paint = Robot.resourcePattern[dx][dy];
+                exists = mapInfos[oy + dy][ox + dx].getPaint();
+                if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                    isPatternComplete = false;
+                    // can't paint enemy paint
+                    if (!exists.isEnemy()) {
+                        G.rc.attack(loc, paint);
+                        paintLocation = loc;
+                        break;
                     }
                 }
             }
@@ -924,7 +925,7 @@ public class Soldier {
                 && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
@@ -1028,20 +1029,6 @@ public class Soldier {
                         scores[i] += 40;
                     }
                 }
-            }
-            return scores;
-        }
-    };
-
-    public static Micro suicide = new Micro() {
-        @Override
-        public int[] micro(Direction d, MapLocation dest) throws Exception {
-            // try to stay out of range if on cd, otherwise try to get in range
-            int[] scores = Motion.defaultMicro.micro(d, dest);
-            scores[G.dirOrd(d)] += 20;
-            if (d != Direction.CENTER) {
-                scores[G.dirOrd(d.rotateLeft())] += 15;
-                scores[G.dirOrd(d.rotateRight())] += 15;
             }
             return scores;
         }
