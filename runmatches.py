@@ -79,18 +79,6 @@ maps += ['[SP2] Duolingo']
 maps += ['[SP2] Narrow']
 maps += ['[SP2] NotMyMap']
 
-maps=[]
-
-maps += ['DefaultSmall']
-maps += ['DefaultMedium']
-maps += ['Justice']
-maps += ['Mirage']
-maps += ['[SP] Lingo']
-maps += ['[SP] 2025']
-maps += ['Fossil']
-maps += ['Racetrack']
-maps += ['catface']
-
 #maps.reverse()
 matches = list(product(bots, maps))
 

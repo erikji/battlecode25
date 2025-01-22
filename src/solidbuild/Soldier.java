@@ -21,17 +21,17 @@ public class Soldier {
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
     // controls ratio of money to paint (higher = more money)
-    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 4;
+    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 3;
     // stop building towers if enemy paint interferes too much
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 8;
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT = 4;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
-    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 12; // tested: 12 against 16 (52/94)
+    public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 8; // tested: 12 against 16 (52/94)
     public static final int SOL_TOWER_HELP_DIST = 5;
-    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 30;
+    public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
     // max soldiers that will build a tower
     public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 3;
     // max build time
-    public static final int SOL_MAX_TOWER_TIME = 200;
+    public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
     public static final int SOL_MIN_SRP_ROUND = 50;
     public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 10;
@@ -60,7 +60,7 @@ public class Soldier {
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
 
     public static boolean reducedRetreating = false;
-    public static boolean avoidRetreating = true;
+    public static boolean avoidRetreating = false;
 
     // queue of next locations to check for expanding SRP
     // used in explore mode to mark initial build since needs centered for markers
@@ -130,10 +130,11 @@ public class Soldier {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        if (!avoidRetreating
-                && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-                && G.maxChips < 6000
-                && G.allyRobots.length < 9) {
+        // if (!avoidRetreating
+        //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
+        //         && G.maxChips < 6000
+        //         && G.allyRobots.length < 9) {
+        if (false) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
@@ -499,7 +500,13 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            Motion.exploreRandomly(moveWithPaintMicro);
+            if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
+                exploreLocation = Motion.exploreRandomlyAggressiveLoc();
+                Motion.bugnavTowards(exploreLocation, suicide);
+                G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
+            } else {
+                Motion.exploreRandomly(moveWithPaintMicro);
+            }
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
@@ -917,7 +924,7 @@ public class Soldier {
                 && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < 4 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
@@ -1021,6 +1028,20 @@ public class Soldier {
                         scores[i] += 40;
                     }
                 }
+            }
+            return scores;
+        }
+    };
+
+    public static Micro suicide = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            // try to stay out of range if on cd, otherwise try to get in range
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            scores[G.dirOrd(d)] += 20;
+            if (d != Direction.CENTER) {
+                scores[G.dirOrd(d.rotateLeft())] += 15;
+                scores[G.dirOrd(d.rotateRight())] += 15;
             }
             return scores;
         }

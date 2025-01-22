@@ -6,8 +6,8 @@ import java.util.*;
 public class Tower {
     // initial weights for bots
     public static final double TOW_SPAWN_SOLDIER_WEIGHT = 2;
-    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 1;
-    public static final double TOW_SPAWN_MOPPER_WEIGHT = 2;
+    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 1.2;
+    public static final double TOW_SPAWN_MOPPER_WEIGHT = 1.2;
     // reduce the weight of soldiers if max towers reached
     public static final double TOW_MAXED_REDUCE_SOLDIER_WEIGHT = 1;
 
@@ -136,7 +136,7 @@ public class Tower {
         //     trying = UnitType.SOLDIER;
         // }
 
-        if (spawnedRobots<2){
+        if (spawnedRobots<2||spawnedRobots<3&&G.rc.getType().getBaseType()==UnitType.LEVEL_ONE_PAINT_TOWER){
             trying=UnitType.SOLDIER;
         }
 
