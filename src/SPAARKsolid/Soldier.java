@@ -527,7 +527,7 @@ public class Soldier {
                 messingUpLocation = Motion.exploreRandomlyLoc();
             }
         // }
-        Motion.bugnavTowards(messingUpLocation, suicide);
+        Motion.bugnavTowards(messingUpLocation);
         G.rc.setIndicatorLine(G.me, messingUpLocation, 0, 0, 255);
     }
 

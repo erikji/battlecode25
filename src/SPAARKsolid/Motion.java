@@ -372,38 +372,59 @@ public class Motion {
                 int rand = Random.rand() % POI.numberOfTowers;
                 UnitType bestTowerType = UnitType.LEVEL_ONE_DEFENSE_TOWER;
                 MapLocation bestLoc = null;
-                search: for (int j = POI.numberOfTowers; --j >= 0;) {
+                for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
-                    if (POI.towerTeams[i] == G.opponentTeam
-                            && ((POI.explored[POI.towerLocs[i].y] >> POI.towerLocs[i].x) & 1) == 0) {
-                        exploreLoc = POI.towerLocs[i];
-                        break;
-                    }
-                    if (POI.towerTeams[i] == G.team) {
-                        Random2.state = G.mapArea;
-                        int rand2 = Random2.rand() % 3;
-                        for (int j2 = 3; --j2 >= 0;) {
-                            int i2 = (j2 + rand2) % 3;
-                            if (POI.symmetry[i2]) {
-                                MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
-                                    switch (bestTowerType) {
-                                        case UnitType.LEVEL_ONE_DEFENSE_TOWER:
-                                            bestTowerType = POI.towerTypes[i];
-                                            bestLoc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                        case UnitType.LEVEL_ONE_MONEY_TOWER:
-                                            if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER) {
-                                                bestTowerType = POI.towerTypes[i];
-                                                bestLoc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                            }
-                                        case UnitType.LEVEL_ONE_PAINT_TOWER:
-                                            if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER || POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                                                bestTowerType = POI.towerTypes[i];
-                                                bestLoc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                            }
+                    if (POI.towerTeams[i] == G.opponentTeam) {
+                        switch (bestTowerType) {
+                            case UnitType.LEVEL_ONE_DEFENSE_TOWER:
+                                if (POI.towerTypes[i] != UnitType.LEVEL_ONE_DEFENSE_TOWER || G.me.distanceSquaredTo(POI.towerLocs[i]) < G.me.distanceSquaredTo(bestLoc)) {
+                                    bestTowerType = POI.towerTypes[i];
+                                    bestLoc = POI.towerLocs[i];
+                                }
+                            case UnitType.LEVEL_ONE_MONEY_TOWER:
+                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER && G.me.distanceSquaredTo(POI.towerLocs[i]) < G.me.distanceSquaredTo(bestLoc)) {
+                                    bestTowerType = POI.towerTypes[i];
+                                    bestLoc = POI.towerLocs[i];
+                                }
+                            case UnitType.LEVEL_ONE_PAINT_TOWER:
+                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER || (POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER && G.me.distanceSquaredTo(POI.towerLocs[i]) < G.me.distanceSquaredTo(bestLoc))) {
+                                    bestTowerType = POI.towerTypes[i];
+                                    bestLoc = POI.towerLocs[i];
+                                }
 
+                        }
+                    }
+                }
+                if (bestLoc == null) {
+                    for (int j = POI.numberOfTowers; --j >= 0;) {
+                        int i = (j + rand) % POI.numberOfTowers;
+                        if (POI.towerTeams[i] == G.team) {
+                            Random2.state = G.mapArea;
+                            int rand2 = Random2.rand() % 3;
+                            for (int j2 = 3; --j2 >= 0;) {
+                                int i2 = (j2 + rand2) % 3;
+                                if (POI.symmetry[i2]) {
+                                    MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
+                                    if (((POI.explored[loc.y] >> loc.x) & 1) == 0) {
+                                        switch (bestTowerType) {
+                                            case UnitType.LEVEL_ONE_DEFENSE_TOWER:
+                                                if (POI.towerTypes[i] != UnitType.LEVEL_ONE_DEFENSE_TOWER || G.me.distanceSquaredTo(loc) > G.me.distanceSquaredTo(bestLoc)) {
+                                                    bestTowerType = POI.towerTypes[i];
+                                                    bestLoc = loc;
+                                                }
+                                            case UnitType.LEVEL_ONE_MONEY_TOWER:
+                                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER && G.me.distanceSquaredTo(loc) > G.me.distanceSquaredTo(bestLoc)) {
+                                                    bestTowerType = POI.towerTypes[i];
+                                                    bestLoc = loc;
+                                                }
+                                            case UnitType.LEVEL_ONE_PAINT_TOWER:
+                                                if (POI.towerTypes[i] == UnitType.LEVEL_ONE_MONEY_TOWER || (POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER && G.me.distanceSquaredTo(loc) > G.me.distanceSquaredTo(bestLoc))) {
+                                                    bestTowerType = POI.towerTypes[i];
+                                                    bestLoc = loc;
+                                                }
+
+                                        }
                                     }
-                                    break;
                                 }
                             }
                         }
