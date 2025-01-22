@@ -296,8 +296,9 @@ public class Motion {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
-                    if (POI.towerTeams[i] == G.opponentTeam
-                            && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                    // if (POI.towerTeams[i] == G.opponentTeam
+                    //         && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                    if (POI.towerTeams[i] == G.opponentTeam) {
                         exploreLoc = POI.towerLocs[i];
                         break;
                     }
@@ -307,11 +308,11 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                // if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
                                     break search;
-                                }
+                                // }
                             }
                         }
                     }
@@ -385,13 +386,16 @@ public class Motion {
     };
 
     public static int getRetreatPaint() throws Exception {
+        if (G.allyRobots.length > 10) {
+            return 0;
+        }
         //if paint is less than getRetreatPaint, the robot may retreat
         int paint = Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
         switch (G.rc.getType()) {
             case SOLDIER:
                 return paint;
             case SPLASHER:
-                if (G.mapArea > 1600 && G.rc.getNumberTowers() == 2) {
+                if (G.mapArea > 1600 && G.rc.getNumberTowers() <= 4) {
                     return 50;
                 }
                 return paint;
