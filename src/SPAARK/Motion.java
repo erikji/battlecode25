@@ -389,19 +389,18 @@ public class Motion {
         if (G.allyRobots.length > 10) {
             return 0;
         }
+        //if paint is less than getRetreatPaint, the robot may retreat
+        int paint = Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
         switch (G.rc.getType()) {
             case SOLDIER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+                return paint;
             case SPLASHER:
                 if (G.mapArea > 1600 && G.rc.getNumberTowers() <= 4) {
                     return 50;
                 }
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+                return paint;
             case MOPPER:
-                return Math.max(paintLost + RETREAT_PAINT_OFFSET,
-                        (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+                return paint;
             default:
                 return 0;
         }

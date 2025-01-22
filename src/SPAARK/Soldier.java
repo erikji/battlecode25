@@ -13,8 +13,6 @@ public class Soldier {
 
     // ratio to reduce retreat requirement by if building tower/srp
     public static final double SOL_RETREAT_REDUCED_RATIO = 0.5;
-    // don't retreat if have enough chips to spam bots
-    public static final int SOL_RETREAT_MAX_CHIPS = 5000;
     // exploration weight multiplier
     public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
     // controls rounds between visiting ruins
@@ -134,7 +132,8 @@ public class Soldier {
         }
         if (!avoidRetreating
                 && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-                && G.rc.getChips() < SOL_RETREAT_MAX_CHIPS) {
+                && G.maxChips < 6000
+                && G.allyRobots.length < 9) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
@@ -918,7 +917,7 @@ public class Soldier {
                 && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);

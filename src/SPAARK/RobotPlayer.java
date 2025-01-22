@@ -40,6 +40,7 @@ public class RobotPlayer {
 
     public static void updateRound() throws Exception {
         // every round
+        G.maxChips = Math.max(G.maxChips, G.rc.getChips());
         Motion.movementCooldown -= GameConstants.COOLDOWNS_PER_TURN * (G.rc.getRoundNum() - G.round);
         Motion.movementCooldown = Math.max(Motion.movementCooldown, 0);
         G.round = G.rc.getRoundNum();
@@ -97,6 +98,7 @@ public class RobotPlayer {
                 //     int a=Random.rand()%G.mapHeight,b=Random.rand()%G.mapWidth,c=Random.rand()%G.mapHeight,d=Random.rand()%G.mapWidth;
                 //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
                 // }
+                G.lastChips = G.rc.getChips();
                 Clock.yield();
             }
         } catch (GameActionException e) {
