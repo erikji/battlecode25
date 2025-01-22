@@ -356,18 +356,19 @@ public class Motion {
         //only use symmetryexplore
         //fixed version
         if (G.rc.isMovementReady()) {
-            --exploreTime;
-            if (exploreLoc != null) {
-                if (G.rc.canSenseLocation(exploreLoc)) {
-                    exploreLoc = null;
-                }
-                if (exploreTime == 0) {
-                    exploreLoc = null;
-                }
-                if (Random.rand() % 35 == 0) {
-                    exploreLoc = null;
-                }
-            }
+            exploreLoc=null;
+            // --exploreTime;
+            // if (exploreLoc != null) {
+            //     if (G.rc.canSenseLocation(exploreLoc)) {
+            //         exploreLoc = null;
+            //     }
+            //     if (exploreTime == 0) {
+            //         exploreLoc = null;
+            //     }
+            //     if (Random.rand() % 35 == 0) {
+            //         exploreLoc = null;
+            //     }
+            // }
             if (exploreLoc == null) {
                 int rand = Random.rand() % POI.numberOfTowers;
                 UnitType bestTowerType = UnitType.LEVEL_ONE_DEFENSE_TOWER;
