@@ -1,4 +1,4 @@
-package SPAARK;
+package a;
 
 import battlecode.common.*;
 
@@ -135,12 +135,6 @@ public class Soldier {
                 && G.maxChips < 6000
                 && G.allyRobots.length < 9) {
             mode = RETREAT;
-            if (ruinLocation != null) {
-                G.setLastVisited(ruinLocation, -2000);
-            }
-            if (resourceLocation != null) {
-                G.setLastVisited(resourceLocation, -2000);
-            }
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
@@ -557,24 +551,23 @@ public class Soldier {
             boolean paint;
             PaintType exists;
             MapLocation loc;
-            int offset = Random.rand() % 25;
-            for (int i = 25; --i >= 0;) {
-                int dx = (i + offset) % 5;
-                int dy = ((i + offset) % 25) / 5;
-                if (dx == 2 && dy == 2)
-                    continue;
-                // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                // guaranteed within vision radius if can attack there
-                loc = ruinLocation.translate(dx - 2, dy - 2);
-                if (G.rc.canAttack(loc)) {
-                    paint = pattern[dx][dy];
-                    exists = mapInfos[oy + dy][ox + dx].getPaint();
-                    // can't paint enemy paint
-                    if (!exists.isEnemy()
-                            && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
+            for (int dx = -1; dx++ < 4;) {
+                for (int dy = -1; dy++ < 4;) {
+                    if (dx == 2 && dy == 2)
+                        continue;
+                    // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                    // guaranteed within vision radius if can attack there
+                    loc = ruinLocation.translate(dx - 2, dy - 2);
+                    if (G.rc.canAttack(loc)) {
+                        paint = pattern[dx][dy];
+                        exists = mapInfos[oy + dy][ox + dx].getPaint();
+                        // can't paint enemy paint
+                        if (!exists.isEnemy()
+                                && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                            G.rc.attack(loc, paint);
+                            paintLocation = loc;
+                            break;
+                        }
                     }
                 }
             }
@@ -599,23 +592,22 @@ public class Soldier {
         PaintType exists;
         MapLocation loc;
         boolean isPatternComplete = true;
-        int offset = Random.rand() % 25;
-        for (int i = 25; --i >= 0;) {
-            int dx = (i + offset) % 5;
-            int dy = ((i + offset) % 25) / 5;
-            // location guaranteed to be on the map by canBuildSrpHere
-            // guaranteed within vision radius if can attack there
-            loc = resourceLocation.translate(dx - 2, dy - 2);
-            if (G.rc.canAttack(loc)) {
-                paint = Robot.resourcePattern[dx][dy];
-                exists = mapInfos[oy + dy][ox + dx].getPaint();
-                if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                    isPatternComplete = false;
-                    // can't paint enemy paint
-                    if (!exists.isEnemy()) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
+        for (int dx = -1; dx++ < 4;) {
+            for (int dy = -1; dy++ < 4;) {
+                // location guaranteed to be on the map by canBuildSrpHere
+                // guaranteed within vision radius if can attack there
+                loc = resourceLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canAttack(loc)) {
+                    paint = Robot.resourcePattern[dx][dy];
+                    exists = mapInfos[oy + dy][ox + dx].getPaint();
+                    if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                        isPatternComplete = false;
+                        // can't paint enemy paint
+                        if (!exists.isEnemy()) {
+                            G.rc.attack(loc, paint);
+                            paintLocation = loc;
+                            break;
+                        }
                     }
                 }
             }
