@@ -1,0 +1,16 @@
+{
+    "id": "retreattest123",
+    "params": {
+        "RETREAT_PAINT_RATIO": {
+            "type": 2,
+            "range": [0.25, 1.00]
+        },
+        "SYMMETRY_EXPLORE_PERCENT": {
+            "type": 1,
+            "range": [0, 2147483647]
+        }
+    },
+    "base_bot": "SPAARK",
+    "test_bots": ["SPAARK"],
+    "maps": ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge", "Fossil", "Gears", "Justice", "Mirage", "Money", "MoneyTower", "Racetrack", "Restart", "SMILE", "SaltyPepper", "TargetPractice", "Thirds", "UglySweater", "UnderTheSea", "catface", "gardenworld", "memstore", "[EDGE] microtest", "[SP] ChessBattleAdvanced", "[EDGE] srp spam", "[SP2] Boulders", "[SP2] Arena", "[SP2] CheckersFightIntermediate", "[EDGE] ruins", "[SP] ChessBattleUnadvanced", "[SP2] Geometric", "[SP] RoundAbout", "[SP] 2025", "[SP] 5757", "[SP] Lingo", "[SP] Longo", "[SP] MapIsNotReference", "[SP] ModernArt3", "[SP] Spirals", "[SP] Squiggles", "[SP2] Piston", "[SP] Cornucopia", "[SP2] Buh", "[SP2] Arena2", "[SP2] CenterExtreme", "[SP2] Corners", "[SP2] Duolingo", "[SP2] Narrow", "[SP2] NotMyMap"]
+}
