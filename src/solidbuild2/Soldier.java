@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuild2;
 
 import battlecode.common.*;
 
@@ -34,12 +34,12 @@ public class Soldier {
     public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
     public static final int SOL_MIN_SRP_ROUND = 50;
-    public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 0;
+    public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 10;
     // controls rounds between repairing/expanding an SRP
     public static final int SOL_SRP_VISIT_TIMEOUT = 100;
     public static final double SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE = 0.5;
     // balance exploring and building SRPs (don't SRP if near target)
-    public static final int SOL_SRP_EXPAND_TIMEOUT = 0;
+    public static final int SOL_SRP_EXPAND_TIMEOUT = 20;
     public static final int SOL_SRP_EXP_OVERRIDE_DIST = 100;
     // stop building SRP if enemy paint interferes too much
     public static final int SOL_MAX_SRP_ENEMY_PAINT = 1;
@@ -173,7 +173,7 @@ public class Soldier {
                 G.indicatorString.append("RETREAT ");
                 if (G.rc.getPaint() > SOL_RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
                         && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
-                    Motion.retreat();
+                    Motion.retreat(moveWithPaintMicro);
                 else
                     Motion.retreat();
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
@@ -522,16 +522,15 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            Motion.exploreRandomly();
-            // if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
-            //     exploreLocation = Motion.exploreRandomlyAggressiveLoc();
-            //     Motion.bugnavTowards(exploreLocation);
-            //     G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
-            // } else {
-            //     Motion.exploreRandomly();
-            // }
+            if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
+                exploreLocation = Motion.exploreRandomlyAggressiveLoc();
+                Motion.bugnavTowards(exploreLocation, suicide);
+                G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
+            } else {
+                Motion.exploreRandomly(moveWithPaintMicro);
+            }
         } else {
-            Motion.bugnavTowards(exploreLocation);
+            Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
@@ -545,7 +544,7 @@ public class Soldier {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
             POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
             mode = EXPLORE;
-            Motion.exploreRandomly();
+            Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
             G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             return;
@@ -697,12 +696,12 @@ public class Soldier {
                 };
                 srpCheckIndex = 0;
             }
-            Motion.exploreRandomly();
+            Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
             G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
             // just sit in the middle of the SRP
-            Motion.bugnavTowards(resourceLocation);
+            Motion.bugnavTowards(resourceLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, resourceLocation, 255, 100, 0);
         }
         if (paintLocation != null)
@@ -713,7 +712,7 @@ public class Soldier {
     public static void expandResource() throws Exception {
         G.indicatorString.append("EXPAND_RP ");
         lastSrpExpansion = G.round;
-        Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
+        Motion.bugnavTowards(srpCheckLocations[srpCheckIndex], moveWithPaintMicro);
         // show the queue and current target
         for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
             if (G.rc.onTheMap(srpCheckLocations[i]))
@@ -737,7 +736,7 @@ public class Soldier {
                     G.rc.attack(towerLocation);
             } else {
                 Motion.bugnavAround(towerLocation, towerType.actionRadiusSquared + 1,
-                        towerType.actionRadiusSquared + 1);
+                        towerType.actionRadiusSquared + 1, moveWithPaintMicro);
             }
         }
         G.rc.setIndicatorDot(G.me, 255, 0, 0);
@@ -965,8 +964,7 @@ public class Soldier {
                 && G.rc.senseMapInfo(loc.translate(1, 0)).getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        // 24 limit is for betterdisintegrating
-        int towerType = G.rc.getChips() < 20000 && G.rc.getNumberTowers() < 24 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
@@ -981,75 +979,75 @@ public class Soldier {
      * Weights neutral tiles as ally tiles if it can paint them, then paints them if
      * it moves to one. DO NOT CHAIN WITH OTHER MICRO FUNCTIONS.
      */
-    // public static Micro moveWithPaintMicro = new Micro() {
-    //     @Override
-    //     public int[] micro(Direction d, MapLocation dest) throws Exception {
-    //         int[] scores = Motion.defaultMicro.micro(d, dest);
-    //         MapLocation nxt, bestLoc = G.me;
-    //         int best = -1000000000;
-    //         int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
-    //                 + Motion.movementCooldown)
-    //                 / 10);
-    //         boolean canPaintBest = false;
-    //         for (int i = 9; --i >= 0;) {
-    //             nxt = G.me.add(G.ALL_DIRECTIONS[i]);
-    //             if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY && G.rc.canAttack(nxt)) {
-    //                 // equalize
-    //                 scores[i] += 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * numTurnsUntilNextMove;
-    //                 if (scores[i] > best) {
-    //                     best = scores[i];
-    //                     canPaintBest = true;
-    //                     bestLoc = nxt;
-    //                 }
-    //             } else if (scores[i] > best) {
-    //                 best = scores[i];
-    //                 canPaintBest = false;
-    //             }
-    //         }
-    //         if (canPaintBest) {
-    //             // no more checkerboarding :(
-    //             G.rc.attack(bestLoc, false);
-    //         } else if (G.rc.isActionReady()) {
-    //             // try to paint nearby
-    //             MapLocation loc;
-    //             for (int dx = -2; ++dx <= 2;) {
-    //                 for (int dy = -2; ++dy <= 2;) {
-    //                     loc = G.me.translate(dx, dy);
-    //                     if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-    //                         // still have to check if on map
-    //                         if (G.rc.canAttack(loc))
-    //                             G.rc.attack(loc);
-    //                     }
-    //                 }
-    //             }
-    //             loc = G.me.translate(-3, 0);
-    //             if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-    //                 // still have to check if on map
-    //                 if (G.rc.canAttack(loc))
-    //                     G.rc.attack(loc);
-    //             }
-    //             loc = G.me.translate(0, 3);
-    //             if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-    //                 // still have to check if on map
-    //                 if (G.rc.canAttack(loc))
-    //                     G.rc.attack(loc);
-    //             }
-    //             loc = G.me.translate(3, 0);
-    //             if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-    //                 // still have to check if on map
-    //                 if (G.rc.canAttack(loc))
-    //                     G.rc.attack(loc);
-    //             }
-    //             loc = G.me.translate(0, -3);
-    //             if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-    //                 // still have to check if on map
-    //                 if (G.rc.canAttack(loc))
-    //                     G.rc.attack(loc);
-    //             }
-    //         }
-    //         return scores;
-    //     }
-    // };
+    public static Micro moveWithPaintMicro = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            MapLocation nxt, bestLoc = G.me;
+            int best = -1000000000;
+            int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
+                    + Motion.movementCooldown)
+                    / 10);
+            boolean canPaintBest = false;
+            for (int i = 9; --i >= 0;) {
+                nxt = G.me.add(G.ALL_DIRECTIONS[i]);
+                if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY && G.rc.canAttack(nxt)) {
+                    // equalize
+                    scores[i] += 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * numTurnsUntilNextMove;
+                    if (scores[i] > best) {
+                        best = scores[i];
+                        canPaintBest = true;
+                        bestLoc = nxt;
+                    }
+                } else if (scores[i] > best) {
+                    best = scores[i];
+                    canPaintBest = false;
+                }
+            }
+            if (canPaintBest) {
+                // no more checkerboarding :(
+                G.rc.attack(bestLoc, false);
+            } else if (G.rc.isActionReady()) {
+                // try to paint nearby
+                // MapLocation loc;
+                // for (int dx = -2; ++dx <= 2;) {
+                //     for (int dy = -2; ++dy <= 2;) {
+                //         loc = G.me.translate(dx, dy);
+                //         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //             // still have to check if on map
+                //             if (G.rc.canAttack(loc))
+                //                 G.rc.attack(loc);
+                //         }
+                //     }
+                // }
+                // loc = G.me.translate(-3, 0);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(0, 3);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(3, 0);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(0, -3);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+            }
+            return scores;
+        }
+    };
 
     public static Micro attackMicro = new Micro() {
         @Override
