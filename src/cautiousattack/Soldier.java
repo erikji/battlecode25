@@ -63,6 +63,9 @@ public class Soldier {
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
+    
+    public static StringBuilder messingUpRuins = new StringBuilder();
+    public static MapLocation messingUpLoc = null; // MESSING_UP mode
 
     public static boolean reducedRetreating = false;
     public static boolean avoidRetreating = false;
@@ -80,9 +83,7 @@ public class Soldier {
     public static int buildTime = 0;
     public static int srpTargetTime = 0;
 
-    // commonly used stuff
-    // map nearby map infos into 2d array in (y, x) form
-    // used for tower building, SRP detection, expansion, building
+    // used for SRPs
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
     public static int lastUpdatedMapInfosRound = -1;
 
@@ -219,15 +220,14 @@ public class Soldier {
                     }
                     // dont attack if tower is easily rebuilt by enemy
                     boolean isDisrupted = false;
-                    int ox = loc.x - G.me.x + 2;
-                    int oy = loc.y - G.me.y + 2;
+                    MapLocation loc2;
                     for (int dx = -1; dx++ < 4;) {
                         for (int dy = -1; dy++ < 4;) {
                             if (dx == 2 && dy == 2)
                                 continue;
                             // make sure not out of vision radius
-                            if (G.rc.canSenseLocation(loc.translate(dx - 2, dy - 2))
-                                    && mapInfos[oy + dy][ox + dx].getPaint().isAlly()) {
+                            loc2 = loc.translate(dx, dy);
+                            if (G.rc.canSenseLocation(loc2) && G.rc.senseMapInfo(loc2).getPaint().isAlly()) {
                                 isDisrupted = true;
                                 break;
                             }
@@ -360,8 +360,9 @@ public class Soldier {
                 if (dx == 2 && dy == 2)
                     continue;
                 // make sure not out of vision radius
-                if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))) {
-                    curr = G.rc.senseMapInfo(ruinLocation.translate(dx - 2, dy - 2)).getPaint();
+                loc = ruinLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canSenseLocation(loc)) {
+                    curr = G.rc.senseMapInfo(loc).getPaint();
                     if (curr != (pattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY))
                         incorrectPaint++;
                     // stop building if there's lots of enemy paint
@@ -453,11 +454,13 @@ public class Soldier {
         int enemyPaint = 0;
         int incorrectPaint = 0;
         PaintType curr;
+        MapLocation loc;
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 // make sure not out of vision radius
-                if (G.rc.canSenseLocation(resourceLocation.translate(dx - 2, dy - 2))) {
-                    curr = G.rc.senseMapInfo(resourceLocation.translate(dx - 2, dy - 2)).getPaint();
+                loc = resourceLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canSenseLocation(loc)) {
+                    curr = G.rc.senseMapInfo(loc).getPaint();
                     if (curr != (Robot.resourcePattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY))
                         incorrectPaint++;
                     // stop building if there's lots of enemy paint
@@ -559,15 +562,14 @@ public class Soldier {
         // if pattern not broken and no allied moppers/splashers retreat
         // otherwise opponent easily rebuilds tower
         boolean isDisrupted = false;
-        int ox = towerLocation.x - G.me.x + 2;
-        int oy = towerLocation.y - G.me.y + 2;
+        MapLocation loc;
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 if (dx == 2 && dy == 2)
                     continue;
                 // make sure not out of vision radius
-                if (G.rc.canSenseLocation(towerLocation.translate(dx - 2, dy - 2))
-                        && mapInfos[oy + dy][ox + dx].getPaint().isAlly()) {
+                loc = resourceLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canSenseLocation(loc) && G.rc.senseMapInfo(loc).getPaint().isAlly()) {
                     isDisrupted = true;
                     break;
                 }
@@ -670,9 +672,6 @@ public class Soldier {
         }
     }
 
-    public static StringBuilder messingUpRuins = new StringBuilder();
-    public static MapLocation messingUpLoc = null;
-
     public static void messingUp() throws Exception {
         if (messingUpLoc != null) {
             boolean allyPaintOnRuin = false;
@@ -752,11 +751,6 @@ public class Soldier {
         G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
         if (G.rc.isActionReady() && G.rc.getPaint() >= 5) {
-            // int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
-            // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            // MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
-            // mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
-            // }
             // paint second
             MapLocation paintLocation = null;
             boolean[][] pattern = Robot.towerPatterns[buildTowerType];
@@ -768,8 +762,6 @@ public class Soldier {
                     G.rc.attack(G.me, paint);
             } else {
                 // paint pattern otherwise
-                // int ox = ruinLocation.x - startX + 2;
-                // int oy = ruinLocation.y - startY + 2;
                 boolean paint;
                 PaintType exists;
                 MapLocation loc;
@@ -794,26 +786,6 @@ public class Soldier {
                         }
                     }
                 }
-                // for (int dx = -1; dx++ < 4;) {
-                // for (int dy = -1; dy++ < 4;) {
-                // if (dx == 2 && dy == 2)
-                // continue;
-                // // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                // // guaranteed within vision radius if can attack there
-                // loc = ruinLocation.translate(dx - 2, dy - 2);
-                // if (G.rc.canAttack(loc)) {
-                // paint = pattern[dx][dy];
-                // exists = mapInfos[oy + dy][ox + dx].getPaint();
-                // // can't paint enemy paint
-                // if (!exists.isEnemy()
-                // && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                // G.rc.attack(loc, paint);
-                // paintLocation = loc;
-                // break;
-                // }
-                // }
-                // }
-                // }
             }
             if (paintLocation != null)
                 G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
