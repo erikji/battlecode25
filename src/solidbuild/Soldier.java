@@ -22,7 +22,7 @@ public class Soldier {
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
     // controls ratio of money to paint (higher = more money)
-    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 3;
+    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 2;
     // stop building towers if enemy paint interferes too much
     public static final int SOL_MAX_TOWER_ENEMY_PAINT = 4;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
@@ -180,6 +180,14 @@ public class Soldier {
                 else
                     Motion.retreat();
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
+            }
+        }
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = G.nearbyRuins[i].add(Direction.WEST);
+            if (G.rc.canSenseLocation(loc)) {
+                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)) {
+                    G.rc.removeMark(loc);
+                }
             }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
@@ -1076,7 +1084,7 @@ public class Soldier {
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
         // 24 limit is for betterdisintegrating
-        int towerType = G.rc.getChips() < 20000 && G.rc.getNumberTowers() < 24 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
