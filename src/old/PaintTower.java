@@ -1,4 +1,4 @@
-package solidbuild;
+package old;
 
 public class PaintTower {
 

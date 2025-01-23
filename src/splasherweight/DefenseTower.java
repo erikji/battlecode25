@@ -1,4 +1,4 @@
-package solidbuild;
+package splasherweight;
 
 public class DefenseTower {
 

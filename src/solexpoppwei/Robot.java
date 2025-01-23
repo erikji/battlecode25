@@ -1,4 +1,4 @@
-package solidbuild;
+package solexpoppwei;
 
 import battlecode.common.*;
 

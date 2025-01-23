@@ -1,4 +1,4 @@
-package solidbuild;
+package b22;
 
 public class DefenseTower {
 

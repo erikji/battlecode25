@@ -1,4 +1,4 @@
-package solidbuild;
+package splasherweight;
 
 public class MoneyTower {
     public static void init()throws Exception{}

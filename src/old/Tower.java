@@ -1,4 +1,4 @@
-package solidbuild;
+package old;
 
 import battlecode.common.*;
 import java.util.*;

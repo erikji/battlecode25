@@ -1,4 +1,4 @@
-package solidbuild;
+package old;
 
 import battlecode.common.*;
 
@@ -31,7 +31,7 @@ public class Soldier {
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
     // max soldiers that will build a tower
     public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 2;
-    // max tower build time
+    // max build time
     public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
     public static final int SOL_MIN_SRP_ROUND = 50;
@@ -48,10 +48,8 @@ public class Soldier {
     public static final int SOL_MAX_SRP_ENEMY_PAINT_NO_HELP = 1;
     public static final int SOL_MAX_SRP_ENEMY_PAINT_HARD = 8;
     public static final int SOL_MAX_SRP_ENEMY_PAINT_NO_HELP_HARD = 1;
-    // max SRP build time
+    // max build time
     public static final int SOL_MAX_SRP_TIME = 50;
-    // max time spent traveling to an SRP target (obstructed by bot / inaccessible)
-    public static final int SOL_MAX_SRP_TARGET_TIME = 15;
     // don't build SRP if not enough paint (runs out quickly)
     public static final int SOL_SRP_MIN_PAINT = 0;
     // dont run out of paint waiting for paint painting area
@@ -78,7 +76,6 @@ public class Soldier {
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
-    public static int srpTargetTime = 0;
 
     public static StringBuilder messingUpRuins = new StringBuilder();
     public static MapLocation messingUpLoc = null;
@@ -89,8 +86,7 @@ public class Soldier {
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
     public static int lastUpdatedMapInfosRound = -1;
 
-    public static void init() throws Exception {
-    }
+    public static void init()throws Exception{}
 
     /**
      * Always:
@@ -168,7 +164,6 @@ public class Soldier {
                 // VERY IMPORTANT DO NOT TOUCH
                 buildBlockedTime = 0;
                 buildTime = 0;
-                srpTargetTime = 0;
                 Motion.setRetreatLoc();
                 if (Motion.retreatTower == -1) {
                     mode = EXPLORE;
@@ -198,8 +193,7 @@ public class Soldier {
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             MapLocation loc = G.nearbyRuins[i].add(Direction.WEST);
             if (G.rc.canSenseLocation(loc)) {
-                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)
-                        && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc) && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
                     G.rc.removeMark(loc);
                 }
             }
@@ -212,7 +206,6 @@ public class Soldier {
         // VERY IMPORTANT DO NOT TOUCH
         buildBlockedTime = 0;
         buildTime = 0;
-        srpTargetTime = 0;
         // dont build tower that bot was just building
         final double towerVisitTimeout = SOL_RUIN_VISIT_TIMEOUT_BASE
                 + SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea
@@ -478,12 +471,6 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
-        // if been trying to reach target for a long time stop (inaccessible/occupied)
-        if (srpTargetTime > SOL_MAX_SRP_TARGET_TIME) {
-            mode = EXPLORE;
-            return;
-        }
-        srpTargetTime++;
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
@@ -508,8 +495,6 @@ public class Soldier {
                 return;
             }
             target = srpCheckLocations[srpCheckIndex];
-            // reset target time when disqualifying target
-            srpTargetTime = 0;
         }
         // markers
         if (G.me.equals(target) && canBuildSrpAtLocation(G.me)) {
@@ -1116,15 +1101,7 @@ public class Soldier {
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
-            boolean enemyPaint = false;
-            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-                if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
-                    enemyPaint = true;
-                    break;
-                }
-            }
-            if (enemyPaint || G.opponentRobotsString.length() > 0)
-                towerType = 0;
+            towerType = 0;
         }
         MapLocation place = loc;
         switch (towerType) {

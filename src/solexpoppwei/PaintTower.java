@@ -1,4 +1,4 @@
-package solidbuild;
+package solexpoppwei;
 
 public class PaintTower {
 
