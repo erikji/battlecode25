@@ -43,6 +43,11 @@ public class Tower {
         Arrays.sort(spawnLocs,
                 (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
         POI.addTower(-1, G.me, G.team, G.rc.getType());
+        switch (G.rc.getType().getBaseType()) {
+            case LEVEL_ONE_DEFENSE_TOWER -> DefenseTower.init();
+            case LEVEL_ONE_MONEY_TOWER -> MoneyTower.init();
+            case LEVEL_ONE_PAINT_TOWER -> PaintTower.init();
+        }
     }
 
     public static void spawnBot(UnitType t) throws Exception {

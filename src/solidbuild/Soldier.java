@@ -86,6 +86,8 @@ public class Soldier {
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
     public static int lastUpdatedMapInfosRound = -1;
 
+    public static void init()throws Exception{}
+
     /**
      * Always:
      * If low on paint (reduceRetreating halves paint), retreat

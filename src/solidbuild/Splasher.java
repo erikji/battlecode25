@@ -13,6 +13,7 @@ public class Splasher {
 
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[37]; // score for attacking this square
+    public static void init()throws Exception{}
 
     /**
      * Always:
