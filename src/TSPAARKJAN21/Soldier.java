@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN21;
 
 import battlecode.common.*;
 
@@ -47,8 +47,7 @@ public class Soldier {
     public static final int SOL_MAX_SRP_ENEMY_PAINT_HARD = 8;
     // max build time for SRP
     public static final int SOL_MAX_SRP_TIME = 50;
-    // max time spent traveling to an SRP expand target (obstructed by bot /
-    // inaccessible)
+    // max time spent traveling to an SRP target (obstructed by bot / inaccessible)
     public static final int SOL_MAX_SRP_TARGET_TIME = 15;
     // don't build SRP if not enough paint (runs out quickly)
     public static final int SOL_SRP_MIN_PAINT = 75;
@@ -195,7 +194,7 @@ public class Soldier {
                 else
                     Motion.retreat();
                 Motion.tryTransferPaint();
-                G.rc.setIndicatorDot(G.me, 255, 0, 255);
+                // G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
@@ -462,7 +461,7 @@ public class Soldier {
         while (!G.rc.onTheMap(target) || G.getLastVisited(target) + visitTimeout >= G.round
                 || cannotBuildSrpAtLocation(target)) {
             if (G.rc.onTheMap(target))
-                G.rc.setIndicatorDot(target, 255, 100, 0);
+                // G.rc.setIndicatorDot(target, 255, 100, 0);
             if (++srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
                 // don't waste turns
@@ -479,7 +478,7 @@ public class Soldier {
             resourceLocation = G.me;
             // only place one marker
             G.rc.mark(resourceLocation, true);
-            G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
             G.indicatorString.append("MK_SRP ");
             mode = BUILD_RESOURCE;
         }
@@ -530,9 +529,9 @@ public class Soldier {
             Motion.exploreRandomly(moveWithPaintMicro);
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
-            G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
+            // G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void buildTower() throws Exception {
@@ -545,7 +544,7 @@ public class Soldier {
             mode = EXPLORE;
             Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
-            G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
+            // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             return;
         }
         // try to stick close to the tower instead of relying on nugbav
@@ -557,7 +556,7 @@ public class Soldier {
         if (!G.me.isAdjacentTo(ruinLocation) || !Motion.move(G.me.directionTo(next))) {
             Motion.bugnavTowards(next);
         }
-        G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
+        // G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
         int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
         for (int i = G.nearbyMapInfos.length; --i >= 0;) {
@@ -602,8 +601,8 @@ public class Soldier {
             }
         }
         if (paintLocation != null)
-            G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorDot(G.me, 0, 0, 255);
+            // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // G.rc.setIndicatorDot(G.me, 0, 0, 255);
         if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
             POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
@@ -677,15 +676,15 @@ public class Soldier {
             }
             Motion.exploreRandomly(moveWithPaintMicro);
             // dot to signal building complete
-            G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
             // just sit in the middle of the SRP
             Motion.bugnavTowards(resourceLocation, moveWithPaintMicro);
-            G.rc.setIndicatorLine(G.me, resourceLocation, 255, 100, 0);
+            // G.rc.setIndicatorLine(G.me, resourceLocation, 255, 100, 0);
         }
-        if (paintLocation != null)
-            G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorDot(G.me, 0, 200, 255);
+        // if (paintLocation != null)
+            // G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
@@ -693,12 +692,12 @@ public class Soldier {
         lastSrpExpansion = G.round;
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex], moveWithPaintMicro);
         // show the queue and current target
-        for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
-            if (G.rc.onTheMap(srpCheckLocations[i]))
-                G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
-        }
-        G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
-        G.rc.setIndicatorDot(G.me, 0, 200, 255);
+        // for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
+            // if (G.rc.onTheMap(srpCheckLocations[i]))
+                // G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+        // }
+        // G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
+        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void attack() throws Exception {
@@ -718,7 +717,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1, moveWithPaintMicro);
             }
         }
-        G.rc.setIndicatorDot(G.me, 255, 0, 0);
+        // G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     /**

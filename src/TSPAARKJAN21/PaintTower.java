@@ -1,6 +1,6 @@
-package SPAARK;
+package TSPAARKJAN21;
 
-public class MoneyTower {
+public class PaintTower {
 
     public static void run() throws Exception {
     }

@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN21;
 
 import battlecode.common.*;
 
@@ -96,7 +96,7 @@ public class RobotPlayer {
                 }
                 // for (int i = 0; i <= 50; i++) {
                 //     int a=Random.rand()%G.mapHeight,b=Random.rand()%G.mapWidth,c=Random.rand()%G.mapHeight,d=Random.rand()%G.mapWidth;
-                //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
+                //     // G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
                 // }
                 G.lastChips = G.rc.getChips();
                 Clock.yield();

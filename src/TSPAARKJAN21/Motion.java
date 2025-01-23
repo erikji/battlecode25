@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN21;
 
 import battlecode.common.*;
 
@@ -185,7 +185,7 @@ public class Motion {
         exploreLoc = exploreRandomlyLoc();
         if (G.rc.isMovementReady()) {
             bugnavTowards(exploreLoc, m);
-            G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
+            // G.rc.setIndicatorLine(G.me, exploreLoc, 0, 200, 0);
         }
     }
 
@@ -273,8 +273,8 @@ public class Motion {
                 // }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        // if (ENABLE_EXPLORE_INDICATORS)
+            // G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
@@ -350,8 +350,8 @@ public class Motion {
                 }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        // if (ENABLE_EXPLORE_INDICATORS)
+            // G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
@@ -562,7 +562,7 @@ public class Motion {
             retreatLoc = POI.towerLocs[retreatTower];
             return;
             // Motion.bugnavTowards(loc, micro);
-            // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
+            // // G.rc.setIndicatorLine(G.me, loc, 200, 0, 200);
             // if (G.rc.canSenseRobotAtLocation(loc)) {
             // int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
             // G.rc.senseRobotAtLocation(loc).getPaintAmount());
@@ -579,7 +579,7 @@ public class Motion {
 
     public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
-            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
+            // G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
             int dist = G.me.distanceSquaredTo(retreatLoc);
             if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
@@ -609,7 +609,7 @@ public class Motion {
                         updateRetreatWaitingLoc();
                     }
                     if (retreatWaitingLoc != null) {
-                        G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
+                        // G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
                         // bugnavTowards(retreatWaitingLoc);
                         return bug2Helper(G.me, retreatWaitingLoc, TOWARDS, 0, 0);
                     }
@@ -1216,7 +1216,7 @@ public class Motion {
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
-                    G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
+                    // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
                     for (int j = step - 1; j >= 0; j--) {
                         if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
                             recalculationNeeded = Math.min(j, recalculationNeeded);
@@ -1406,18 +1406,18 @@ public class Motion {
         // if (((bfsDist[(G.round % 100) * (height + 2) + j + 1] >> b) & 1)
         // == 0) {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 0, 0);
         // }
         // else {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 0, 0);
         // }
         // }
         // else {
         // if (((bfsMap[j + 1] >> b) & 1) == 0) {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 255, 255, 255);
         // }
         // else {
-        // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
+        // // G.rc.setIndicatorDot(new MapLocation(b, j), 0, 255, 0);
         // }
         // }
         // }

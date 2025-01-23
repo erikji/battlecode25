@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN21;
 
 import battlecode.common.*;
 
@@ -594,7 +594,7 @@ public class POI {
             if (ENABLE_INDICATORS) {
                 G.indicatorString.append("SENT-MESSAGE=" + G.me);
                 for (Direction d : G.DIRECTIONS) {
-                    G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+                    // G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
                 }
             }
         }
@@ -640,7 +640,7 @@ public class POI {
                     if (ENABLE_INDICATORS) {
                         G.indicatorString.append("SENT-MESSAGE=" + parseLocation(n));
                         for (Direction d : G.DIRECTIONS) {
-                            G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+                            // G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
                         }
                     }
                     if (relayMessages == 2) {
@@ -739,41 +739,41 @@ public class POI {
                     // if (parseTowerTeam(towers[i]) == G.team) {
                     if (towerTeams[i] == G.team) {
                         if (towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER) {
-                            G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 100, 0);
+                            // G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 100, 0);
                             MapLocation loc = towerLocs[i];
                             for (int j = 8; --j >= 0;) {
-                                G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 255, 0);
+                                // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 255, 0);
                             }
                         } else {
-                            G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 150, 0);
+                            // G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 150, 0);
                             MapLocation loc = towerLocs[i];
                             for (int j = 8; --j >= 0;) {
-                                G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 100, 0);
+                                // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 100, 0);
                             }
                             // MapLocation loc = parseLocation(towers[i]);
                             // for (int j = 8; --j >= 0;) {
-                            // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 255);
+                            // // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 255, 255);
                             // }
                         }
                     } else if (towerTeams[i] == G.opponentTeam) {
-                        G.rc.setIndicatorLine(G.me, towerLocs[i], 150, 0, 0);
+                        // G.rc.setIndicatorLine(G.me, towerLocs[i], 150, 0, 0);
                         MapLocation loc = towerLocs[i];
                         for (int j = 8; --j >= 0;) {
-                            G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 255, 0, 0);
+                            // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 255, 0, 0);
                         }
                         // MapLocation loc = parseLocation(towers[i]);
                         // for (int j = 8; --j >= 0;) {
-                        // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 255, 0, 0);
+                        // // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 255, 0, 0);
                         // }
                     } else {
-                        G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 0, 150);
+                        // G.rc.setIndicatorLine(G.me, towerLocs[i], 0, 0, 150);
                         MapLocation loc = towerLocs[i];
                         for (int j = 8; --j >= 0;) {
-                            G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 0, 255);
+                            // G.rc.setIndicatorLine(loc, loc.add(G.DIRECTIONS[j]), 0, 0, 255);
                         }
                         // MapLocation loc = parseLocation(towers[i]);
                         // for (int j = 8; --j >= 0;) {
-                        // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 0, 255);
+                        // // G.rc.setIndicatorDot(loc.add(G.DIRECTIONS[j]), 0, 0, 255);
                         // }
                     }
                 } catch (Exception e) {
