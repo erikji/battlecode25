@@ -138,14 +138,12 @@ public class Soldier {
         // somewhat spaghetti fix for soldiers
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-        // if (!avoidRetreating
-        // && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ?
-        // SOL_RETREAT_REDUCED_RATIO : 1)
-        // && G.maxChips < 6000
-        // && G.allyRobots.length < 9) {
-        if (false) {
-            mode = RETREAT;
-        } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+            Motion.setRetreatLoc();
+            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+                mode = RETREAT;
+            }
+        } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
