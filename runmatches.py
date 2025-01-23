@@ -15,13 +15,14 @@ emojiMap = {
 }
 errors = []
 
-currentBot = 'solidbuildlesssplashers' #bot to test
+currentBot = 'solidbuild' #bot to test
 if len(sys.argv) > 1:
     currentBot = sys.argv[1]
 
 # bots = [chr(ord('a')+i) for i in range(14)]
-bots = [('a' +str((i + 1))) for i in range(14)]
-bots = ['solidbuild']
+# bots = [('a' +str((i + 1))) for i in range(14)]
+bots = [('b' +str((i + 1))) for i in range(20)]
+# bots = ['solidbuild']
 print(bots)
 # bots = ["a"]
 if len(sys.argv) > 2:

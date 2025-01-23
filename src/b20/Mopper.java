@@ -1,4 +1,4 @@
-package solidbuild;
+package b20;
 
 import battlecode.common.*;
 
@@ -13,7 +13,7 @@ public class Mopper {
     public static MapLocation target = null;
     
     //how much to weight swings more
-    public static final double MOP_SWING_MULT = 1; // OPTNET_PARAM
+    public static final double MOP_SWING_MULT = 1.3; // OPTNET_PARAM
     //extra weight to stealing paint from enemy in retreat mode
     public static final int MOP_RETREAT_STEAL_WEIGHT = 30; // OPTNET_PARAM
     //extra weight to mopping paint next to a tower
