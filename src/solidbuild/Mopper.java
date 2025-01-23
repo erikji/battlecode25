@@ -45,10 +45,12 @@ public class Mopper {
      * Help soldiers mop enemy paint around ruins
      */
     public static void run() throws Exception {
-        // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
-        if (false) {
-            mode = RETREAT;
-        } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+            Motion.setRetreatLoc();
+            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+                mode = RETREAT;
+            }
+        } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
