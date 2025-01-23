@@ -28,9 +28,13 @@ public class Splasher {
      */
     public static void run() throws Exception {
         // occasionally clear ruins to not oof forever
-        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
-			mode = RETREAT;
-        } else if (G.rc.getPaint() > Motion.paintNeededToStopRetreating && mode == RETREAT) {
+        // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+		if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+			Motion.setRetreatLoc();
+			if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+				mode = RETREAT;
+			}
+		} else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
@@ -3728,25 +3732,7 @@ public class Splasher {
     }
 
     public static void exploreMoveScores() throws Exception {
-		// MapLocation best = null;
-		// int bestWeight = 0;
-		// for (int i = G.opponentRobots.length; --i >= 0;) {
-		// 	if (G.opponentRobots[i].type != UnitType.SOLDIER) {
-		// 		continue;
-		// 	}
-		// 	int weight = G.opponentRobots[i].paintAmount - G.me.distanceSquaredTo(G.opponentRobots[i].location);
-		// 	if (best == null || weight > bestWeight) {
-		// 		best = G.opponentRobots[i].location;
-		// 		bestWeight = weight;
-		// 	}
-		// }
-		// if (best != null && (Motion.exploreLoc == null || best.isWithinDistanceSquared(Motion.exploreLoc, 40))) {
-		// if (best != null) {
-		// 	moveScores = Motion.defaultMicro.micro(Motion.bug2Helper(G.me, best, Motion.TOWARDS, 0, 0), Motion.exploreLoc);
-		// }
-		// else {
 		moveScores = Motion.defaultMicro.micro(Motion.bug2Helper(G.me, Motion.exploreRandomlyAggressiveLoc(), Motion.TOWARDS, 0, 0), Motion.exploreLoc);
-		// }
     }
 
     public static void retreatMoveScores() throws Exception {

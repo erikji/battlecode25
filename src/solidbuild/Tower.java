@@ -105,7 +105,7 @@ public class Tower {
         //     soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
         // }
         soldierWeight -= ((double) G.rc.getNumberTowers()) * 0.05;
-        splasherWeight += ((double) POI.paintTowers) * 0.07;
+        splasherWeight += ((double) POI.paintTowers) * 0.1;
         double sum = soldierWeight + splasherWeight + mopperWeight;
         soldierWeight /= sum;
         splasherWeight /= sum;
