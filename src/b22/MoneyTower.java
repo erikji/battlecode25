@@ -1,6 +1,6 @@
-package b21;
+package b22;
 
-public class DefenseTower {
+public class MoneyTower {
 
     public static void run() throws Exception {
     }

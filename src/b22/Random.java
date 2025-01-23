@@ -1,4 +1,4 @@
-package b21;
+package b22;
 
 public class Random {
     public static int state;
