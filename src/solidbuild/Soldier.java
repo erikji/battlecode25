@@ -193,7 +193,7 @@ public class Soldier {
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             MapLocation loc = G.nearbyRuins[i].add(Direction.WEST);
             if (G.rc.canSenseLocation(loc)) {
-                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)) {
+                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc) && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
                     G.rc.removeMark(loc);
                 }
             }
