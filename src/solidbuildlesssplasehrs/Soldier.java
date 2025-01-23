@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildlesssplasehrs;
 
 import battlecode.common.*;
 
@@ -197,12 +197,6 @@ public class Soldier {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + Motion.movementCooldown) / 10);
-                    if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * turnsToNext) {
-                        Motion.avoidSymmetryExplore = true;
-                        Motion.exploreLoc = null;
-                        continue;
-                    }
                     towerLocation = loc;
                     towerType = bot.type;
                     mode = ATTACK;
@@ -491,17 +485,8 @@ public class Soldier {
         // nothing for now
         if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation) || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
             mode = EXPLORE;
+            exploreCheckMode();
             return;
-        }
-        if (G.rc.canSenseLocation(towerLocation)) {
-            int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + Motion.movementCooldown) / 10);
-            RobotInfo bot = G.rc.senseRobotAtLocation(towerLocation);
-            if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * turnsToNext) {
-                mode = EXPLORE;
-                Motion.avoidSymmetryExplore = true;
-                Motion.exploreLoc = null;
-                return;
-            }
         }
     }
 
@@ -516,7 +501,7 @@ public class Soldier {
                 + SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea
                 + SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE * G.rc.getNumberTowers();
         for (int i = POI.numberOfTowers; --i >= 0;) {
-            if (POI.towerTeams[i] == G.opponentTeam && !Motion.avoidSymmetryExplore) {
+            if (POI.towerTeams[i] == G.opponentTeam) {
                 // attack these
                 MapLocation pos = POI.towerLocs[i];
                 if (G.me.isWithinDistanceSquared(pos, bestDistanceSquared)
@@ -537,14 +522,13 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            Motion.exploreRandomly();
-            // if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
-            //     exploreLocation = Motion.exploreRandomlyAggressiveLoc();
-            //     Motion.bugnavTowards(exploreLocation);
-            //     G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
-            // } else {
-            //     Motion.exploreRandomly();
-            // }
+            if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
+                exploreLocation = Motion.exploreRandomlyAggressiveLoc();
+                Motion.bugnavTowards(exploreLocation, suicide);
+                G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
+            } else {
+                Motion.exploreRandomly();
+            }
         } else {
             Motion.bugnavTowards(exploreLocation);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
@@ -980,8 +964,7 @@ public class Soldier {
                 && G.rc.senseMapInfo(loc.translate(1, 0)).getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        // 24 limit is for betterdisintegrating
-        int towerType = G.rc.getChips() < 20000 && G.rc.getNumberTowers() < 24 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
