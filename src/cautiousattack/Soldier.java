@@ -568,7 +568,7 @@ public class Soldier {
                 if (dx == 2 && dy == 2)
                     continue;
                 // make sure not out of vision radius
-                loc = resourceLocation.translate(dx - 2, dy - 2);
+                loc = towerLocation.translate(dx - 2, dy - 2);
                 if (G.rc.canSenseLocation(loc) && G.rc.senseMapInfo(loc).getPaint().isAlly()) {
                     isDisrupted = true;
                     break;
