@@ -39,6 +39,11 @@ public class Robot {
         //         Soldier.mode = Soldier.MESSING_UP;
         //     }
         // }
+        switch (G.rc.getType()) {
+            case SOLDIER -> Soldier.init();
+            case SPLASHER -> Splasher.init();
+            case MOPPER -> Mopper.init();
+        }
     }
     
     public static void run() throws Exception {

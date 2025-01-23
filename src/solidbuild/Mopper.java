@@ -28,6 +28,7 @@ public class Mopper {
     public static int[] swingScores = new int[36]; // swinging
     public static int[] transferScores = new int[25]; //transfer paint
     // [south, west, east, north] for each swingScore
+    public static void init()throws Exception{}
 
     /**
      * If low on paint, retreat
@@ -832,7 +833,6 @@ public class Mopper {
                     if (G.rc.canTransferPaint(transferLoc, Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount))) {
                         G.rc.transferPaint(transferLoc, Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount));
                     }
-                    System.out.println("transfer");
                 }
             }
         }
