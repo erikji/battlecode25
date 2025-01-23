@@ -1,5 +1,21 @@
 from range20 import works
 import sys
+
+
+#transfer scores
+a = [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0)]
+for i in range(1,25):
+    print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores["""+str(i)+"""] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores["""+str(i)+"""] += 200;
+                }
+            }
+        }""")
+
 #mop
 #weighing scores
 a = [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0)]
@@ -11,15 +27,16 @@ for d in a:
             if (dx+d[0])**2 + (dy+d[1])**2 > 2:
                 ind = works.index((dx+d[0],dy+d[1]))
                 # s += f'\t\t//if we move to [{d[0]}, {d[1]}] (index {a.index(d)}), then we will be able to attack [{dx+d[0]}, {dy+d[1]}] (index {ind}), so check that too\n'
-                s += f'\t\tif (attackScores[{ind}] > allmax[{a.index(d)}])' + ' {\n'
-                s += f'\t\t\tallmax[{a.index(d)}] = attackScores[{ind}];\n'
+                s += f'\t\tif (transferScores[{ind}] > allmax[{a.index(d)}])' + ' {\n'
+                s += f'\t\t\tallmax[{a.index(d)}] = transferScores[{ind}];\n'
                 s += f'\t\t\tallx[{a.index(d)}] = {dx+d[0]};\n'
                 s += f'\t\t\tally[{a.index(d)}] = {dy+d[1]};\n'
-                s += f'\t\t\tallswing[{a.index(d)}] = false;\n'
+                s += f'\t\t\talltype[{a.index(d)}] = TRANSFER;\n'
                 s += '\t\t}\n'
                 # asdf += [works.index((dx+d[0],dy+d[1]))]
     # print(d,asdf)
-    # print(s,end='')
+    print(s,end='')
+exit()
 
 #calculating scores
 for i in range(25):
