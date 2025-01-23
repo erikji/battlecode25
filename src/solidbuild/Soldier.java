@@ -996,41 +996,41 @@ public class Soldier {
                 G.rc.attack(bestLoc, false);
             } else if (G.rc.isActionReady()) {
                 // try to paint nearby
-                MapLocation loc;
-                for (int dx = -2; ++dx <= 2;) {
-                    for (int dy = -2; ++dy <= 2;) {
-                        loc = G.me.translate(dx, dy);
-                        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                            // still have to check if on map
-                            if (G.rc.canAttack(loc))
-                                G.rc.attack(loc);
-                        }
-                    }
-                }
-                loc = G.me.translate(-3, 0);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(0, 3);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(3, 0);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(0, -3);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
+                // MapLocation loc;
+                // for (int dx = -2; ++dx <= 2;) {
+                //     for (int dy = -2; ++dy <= 2;) {
+                //         loc = G.me.translate(dx, dy);
+                //         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //             // still have to check if on map
+                //             if (G.rc.canAttack(loc))
+                //                 G.rc.attack(loc);
+                //         }
+                //     }
+                // }
+                // loc = G.me.translate(-3, 0);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(0, 3);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(3, 0);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(0, -3);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
             }
             return scores;
         }
@@ -1043,14 +1043,14 @@ public class Soldier {
             int[] scores = Motion.defaultMicro.micro(d, dest);
             if (G.rc.isActionReady()) {
                 for (int i = 9; --i >= 0;) {
-                    if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
+                    if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             G.rc.getType().actionRadiusSquared)) {
                         scores[i] += 400;
                     }
                 }
             } else {
                 for (int i = 9; --i >= 0;) {
-                    if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
+                    if (!G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             towerType.actionRadiusSquared)) {
                         scores[i] += 400;
                     }
