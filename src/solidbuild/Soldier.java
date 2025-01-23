@@ -526,8 +526,6 @@ public class Soldier {
     public static void buildTower() throws Exception {
         G.indicatorString.append("BUILD_TW ");
         G.indicatorString.append("TYPE=" + buildTowerType + " ");
-        int startX = G.me.x;
-        int startY = G.me.y;
         // move first, then paint, helps avoid passive paint drain
         if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
@@ -627,8 +625,6 @@ public class Soldier {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
         MapLocation paintLocation = null;
-        int ox = resourceLocation.x - G.me.x + 2;
-        int oy = resourceLocation.y - G.me.y + 2;
         boolean paint;
         PaintType exists;
         MapLocation loc;
@@ -980,7 +976,7 @@ public class Soldier {
                     + Motion.movementCooldown)
                     / 10);
             boolean canPaintBest = false;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY && G.rc.canAttack(nxt)) {
                     // equalize
@@ -1046,17 +1042,17 @@ public class Soldier {
             // try to stay out of range if on cd, otherwise try to get in range
             int[] scores = Motion.defaultMicro.micro(d, dest);
             if (G.rc.isActionReady()) {
-                for (int i = 8; --i >= 0;) {
-                    if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
+                for (int i = 9; --i >= 0;) {
+                    if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             G.rc.getType().actionRadiusSquared)) {
-                        scores[i] += 40;
+                        scores[i] += 400;
                     }
                 }
             } else {
-                for (int i = 8; --i >= 0;) {
-                    if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
+                for (int i = 9; --i >= 0;) {
+                    if (!G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             towerType.actionRadiusSquared)) {
-                        scores[i] += 40;
+                        scores[i] += 400;
                     }
                 }
             }
