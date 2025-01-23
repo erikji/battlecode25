@@ -1,4 +1,4 @@
-package solidbuild;
+package b21;
 
 import battlecode.common.*;
 import java.util.*;

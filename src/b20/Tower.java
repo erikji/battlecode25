@@ -1,11 +1,11 @@
-package solidbuild;
+package b20;
 
 import battlecode.common.*;
 import java.util.*;
 
 public class Tower {
     // initial weights for bots
-    public static final double TOW_SPAWN_SOLDIER_WEIGHT = 1.5;
+    public static final double TOW_SPAWN_SOLDIER_WEIGHT = 2;
     public static final double TOW_SPAWN_SPLASHER_WEIGHT = 0.8;
     public static final double TOW_SPAWN_MOPPER_WEIGHT = 1.2;
     // reduce the weight of soldiers if max towers reached
@@ -82,6 +82,8 @@ public class Tower {
         }
     }
 
+    public static int lastNumberOfTowers = 0;
+
     public static void run() throws Exception {
         // general common code for all towers
         // spawning
@@ -101,11 +103,9 @@ public class Tower {
         // }
         // }
         // }
-        // if (G.rc.getNumberTowers() == 25) {
-        //     soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
-        // }
-        soldierWeight -= ((double) G.rc.getNumberTowers()) * 0.05;
-        splasherWeight += ((double) POI.paintTowers) * 0.07;
+        if (G.rc.getNumberTowers() == 25) {
+            soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
+        }
         double sum = soldierWeight + splasherWeight + mopperWeight;
         soldierWeight /= sum;
         splasherWeight /= sum;
@@ -284,7 +284,7 @@ public class Tower {
         //     G.rc.disintegrate();
         //     return;
         // }
-        if (G.rc.getNumberTowers() == 25 && G.rc.getChips() > 20000 && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+        if (G.rc.getChips() > 20000 && lastNumberOfTowers <= G.rc.getNumberTowers() && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
             attack();
             // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
             G.rc.disintegrate();
@@ -295,6 +295,7 @@ public class Tower {
         }
         // attack after upgrading
         attack();
+        lastNumberOfTowers = G.rc.getNumberTowers();
     }
 
     public static void attack() throws Exception {
