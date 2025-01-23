@@ -9,6 +9,7 @@ public class Soldier {
     public static final int EXPAND_RESOURCE = 3;
     public static final int ATTACK = 4;
     public static final int RETREAT = 5;
+    public static final int MESSING_UP = 6;
     public static int mode = EXPLORE;
 
     // ratio to reduce retreat requirement by if building tower/srp
@@ -150,6 +151,7 @@ public class Soldier {
             case BUILD_RESOURCE -> buildResourceCheckMode();
             case EXPAND_RESOURCE -> expandResourceCheckMode();
             case ATTACK -> attackCheckMode();
+            case MESSING_UP -> messingUpCheckMode();
             case RETREAT -> {
                 // VERY IMPORTANT DO NOT TOUCH
                 buildBlockedTime = 0;
@@ -169,6 +171,7 @@ public class Soldier {
             case BUILD_RESOURCE -> buildResource();
             case EXPAND_RESOURCE -> expandResource();
             case ATTACK -> attack();
+            case MESSING_UP -> messingUp();
             case RETREAT -> {
                 G.indicatorString.append("RETREAT ");
                 if (G.rc.getPaint() > SOL_RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
@@ -538,18 +541,110 @@ public class Soldier {
         }
         if (exploreLocation == null) {
             Motion.exploreRandomly();
-            // if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
-            //     exploreLocation = Motion.exploreRandomlyAggressiveLoc();
-            //     Motion.bugnavTowards(exploreLocation);
-            //     G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
-            // } else {
-            //     Motion.exploreRandomly();
-            // }
         } else {
             Motion.bugnavTowards(exploreLocation);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i]) && messingUpRuins.indexOf(G.nearbyRuins[i].toString()) == -1) {
+                boolean allyPaintOnRuin = false;
+                for (int j = 25; --j >= 0;) {
+                    MapLocation nxt = G.nearbyRuins[i].translate(G.range20X[j], G.range20Y[j]);
+                    if (G.rc.canSenseLocation(nxt)) {
+                        PaintType p = G.rc.senseMapInfo(nxt).getPaint();
+                        if (p.isAlly()) {
+                            allyPaintOnRuin = true;
+                            break;
+                        }
+                    }
+                }
+                if (!allyPaintOnRuin) {
+                    for (int j = 25; --j >= 0;) {
+                        MapLocation nxt = G.nearbyRuins[i].translate(G.range20X[j], G.range20Y[j]);
+                        if (G.rc.canSenseLocation(nxt)) {
+                            PaintType p = G.rc.senseMapInfo(nxt).getPaint();
+                            if (p == PaintType.EMPTY && G.rc.canAttack(nxt)) {
+                                G.rc.attack(nxt);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         G.rc.setIndicatorDot(G.me, 0, 255, 0);
+    }
+
+    public static void messingUpCheckMode() throws Exception {
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = G.nearbyRuins[i];
+            if (G.rc.canSenseRobotAtLocation(loc)) {
+                RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                if (bot.team == G.opponentTeam) {
+                    towerLocation = loc;
+                    towerType = bot.type;
+                    mode = ATTACK;
+                    return;
+                }
+            }
+        }
+    }
+
+    public static StringBuilder messingUpRuins = new StringBuilder();
+    public static MapLocation messingUpLoc = null;
+
+    public static void messingUp() throws Exception {
+        if (messingUpLoc != null) {
+            boolean allyPaintOnRuin = false;
+            MapLocation neutralPaintLoc = null;
+            for (int j = 25; --j >= 0;) {
+                MapLocation nxt = messingUpLoc.translate(G.range20X[j], G.range20Y[j]);
+                if (G.rc.canSenseLocation(nxt)) {
+                    PaintType p = G.rc.senseMapInfo(nxt).getPaint();
+                    if (p.isAlly()) {
+                        allyPaintOnRuin = true;
+                        messingUpRuins.append(messingUpLoc.toString());
+                        messingUpLoc = null;
+                        break;
+                    }
+                    else if (p == PaintType.EMPTY) {
+                        if (neutralPaintLoc == null) {
+                            neutralPaintLoc = nxt;
+                        } else if (G.me.distanceSquaredTo(nxt) < G.me.distanceSquaredTo(neutralPaintLoc)) {
+                            neutralPaintLoc = nxt;
+                        }
+                    }
+                }
+            }
+            if (!allyPaintOnRuin && neutralPaintLoc != null) {
+                Motion.bugnavTowards(neutralPaintLoc);
+                if (G.rc.canAttack(neutralPaintLoc)) {
+                    G.rc.attack(neutralPaintLoc);
+                    messingUpLoc = null;
+                }
+            } else {
+                Motion.bugnavTowards(messingUpLoc);
+            }
+        } else if (messingUpLoc == null) {
+            for (int i = G.nearbyRuins.length; --i >= 0;) {
+                if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i]) && messingUpRuins.indexOf(G.nearbyRuins[i].toString()) == -1) {
+                    if (G.rc.isActionReady() || G.rc.isMovementReady()) {
+                        messingUpLoc = G.nearbyRuins[i];
+                        messingUp();
+                    }
+                }
+            }
+        }
+        if (G.rc.isMovementReady()) {
+            MapLocation loc = Motion.exploreRandomlyAggressiveLoc();
+            Motion.bugnavTowards(loc);
+        }
+        for (int i = 8; --i >= 0;) {
+            MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
+            if (G.rc.onTheMap(nxt)){
+                G.rc.setIndicatorLine(G.me, nxt, 0, 0, 0);
+            }
+        }
     }
 
     public static void buildTower() throws Exception {
