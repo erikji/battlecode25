@@ -1101,7 +1101,15 @@ public class Soldier {
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
-            towerType = 0;
+            boolean enemyPaint = false;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+                    enemyPaint = true;
+                    break;
+                }
+            }
+            if (enemyPaint || G.opponentRobotsString.length() > 0)
+                towerType = 0;
         }
         MapLocation place = loc;
         switch (towerType) {
