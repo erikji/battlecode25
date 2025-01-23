@@ -1098,6 +1098,9 @@ public class Soldier {
         int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        if (G.mapCenter.distanceSquaredTo(loc) < 36) {
+            towerType = 0;
+        }
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
