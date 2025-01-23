@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN21;
 
 import battlecode.common.*;
 
@@ -591,11 +591,11 @@ public class Mopper {
         if (mode == RETREAT) {
             Motion.tryTransferPaint();
         }
-        switch (mode) {
-            case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
-            case BUILD -> G.rc.setIndicatorDot(G.me, 0, 0, 255);
-            case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
-        }
+        // switch (mode) {
+        //     case EXPLORE -> // G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        //     case BUILD -> // G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        //     case RETREAT -> // G.rc.setIndicatorDot(G.me, 255, 0, 255);
+        // }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
@@ -665,11 +665,11 @@ public class Mopper {
             if (bestBot != null)
                 bestEmpty = bestBot;
             dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-            G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+            // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
         }
         moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
-        if (G.rc.onTheMap(microDir))
-            G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        // if (G.rc.onTheMap(microDir))
+            // G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
     }
 
     public static void exploreAttackScores() throws Exception {

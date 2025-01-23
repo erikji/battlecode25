@@ -1,4 +1,4 @@
-package SPAARK;
+package TSPAARKJAN21;
 
 public class Random {
     public static int state;
