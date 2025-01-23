@@ -77,6 +77,9 @@ public class Soldier {
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
 
+    public static StringBuilder messingUpRuins = new StringBuilder();
+    public static MapLocation messingUpLoc = null;
+
     // commonly used stuff
     // map nearby map infos into 2d array in (y, x) form
     // used for tower building, SRP detection, expansion, building
@@ -123,6 +126,10 @@ public class Soldier {
      * Attack tower until ded lmao
      * Attempt to repair SRPs if not in range to attack tower
      * 
+     * Messing Up (Trolling):
+     * REEEEE PLACE PAINT OVER EVERY RUIN IN SIGHT
+     * - Use symmetry to guess ruins near enemy and paint spam those
+     * 
      * Retreat:
      * Use Robot retreat
      * Try to paint under self when near tower
@@ -132,9 +139,10 @@ public class Soldier {
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
         // if (!avoidRetreating
-        //         && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ? SOL_RETREAT_REDUCED_RATIO : 1)
-        //         && G.maxChips < 6000
-        //         && G.allyRobots.length < 9) {
+        // && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ?
+        // SOL_RETREAT_REDUCED_RATIO : 1)
+        // && G.maxChips < 6000
+        // && G.allyRobots.length < 9) {
         if (false) {
             mode = RETREAT;
         } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
@@ -208,8 +216,10 @@ public class Soldier {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + Motion.movementCooldown) / 10);
-                    if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * turnsToNext) {
+                    int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
+                            + Motion.movementCooldown) / 10);
+                    if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength)
+                            * turnsToNext) {
                         Motion.avoidSymmetryExplore = true;
                         Motion.exploreLoc = null;
                         continue;
@@ -500,14 +510,17 @@ public class Soldier {
     public static void attackCheckMode() throws Exception {
         G.indicatorString.append("CHK_ATK ");
         // nothing for now
-        if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation) || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
+        if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation)
+                || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
             mode = EXPLORE;
             return;
         }
         if (G.rc.canSenseLocation(towerLocation)) {
-            int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + Motion.movementCooldown) / 10);
+            int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN) + Motion.movementCooldown)
+                    / 10);
             RobotInfo bot = G.rc.senseRobotAtLocation(towerLocation);
-            if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * turnsToNext) {
+            if (bot.health > 50
+                    && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * turnsToNext) {
                 mode = EXPLORE;
                 Motion.avoidSymmetryExplore = true;
                 Motion.exploreLoc = null;
@@ -536,7 +549,7 @@ public class Soldier {
                     exploreLocation = pos;
                 }
             } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
-            // } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 8) {
+                // } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 8) {
                 // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.towerLocs[i];
                 // prioritize opponent towers more than ruins, so it has to be REALLY close
@@ -554,7 +567,8 @@ public class Soldier {
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
-            if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i]) && messingUpRuins.indexOf(G.nearbyRuins[i].toString()) == -1) {
+            if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])
+                    && messingUpRuins.indexOf(G.nearbyRuins[i].toString()) == -1) {
                 boolean allyPaintOnRuin = false;
                 for (int j = 25; --j >= 0;) {
                     MapLocation nxt = G.nearbyRuins[i].translate(G.range20X[j], G.range20Y[j]);
@@ -598,10 +612,8 @@ public class Soldier {
         }
     }
 
-    public static StringBuilder messingUpRuins = new StringBuilder();
-    public static MapLocation messingUpLoc = null;
-
     public static void messingUp() throws Exception {
+        // explore aggressively (symmetry explore) and cover ruins with paint
         if (messingUpLoc != null) {
             boolean allyPaintOnRuin = false;
             MapLocation neutralPaintLoc = null;
@@ -614,8 +626,7 @@ public class Soldier {
                         messingUpRuins.append(messingUpLoc.toString());
                         messingUpLoc = null;
                         break;
-                    }
-                    else if (p == PaintType.EMPTY) {
+                    } else if (p == PaintType.EMPTY) {
                         if (neutralPaintLoc == null) {
                             neutralPaintLoc = nxt;
                         } else if (G.me.distanceSquaredTo(nxt) < G.me.distanceSquaredTo(neutralPaintLoc)) {
@@ -635,7 +646,8 @@ public class Soldier {
             }
         } else if (messingUpLoc == null) {
             for (int i = G.nearbyRuins.length; --i >= 0;) {
-                if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i]) && messingUpRuins.indexOf(G.nearbyRuins[i].toString()) == -1) {
+                if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])
+                        && messingUpRuins.indexOf(G.nearbyRuins[i].toString()) == -1) {
                     if (G.rc.isActionReady() || G.rc.isMovementReady()) {
                         messingUpLoc = G.nearbyRuins[i];
                         messingUp();
@@ -649,7 +661,7 @@ public class Soldier {
         }
         for (int i = 8; --i >= 0;) {
             MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
-            if (G.rc.onTheMap(nxt)){
+            if (G.rc.onTheMap(nxt)) {
                 G.rc.setIndicatorLine(G.me, nxt, 0, 0, 0);
             }
         }
@@ -682,13 +694,14 @@ public class Soldier {
         if (G.rc.isActionReady() && G.rc.getPaint() >= 5) {
             // int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
             // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            //     MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
-            //     mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
+            // MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
+            // mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
             // }
             // paint second
             MapLocation paintLocation = null;
             boolean[][] pattern = Robot.towerPatterns[buildTowerType];
-            if (G.me.isWithinDistanceSquared(ruinLocation, 8) && G.rc.senseMapInfo(G.me).getPaint() == PaintType.EMPTY) {
+            if (G.me.isWithinDistanceSquared(ruinLocation, 8)
+                    && G.rc.senseMapInfo(G.me).getPaint() == PaintType.EMPTY) {
                 // paint under self first (passive paint drain)
                 boolean paint = pattern[G.me.x - ruinLocation.x + 2][G.me.y - ruinLocation.y + 2];
                 if (G.rc.canAttack(G.me))
@@ -722,24 +735,24 @@ public class Soldier {
                     }
                 }
                 // for (int dx = -1; dx++ < 4;) {
-                //     for (int dy = -1; dy++ < 4;) {
-                //         if (dx == 2 && dy == 2)
-                //             continue;
-                //         // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                //         // guaranteed within vision radius if can attack there
-                //         loc = ruinLocation.translate(dx - 2, dy - 2);
-                //         if (G.rc.canAttack(loc)) {
-                //             paint = pattern[dx][dy];
-                //             exists = mapInfos[oy + dy][ox + dx].getPaint();
-                //             // can't paint enemy paint
-                //             if (!exists.isEnemy()
-                //                     && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                //                 G.rc.attack(loc, paint);
-                //                 paintLocation = loc;
-                //                 break;
-                //             }
-                //         }
-                //     }
+                // for (int dy = -1; dy++ < 4;) {
+                // if (dx == 2 && dy == 2)
+                // continue;
+                // // location guaranteed to be on the map, unless ruinLocation isn't a ruin
+                // // guaranteed within vision radius if can attack there
+                // loc = ruinLocation.translate(dx - 2, dy - 2);
+                // if (G.rc.canAttack(loc)) {
+                // paint = pattern[dx][dy];
+                // exists = mapInfos[oy + dy][ox + dx].getPaint();
+                // // can't paint enemy paint
+                // if (!exists.isEnemy()
+                // && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                // G.rc.attack(loc, paint);
+                // paintLocation = loc;
+                // break;
+                // }
+                // }
+                // }
                 // }
             }
             if (paintLocation != null)
@@ -1084,7 +1097,9 @@ public class Soldier {
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
         // 24 limit is for betterdisintegrating
-        int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24
+                && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
+                        || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
@@ -1112,7 +1127,8 @@ public class Soldier {
                 boolean canPaintBest = false;
                 for (int i = 9; --i >= 0;) {
                     nxt = G.me.add(G.ALL_DIRECTIONS[i]);
-                    if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY && G.rc.canAttack(nxt)) {
+                    if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY
+                            && G.rc.canAttack(nxt)) {
                         // equalize
                         scores[i] += 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * numTurnsUntilNextMove;
                         if (scores[i] > best) {
@@ -1198,7 +1214,7 @@ public class Soldier {
     public static Micro suicide = new Micro() {
         @Override
         public int[] micro(Direction d, MapLocation dest) throws Exception {
-            //just run toward the enemy lol
+            // just run toward the enemy lol
             int[] scores = Motion.defaultMicro.micro(d, dest);
             scores[G.dirOrd(d)] += 20;
             if (d != Direction.CENTER) {
