@@ -1671,10 +1671,10 @@ public class Motion {
                 best = i;
             }
         }
-        if (scores[best] > 0) {
-            return move(G.ALL_DIRECTIONS[best]);
-        }
-        return false;
+        // if (scores[best] > 0) {
+        return move(G.ALL_DIRECTIONS[best]);
+        // }
+        // return false;
     }
 
     // false if it didn't move

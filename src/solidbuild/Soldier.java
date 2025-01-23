@@ -976,7 +976,7 @@ public class Soldier {
                     + Motion.movementCooldown)
                     / 10);
             boolean canPaintBest = false;
-            for (int i = 8; --i >= 0;) {
+            for (int i = 9; --i >= 0;) {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY && G.rc.canAttack(nxt)) {
                     // equalize
