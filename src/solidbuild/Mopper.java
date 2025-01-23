@@ -15,20 +15,22 @@ public class Mopper {
     public static final int BUILD_TIMEOUT = 10;
 
     public static MapLocation target = null;
-    
-    //how much to weight swings more
+
+    // how much to weight swings more
     public static final double MOP_SWING_MULT = 1; // OPTNET_PARAM
-    //extra weight to stealing paint from enemy in retreat mode
+    // extra weight to stealing paint from enemy in retreat mode
     public static final int MOP_RETREAT_STEAL_WEIGHT = 30; // OPTNET_PARAM
-    //extra weight to mopping paint next to a tower
+    // extra weight to mopping paint next to a tower
     public static final int MOP_TOWER_WEIGHT = 50; // OPTNET_PARAM
 
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[25]; // mopping
     public static int[] swingScores = new int[36]; // swinging
-    public static int[] transferScores = new int[25]; //transfer paint
+    public static int[] transferScores = new int[25]; // transfer paint
     // [south, west, east, north] for each swingScore
-    public static void init()throws Exception{}
+
+    public static void init() throws Exception {
+    }
 
     /**
      * If low on paint, retreat
@@ -63,7 +65,7 @@ public class Mopper {
             case BUILD:
                 buildCheckMode();
                 break;
-            case RETREAT: 
+            case RETREAT:
                 Motion.setRetreatLoc();
                 if (Motion.retreatTower == -1) {
                     mode = EXPLORE;
@@ -237,7 +239,7 @@ public class Mopper {
                 cy, cy, cy, cy, cy, cy, cy, cy, cy
         };
         int[] alltype = new int[] {
-                type,type,type,type,type,type,type,type,type
+                type, type, type, type, type, type, type, type, type
         };
         if (attackScores[21] > allmax[0]) {
             allmax[0] = attackScores[21];
@@ -592,197 +594,197 @@ public class Mopper {
             alltype[7] = SWING;
         }
         if (transferScores[21] > allmax[0]) {
-			allmax[0] = transferScores[21];
-			allx[0] = -2;
-			ally[0] = -2;
-			alltype[0] = TRANSFER;
-		}
-		if (transferScores[13] > allmax[0]) {
-			allmax[0] = transferScores[13];
-			allx[0] = -2;
-			ally[0] = -1;
-			alltype[0] = TRANSFER;
-		}
-		if (transferScores[9] > allmax[0]) {
-			allmax[0] = transferScores[9];
-			allx[0] = -2;
-			ally[0] = 0;
-			alltype[0] = TRANSFER;
-		}
-		if (transferScores[15] > allmax[0]) {
-			allmax[0] = transferScores[15];
-			allx[0] = -1;
-			ally[0] = -2;
-			alltype[0] = TRANSFER;
-		}
-		if (transferScores[10] > allmax[0]) {
-			allmax[0] = transferScores[10];
-			allx[0] = 0;
-			ally[0] = -2;
-			alltype[0] = TRANSFER;
-		}
-		if (transferScores[15] > allmax[1]) {
-			allmax[1] = transferScores[15];
-			allx[1] = -1;
-			ally[1] = -2;
-			alltype[1] = TRANSFER;
-		}
-		if (transferScores[10] > allmax[1]) {
-			allmax[1] = transferScores[10];
-			allx[1] = 0;
-			ally[1] = -2;
-			alltype[1] = TRANSFER;
-		}
-		if (transferScores[17] > allmax[1]) {
-			allmax[1] = transferScores[17];
-			allx[1] = 1;
-			ally[1] = -2;
-			alltype[1] = TRANSFER;
-		}
-		if (transferScores[10] > allmax[2]) {
-			allmax[2] = transferScores[10];
-			allx[2] = 0;
-			ally[2] = -2;
-			alltype[2] = TRANSFER;
-		}
-		if (transferScores[17] > allmax[2]) {
-			allmax[2] = transferScores[17];
-			allx[2] = 1;
-			ally[2] = -2;
-			alltype[2] = TRANSFER;
-		}
-		if (transferScores[23] > allmax[2]) {
-			allmax[2] = transferScores[23];
-			allx[2] = 2;
-			ally[2] = -2;
-			alltype[2] = TRANSFER;
-		}
-		if (transferScores[19] > allmax[2]) {
-			allmax[2] = transferScores[19];
-			allx[2] = 2;
-			ally[2] = -1;
-			alltype[2] = TRANSFER;
-		}
-		if (transferScores[12] > allmax[2]) {
-			allmax[2] = transferScores[12];
-			allx[2] = 2;
-			ally[2] = 0;
-			alltype[2] = TRANSFER;
-		}
-		if (transferScores[19] > allmax[3]) {
-			allmax[3] = transferScores[19];
-			allx[3] = 2;
-			ally[3] = -1;
-			alltype[3] = TRANSFER;
-		}
-		if (transferScores[12] > allmax[3]) {
-			allmax[3] = transferScores[12];
-			allx[3] = 2;
-			ally[3] = 0;
-			alltype[3] = TRANSFER;
-		}
-		if (transferScores[20] > allmax[3]) {
-			allmax[3] = transferScores[20];
-			allx[3] = 2;
-			ally[3] = 1;
-			alltype[3] = TRANSFER;
-		}
-		if (transferScores[11] > allmax[4]) {
-			allmax[4] = transferScores[11];
-			allx[4] = 0;
-			ally[4] = 2;
-			alltype[4] = TRANSFER;
-		}
-		if (transferScores[18] > allmax[4]) {
-			allmax[4] = transferScores[18];
-			allx[4] = 1;
-			ally[4] = 2;
-			alltype[4] = TRANSFER;
-		}
-		if (transferScores[12] > allmax[4]) {
-			allmax[4] = transferScores[12];
-			allx[4] = 2;
-			ally[4] = 0;
-			alltype[4] = TRANSFER;
-		}
-		if (transferScores[20] > allmax[4]) {
-			allmax[4] = transferScores[20];
-			allx[4] = 2;
-			ally[4] = 1;
-			alltype[4] = TRANSFER;
-		}
-		if (transferScores[24] > allmax[4]) {
-			allmax[4] = transferScores[24];
-			allx[4] = 2;
-			ally[4] = 2;
-			alltype[4] = TRANSFER;
-		}
-		if (transferScores[16] > allmax[5]) {
-			allmax[5] = transferScores[16];
-			allx[5] = -1;
-			ally[5] = 2;
-			alltype[5] = TRANSFER;
-		}
-		if (transferScores[11] > allmax[5]) {
-			allmax[5] = transferScores[11];
-			allx[5] = 0;
-			ally[5] = 2;
-			alltype[5] = TRANSFER;
-		}
-		if (transferScores[18] > allmax[5]) {
-			allmax[5] = transferScores[18];
-			allx[5] = 1;
-			ally[5] = 2;
-			alltype[5] = TRANSFER;
-		}
-		if (transferScores[9] > allmax[6]) {
-			allmax[6] = transferScores[9];
-			allx[6] = -2;
-			ally[6] = 0;
-			alltype[6] = TRANSFER;
-		}
-		if (transferScores[14] > allmax[6]) {
-			allmax[6] = transferScores[14];
-			allx[6] = -2;
-			ally[6] = 1;
-			alltype[6] = TRANSFER;
-		}
-		if (transferScores[22] > allmax[6]) {
-			allmax[6] = transferScores[22];
-			allx[6] = -2;
-			ally[6] = 2;
-			alltype[6] = TRANSFER;
-		}
-		if (transferScores[16] > allmax[6]) {
-			allmax[6] = transferScores[16];
-			allx[6] = -1;
-			ally[6] = 2;
-			alltype[6] = TRANSFER;
-		}
-		if (transferScores[11] > allmax[6]) {
-			allmax[6] = transferScores[11];
-			allx[6] = 0;
-			ally[6] = 2;
-			alltype[6] = TRANSFER;
-		}
-		if (transferScores[13] > allmax[7]) {
-			allmax[7] = transferScores[13];
-			allx[7] = -2;
-			ally[7] = -1;
-			alltype[7] = TRANSFER;
-		}
-		if (transferScores[9] > allmax[7]) {
-			allmax[7] = transferScores[9];
-			allx[7] = -2;
-			ally[7] = 0;
-			alltype[7] = TRANSFER;
-		}
-		if (transferScores[14] > allmax[7]) {
-			allmax[7] = transferScores[14];
-			allx[7] = -2;
-			ally[7] = 1;
-			alltype[7] = TRANSFER;
-		}
+            allmax[0] = transferScores[21];
+            allx[0] = -2;
+            ally[0] = -2;
+            alltype[0] = TRANSFER;
+        }
+        if (transferScores[13] > allmax[0]) {
+            allmax[0] = transferScores[13];
+            allx[0] = -2;
+            ally[0] = -1;
+            alltype[0] = TRANSFER;
+        }
+        if (transferScores[9] > allmax[0]) {
+            allmax[0] = transferScores[9];
+            allx[0] = -2;
+            ally[0] = 0;
+            alltype[0] = TRANSFER;
+        }
+        if (transferScores[15] > allmax[0]) {
+            allmax[0] = transferScores[15];
+            allx[0] = -1;
+            ally[0] = -2;
+            alltype[0] = TRANSFER;
+        }
+        if (transferScores[10] > allmax[0]) {
+            allmax[0] = transferScores[10];
+            allx[0] = 0;
+            ally[0] = -2;
+            alltype[0] = TRANSFER;
+        }
+        if (transferScores[15] > allmax[1]) {
+            allmax[1] = transferScores[15];
+            allx[1] = -1;
+            ally[1] = -2;
+            alltype[1] = TRANSFER;
+        }
+        if (transferScores[10] > allmax[1]) {
+            allmax[1] = transferScores[10];
+            allx[1] = 0;
+            ally[1] = -2;
+            alltype[1] = TRANSFER;
+        }
+        if (transferScores[17] > allmax[1]) {
+            allmax[1] = transferScores[17];
+            allx[1] = 1;
+            ally[1] = -2;
+            alltype[1] = TRANSFER;
+        }
+        if (transferScores[10] > allmax[2]) {
+            allmax[2] = transferScores[10];
+            allx[2] = 0;
+            ally[2] = -2;
+            alltype[2] = TRANSFER;
+        }
+        if (transferScores[17] > allmax[2]) {
+            allmax[2] = transferScores[17];
+            allx[2] = 1;
+            ally[2] = -2;
+            alltype[2] = TRANSFER;
+        }
+        if (transferScores[23] > allmax[2]) {
+            allmax[2] = transferScores[23];
+            allx[2] = 2;
+            ally[2] = -2;
+            alltype[2] = TRANSFER;
+        }
+        if (transferScores[19] > allmax[2]) {
+            allmax[2] = transferScores[19];
+            allx[2] = 2;
+            ally[2] = -1;
+            alltype[2] = TRANSFER;
+        }
+        if (transferScores[12] > allmax[2]) {
+            allmax[2] = transferScores[12];
+            allx[2] = 2;
+            ally[2] = 0;
+            alltype[2] = TRANSFER;
+        }
+        if (transferScores[19] > allmax[3]) {
+            allmax[3] = transferScores[19];
+            allx[3] = 2;
+            ally[3] = -1;
+            alltype[3] = TRANSFER;
+        }
+        if (transferScores[12] > allmax[3]) {
+            allmax[3] = transferScores[12];
+            allx[3] = 2;
+            ally[3] = 0;
+            alltype[3] = TRANSFER;
+        }
+        if (transferScores[20] > allmax[3]) {
+            allmax[3] = transferScores[20];
+            allx[3] = 2;
+            ally[3] = 1;
+            alltype[3] = TRANSFER;
+        }
+        if (transferScores[11] > allmax[4]) {
+            allmax[4] = transferScores[11];
+            allx[4] = 0;
+            ally[4] = 2;
+            alltype[4] = TRANSFER;
+        }
+        if (transferScores[18] > allmax[4]) {
+            allmax[4] = transferScores[18];
+            allx[4] = 1;
+            ally[4] = 2;
+            alltype[4] = TRANSFER;
+        }
+        if (transferScores[12] > allmax[4]) {
+            allmax[4] = transferScores[12];
+            allx[4] = 2;
+            ally[4] = 0;
+            alltype[4] = TRANSFER;
+        }
+        if (transferScores[20] > allmax[4]) {
+            allmax[4] = transferScores[20];
+            allx[4] = 2;
+            ally[4] = 1;
+            alltype[4] = TRANSFER;
+        }
+        if (transferScores[24] > allmax[4]) {
+            allmax[4] = transferScores[24];
+            allx[4] = 2;
+            ally[4] = 2;
+            alltype[4] = TRANSFER;
+        }
+        if (transferScores[16] > allmax[5]) {
+            allmax[5] = transferScores[16];
+            allx[5] = -1;
+            ally[5] = 2;
+            alltype[5] = TRANSFER;
+        }
+        if (transferScores[11] > allmax[5]) {
+            allmax[5] = transferScores[11];
+            allx[5] = 0;
+            ally[5] = 2;
+            alltype[5] = TRANSFER;
+        }
+        if (transferScores[18] > allmax[5]) {
+            allmax[5] = transferScores[18];
+            allx[5] = 1;
+            ally[5] = 2;
+            alltype[5] = TRANSFER;
+        }
+        if (transferScores[9] > allmax[6]) {
+            allmax[6] = transferScores[9];
+            allx[6] = -2;
+            ally[6] = 0;
+            alltype[6] = TRANSFER;
+        }
+        if (transferScores[14] > allmax[6]) {
+            allmax[6] = transferScores[14];
+            allx[6] = -2;
+            ally[6] = 1;
+            alltype[6] = TRANSFER;
+        }
+        if (transferScores[22] > allmax[6]) {
+            allmax[6] = transferScores[22];
+            allx[6] = -2;
+            ally[6] = 2;
+            alltype[6] = TRANSFER;
+        }
+        if (transferScores[16] > allmax[6]) {
+            allmax[6] = transferScores[16];
+            allx[6] = -1;
+            ally[6] = 2;
+            alltype[6] = TRANSFER;
+        }
+        if (transferScores[11] > allmax[6]) {
+            allmax[6] = transferScores[11];
+            allx[6] = 0;
+            ally[6] = 2;
+            alltype[6] = TRANSFER;
+        }
+        if (transferScores[13] > allmax[7]) {
+            allmax[7] = transferScores[13];
+            allx[7] = -2;
+            ally[7] = -1;
+            alltype[7] = TRANSFER;
+        }
+        if (transferScores[9] > allmax[7]) {
+            allmax[7] = transferScores[9];
+            allx[7] = -2;
+            ally[7] = 0;
+            alltype[7] = TRANSFER;
+        }
+        if (transferScores[14] > allmax[7]) {
+            allmax[7] = transferScores[14];
+            allx[7] = -2;
+            ally[7] = 1;
+            alltype[7] = TRANSFER;
+        }
         // copyspaghetti from Motion.microMove but whatever
         if (G.rc.isActionReady()) {
             int best = 8;
@@ -826,12 +828,16 @@ public class Mopper {
                 if (allmax[best] > 0) {
                     MapLocation transferLoc = G.me.translate(allx[best], ally[best]);
                     RobotInfo r = G.rc.senseRobotAtLocation(transferLoc);
-                    if (G.rc.canTransferPaint(transferLoc, Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount))) {
-                        G.rc.transferPaint(transferLoc, Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount));
+                    if (G.rc.canTransferPaint(transferLoc,
+                            Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount))) {
+                        G.rc.transferPaint(transferLoc,
+                                Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount));
                     }
                     Motion.move(G.ALL_DIRECTIONS[best]);
-                    if (G.rc.canTransferPaint(transferLoc, Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount))) {
-                        G.rc.transferPaint(transferLoc, Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount));
+                    if (G.rc.canTransferPaint(transferLoc,
+                            Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount))) {
+                        G.rc.transferPaint(transferLoc,
+                                Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount));
                     }
                 }
             }
@@ -900,7 +906,8 @@ public class Mopper {
         int lowestSoldierID = 1000000;
         RobotInfo lowestSoldier = null;
         for (int i = G.allyRobots.length; --i >= 0;) {
-            if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].team == G.team && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
+            if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].team == G.team
+                    && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
                 lowestSoldier = G.allyRobots[i];
             }
         }
@@ -937,7 +944,7 @@ public class Mopper {
             if (G.rc.onTheMap(microDir))
                 G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
         } else {
-            //ignore lowestSoldier
+            // ignore lowestSoldier
             Direction dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
             moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
         }
@@ -949,237 +956,261 @@ public class Mopper {
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[1] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[1] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[1] += 101;
                 }
             }
         }
-		loc = G.me.translate(0, -1);
+        loc = G.me.translate(0, -1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[2] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[2] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[2] += 101;
                 }
             }
         }
-		loc = G.me.translate(0, 1);
+        loc = G.me.translate(0, 1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[3] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[3] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[3] += 101;
                 }
             }
         }
-		loc = G.me.translate(1, 0);
+        loc = G.me.translate(1, 0);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[4] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[4] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[4] += 101;
                 }
             }
         }
-		loc = G.me.translate(-1, -1);
+        loc = G.me.translate(-1, -1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[5] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[5] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[5] += 101;
                 }
             }
         }
-		loc = G.me.translate(-1, 1);
+        loc = G.me.translate(-1, 1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[6] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[6] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[6] += 101;
                 }
             }
         }
-		loc = G.me.translate(1, -1);
+        loc = G.me.translate(1, -1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[7] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[7] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[7] += 101;
                 }
             }
         }
-		loc = G.me.translate(1, 1);
+        loc = G.me.translate(1, 1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[8] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[8] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[8] += 101;
                 }
             }
         }
-		loc = G.me.translate(-2, 0);
+        loc = G.me.translate(-2, 0);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[9] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[9] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[9] += 101;
                 }
             }
         }
-		loc = G.me.translate(0, -2);
+        loc = G.me.translate(0, -2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[10] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[10] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[10] += 101;
                 }
             }
         }
-		loc = G.me.translate(0, 2);
+        loc = G.me.translate(0, 2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[11] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[11] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[11] += 101;
                 }
             }
         }
-		loc = G.me.translate(2, 0);
+        loc = G.me.translate(2, 0);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[12] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[12] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[12] += 101;
                 }
             }
         }
-		loc = G.me.translate(-2, -1);
+        loc = G.me.translate(-2, -1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[13] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[13] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[13] += 101;
                 }
             }
         }
-		loc = G.me.translate(-2, 1);
+        loc = G.me.translate(-2, 1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[14] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[14] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[14] += 101;
                 }
             }
         }
-		loc = G.me.translate(-1, -2);
+        loc = G.me.translate(-1, -2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[15] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[15] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[15] += 101;
                 }
             }
         }
-		loc = G.me.translate(-1, 2);
+        loc = G.me.translate(-1, 2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[16] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[16] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[16] += 101;
                 }
             }
         }
-		loc = G.me.translate(1, -2);
+        loc = G.me.translate(1, -2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[17] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[17] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[17] += 101;
                 }
             }
         }
-		loc = G.me.translate(1, 2);
+        loc = G.me.translate(1, 2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[18] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[18] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[18] += 101;
                 }
             }
         }
-		loc = G.me.translate(2, -1);
+        loc = G.me.translate(2, -1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[19] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[19] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[19] += 101;
                 }
             }
         }
-		loc = G.me.translate(2, 1);
+        loc = G.me.translate(2, 1);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[20] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[20] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[20] += 101;
                 }
             }
         }
-		loc = G.me.translate(-2, -2);
+        loc = G.me.translate(-2, -2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[21] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[21] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[21] += 101;
                 }
             }
         }
-		loc = G.me.translate(-2, 2);
+        loc = G.me.translate(-2, 2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[22] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[22] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[22] += 101;
                 }
             }
         }
-		loc = G.me.translate(2, -2);
+        loc = G.me.translate(2, -2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[23] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[23] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[23] += 101;
                 }
             }
         }
-		loc = G.me.translate(2, 2);
+        loc = G.me.translate(2, 2);
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
             if (r.team == G.team && G.rc.getPaint() > 60 && r.type != UnitType.MOPPER && r.type.isRobotType()) {
-                // transferScores[24] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
+                // transferScores[24] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity -
+                // r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
                     transferScores[24] += 101;
                 }
@@ -1191,7 +1222,7 @@ public class Mopper {
         exploreTransferScores();
     }
     // public static void retreatTransferScores() throws Exception {
-    //     exploreTransferScores();
+    // exploreTransferScores();
     // }
 
     public static void exploreAttackScores() throws Exception {
@@ -1204,18 +1235,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[0] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[0] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[0] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 0);
+        loc = G.me.translate(-1, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1224,18 +1257,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[1] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[1] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[1] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, -1);
+        loc = G.me.translate(0, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1244,18 +1279,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[2] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[2] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[2] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, 1);
+        loc = G.me.translate(0, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1264,18 +1301,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[3] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[3] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[3] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 0);
+        loc = G.me.translate(1, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1284,18 +1323,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[4] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[4] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[4] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, -1);
+        loc = G.me.translate(-1, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1304,18 +1345,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[5] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[5] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[5] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 1);
+        loc = G.me.translate(-1, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1324,18 +1367,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[6] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[6] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[6] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, -1);
+        loc = G.me.translate(1, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1344,18 +1389,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[7] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[7] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[7] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 1);
+        loc = G.me.translate(1, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1364,18 +1411,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[8] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[8] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[8] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 0);
+        loc = G.me.translate(-2, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1384,18 +1433,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[9] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[9] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[9] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, -2);
+        loc = G.me.translate(0, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1404,18 +1455,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[10] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[10] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[10] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, 2);
+        loc = G.me.translate(0, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1424,18 +1477,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[11] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[11] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[11] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 0);
+        loc = G.me.translate(2, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1444,18 +1499,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[12] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[12] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[12] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, -1);
+        loc = G.me.translate(-2, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1464,18 +1521,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[13] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[13] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[13] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 1);
+        loc = G.me.translate(-2, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1484,18 +1543,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[14] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[14] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[14] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, -2);
+        loc = G.me.translate(-1, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1504,18 +1565,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[15] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[15] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[15] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 2);
+        loc = G.me.translate(-1, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1524,18 +1587,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[16] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[16] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[16] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, -2);
+        loc = G.me.translate(1, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1544,18 +1609,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[17] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[17] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[17] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 2);
+        loc = G.me.translate(1, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1564,18 +1631,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[18] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[18] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[18] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, -1);
+        loc = G.me.translate(2, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1584,18 +1653,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[19] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[19] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[19] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 1);
+        loc = G.me.translate(2, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1604,18 +1675,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[20] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[20] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[20] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, -2);
+        loc = G.me.translate(-2, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1624,18 +1697,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[21] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[21] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[21] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 2);
+        loc = G.me.translate(-2, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1644,18 +1719,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[22] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[22] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[22] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, -2);
+        loc = G.me.translate(2, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1664,18 +1741,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[23] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[23] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[23] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 2);
+        loc = G.me.translate(2, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -1684,12 +1763,14 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[24] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[24] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[24] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
@@ -1700,1229 +1781,1274 @@ public class Mopper {
     public static void exploreSwingScores() throws Exception {
         MapLocation loc;
         loc = G.me.translate(-1, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[32] += toAdd2;
-			swingScores[28] += toAdd2;
-			swingScores[9] += toAdd2;
-			swingScores[5] += toAdd2;
-			swingScores[4] += toAdd2;
-			swingScores[0] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[32] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[0] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[32] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[0] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-1, -3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[4] += toAdd2;
-			swingScores[0] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[4] += toAdd;
-					swingScores[0] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[4] += toAdd;
-					swingScores[0] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[28] += toAdd2;
-			swingScores[5] += toAdd2;
-			swingScores[1] += toAdd2;
-			swingScores[0] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[28] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[1] += toAdd;
-					swingScores[0] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[28] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[1] += toAdd;
-					swingScores[0] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, -3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[0] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[0] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[0] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[32] += toAdd2;
-			swingScores[28] += toAdd2;
-			swingScores[12] += toAdd2;
-			swingScores[9] += toAdd2;
-			swingScores[8] += toAdd2;
-			swingScores[4] += toAdd2;
-			swingScores[2] += toAdd2;
-			swingScores[0] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[32] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[8] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[2] += toAdd;
-					swingScores[0] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[32] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[8] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[2] += toAdd;
-					swingScores[0] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, -3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[8] += toAdd2;
-			swingScores[4] += toAdd2;
-			swingScores[0] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[8] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[0] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[8] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[0] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[33] += toAdd2;
-			swingScores[29] += toAdd2;
-			swingScores[28] += toAdd2;
-			swingScores[24] += toAdd2;
-			swingScores[5] += toAdd2;
-			swingScores[1] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[33] += toAdd;
-					swingScores[29] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[1] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[33] += toAdd;
-					swingScores[29] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[1] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-3, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[29] += toAdd2;
-			swingScores[1] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[29] += toAdd;
-					swingScores[1] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[29] += toAdd;
-					swingScores[1] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-3, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[1] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[1] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[1] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[33] += toAdd2;
-			swingScores[29] += toAdd2;
-			swingScores[25] += toAdd2;
-			swingScores[24] += toAdd2;
-			swingScores[21] += toAdd2;
-			swingScores[5] += toAdd2;
-			swingScores[3] += toAdd2;
-			swingScores[1] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[33] += toAdd;
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[3] += toAdd;
-					swingScores[1] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[33] += toAdd;
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[3] += toAdd;
-					swingScores[1] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[29] += toAdd2;
-			swingScores[25] += toAdd2;
-			swingScores[1] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[1] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[1] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[32] += toAdd2;
-			swingScores[30] += toAdd2;
-			swingScores[28] += toAdd2;
-			swingScores[24] += toAdd2;
-			swingScores[20] += toAdd2;
-			swingScores[16] += toAdd2;
-			swingScores[13] += toAdd2;
-			swingScores[12] += toAdd2;
-			swingScores[9] += toAdd2;
-			swingScores[2] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[32] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[2] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[32] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[2] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[34] += toAdd2;
-			swingScores[32] += toAdd2;
-			swingScores[30] += toAdd2;
-			swingScores[20] += toAdd2;
-			swingScores[16] += toAdd2;
-			swingScores[12] += toAdd2;
-			swingScores[6] += toAdd2;
-			swingScores[2] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[34] += toAdd;
-					swingScores[32] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[6] += toAdd;
-					swingScores[2] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[34] += toAdd;
-					swingScores[32] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[6] += toAdd;
-					swingScores[2] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[30] += toAdd2;
-			swingScores[26] += toAdd2;
-			swingScores[24] += toAdd2;
-			swingScores[20] += toAdd2;
-			swingScores[17] += toAdd2;
-			swingScores[16] += toAdd2;
-			swingScores[13] += toAdd2;
-			swingScores[11] += toAdd2;
-			swingScores[9] += toAdd2;
-			swingScores[7] += toAdd2;
-			swingScores[3] += toAdd2;
-			swingScores[2] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[3] += toAdd;
-					swingScores[2] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[3] += toAdd;
-					swingScores[2] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[34] += toAdd2;
-			swingScores[30] += toAdd2;
-			swingScores[26] += toAdd2;
-			swingScores[22] += toAdd2;
-			swingScores[20] += toAdd2;
-			swingScores[16] += toAdd2;
-			swingScores[11] += toAdd2;
-			swingScores[7] += toAdd2;
-			swingScores[6] += toAdd2;
-			swingScores[2] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[34] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[6] += toAdd;
-					swingScores[2] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[34] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[6] += toAdd;
-					swingScores[2] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[32] += toAdd2;
-			swingScores[12] += toAdd2;
-			swingScores[8] += toAdd2;
-			swingScores[6] += toAdd2;
-			swingScores[4] += toAdd2;
-			swingScores[2] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[32] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[8] += toAdd;
-					swingScores[6] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[2] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[32] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[8] += toAdd;
-					swingScores[6] += toAdd;
-					swingScores[4] += toAdd;
-					swingScores[2] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-1, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[33] += toAdd2;
-			swingScores[24] += toAdd2;
-			swingScores[21] += toAdd2;
-			swingScores[20] += toAdd2;
-			swingScores[17] += toAdd2;
-			swingScores[13] += toAdd2;
-			swingScores[9] += toAdd2;
-			swingScores[7] += toAdd2;
-			swingScores[5] += toAdd2;
-			swingScores[3] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[33] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[3] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[33] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[5] += toAdd;
-					swingScores[3] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-1, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[35] += toAdd2;
-			swingScores[33] += toAdd2;
-			swingScores[31] += toAdd2;
-			swingScores[21] += toAdd2;
-			swingScores[17] += toAdd2;
-			swingScores[13] += toAdd2;
-			swingScores[7] += toAdd2;
-			swingScores[3] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[35] += toAdd;
-					swingScores[33] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[3] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[35] += toAdd;
-					swingScores[33] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[3] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[35] += toAdd2;
-			swingScores[31] += toAdd2;
-			swingScores[30] += toAdd2;
-			swingScores[26] += toAdd2;
-			swingScores[17] += toAdd2;
-			swingScores[15] += toAdd2;
-			swingScores[13] += toAdd2;
-			swingScores[11] += toAdd2;
-			swingScores[7] += toAdd2;
-			swingScores[3] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[35] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[15] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[3] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[35] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[15] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[7] += toAdd;
-					swingScores[3] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[33] += toAdd2;
-			swingScores[31] += toAdd2;
-			swingScores[29] += toAdd2;
-			swingScores[25] += toAdd2;
-			swingScores[21] += toAdd2;
-			swingScores[3] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[33] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[3] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[33] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[3] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, -3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[8] += toAdd2;
-			swingScores[4] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[8] += toAdd;
-					swingScores[4] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[8] += toAdd;
-					swingScores[4] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-1, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[33] += toAdd2;
-			swingScores[32] += toAdd2;
-			swingScores[28] += toAdd2;
-			swingScores[24] += toAdd2;
-			swingScores[20] += toAdd2;
-			swingScores[13] += toAdd2;
-			swingScores[9] += toAdd2;
-			swingScores[5] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[33] += toAdd;
-					swingScores[32] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[5] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[33] += toAdd;
-					swingScores[32] += toAdd;
-					swingScores[28] += toAdd;
-					swingScores[24] += toAdd;
-					swingScores[20] += toAdd;
-					swingScores[13] += toAdd;
-					swingScores[9] += toAdd;
-					swingScores[5] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[34] += toAdd2;
-			swingScores[16] += toAdd2;
-			swingScores[14] += toAdd2;
-			swingScores[12] += toAdd2;
-			swingScores[10] += toAdd2;
-			swingScores[6] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[34] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[10] += toAdd;
-					swingScores[6] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[34] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[12] += toAdd;
-					swingScores[10] += toAdd;
-					swingScores[6] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[34] += toAdd2;
-			swingScores[22] += toAdd2;
-			swingScores[18] += toAdd2;
-			swingScores[16] += toAdd2;
-			swingScores[14] += toAdd2;
-			swingScores[11] += toAdd2;
-			swingScores[10] += toAdd2;
-			swingScores[6] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[34] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[18] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[10] += toAdd;
-					swingScores[6] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[34] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[18] += toAdd;
-					swingScores[16] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[10] += toAdd;
-					swingScores[6] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[12] += toAdd2;
-			swingScores[10] += toAdd2;
-			swingScores[8] += toAdd2;
-			swingScores[6] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[12] += toAdd;
-					swingScores[10] += toAdd;
-					swingScores[8] += toAdd;
-					swingScores[6] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[12] += toAdd;
-					swingScores[10] += toAdd;
-					swingScores[8] += toAdd;
-					swingScores[6] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[35] += toAdd2;
-			swingScores[34] += toAdd2;
-			swingScores[30] += toAdd2;
-			swingScores[26] += toAdd2;
-			swingScores[22] += toAdd2;
-			swingScores[15] += toAdd2;
-			swingScores[11] += toAdd2;
-			swingScores[7] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[35] += toAdd;
-					swingScores[34] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[15] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[7] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[35] += toAdd;
-					swingScores[34] += toAdd;
-					swingScores[30] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[15] += toAdd;
-					swingScores[11] += toAdd;
-					swingScores[7] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, -3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[8] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[8] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[8] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(3, -1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[14] += toAdd2;
-			swingScores[10] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[14] += toAdd;
-					swingScores[10] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[14] += toAdd;
-					swingScores[10] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(3, 0);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[18] += toAdd2;
-			swingScores[14] += toAdd2;
-			swingScores[10] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[18] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[10] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[18] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[10] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(3, -2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[10] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[10] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[10] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[34] += toAdd2;
-			swingScores[22] += toAdd2;
-			swingScores[18] += toAdd2;
-			swingScores[15] += toAdd2;
-			swingScores[14] += toAdd2;
-			swingScores[11] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[34] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[18] += toAdd;
-					swingScores[15] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[11] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[34] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[18] += toAdd;
-					swingScores[15] += toAdd;
-					swingScores[14] += toAdd;
-					swingScores[11] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(3, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[18] += toAdd2;
-			swingScores[14] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[18] += toAdd;
-					swingScores[14] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[18] += toAdd;
-					swingScores[14] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[35] += toAdd2;
-			swingScores[26] += toAdd2;
-			swingScores[23] += toAdd2;
-			swingScores[22] += toAdd2;
-			swingScores[19] += toAdd2;
-			swingScores[15] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[35] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[19] += toAdd;
-					swingScores[15] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[35] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[22] += toAdd;
-					swingScores[19] += toAdd;
-					swingScores[15] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[22] += toAdd2;
-			swingScores[19] += toAdd2;
-			swingScores[18] += toAdd2;
-			swingScores[15] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[22] += toAdd;
-					swingScores[19] += toAdd;
-					swingScores[18] += toAdd;
-					swingScores[15] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[22] += toAdd;
-					swingScores[19] += toAdd;
-					swingScores[18] += toAdd;
-					swingScores[15] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[35] += toAdd2;
-			swingScores[31] += toAdd2;
-			swingScores[27] += toAdd2;
-			swingScores[26] += toAdd2;
-			swingScores[23] += toAdd2;
-			swingScores[19] += toAdd2;
-			swingScores[17] += toAdd2;
-			swingScores[15] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[35] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[27] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[19] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[15] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[35] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[27] += toAdd;
-					swingScores[26] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[19] += toAdd;
-					swingScores[17] += toAdd;
-					swingScores[15] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-1, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[35] += toAdd2;
-			swingScores[31] += toAdd2;
-			swingScores[27] += toAdd2;
-			swingScores[23] += toAdd2;
-			swingScores[21] += toAdd2;
-			swingScores[17] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[35] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[27] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[17] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[35] += toAdd;
-					swingScores[31] += toAdd;
-					swingScores[27] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[21] += toAdd;
-					swingScores[17] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(3, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[18] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[18] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[18] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(1, 3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[23] += toAdd2;
-			swingScores[19] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[23] += toAdd;
-					swingScores[19] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[23] += toAdd;
-					swingScores[19] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(2, 3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[19] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[19] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[19] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(0, 3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[27] += toAdd2;
-			swingScores[23] += toAdd2;
-			swingScores[19] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[27] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[19] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[27] += toAdd;
-					swingScores[23] += toAdd;
-					swingScores[19] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[31] += toAdd2;
-			swingScores[27] += toAdd2;
-			swingScores[25] += toAdd2;
-			swingScores[21] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[31] += toAdd;
-					swingScores[27] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[21] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[31] += toAdd;
-					swingScores[27] += toAdd;
-					swingScores[25] += toAdd;
-					swingScores[21] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-1, 3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[27] += toAdd2;
-			swingScores[23] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[27] += toAdd;
-					swingScores[23] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[27] += toAdd;
-					swingScores[23] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 1);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[29] += toAdd2;
-			swingScores[25] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[29] += toAdd;
-					swingScores[25] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-3, 2);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[25] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[25] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[25] += toAdd;
-				}
-			}
-		}
-		loc = G.me.translate(-2, 3);
-		if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
-			RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-			int toAdd2 = Math.min(5, bot.paintAmount) * 5;
-			swingScores[27] += toAdd2;
-			if (bot.paintAmount > 0) {
-				if (bot.paintAmount <= 5){
-					int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
-					swingScores[27] += toAdd;
-				} else {
-					int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
-					swingScores[27] += toAdd;
-				}
-			}
-		}
-		swingScores[0] *= MOP_SWING_MULT;
-		swingScores[1] *= MOP_SWING_MULT;
-		swingScores[2] *= MOP_SWING_MULT;
-		swingScores[3] *= MOP_SWING_MULT;
-		swingScores[4] *= MOP_SWING_MULT;
-		swingScores[5] *= MOP_SWING_MULT;
-		swingScores[6] *= MOP_SWING_MULT;
-		swingScores[7] *= MOP_SWING_MULT;
-		swingScores[8] *= MOP_SWING_MULT;
-		swingScores[9] *= MOP_SWING_MULT;
-		swingScores[10] *= MOP_SWING_MULT;
-		swingScores[11] *= MOP_SWING_MULT;
-		swingScores[12] *= MOP_SWING_MULT;
-		swingScores[13] *= MOP_SWING_MULT;
-		swingScores[14] *= MOP_SWING_MULT;
-		swingScores[15] *= MOP_SWING_MULT;
-		swingScores[16] *= MOP_SWING_MULT;
-		swingScores[17] *= MOP_SWING_MULT;
-		swingScores[18] *= MOP_SWING_MULT;
-		swingScores[19] *= MOP_SWING_MULT;
-		swingScores[20] *= MOP_SWING_MULT;
-		swingScores[21] *= MOP_SWING_MULT;
-		swingScores[22] *= MOP_SWING_MULT;
-		swingScores[23] *= MOP_SWING_MULT;
-		swingScores[24] *= MOP_SWING_MULT;
-		swingScores[25] *= MOP_SWING_MULT;
-		swingScores[26] *= MOP_SWING_MULT;
-		swingScores[27] *= MOP_SWING_MULT;
-		swingScores[28] *= MOP_SWING_MULT;
-		swingScores[29] *= MOP_SWING_MULT;
-		swingScores[30] *= MOP_SWING_MULT;
-		swingScores[31] *= MOP_SWING_MULT;
-		swingScores[32] *= MOP_SWING_MULT;
-		swingScores[33] *= MOP_SWING_MULT;
-		swingScores[34] *= MOP_SWING_MULT;
-		swingScores[35] *= MOP_SWING_MULT;
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[32] += toAdd2;
+            swingScores[28] += toAdd2;
+            swingScores[9] += toAdd2;
+            swingScores[5] += toAdd2;
+            swingScores[4] += toAdd2;
+            swingScores[0] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[32] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[0] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[32] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[0] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-1, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[4] += toAdd2;
+            swingScores[0] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[4] += toAdd;
+                    swingScores[0] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[4] += toAdd;
+                    swingScores[0] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[28] += toAdd2;
+            swingScores[5] += toAdd2;
+            swingScores[1] += toAdd2;
+            swingScores[0] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[28] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[1] += toAdd;
+                    swingScores[0] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[28] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[1] += toAdd;
+                    swingScores[0] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[0] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[0] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[0] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[32] += toAdd2;
+            swingScores[28] += toAdd2;
+            swingScores[12] += toAdd2;
+            swingScores[9] += toAdd2;
+            swingScores[8] += toAdd2;
+            swingScores[4] += toAdd2;
+            swingScores[2] += toAdd2;
+            swingScores[0] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[32] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[8] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[2] += toAdd;
+                    swingScores[0] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[32] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[8] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[2] += toAdd;
+                    swingScores[0] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[8] += toAdd2;
+            swingScores[4] += toAdd2;
+            swingScores[0] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[8] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[0] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[8] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[0] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[33] += toAdd2;
+            swingScores[29] += toAdd2;
+            swingScores[28] += toAdd2;
+            swingScores[24] += toAdd2;
+            swingScores[5] += toAdd2;
+            swingScores[1] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[33] += toAdd;
+                    swingScores[29] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[1] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[33] += toAdd;
+                    swingScores[29] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[1] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-3, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[29] += toAdd2;
+            swingScores[1] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[29] += toAdd;
+                    swingScores[1] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[29] += toAdd;
+                    swingScores[1] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-3, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[1] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[1] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[1] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[33] += toAdd2;
+            swingScores[29] += toAdd2;
+            swingScores[25] += toAdd2;
+            swingScores[24] += toAdd2;
+            swingScores[21] += toAdd2;
+            swingScores[5] += toAdd2;
+            swingScores[3] += toAdd2;
+            swingScores[1] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[33] += toAdd;
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[3] += toAdd;
+                    swingScores[1] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[33] += toAdd;
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[3] += toAdd;
+                    swingScores[1] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-3, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[29] += toAdd2;
+            swingScores[25] += toAdd2;
+            swingScores[1] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[1] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[1] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[32] += toAdd2;
+            swingScores[30] += toAdd2;
+            swingScores[28] += toAdd2;
+            swingScores[24] += toAdd2;
+            swingScores[20] += toAdd2;
+            swingScores[16] += toAdd2;
+            swingScores[13] += toAdd2;
+            swingScores[12] += toAdd2;
+            swingScores[9] += toAdd2;
+            swingScores[2] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[32] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[2] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[32] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[2] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[34] += toAdd2;
+            swingScores[32] += toAdd2;
+            swingScores[30] += toAdd2;
+            swingScores[20] += toAdd2;
+            swingScores[16] += toAdd2;
+            swingScores[12] += toAdd2;
+            swingScores[6] += toAdd2;
+            swingScores[2] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[34] += toAdd;
+                    swingScores[32] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[6] += toAdd;
+                    swingScores[2] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[34] += toAdd;
+                    swingScores[32] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[6] += toAdd;
+                    swingScores[2] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[30] += toAdd2;
+            swingScores[26] += toAdd2;
+            swingScores[24] += toAdd2;
+            swingScores[20] += toAdd2;
+            swingScores[17] += toAdd2;
+            swingScores[16] += toAdd2;
+            swingScores[13] += toAdd2;
+            swingScores[11] += toAdd2;
+            swingScores[9] += toAdd2;
+            swingScores[7] += toAdd2;
+            swingScores[3] += toAdd2;
+            swingScores[2] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[3] += toAdd;
+                    swingScores[2] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[3] += toAdd;
+                    swingScores[2] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[34] += toAdd2;
+            swingScores[30] += toAdd2;
+            swingScores[26] += toAdd2;
+            swingScores[22] += toAdd2;
+            swingScores[20] += toAdd2;
+            swingScores[16] += toAdd2;
+            swingScores[11] += toAdd2;
+            swingScores[7] += toAdd2;
+            swingScores[6] += toAdd2;
+            swingScores[2] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[34] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[6] += toAdd;
+                    swingScores[2] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[34] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[6] += toAdd;
+                    swingScores[2] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[32] += toAdd2;
+            swingScores[12] += toAdd2;
+            swingScores[8] += toAdd2;
+            swingScores[6] += toAdd2;
+            swingScores[4] += toAdd2;
+            swingScores[2] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[32] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[8] += toAdd;
+                    swingScores[6] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[2] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[32] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[8] += toAdd;
+                    swingScores[6] += toAdd;
+                    swingScores[4] += toAdd;
+                    swingScores[2] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-1, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[33] += toAdd2;
+            swingScores[24] += toAdd2;
+            swingScores[21] += toAdd2;
+            swingScores[20] += toAdd2;
+            swingScores[17] += toAdd2;
+            swingScores[13] += toAdd2;
+            swingScores[9] += toAdd2;
+            swingScores[7] += toAdd2;
+            swingScores[5] += toAdd2;
+            swingScores[3] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[33] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[3] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[33] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[5] += toAdd;
+                    swingScores[3] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-1, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[35] += toAdd2;
+            swingScores[33] += toAdd2;
+            swingScores[31] += toAdd2;
+            swingScores[21] += toAdd2;
+            swingScores[17] += toAdd2;
+            swingScores[13] += toAdd2;
+            swingScores[7] += toAdd2;
+            swingScores[3] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[35] += toAdd;
+                    swingScores[33] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[3] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[35] += toAdd;
+                    swingScores[33] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[3] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[35] += toAdd2;
+            swingScores[31] += toAdd2;
+            swingScores[30] += toAdd2;
+            swingScores[26] += toAdd2;
+            swingScores[17] += toAdd2;
+            swingScores[15] += toAdd2;
+            swingScores[13] += toAdd2;
+            swingScores[11] += toAdd2;
+            swingScores[7] += toAdd2;
+            swingScores[3] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[35] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[15] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[3] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[35] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[15] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[7] += toAdd;
+                    swingScores[3] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[33] += toAdd2;
+            swingScores[31] += toAdd2;
+            swingScores[29] += toAdd2;
+            swingScores[25] += toAdd2;
+            swingScores[21] += toAdd2;
+            swingScores[3] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[33] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[3] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[33] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[3] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[8] += toAdd2;
+            swingScores[4] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[8] += toAdd;
+                    swingScores[4] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[8] += toAdd;
+                    swingScores[4] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-1, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[33] += toAdd2;
+            swingScores[32] += toAdd2;
+            swingScores[28] += toAdd2;
+            swingScores[24] += toAdd2;
+            swingScores[20] += toAdd2;
+            swingScores[13] += toAdd2;
+            swingScores[9] += toAdd2;
+            swingScores[5] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[33] += toAdd;
+                    swingScores[32] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[5] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[33] += toAdd;
+                    swingScores[32] += toAdd;
+                    swingScores[28] += toAdd;
+                    swingScores[24] += toAdd;
+                    swingScores[20] += toAdd;
+                    swingScores[13] += toAdd;
+                    swingScores[9] += toAdd;
+                    swingScores[5] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[34] += toAdd2;
+            swingScores[16] += toAdd2;
+            swingScores[14] += toAdd2;
+            swingScores[12] += toAdd2;
+            swingScores[10] += toAdd2;
+            swingScores[6] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[34] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[10] += toAdd;
+                    swingScores[6] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[34] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[12] += toAdd;
+                    swingScores[10] += toAdd;
+                    swingScores[6] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[34] += toAdd2;
+            swingScores[22] += toAdd2;
+            swingScores[18] += toAdd2;
+            swingScores[16] += toAdd2;
+            swingScores[14] += toAdd2;
+            swingScores[11] += toAdd2;
+            swingScores[10] += toAdd2;
+            swingScores[6] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[34] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[18] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[10] += toAdd;
+                    swingScores[6] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[34] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[18] += toAdd;
+                    swingScores[16] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[10] += toAdd;
+                    swingScores[6] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[12] += toAdd2;
+            swingScores[10] += toAdd2;
+            swingScores[8] += toAdd2;
+            swingScores[6] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[12] += toAdd;
+                    swingScores[10] += toAdd;
+                    swingScores[8] += toAdd;
+                    swingScores[6] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[12] += toAdd;
+                    swingScores[10] += toAdd;
+                    swingScores[8] += toAdd;
+                    swingScores[6] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[35] += toAdd2;
+            swingScores[34] += toAdd2;
+            swingScores[30] += toAdd2;
+            swingScores[26] += toAdd2;
+            swingScores[22] += toAdd2;
+            swingScores[15] += toAdd2;
+            swingScores[11] += toAdd2;
+            swingScores[7] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[35] += toAdd;
+                    swingScores[34] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[15] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[7] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[35] += toAdd;
+                    swingScores[34] += toAdd;
+                    swingScores[30] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[15] += toAdd;
+                    swingScores[11] += toAdd;
+                    swingScores[7] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, -3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[8] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[8] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[8] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(3, -1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[14] += toAdd2;
+            swingScores[10] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[14] += toAdd;
+                    swingScores[10] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[14] += toAdd;
+                    swingScores[10] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(3, 0);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[18] += toAdd2;
+            swingScores[14] += toAdd2;
+            swingScores[10] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[18] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[10] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[18] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[10] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(3, -2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[10] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[10] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[10] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[34] += toAdd2;
+            swingScores[22] += toAdd2;
+            swingScores[18] += toAdd2;
+            swingScores[15] += toAdd2;
+            swingScores[14] += toAdd2;
+            swingScores[11] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[34] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[18] += toAdd;
+                    swingScores[15] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[11] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[34] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[18] += toAdd;
+                    swingScores[15] += toAdd;
+                    swingScores[14] += toAdd;
+                    swingScores[11] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(3, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[18] += toAdd2;
+            swingScores[14] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[18] += toAdd;
+                    swingScores[14] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[18] += toAdd;
+                    swingScores[14] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[35] += toAdd2;
+            swingScores[26] += toAdd2;
+            swingScores[23] += toAdd2;
+            swingScores[22] += toAdd2;
+            swingScores[19] += toAdd2;
+            swingScores[15] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[35] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[19] += toAdd;
+                    swingScores[15] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[35] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[22] += toAdd;
+                    swingScores[19] += toAdd;
+                    swingScores[15] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[22] += toAdd2;
+            swingScores[19] += toAdd2;
+            swingScores[18] += toAdd2;
+            swingScores[15] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[22] += toAdd;
+                    swingScores[19] += toAdd;
+                    swingScores[18] += toAdd;
+                    swingScores[15] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[22] += toAdd;
+                    swingScores[19] += toAdd;
+                    swingScores[18] += toAdd;
+                    swingScores[15] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[35] += toAdd2;
+            swingScores[31] += toAdd2;
+            swingScores[27] += toAdd2;
+            swingScores[26] += toAdd2;
+            swingScores[23] += toAdd2;
+            swingScores[19] += toAdd2;
+            swingScores[17] += toAdd2;
+            swingScores[15] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[35] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[27] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[19] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[15] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[35] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[27] += toAdd;
+                    swingScores[26] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[19] += toAdd;
+                    swingScores[17] += toAdd;
+                    swingScores[15] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-1, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[35] += toAdd2;
+            swingScores[31] += toAdd2;
+            swingScores[27] += toAdd2;
+            swingScores[23] += toAdd2;
+            swingScores[21] += toAdd2;
+            swingScores[17] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[35] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[27] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[17] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[35] += toAdd;
+                    swingScores[31] += toAdd;
+                    swingScores[27] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[21] += toAdd;
+                    swingScores[17] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(3, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[18] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[18] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[18] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(1, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[23] += toAdd2;
+            swingScores[19] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[23] += toAdd;
+                    swingScores[19] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[23] += toAdd;
+                    swingScores[19] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(2, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[19] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[19] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[19] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(0, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[27] += toAdd2;
+            swingScores[23] += toAdd2;
+            swingScores[19] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[27] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[19] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[27] += toAdd;
+                    swingScores[23] += toAdd;
+                    swingScores[19] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[31] += toAdd2;
+            swingScores[27] += toAdd2;
+            swingScores[25] += toAdd2;
+            swingScores[21] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[31] += toAdd;
+                    swingScores[27] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[21] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[31] += toAdd;
+                    swingScores[27] += toAdd;
+                    swingScores[25] += toAdd;
+                    swingScores[21] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-1, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[27] += toAdd2;
+            swingScores[23] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[27] += toAdd;
+                    swingScores[23] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[27] += toAdd;
+                    swingScores[23] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-3, 1);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[29] += toAdd2;
+            swingScores[25] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[29] += toAdd;
+                    swingScores[25] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-3, 2);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[25] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[25] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[25] += toAdd;
+                }
+            }
+        }
+        loc = G.me.translate(-2, 3);
+        if (G.opponentRobotsString.indexOf(loc.toString()) != -1) {
+            RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+            int toAdd2 = Math.min(5, bot.paintAmount) * 5;
+            swingScores[27] += toAdd2;
+            if (bot.paintAmount > 0) {
+                if (bot.paintAmount <= 5) {
+                    int toAdd = (int) (G.paintPerChips() * bot.type.moneyCost);
+                    swingScores[27] += toAdd;
+                } else {
+                    int toAdd = (int) ((G.cooldown(bot.paintAmount - 5, 10, bot.type.paintCapacity)
+                            - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown());
+                    swingScores[27] += toAdd;
+                }
+            }
+        }
+        swingScores[0] *= MOP_SWING_MULT;
+        swingScores[1] *= MOP_SWING_MULT;
+        swingScores[2] *= MOP_SWING_MULT;
+        swingScores[3] *= MOP_SWING_MULT;
+        swingScores[4] *= MOP_SWING_MULT;
+        swingScores[5] *= MOP_SWING_MULT;
+        swingScores[6] *= MOP_SWING_MULT;
+        swingScores[7] *= MOP_SWING_MULT;
+        swingScores[8] *= MOP_SWING_MULT;
+        swingScores[9] *= MOP_SWING_MULT;
+        swingScores[10] *= MOP_SWING_MULT;
+        swingScores[11] *= MOP_SWING_MULT;
+        swingScores[12] *= MOP_SWING_MULT;
+        swingScores[13] *= MOP_SWING_MULT;
+        swingScores[14] *= MOP_SWING_MULT;
+        swingScores[15] *= MOP_SWING_MULT;
+        swingScores[16] *= MOP_SWING_MULT;
+        swingScores[17] *= MOP_SWING_MULT;
+        swingScores[18] *= MOP_SWING_MULT;
+        swingScores[19] *= MOP_SWING_MULT;
+        swingScores[20] *= MOP_SWING_MULT;
+        swingScores[21] *= MOP_SWING_MULT;
+        swingScores[22] *= MOP_SWING_MULT;
+        swingScores[23] *= MOP_SWING_MULT;
+        swingScores[24] *= MOP_SWING_MULT;
+        swingScores[25] *= MOP_SWING_MULT;
+        swingScores[26] *= MOP_SWING_MULT;
+        swingScores[27] *= MOP_SWING_MULT;
+        swingScores[28] *= MOP_SWING_MULT;
+        swingScores[29] *= MOP_SWING_MULT;
+        swingScores[30] *= MOP_SWING_MULT;
+        swingScores[31] *= MOP_SWING_MULT;
+        swingScores[32] *= MOP_SWING_MULT;
+        swingScores[33] *= MOP_SWING_MULT;
+        swingScores[34] *= MOP_SWING_MULT;
+        swingScores[35] *= MOP_SWING_MULT;
     }
 
     public static void buildMoveScores() throws Exception {
@@ -2951,18 +3077,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[0] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[0] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[0] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[0] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 0);
+        loc = G.me.translate(-1, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -2974,18 +3102,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[1] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[1] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[1] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[1] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, -1);
+        loc = G.me.translate(0, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -2997,18 +3127,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[2] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[2] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[2] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[2] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, 1);
+        loc = G.me.translate(0, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3020,18 +3152,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[3] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[3] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[3] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[3] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 0);
+        loc = G.me.translate(1, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3043,18 +3177,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[4] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[4] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[4] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[4] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, -1);
+        loc = G.me.translate(-1, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3066,18 +3202,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[5] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[5] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[5] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[5] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 1);
+        loc = G.me.translate(-1, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3089,18 +3227,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[6] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[6] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[6] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[6] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, -1);
+        loc = G.me.translate(1, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3112,18 +3252,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[7] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[7] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[7] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[7] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 1);
+        loc = G.me.translate(1, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3135,18 +3277,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[8] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[8] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[8] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[8] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 0);
+        loc = G.me.translate(-2, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3158,18 +3302,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[9] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[9] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[9] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[9] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, -2);
+        loc = G.me.translate(0, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3181,18 +3327,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[10] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[10] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[10] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[10] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, 2);
+        loc = G.me.translate(0, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3204,18 +3352,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[11] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[11] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[11] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[11] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 0);
+        loc = G.me.translate(2, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3227,18 +3377,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[12] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[12] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[12] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[12] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, -1);
+        loc = G.me.translate(-2, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3250,18 +3402,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[13] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[13] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[13] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[13] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 1);
+        loc = G.me.translate(-2, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3273,18 +3427,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[14] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[14] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[14] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[14] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, -2);
+        loc = G.me.translate(-1, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3296,18 +3452,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[15] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[15] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[15] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[15] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 2);
+        loc = G.me.translate(-1, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3319,18 +3477,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[16] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[16] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[16] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[16] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, -2);
+        loc = G.me.translate(1, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3342,18 +3502,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[17] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[17] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[17] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[17] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 2);
+        loc = G.me.translate(1, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3365,18 +3527,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[18] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[18] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[18] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[18] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, -1);
+        loc = G.me.translate(2, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3388,18 +3552,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[19] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[19] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[19] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[19] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 1);
+        loc = G.me.translate(2, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3411,18 +3577,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[20] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[20] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[20] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[20] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, -2);
+        loc = G.me.translate(-2, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3434,18 +3602,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[21] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[21] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[21] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[21] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 2);
+        loc = G.me.translate(-2, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3457,18 +3627,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[22] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[22] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[22] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[22] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, -2);
+        loc = G.me.translate(2, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3480,18 +3652,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[23] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[23] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[23] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[23] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 2);
+        loc = G.me.translate(2, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3503,12 +3677,14 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[24] += (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[24] += (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[24] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[24] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
@@ -3540,18 +3716,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[0] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[0] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[0] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[0] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[0] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 0);
+        loc = G.me.translate(-1, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3560,18 +3738,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[1] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[1] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[1] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[1] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[1] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, -1);
+        loc = G.me.translate(0, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3580,18 +3760,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[2] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[2] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[2] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[2] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[2] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, 1);
+        loc = G.me.translate(0, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3600,18 +3782,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[3] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[3] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[3] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[3] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[3] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 0);
+        loc = G.me.translate(1, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3620,18 +3804,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[4] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[4] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[4] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[4] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[4] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, -1);
+        loc = G.me.translate(-1, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3640,18 +3826,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[5] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[5] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[5] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[5] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[5] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 1);
+        loc = G.me.translate(-1, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3660,18 +3848,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[6] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[6] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[6] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[6] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[6] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, -1);
+        loc = G.me.translate(1, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3680,18 +3870,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[7] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[7] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[7] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[7] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[7] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 1);
+        loc = G.me.translate(1, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3700,18 +3892,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[8] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[8] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[8] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[8] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[8] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 0);
+        loc = G.me.translate(-2, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3720,18 +3914,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[9] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[9] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[9] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[9] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[9] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, -2);
+        loc = G.me.translate(0, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3740,18 +3936,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[10] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[10] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[10] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[10] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[10] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(0, 2);
+        loc = G.me.translate(0, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3760,18 +3958,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[11] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[11] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[11] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[11] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[11] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 0);
+        loc = G.me.translate(2, 0);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3780,18 +3980,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[12] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[12] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[12] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[12] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[12] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, -1);
+        loc = G.me.translate(-2, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3800,18 +4002,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[13] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[13] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[13] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[13] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[13] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 1);
+        loc = G.me.translate(-2, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3820,18 +4024,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[14] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[14] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[14] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[14] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[14] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, -2);
+        loc = G.me.translate(-1, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3840,18 +4046,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[15] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[15] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[15] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[15] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[15] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-1, 2);
+        loc = G.me.translate(-1, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3860,18 +4068,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[16] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[16] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[16] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[16] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[16] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, -2);
+        loc = G.me.translate(1, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3880,18 +4090,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[17] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[17] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[17] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[17] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[17] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(1, 2);
+        loc = G.me.translate(1, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3900,18 +4112,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[18] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[18] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[18] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[18] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[18] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, -1);
+        loc = G.me.translate(2, -1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3920,18 +4134,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[19] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[19] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[19] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[19] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[19] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 1);
+        loc = G.me.translate(2, 1);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3940,18 +4156,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[20] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[20] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[20] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[20] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[20] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, -2);
+        loc = G.me.translate(-2, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3960,18 +4178,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[21] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[21] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[21] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[21] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[21] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(-2, 2);
+        loc = G.me.translate(-2, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -3980,18 +4200,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[22] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[22] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[22] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[22] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[22] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, -2);
+        loc = G.me.translate(2, -2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -4000,18 +4222,20 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[23] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[23] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[23] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[23] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[23] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
             }
         }
-		loc = G.me.translate(2, 2);
+        loc = G.me.translate(2, 2);
         if (G.rc.onTheMap(loc)) {
             PaintType paint = G.rc.senseMapInfo(loc).getPaint();
             if (paint.isEnemy()) {
@@ -4020,12 +4244,14 @@ public class Mopper {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
-                    attackScores[24] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount) + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
+                    attackScores[24] += MOP_RETREAT_STEAL_WEIGHT + (Math.min(10, bot.paintAmount)
+                            + Math.min(5, UnitType.MOPPER.paintCapacity - G.rc.getPaint())) * 7;
                     if (bot.paintAmount > 0) {
                         if (bot.paintAmount <= 10) {
                             attackScores[24] += (int) G.paintPerChips() * bot.type.moneyCost;
                         } else {
-                            attackScores[24] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity) - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
+                            attackScores[24] += (G.cooldown(bot.paintAmount - 10, 10, bot.type.paintCapacity)
+                                    - G.cooldown(bot.paintAmount, 10, bot.type.paintCapacity)) * G.paintPerCooldown();
                         }
                     }
                 }
