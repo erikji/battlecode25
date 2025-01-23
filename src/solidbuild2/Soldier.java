@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuild2;
 
 import battlecode.common.*;
 
@@ -34,12 +34,12 @@ public class Soldier {
     public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
     public static final int SOL_MIN_SRP_ROUND = 50;
-    public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 0;
+    public static final int SOL_SPAWN_SRP_MIN_ROUNDS = 10;
     // controls rounds between repairing/expanding an SRP
     public static final int SOL_SRP_VISIT_TIMEOUT = 100;
     public static final double SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE = 0.5;
     // balance exploring and building SRPs (don't SRP if near target)
-    public static final int SOL_SRP_EXPAND_TIMEOUT = 0;
+    public static final int SOL_SRP_EXPAND_TIMEOUT = 20;
     public static final int SOL_SRP_EXP_OVERRIDE_DIST = 100;
     // stop building SRP if enemy paint interferes too much
     public static final int SOL_MAX_SRP_ENEMY_PAINT = 1;
