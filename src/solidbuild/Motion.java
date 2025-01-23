@@ -232,6 +232,7 @@ public class Motion {
     public static final int SYMMETRY_EXPLORE_PERCENT = Integer.MAX_VALUE; // OPTNET_PARAM
     // used for soldiers at low hp, avoid exploring enemy towers
     public static boolean avoidSymmetryExplore = false;
+    public static boolean exploreTowerCheck = false;
 
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {
@@ -240,11 +241,22 @@ public class Motion {
                 if (G.rc.canSenseLocation(exploreLoc)) {
                     exploreLoc = null;
                 }
-                if (exploreTime == 0) {
+                else if (exploreTime == 0) {
                     exploreLoc = null;
                 }
-                if (Random.rand() % 35 == 0) {
+                else if (Random.rand() % 35 == 0) {
                     exploreLoc = null;
+                }
+                else if (exploreTowerCheck) {
+                    for (int i = POI.numberOfTowers; --i >= 0;) {
+                        if (POI.towerTeams[i] != G.team) {
+                            continue;
+                        }
+                        if (exploreLoc.isWithinDistanceSquared(POI.towerLocs[i], 20)) {
+                            exploreLoc = null;
+                            break;
+                        }
+                    }
                 }
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
@@ -252,8 +264,9 @@ public class Motion {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
-                    if (POI.towerTeams[i] == G.opponentTeam
-                            && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                    // if (POI.towerTeams[i] == G.opponentTeam
+                    //         && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                    if (POI.towerTeams[i] == G.opponentTeam) {
                         exploreLoc = POI.towerLocs[i];
                         break;
                     }
@@ -263,11 +276,12 @@ public class Motion {
                             int i2 = (j2 + rand2) % 3;
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
-                                if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
+                                // if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
                                     exploreLoc = loc;
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                    exploreTowerCheck = true;
                                     break search;
-                                }
+                                // }
                             }
                         }
                     }
@@ -295,6 +309,7 @@ public class Motion {
                                     exploreLoc = new MapLocation(b, i);
                                     // }
                                     exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                    exploreTowerCheck = true;
                                     break;
                                 }
                             }

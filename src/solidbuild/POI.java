@@ -137,6 +137,7 @@ public class POI {
         if (towerGrid[loc.y / 5][loc.x / 5] != -1) {
             int i = towerGrid[loc.y / 5][loc.x / 5];
             if (team != towerTeams[i] || type != towerTypes[i]) {
+                Motion.exploreTowerCheck = true;
                 if (towerTeams[i] == G.team) {
                     switch (towerTypes[i]) {
                         case LEVEL_ONE_PAINT_TOWER:

@@ -230,6 +230,8 @@ public class Motion {
     public static int exploreTime = 0;
 
     public static final int SYMMETRY_EXPLORE_PERCENT = Integer.MAX_VALUE; // OPTNET_PARAM
+    // used for soldiers at low hp, avoid exploring enemy towers
+    public static boolean avoidSymmetryExplore = false;
 
     public static MapLocation exploreRandomlyLoc() throws Exception {
         if (G.rc.isMovementReady()) {
@@ -246,7 +248,7 @@ public class Motion {
                 }
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
-            if (exploreLoc == null && numValidSymmetries == 1 && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
+            if (exploreLoc == null && !avoidSymmetryExplore && numValidSymmetries == 1 && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
@@ -1640,8 +1642,8 @@ public class Motion {
                 if (bot.team == G.opponentTeam) {
                     int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
                     int toSubtract2 = toSubtract;
-                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 100;
-                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2) toSubtract2 += 200;
+                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 1000;
+                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2) toSubtract2 += 2000;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
                             if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
