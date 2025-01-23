@@ -30,7 +30,7 @@ public class Soldier {
     public static final int SOL_TOWER_HELP_DIST = 5;
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
     // max soldiers that will build a tower
-    public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 3;
+    public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 2;
     // max build time
     public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
