@@ -141,7 +141,7 @@ public class Tower {
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
-        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900) {
+        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.rc.getRoundNum() < 100 || G.rc.getRoundNum() % 3 == 0)) {
             switch (trying) {
                 case UnitType.MOPPER:
                     for (MapLocation loc : spawnLocs) {
@@ -282,7 +282,7 @@ public class Tower {
         //     G.rc.disintegrate();
         //     return;
         // }
-        if (G.rc.getNumberTowers() == 25 && G.rc.getChips() > 20000 && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+        if (G.rc.getChips() > (G.rc.getID()<10?20000:G.rc.getID()*2) && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
             attack();
             // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
             G.rc.disintegrate();
