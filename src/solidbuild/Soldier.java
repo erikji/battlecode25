@@ -1042,14 +1042,14 @@ public class Soldier {
             // try to stay out of range if on cd, otherwise try to get in range
             int[] scores = Motion.defaultMicro.micro(d, dest);
             if (G.rc.isActionReady()) {
-                for (int i = 8; --i >= 0;) {
+                for (int i = 9; --i >= 0;) {
                     if (G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             G.rc.getType().actionRadiusSquared)) {
                         scores[i] += 400;
                     }
                 }
             } else {
-                for (int i = 8; --i >= 0;) {
+                for (int i = 9; --i >= 0;) {
                     if (!G.me.add(G.DIRECTIONS[i]).isWithinDistanceSquared(towerLocation,
                             towerType.actionRadiusSquared)) {
                         scores[i] += 400;
