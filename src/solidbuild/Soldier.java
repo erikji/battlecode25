@@ -509,13 +509,14 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
-                exploreLocation = Motion.exploreRandomlyAggressiveLoc();
-                Motion.bugnavTowards(exploreLocation, suicide);
-                G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
-            } else {
-                Motion.exploreRandomly();
-            }
+            Motion.exploreRandomly();
+            // if (G.rc.getRoundNum() > Math.sqrt(G.mapArea * 12) && Random.rand() % 2 == 0) {
+            //     exploreLocation = Motion.exploreRandomlyAggressiveLoc();
+            //     Motion.bugnavTowards(exploreLocation);
+            //     G.rc.setIndicatorLine(G.me, exploreLocation, 0, 0, 0);
+            // } else {
+            //     Motion.exploreRandomly();
+            // }
         } else {
             Motion.bugnavTowards(exploreLocation);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
@@ -951,7 +952,8 @@ public class Soldier {
                 && G.rc.senseMapInfo(loc.translate(1, 0)).getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = G.rc.getChips() < 20000 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        // 24 limit is for betterdisintegrating
+        int towerType = G.rc.getChips() < 20000 && G.rc.getNumberTowers() < 24 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6 || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
