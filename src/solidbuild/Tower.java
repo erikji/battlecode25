@@ -138,7 +138,7 @@ public class Tower {
         //     trying = UnitType.SOLDIER;
         // }
 
-        if (spawnedRobots<3){
+        if ((G.round < 50 || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) && spawnedRobots<3){
             trying=UnitType.SOLDIER;
         }
 
