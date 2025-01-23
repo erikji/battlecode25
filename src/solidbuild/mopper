@@ -1,0 +1,432 @@
+		loc = G.me.translate(-1, 0);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[1] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[1] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(0, -1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[2] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[2] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(0, 1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[3] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[3] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(1, 0);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[4] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[4] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-1, -1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[5] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[5] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-1, 1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[6] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[6] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(1, -1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[7] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[7] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(1, 1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[8] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[8] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-2, 0);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[9] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[9] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(0, -2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[10] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[10] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(0, 2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[11] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[11] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(2, 0);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[12] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[12] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-2, -1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[13] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[13] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-2, 1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[14] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[14] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-1, -2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[15] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[15] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-1, 2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[16] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[16] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(1, -2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[17] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[17] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(1, 2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[18] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[18] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(2, -1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[19] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[19] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(2, 1);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[20] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[20] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-2, -2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[21] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[21] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(-2, 2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[22] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[22] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(2, -2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[23] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[23] += 200;
+                }
+            }
+        }
+		loc = G.me.translate(2, 2);
+        if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
+            RobotInfo r = G.rc.senseRobotAtLocation(loc);
+            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
+                transferScores[24] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+                if (r.paintAmount == 0) {
+                    transferScores[24] += 200;
+                }
+            }
+        }
+		if (transferScores[21] > allmax[0]) {
+			allmax[0] = transferScores[21];
+			allx[0] = -2;
+			ally[0] = -2;
+			alltype[0] = TRANSFER;
+		}
+		if (transferScores[13] > allmax[0]) {
+			allmax[0] = transferScores[13];
+			allx[0] = -2;
+			ally[0] = -1;
+			alltype[0] = TRANSFER;
+		}
+		if (transferScores[9] > allmax[0]) {
+			allmax[0] = transferScores[9];
+			allx[0] = -2;
+			ally[0] = 0;
+			alltype[0] = TRANSFER;
+		}
+		if (transferScores[15] > allmax[0]) {
+			allmax[0] = transferScores[15];
+			allx[0] = -1;
+			ally[0] = -2;
+			alltype[0] = TRANSFER;
+		}
+		if (transferScores[10] > allmax[0]) {
+			allmax[0] = transferScores[10];
+			allx[0] = 0;
+			ally[0] = -2;
+			alltype[0] = TRANSFER;
+		}
+		if (transferScores[15] > allmax[1]) {
+			allmax[1] = transferScores[15];
+			allx[1] = -1;
+			ally[1] = -2;
+			alltype[1] = TRANSFER;
+		}
+		if (transferScores[10] > allmax[1]) {
+			allmax[1] = transferScores[10];
+			allx[1] = 0;
+			ally[1] = -2;
+			alltype[1] = TRANSFER;
+		}
+		if (transferScores[17] > allmax[1]) {
+			allmax[1] = transferScores[17];
+			allx[1] = 1;
+			ally[1] = -2;
+			alltype[1] = TRANSFER;
+		}
+		if (transferScores[10] > allmax[2]) {
+			allmax[2] = transferScores[10];
+			allx[2] = 0;
+			ally[2] = -2;
+			alltype[2] = TRANSFER;
+		}
+		if (transferScores[17] > allmax[2]) {
+			allmax[2] = transferScores[17];
+			allx[2] = 1;
+			ally[2] = -2;
+			alltype[2] = TRANSFER;
+		}
+		if (transferScores[23] > allmax[2]) {
+			allmax[2] = transferScores[23];
+			allx[2] = 2;
+			ally[2] = -2;
+			alltype[2] = TRANSFER;
+		}
+		if (transferScores[19] > allmax[2]) {
+			allmax[2] = transferScores[19];
+			allx[2] = 2;
+			ally[2] = -1;
+			alltype[2] = TRANSFER;
+		}
+		if (transferScores[12] > allmax[2]) {
+			allmax[2] = transferScores[12];
+			allx[2] = 2;
+			ally[2] = 0;
+			alltype[2] = TRANSFER;
+		}
+		if (transferScores[19] > allmax[3]) {
+			allmax[3] = transferScores[19];
+			allx[3] = 2;
+			ally[3] = -1;
+			alltype[3] = TRANSFER;
+		}
+		if (transferScores[12] > allmax[3]) {
+			allmax[3] = transferScores[12];
+			allx[3] = 2;
+			ally[3] = 0;
+			alltype[3] = TRANSFER;
+		}
+		if (transferScores[20] > allmax[3]) {
+			allmax[3] = transferScores[20];
+			allx[3] = 2;
+			ally[3] = 1;
+			alltype[3] = TRANSFER;
+		}
+		if (transferScores[11] > allmax[4]) {
+			allmax[4] = transferScores[11];
+			allx[4] = 0;
+			ally[4] = 2;
+			alltype[4] = TRANSFER;
+		}
+		if (transferScores[18] > allmax[4]) {
+			allmax[4] = transferScores[18];
+			allx[4] = 1;
+			ally[4] = 2;
+			alltype[4] = TRANSFER;
+		}
+		if (transferScores[12] > allmax[4]) {
+			allmax[4] = transferScores[12];
+			allx[4] = 2;
+			ally[4] = 0;
+			alltype[4] = TRANSFER;
+		}
+		if (transferScores[20] > allmax[4]) {
+			allmax[4] = transferScores[20];
+			allx[4] = 2;
+			ally[4] = 1;
+			alltype[4] = TRANSFER;
+		}
+		if (transferScores[24] > allmax[4]) {
+			allmax[4] = transferScores[24];
+			allx[4] = 2;
+			ally[4] = 2;
+			alltype[4] = TRANSFER;
+		}
+		if (transferScores[16] > allmax[5]) {
+			allmax[5] = transferScores[16];
+			allx[5] = -1;
+			ally[5] = 2;
+			alltype[5] = TRANSFER;
+		}
+		if (transferScores[11] > allmax[5]) {
+			allmax[5] = transferScores[11];
+			allx[5] = 0;
+			ally[5] = 2;
+			alltype[5] = TRANSFER;
+		}
+		if (transferScores[18] > allmax[5]) {
+			allmax[5] = transferScores[18];
+			allx[5] = 1;
+			ally[5] = 2;
+			alltype[5] = TRANSFER;
+		}
+		if (transferScores[9] > allmax[6]) {
+			allmax[6] = transferScores[9];
+			allx[6] = -2;
+			ally[6] = 0;
+			alltype[6] = TRANSFER;
+		}
+		if (transferScores[14] > allmax[6]) {
+			allmax[6] = transferScores[14];
+			allx[6] = -2;
+			ally[6] = 1;
+			alltype[6] = TRANSFER;
+		}
+		if (transferScores[22] > allmax[6]) {
+			allmax[6] = transferScores[22];
+			allx[6] = -2;
+			ally[6] = 2;
+			alltype[6] = TRANSFER;
+		}
+		if (transferScores[16] > allmax[6]) {
+			allmax[6] = transferScores[16];
+			allx[6] = -1;
+			ally[6] = 2;
+			alltype[6] = TRANSFER;
+		}
+		if (transferScores[11] > allmax[6]) {
+			allmax[6] = transferScores[11];
+			allx[6] = 0;
+			ally[6] = 2;
+			alltype[6] = TRANSFER;
+		}
+		if (transferScores[13] > allmax[7]) {
+			allmax[7] = transferScores[13];
+			allx[7] = -2;
+			ally[7] = -1;
+			alltype[7] = TRANSFER;
+		}
+		if (transferScores[9] > allmax[7]) {
+			allmax[7] = transferScores[9];
+			allx[7] = -2;
+			ally[7] = 0;
+			alltype[7] = TRANSFER;
+		}
+		if (transferScores[14] > allmax[7]) {
+			allmax[7] = transferScores[14];
+			allx[7] = -2;
+			ally[7] = 1;
+			alltype[7] = TRANSFER;
+		}
