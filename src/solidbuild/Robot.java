@@ -21,6 +21,24 @@ public class Robot {
                 G.rc.getTowerPattern(UnitType.LEVEL_ONE_PAINT_TOWER)
         };
         Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
+        if (G.rc.getRoundNum() < 3 && G.rc.getType() == UnitType.SOLDIER) {
+            boolean foundPaintTower = false;
+            boolean foundMoneyTower = false;
+            for (int i = G.nearbyRuins.length; --i >= 0;) {
+                if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                    RobotInfo tower = G.rc.senseRobotAtLocation(G.nearbyRuins[i]);
+                    if (tower.team == G.team && tower.type.getBaseType() == UnitType.LEVEL_ONE_PAINT_TOWER) {
+                        foundPaintTower = true;
+                    }
+                    if (tower.team == G.team && tower.type.getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+                        foundMoneyTower = true;
+                    }
+                }
+            }
+            if (foundPaintTower&&!foundMoneyTower) {
+                Soldier.mode = Soldier.MESSING_UP;
+            }
+        }
     }
     
     public static void run() throws Exception {

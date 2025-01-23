@@ -28,17 +28,17 @@ public class Tower {
     public static void init() throws Exception {
         spawnLocs = new MapLocation[] {
                 G.me.add(Direction.NORTH),
-                G.me.add(Direction.NORTH).add(Direction.NORTH),
                 G.me.add(Direction.NORTHEAST),
                 G.me.add(Direction.EAST),
-                G.me.add(Direction.EAST).add(Direction.EAST),
                 G.me.add(Direction.SOUTHEAST),
                 G.me.add(Direction.SOUTH),
-                G.me.add(Direction.SOUTH).add(Direction.SOUTH),
                 G.me.add(Direction.SOUTHWEST),
                 G.me.add(Direction.WEST),
+                G.me.add(Direction.NORTHWEST),
+                G.me.add(Direction.NORTH).add(Direction.NORTH),
+                G.me.add(Direction.EAST).add(Direction.EAST),
+                G.me.add(Direction.SOUTH).add(Direction.SOUTH),
                 G.me.add(Direction.WEST).add(Direction.WEST),
-                G.me.add(Direction.NORTHWEST)
         };
         Arrays.sort(spawnLocs,
                 (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
