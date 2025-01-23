@@ -45,8 +45,11 @@ public class Soldier {
     public static final int SOL_MAX_SRP_ENEMY_PAINT = 1;
     public static final int SOL_MAX_SRP_BLOCKED_TIME = 5;
     public static final int SOL_MAX_SRP_ENEMY_PAINT_HARD = 8;
-    // max build time
+    // max build time for SRP
     public static final int SOL_MAX_SRP_TIME = 50;
+    // max time spent traveling to an SRP expand target (obstructed by bot /
+    // inaccessible)
+    public static final int SOL_MAX_SRP_TARGET_TIME = 15;
     // don't build SRP if not enough paint (runs out quickly)
     public static final int SOL_SRP_MIN_PAINT = 75;
     // dont run out of paint waiting for paint painting area
@@ -73,6 +76,7 @@ public class Soldier {
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
+    public static int srpTargetTime = 0;
 
     // commonly used stuff
     // map nearby map infos into 2d array in (y, x) form
@@ -98,12 +102,14 @@ public class Soldier {
      * - avoidRetreating true if is lowest ID, don't abandon the tower
      * Place stuff
      * If tower pattern obstructed by enemy paint long enougn, return to explore
+     * If building for too long, return to explore
      * Complete tower, return to explore
      * 
      * Build SRP:
      * Automatically make reducedRetreating true
      * Place SRP
      * If SRP obstructed by enemy paint long enougn, return to explore
+     * If building for too long, return to explore
      * Complete SRP, queue 16 expansion locations and enter SRP expand mode
      * - Not as optimal anymore, sad
      * 
@@ -111,6 +117,7 @@ public class Soldier {
      * Go to queued locations of expansion and see if can build (race conditions)
      * - SRPs won't be built overlapping with ruin 5x5 squares (but can with towers)
      * - Tiling is checked
+     * If trying to reach expand target for too long, return to explore
      * If can build
      * - Place secondary marker at center
      * - Enter SRP build mode
@@ -164,6 +171,7 @@ public class Soldier {
                 // VERY IMPORTANT DO NOT TOUCH
                 buildBlockedTime = 0;
                 buildTime = 0;
+                srpTargetTime = 0;
                 Motion.setRetreatLoc();
                 if (Motion.retreatTower == -1) {
                     mode = EXPLORE;
@@ -198,6 +206,7 @@ public class Soldier {
         // VERY IMPORTANT DO NOT TOUCH
         buildBlockedTime = 0;
         buildTime = 0;
+        srpTargetTime = 0;
         // dont build tower that bot was just building
         final double towerVisitTimeout = SOL_RUIN_VISIT_TIMEOUT_BASE
                 + SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea
@@ -440,6 +449,12 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
+        // if been trying to reach target for a long time stop (inaccessible/occupied)
+        if (srpTargetTime > SOL_MAX_SRP_TARGET_TIME) {
+            mode = EXPLORE;
+            return;
+        }
+        srpTargetTime++;
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
@@ -456,6 +471,8 @@ public class Soldier {
                 return;
             }
             target = srpCheckLocations[srpCheckIndex];
+            // reset target time when disqualifying target
+            srpTargetTime = 0;
         }
         // markers
         if (G.me.equals(target) && canBuildSrpAtLocation(G.me)) {
@@ -471,7 +488,8 @@ public class Soldier {
     public static void attackCheckMode() throws Exception {
         G.indicatorString.append("CHK_ATK ");
         // nothing for now
-        if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation) || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
+        if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation)
+                || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
             mode = EXPLORE;
             exploreCheckMode();
             return;
@@ -498,7 +516,7 @@ public class Soldier {
                     exploreLocation = pos;
                 }
             } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 25) {
-            // } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 8) {
+                // } else if (POI.towerTeams[i] == Team.NEUTRAL && G.rc.getNumberTowers() < 8) {
                 // having 25 towers otherwise just softlocks the bots
                 MapLocation pos = POI.towerLocs[i];
                 // prioritize opponent towers more than ruins, so it has to be REALLY close
@@ -930,7 +948,8 @@ public class Soldier {
                 && mapInfos[oy][ox + 1].getMark() == PaintType.ALLY_PRIMARY)
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
-        int towerType = G.rc.getChips() < 20000 && POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1 : 2;
+        int towerType = G.rc.getChips() < 20000 && POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers ? 1
+                : 2;
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
