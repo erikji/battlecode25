@@ -203,6 +203,7 @@ public class Soldier {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
+                    // dont attack if instadie
                     int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
                             + Motion.movementCooldown) / 10);
                     if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength)
@@ -210,6 +211,34 @@ public class Soldier {
                         Motion.avoidSymmetryExplore = true;
                         Motion.exploreLoc = null;
                         continue;
+                    }
+                    // dont attack if tower is easily rebuilt by enemy
+                    boolean isDisrupted = false;
+                    int ox = towerLocation.x - G.me.x + 2;
+                    int oy = towerLocation.y - G.me.y + 2;
+                    for (int dx = -1; dx++ < 4;) {
+                        for (int dy = -1; dy++ < 4;) {
+                            if (dx == 2 && dy == 2)
+                                continue;
+                            // make sure not out of vision radius
+                            if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))
+                                    && mapInfos[oy + dy][ox + dx].getPaint().isAlly()) {
+                                isDisrupted = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isDisrupted) {
+                        boolean hasHelp = false;
+                        for (int j = G.allyRobots.length; --j >= 0;) {
+                            if (G.allyRobots[j].type == UnitType.SPLASHER || G.allyRobots[j].type == UnitType.MOPPER) {
+                                hasHelp = true;
+                                break;
+                            }
+                        }
+                        // nope
+                        if (!hasHelp)
+                            continue;
                     }
                     towerLocation = loc;
                     towerType = bot.type;
@@ -516,6 +545,7 @@ public class Soldier {
             }
         }
         // if pattern not broken and no allied moppers/splashers retreat
+        // otherwise opponent easily rebuilds tower
         boolean isDisrupted = false;
         int ox = towerLocation.x - G.me.x + 2;
         int oy = towerLocation.y - G.me.y + 2;
@@ -530,6 +560,18 @@ public class Soldier {
                     break;
                 }
             }
+        }
+        if (!isDisrupted) {
+            boolean hasHelp = false;
+            for (int i = G.allyRobots.length; --i >= 0;) {
+                if (G.allyRobots[i].type == UnitType.SPLASHER || G.allyRobots[i].type == UnitType.MOPPER) {
+                    hasHelp = true;
+                    break;
+                }
+            }
+            // nope
+            if (!hasHelp)
+                mode = EXPLORE;
         }
     }
 
