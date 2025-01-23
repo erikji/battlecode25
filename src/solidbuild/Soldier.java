@@ -997,44 +997,44 @@ public class Soldier {
             }
             if (canPaintBest) {
                 // no more checkerboarding :(
-                G.rc.attack(bestLoc, false);
+                // G.rc.attack(bestLoc, false);
             } else if (G.rc.isActionReady()) {
                 // try to paint nearby
-                MapLocation loc;
-                for (int dx = -2; ++dx <= 2;) {
-                    for (int dy = -2; ++dy <= 2;) {
-                        loc = G.me.translate(dx, dy);
-                        if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                            // still have to check if on map
-                            if (G.rc.canAttack(loc))
-                                G.rc.attack(loc);
-                        }
-                    }
-                }
-                loc = G.me.translate(-3, 0);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(0, 3);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(3, 0);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
-                loc = G.me.translate(0, -3);
-                if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
-                    // still have to check if on map
-                    if (G.rc.canAttack(loc))
-                        G.rc.attack(loc);
-                }
+                // MapLocation loc;
+                // for (int dx = -2; ++dx <= 2;) {
+                //     for (int dy = -2; ++dy <= 2;) {
+                //         loc = G.me.translate(dx, dy);
+                //         if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //             // still have to check if on map
+                //             if (G.rc.canAttack(loc))
+                //                 G.rc.attack(loc);
+                //         }
+                //     }
+                // }
+                // loc = G.me.translate(-3, 0);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(0, 3);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(3, 0);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
+                // loc = G.me.translate(0, -3);
+                // if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                //     // still have to check if on map
+                //     if (G.rc.canAttack(loc))
+                //         G.rc.attack(loc);
+                // }
             }
             return scores;
         }
