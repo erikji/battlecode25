@@ -1,4 +1,4 @@
-package b22;
+package old;
 
 public class PaintTower {
 

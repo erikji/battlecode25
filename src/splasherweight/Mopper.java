@@ -1,4 +1,4 @@
-package b22;
+package splasherweight;
 
 import battlecode.common.*;
 

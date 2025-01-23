@@ -1,9 +1,8 @@
-package b22;
+package splasherweight;
 
-public class PaintTower {
-
-
+public class MoneyTower {
     public static void init()throws Exception{}
+
     public static void run() throws Exception {
     }
 }

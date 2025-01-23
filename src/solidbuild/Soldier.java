@@ -15,7 +15,7 @@ public class Soldier {
     // ratio to reduce retreat requirement by if building tower/srp
     public static final double SOL_RETREAT_REDUCED_RATIO = 0.5;
     // exploration weight multiplier
-    public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
+    public static final int SOL_EXPLORE_OPP_WEIGHT = 2; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
     // controls rounds between visiting ruins
     public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -100;
     // increase timeout based on number of towers and map area
@@ -48,6 +48,9 @@ public class Soldier {
     public static final int SOL_MAX_SRP_ENEMY_PAINT_NO_HELP = 1;
     public static final int SOL_MAX_SRP_ENEMY_PAINT_HARD = 8;
     public static final int SOL_MAX_SRP_ENEMY_PAINT_NO_HELP_HARD = 1;
+    // max time spent traveling to an SRP expand target (obstructed by bot /
+    // inaccessible)
+    public static final int SOL_MAX_SRP_TARGET_TIME = 15;
     // max build time
     public static final int SOL_MAX_SRP_TIME = 50;
     // don't build SRP if not enough paint (runs out quickly)
@@ -76,6 +79,7 @@ public class Soldier {
 
     public static int buildBlockedTime = 0;
     public static int buildTime = 0;
+    public static int srpTargetTime = 0;
 
     public static StringBuilder messingUpRuins = new StringBuilder();
     public static MapLocation messingUpLoc = null;
@@ -471,6 +475,12 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
+        // if been trying to reach target for a long time stop (inaccessible/occupied)
+        if (srpTargetTime > SOL_MAX_SRP_TARGET_TIME) {
+            mode = EXPLORE;
+            return;
+        }
+        srpTargetTime++;
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
@@ -495,6 +505,8 @@ public class Soldier {
                 return;
             }
             target = srpCheckLocations[srpCheckIndex];
+            // reset target time when disqualifying target
+            srpTargetTime = 0;
         }
         // markers
         if (G.me.equals(target) && canBuildSrpAtLocation(G.me)) {

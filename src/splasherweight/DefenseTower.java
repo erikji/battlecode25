@@ -1,4 +1,4 @@
-package b22;
+package splasherweight;
 
 public class DefenseTower {
 

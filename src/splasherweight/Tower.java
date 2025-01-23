@@ -1,4 +1,4 @@
-package b22;
+package splasherweight;
 
 import battlecode.common.*;
 import java.util.*;
@@ -6,7 +6,7 @@ import java.util.*;
 public class Tower {
     // initial weights for bots
     public static final double TOW_SPAWN_SOLDIER_WEIGHT = 1.5;
-    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 0.8;
+    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 0.9;
     public static final double TOW_SPAWN_MOPPER_WEIGHT = 1.2;
     // reduce the weight of soldiers if max towers reached
     public static final double TOW_MAXED_REDUCE_SOLDIER_WEIGHT = 1;

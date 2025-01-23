@@ -1,4 +1,4 @@
-package b22;
+package old;
 
 import battlecode.common.*;
 import java.util.*;

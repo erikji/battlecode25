@@ -1,4 +1,4 @@
-package b22;
+package solexpoppwei;
 
 import battlecode.common.*;
 import java.util.*;
