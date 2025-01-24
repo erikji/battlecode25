@@ -15,6 +15,7 @@ public class Tower {
     public static int spawnedSplashers = 0;
     public static int spawnedMoppers = 0;
     public static int spawnedRobots = 0;
+    public static int lastSpawn = -1;
 
     public static double doubleSpawnedSoldiers = 0;
     public static double doubleSpawnedSplashers = 0;
@@ -148,7 +149,7 @@ public class Tower {
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
-        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.rc.getRoundNum() < 100 || G.rc.getRoundNum() % 4 == 0) || G.round < 10) {
+        if ((G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.round < 100 || (lastSpawn + 1 < G.round && G.allyRobots.length < 4)) || G.round < 10)) {
             switch (trying) {
                 case UnitType.MOPPER:
                     for (MapLocation loc : spawnLocs) {
@@ -159,6 +160,7 @@ public class Tower {
                             doubleSpawnedSoldiers += soldierWeight;
                             doubleSpawnedSplashers += splasherWeight;
                             doubleSpawnedMoppers += mopperWeight;
+                            lastSpawn = G.round;
                             break;
                         }
                     }
@@ -172,6 +174,7 @@ public class Tower {
                             doubleSpawnedSoldiers += soldierWeight;
                             doubleSpawnedSplashers += splasherWeight;
                             doubleSpawnedMoppers += mopperWeight;
+                            lastSpawn = G.round;
                             break;
                         }
                     }
@@ -185,6 +188,7 @@ public class Tower {
                             doubleSpawnedSoldiers += soldierWeight;
                             doubleSpawnedSplashers += splasherWeight;
                             doubleSpawnedMoppers += mopperWeight;
+                            lastSpawn = G.round;
                             break;
                         }
                     }
