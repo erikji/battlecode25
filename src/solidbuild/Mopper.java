@@ -53,6 +53,10 @@ public class Mopper {
             if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
             }
+            else {
+                mode = EXPLORE;
+                Motion.retreatTower = -1;
+            }
         } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
