@@ -616,14 +616,18 @@ public class Motion {
                 for (int i = G.nearbyRuins.length; --i >= 0;) {
                     MapLocation loc = G.nearbyRuins[i];
                     if (!G.rc.canSenseRobotAtLocation(loc)) continue;
-                    if (G.rc.senseRobotAtLocation(loc).team != G.team) continue;
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    if (bot.team != G.team) continue;
+                    if (bot.type.getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER && bot.paintAmount == 0) {
+                        continue;
+                    }
                     int weight = 0;
                     if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
                         weight -= 1000;
                     }
                     int distance = Motion.getChebyshevDistance(G.me, loc);
                     weight -= distance;
-                    weight += G.rc.senseRobotAtLocation(loc).paintAmount;
+                    weight += bot.paintAmount;
 
                     if (best == -1 || weight > bestWeight) {
                         best = i;
