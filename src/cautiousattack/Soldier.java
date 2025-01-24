@@ -15,14 +15,14 @@ public class Soldier {
     // ratio to reduce retreat requirement by if building tower/srp
     public static final double SOL_RETREAT_REDUCED_RATIO = 0.5;
     // exploration weight multiplier
-    public static final int SOL_EXPLORE_OPP_WEIGHT = 5; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
+    public static final int SOL_EXPLORE_OPP_WEIGHT = 2; // tested: 3 (45/94), 4 (44/94), 6 (47/94)
     // controls rounds between visiting ruins
     public static final int SOL_RUIN_VISIT_TIMEOUT_BASE = -100;
     // increase timeout based on number of towers and map area
     public static final int SOL_RUIN_VISIT_TIMEOUT_TOW_INCREASE = 80;
     public static final double SOL_RUIN_VISIT_TIMEOUT_MAP_INCREASE = 0.2;
     // controls ratio of money to paint (higher = more money)
-    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 3;
+    public static final double SOL_MONEY_PAINT_TOWER_RATIO = 2;
     // stop building towers if enemy paint interferes too much
     public static final int SOL_MAX_TOWER_ENEMY_PAINT = 4;
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_NO_HELP = 1;
@@ -30,7 +30,7 @@ public class Soldier {
     public static final int SOL_TOWER_HELP_DIST = 5;
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
     // max soldiers that will build a tower at a time
-    public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 3;
+    public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 2;
     // max tower build time
     public static final int SOL_MAX_TOWER_TIME = 80;
     // don't build SRP immediately after spawning or in early game
@@ -63,7 +63,7 @@ public class Soldier {
     public static UnitType towerType = null; // ATTACK mode
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
-    
+
     public static StringBuilder messingUpRuins = new StringBuilder();
     public static MapLocation messingUpLoc = null; // MESSING_UP mode
 
@@ -86,6 +86,9 @@ public class Soldier {
     // used for SRPs
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
     public static int lastUpdatedMapInfosRound = -1;
+
+    public static void init() throws Exception {
+    }
 
     /**
      * Always:
@@ -137,14 +140,12 @@ public class Soldier {
         // somewhat spaghetti fix for soldiers
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-        // if (!avoidRetreating
-        // && G.rc.getPaint() < Motion.getRetreatPaint() * (reducedRetreating ?
-        // SOL_RETREAT_REDUCED_RATIO : 1)
-        // && G.maxChips < 6000
-        // && G.allyRobots.length < 9) {
-        if (false) {
-            mode = RETREAT;
-        } else if (mode == RETREAT && G.rc.getPaint() > Motion.paintNeededToStopRetreating) {
+        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+            Motion.setRetreatLoc();
+            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+                mode = RETREAT;
+            }
+        } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
@@ -188,6 +189,16 @@ public class Soldier {
                 else
                     Motion.retreat();
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
+            }
+        }
+        // remove markers for money towers so we can make paint towers late-game
+        for (int i = G.nearbyRuins.length; --i >= 0;) {
+            MapLocation loc = G.nearbyRuins[i].add(Direction.WEST);
+            if (G.rc.canSenseLocation(loc)) {
+                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)
+                        && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                    G.rc.removeMark(loc);
+                }
             }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
@@ -621,9 +632,9 @@ public class Soldier {
             }
         }
         if (exploreLocation == null) {
-            Motion.exploreRandomly();
+            Motion.exploreRandomly(moveWithPaintMicro);
         } else {
-            Motion.bugnavTowards(exploreLocation);
+            Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
             G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
@@ -1129,9 +1140,20 @@ public class Soldier {
             return 2;
         // no im not adding the rc.disintigrate too much bytecode
         // 24 limit is for betterdisintegrating
-        int towerType = G.rc.getChips() < 20000 && G.rc.getNumberTowers() < 24
+        int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        if (G.mapCenter.distanceSquaredTo(loc) < 36) {
+            // boolean enemyPaint = false;
+            // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+            // if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+            // enemyPaint = true;
+            // break;
+            // }
+            // }
+            // if (enemyPaint || G.opponentRobotsString.length() > 0)
+            towerType = 0;
+        }
         MapLocation place = loc;
         switch (towerType) {
             case 1 -> place = loc.translate(-1, 0);
@@ -1141,6 +1163,83 @@ public class Soldier {
             G.rc.mark(place, false);
         return towerType;
     }
+
+    /**
+     * Weights neutral tiles as ally tiles if it can paint them, then paints them if
+     * it moves to one. DO NOT CHAIN WITH OTHER MICRO FUNCTIONS.
+     */
+    public static Micro moveWithPaintMicro = new Micro() {
+        @Override
+        public int[] micro(Direction d, MapLocation dest) throws Exception {
+            int[] scores = Motion.defaultMicro.micro(d, dest);
+            if (Random.rand() % 4 == 0) {
+                MapLocation nxt, bestLoc = G.me;
+                int best = -1000000000;
+                int numTurnsUntilNextMove = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
+                        + Motion.movementCooldown)
+                        / 10);
+                boolean canPaintBest = false;
+                for (int i = 9; --i >= 0;) {
+                    nxt = G.me.add(G.ALL_DIRECTIONS[i]);
+                    if (G.rc.onTheMap(nxt) && G.rc.senseMapInfo(nxt).getPaint() == PaintType.EMPTY
+                            && G.rc.canAttack(nxt)) {
+                        // equalize
+                        scores[i] += 5 * GameConstants.PENALTY_NEUTRAL_TERRITORY * numTurnsUntilNextMove;
+                        if (scores[i] > best) {
+                            best = scores[i];
+                            canPaintBest = true;
+                            bestLoc = nxt;
+                        }
+                    } else if (scores[i] > best) {
+                        best = scores[i];
+                        canPaintBest = false;
+                    }
+                }
+                if (canPaintBest) {
+                    // no more checkerboarding :(
+                    G.rc.attack(bestLoc, false);
+                } else if (G.rc.isActionReady()) {
+                    // try to paint nearby
+                    MapLocation loc;
+                    for (int dx = -2; ++dx <= 2;) {
+                        for (int dy = -2; ++dy <= 2;) {
+                            loc = G.me.translate(dx, dy);
+                            if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                                // still have to check if on map
+                                if (G.rc.canAttack(loc))
+                                    G.rc.attack(loc);
+                            }
+                        }
+                    }
+                    loc = G.me.translate(-3, 0);
+                    if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                        // still have to check if on map
+                        if (G.rc.canAttack(loc))
+                            G.rc.attack(loc);
+                    }
+                    loc = G.me.translate(0, 3);
+                    if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                        // still have to check if on map
+                        if (G.rc.canAttack(loc))
+                            G.rc.attack(loc);
+                    }
+                    loc = G.me.translate(3, 0);
+                    if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                        // still have to check if on map
+                        if (G.rc.canAttack(loc))
+                            G.rc.attack(loc);
+                    }
+                    loc = G.me.translate(0, -3);
+                    if (G.rc.onTheMap(loc) && G.rc.senseMapInfo(loc).getPaint() == PaintType.EMPTY) {
+                        // still have to check if on map
+                        if (G.rc.canAttack(loc))
+                            G.rc.attack(loc);
+                    }
+                }
+            }
+            return scores;
+        }
+    };
 
     public static Micro attackMicro = new Micro() {
         @Override
