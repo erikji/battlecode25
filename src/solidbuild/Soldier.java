@@ -198,6 +198,13 @@ public class Soldier {
                     G.rc.removeMark(loc);
                 }
             }
+            loc = G.nearbyRuins[i].add(Direction.SOUTH);
+            if (G.rc.canSenseLocation(loc)) {
+                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)
+                        && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                    G.rc.removeMark(loc);
+                }
+            }
         }
         G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
@@ -1076,6 +1083,9 @@ public class Soldier {
     public static int predictTowerType(MapLocation loc) throws Exception {
         G.indicatorString.append("(M=" + POI.moneyTowers + ", P=" + POI.paintTowers + ") ");
         // check for marker
+        if (G.me.isWithinDistanceSquared(loc.add(Direction.SOUTH), 20)
+                && G.rc.senseMapInfo(loc.translate(0, -1)).getMark() == PaintType.ALLY_PRIMARY)
+            return 0;
         if (G.me.isWithinDistanceSquared(loc.add(Direction.WEST), 20)
                 && G.rc.senseMapInfo(loc.translate(-1, 0)).getMark() == PaintType.ALLY_PRIMARY)
             return 1;
@@ -1091,18 +1101,19 @@ public class Soldier {
             towerType = 2;
         }
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
-            // boolean enemyPaint = false;
-            // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            // if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
-            // enemyPaint = true;
-            // break;
-            // }
-            // }
-            // if (enemyPaint || G.opponentRobotsString.length() > 0)
-            towerType = 0;
+            boolean enemyPaint = false;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+                    enemyPaint = true;
+                    break;
+                }
+            }
+            if (enemyPaint || G.opponentRobotsString.length() > 0)
+                towerType = 0;
         }
         MapLocation place = loc;
         switch (towerType) {
+            case 0 -> place = loc.translate(0, -1);
             case 1 -> place = loc.translate(-1, 0);
             case 2 -> place = loc.translate(1, 0);
         }
