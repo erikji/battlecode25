@@ -681,6 +681,11 @@ public class Motion {
             if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
+                    if (r.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER) {
+                        if (r.paintAmount != 0) {
+                            return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
+                        }
+                    }
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     boolean lowest = true;
                     for (int i = 8; --i >= 0;) {
@@ -693,10 +698,6 @@ public class Motion {
                     }
                     if (lowest && r.paintAmount >= amount) {
                         return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
-                    } else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
-                        if (r.paintAmount != 0) {
-                            return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
-                        }
                     }
                 }
             }
