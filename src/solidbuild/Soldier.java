@@ -144,7 +144,7 @@ public class Soldier {
         // G.allyRobots.length < 9) {
         if (G.rc.getPaint() < 150 && G.maxChips < 6000 && G.allyRobots.length < 9) {
             Motion.setRetreatLoc();
-            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+            if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
             }
         } else if (mode == RETREAT) {
@@ -167,11 +167,11 @@ public class Soldier {
                 buildBlockedTime = 0;
                 buildTime = 0;
                 srpTargetTime = 0;
-                Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1) {
-                    mode = EXPLORE;
-                    exploreCheckMode();
-                }
+                // Motion.setRetreatLoc();
+                // if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
+                //     mode = EXPLORE;
+                //     exploreCheckMode();
+                // }
             }
         }
         int b = Clock.getBytecodeNum();
@@ -196,6 +196,13 @@ public class Soldier {
         // remove markers for money towers so we can make paint towers late-game
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             MapLocation loc = G.nearbyRuins[i].add(Direction.WEST);
+            if (G.rc.canSenseLocation(loc)) {
+                if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)
+                        && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+                    G.rc.removeMark(loc);
+                }
+            }
+            loc = G.nearbyRuins[i].add(Direction.SOUTH);
             if (G.rc.canSenseLocation(loc)) {
                 if (G.rc.senseMapInfo(loc).getMark() == PaintType.ALLY_PRIMARY && G.rc.canRemoveMark(loc)
                         && G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
@@ -775,17 +782,15 @@ public class Soldier {
             // location guaranteed to be on the map by canBuildSrpHere
             // guaranteed within vision radius if can attack there
             loc = resourceLocation.translate(dx - 2, dy - 2);
-            if (G.rc.canAttack(loc)) {
-                paint = Robot.resourcePattern[dx][dy];
-                exists = G.rc.senseMapInfo(loc).getPaint();
-                if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                    isPatternComplete = false;
-                    // can't paint enemy paint
-                    if (!exists.isEnemy()) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
-                    }
+            paint = Robot.resourcePattern[dx][dy];
+            exists = G.rc.senseMapInfo(loc).getPaint();
+            if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                isPatternComplete = false;
+                // can't paint enemy paint
+                if (G.rc.canAttack(loc) && !exists.isEnemy()) {
+                    G.rc.attack(loc, paint);
+                    paintLocation = loc;
+                    break;
                 }
             }
         }
@@ -1083,6 +1088,9 @@ public class Soldier {
     public static int predictTowerType(MapLocation loc) throws Exception {
         G.indicatorString.append("(M=" + POI.moneyTowers + ", P=" + POI.paintTowers + ") ");
         // check for marker
+        if (G.me.isWithinDistanceSquared(loc.add(Direction.SOUTH), 20)
+                && G.rc.senseMapInfo(loc.translate(0, -1)).getMark() == PaintType.ALLY_PRIMARY)
+            return 0;
         if (G.me.isWithinDistanceSquared(loc.add(Direction.WEST), 20)
                 && G.rc.senseMapInfo(loc.translate(-1, 0)).getMark() == PaintType.ALLY_PRIMARY)
             return 1;
@@ -1094,22 +1102,23 @@ public class Soldier {
         int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
-        // if (POI.paintTowers == 0 && POI.moneyTowers >= 3) {
-        // towerType = 2;
-        // }
+        if (POI.paintTowers == 0 && POI.moneyTowers >= 3) {
+            towerType = 2;
+        }
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
-            // boolean enemyPaint = false;
-            // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            // if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
-            // enemyPaint = true;
-            // break;
-            // }
-            // }
-            // if (enemyPaint || G.opponentRobotsString.length() > 0)
-            towerType = 0;
+            boolean enemyPaint = false;
+            for (int i = G.nearbyMapInfos.length; --i >= 0;) {
+                if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+                    enemyPaint = true;
+                    break;
+                }
+            }
+            if (enemyPaint || G.opponentRobotsString.length() > 0)
+                towerType = 0;
         }
         MapLocation place = loc;
         switch (towerType) {
+            case 0 -> place = loc.translate(0, -1);
             case 1 -> place = loc.translate(-1, 0);
             case 2 -> place = loc.translate(1, 0);
         }

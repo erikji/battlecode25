@@ -51,7 +51,7 @@ public class Mopper {
         G.indicatorString.append("START=" + Clock.getBytecodeNum());
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
             Motion.setRetreatLoc();
-            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+            if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
             }
         } else if (mode == RETREAT) {
@@ -67,11 +67,11 @@ public class Mopper {
                 buildCheckMode();
                 break;
             case RETREAT:
-                Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1) {
-                    mode = EXPLORE;
-                    exploreCheckMode();
-                }
+                // Motion.setRetreatLoc();
+                // if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
+                //     mode = EXPLORE;
+                //     exploreCheckMode();
+                // }
                 break;
         }
         int b = Clock.getBytecodeNum();
