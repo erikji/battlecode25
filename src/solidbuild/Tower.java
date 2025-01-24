@@ -148,7 +148,7 @@ public class Tower {
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
-        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.rc.getRoundNum() < 100 || G.rc.getRoundNum() % 3 == 0)) {
+        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.rc.getRoundNum() < 100 || G.rc.getRoundNum() % 4 == 0)) {
             switch (trying) {
                 case UnitType.MOPPER:
                     for (MapLocation loc : spawnLocs) {
