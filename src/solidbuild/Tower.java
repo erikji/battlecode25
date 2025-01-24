@@ -6,7 +6,7 @@ import java.util.*;
 public class Tower {
     // initial weights for bots
     public static final double TOW_SPAWN_SOLDIER_WEIGHT = 1.5;
-    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 0.8;
+    public static final double TOW_SPAWN_SPLASHER_WEIGHT = 0.2;
     public static final double TOW_SPAWN_MOPPER_WEIGHT = 1.2;
     // reduce the weight of soldiers if max towers reached
     public static final double TOW_MAXED_REDUCE_SOLDIER_WEIGHT = 1;
@@ -110,7 +110,7 @@ public class Tower {
         //     soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
         // }
         soldierWeight -= ((double) G.rc.getNumberTowers()) * 0.05;
-        splasherWeight += ((double) POI.paintTowers) * 0.1;
+        splasherWeight += ((double) POI.paintTowers) * 0.3;
         double sum = soldierWeight + splasherWeight + mopperWeight;
         soldierWeight /= sum;
         splasherWeight /= sum;

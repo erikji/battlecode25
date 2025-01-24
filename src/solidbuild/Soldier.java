@@ -175,7 +175,7 @@ public class Soldier {
             }
         }
         int b = Clock.getBytecodeNum();
-        G.indicatorString.append((b - a) + " ");
+        // G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
             case BUILD_TOWER -> buildTower();
@@ -184,13 +184,13 @@ public class Soldier {
             case ATTACK -> attack();
             case MESSING_UP -> messingUp();
             case RETREAT -> {
-                G.indicatorString.append("RETREAT ");
+                // G.indicatorString.append("RETREAT ");
                 if (G.rc.getPaint() > SOL_RETREAT_PAINT_MIN_PAINT && Motion.retreatTower >= 0
                         && G.me.isWithinDistanceSquared(POI.towerLocs[Motion.retreatTower], 8))
                     Motion.retreat();
                 else
                     Motion.retreat();
-                G.rc.setIndicatorDot(G.me, 255, 0, 255);
+                // G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
         }
         // remove markers for money towers so we can make paint towers late-game
@@ -210,11 +210,11 @@ public class Soldier {
                 }
             }
         }
-        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
+        // G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {
-        G.indicatorString.append("CHK_E ");
+        // G.indicatorString.append("CHK_E ");
         // VERY IMPORTANT DO NOT TOUCH
         buildBlockedTime = 0;
         buildTime = 0;
@@ -255,7 +255,7 @@ public class Soldier {
         }
         if (lastSrpExpansion + SOL_SRP_EXPAND_TIMEOUT >= G.round || (exploreLocation != null
                 && G.me.isWithinDistanceSquared(exploreLocation, SOL_SRP_EXP_OVERRIDE_DIST))) {
-            G.indicatorString.append("SKIP_CHK_RP:" + lastSrpExpansion + ":" + exploreLocation + " ");
+            // G.indicatorString.append("SKIP_CHK_RP:" + lastSrpExpansion + ":" + exploreLocation + " ");
         } else if (G.rc.getPaint() > SOL_SRP_MIN_PAINT) {
             // scan for SRP centers nearby to repair
             final double srpVisitTimeout = SOL_SRP_VISIT_TIMEOUT + SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea;
@@ -306,7 +306,7 @@ public class Soldier {
     }
 
     public static void buildTowerCheckMode() throws Exception {
-        G.indicatorString.append("CHK_BTW ");
+        // G.indicatorString.append("CHK_BTW ");
         reducedRetreating = true;
         G.setLastVisited(ruinLocation, G.round);
         // if been building for a long time stop
@@ -367,7 +367,7 @@ public class Soldier {
                 if (curr.isEnemy()) {
                     enemyPaint++;
                     if (enemyPaint >= SOL_MAX_TOWER_ENEMY_PAINT_HARD) {
-                        G.indicatorString.append("BLOCK-H ");
+                        // G.indicatorString.append("BLOCK-H ");
                         // immediately give up if there's way too much paint
                         mode = EXPLORE;
                         return;
@@ -378,7 +378,7 @@ public class Soldier {
         // check blocked by enemy paint
         if (enemyPaint >= maxEnemyPaint) {
             buildBlockedTime++;
-            G.indicatorString.append("BLOCK ");
+            // G.indicatorString.append("BLOCK ");
             // if pattern has been blocked for a long time just give up
             if (buildBlockedTime > SOL_MAX_TOWER_BLOCKED_TIME) {
                 mode = EXPLORE;
@@ -388,7 +388,7 @@ public class Soldier {
             buildBlockedTime = 0;
         }
         if (incorrectPaint == 0) {
-            G.indicatorString.append("COMPLETE ");
+            // G.indicatorString.append("COMPLETE ");
             // if pattern complete leave lowest bot ID to complete
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].type == UnitType.SOLDIER
@@ -416,16 +416,17 @@ public class Soldier {
                 }
             }
             totalPaint += G.rc.getPaint() / UnitType.SOLDIER.attackCost;
-            G.indicatorString.append("TP=" + totalPaint + ",IP=" + incorrectPaint + " ");
+            // G.indicatorString.append("TP=" + totalPaint + ",IP=" + incorrectPaint + " ");
             if (totalPaint >= incorrectPaint)
                 avoidRetreating = true;
-        } else {
-            G.indicatorString.append("EP=" + enemyPaint + ",IP=" + incorrectPaint + " ");
         }
+        //  else {
+        //     // G.indicatorString.append("EP=" + enemyPaint + ",IP=" + incorrectPaint + " ");
+        // }
     }
 
     public static void buildResourceCheckMode() throws Exception {
-        G.indicatorString.append("CHK_BRP ");
+        // G.indicatorString.append("CHK_BRP ");
         reducedRetreating = true;
         // shouldn't interfere with towers here either, same as expand RP
         G.setLastVisited(resourceLocation, G.round);
@@ -464,7 +465,7 @@ public class Soldier {
                     if (curr.isEnemy()) {
                         enemyPaint++;
                         if (enemyPaint >= maxEnemyPaintHard) {
-                            G.indicatorString.append("BLOCK-H ");
+                            // G.indicatorString.append("BLOCK-H ");
                             // immediately give up if there's way too much paint
                             mode = EXPLORE;
                             return;
@@ -476,7 +477,7 @@ public class Soldier {
         // check blocked by enemy paint
         if (enemyPaint >= maxEnemyPaint) {
             buildBlockedTime++;
-            G.indicatorString.append("BLOCK ");
+            // G.indicatorString.append("BLOCK ");
             // if pattern has been blocked for a long time just give up
             if (buildBlockedTime > SOL_MAX_SRP_BLOCKED_TIME) {
                 mode = EXPLORE;
@@ -491,7 +492,7 @@ public class Soldier {
     }
 
     public static void expandResourceCheckMode() throws Exception {
-        G.indicatorString.append("CHK_ERP ");
+        // G.indicatorString.append("CHK_ERP ");
         MapLocation target = srpCheckLocations[srpCheckIndex];
         // if been trying to reach target for a long time stop (inaccessible/occupied)
         if (srpTargetTime > SOL_MAX_SRP_TARGET_TIME) {
@@ -511,8 +512,8 @@ public class Soldier {
         final double visitTimeout = SOL_SRP_VISIT_TIMEOUT + SOL_SRP_VISIT_TIMEOUT_MAP_INCREASE * G.mapArea;
         while (!G.rc.onTheMap(target) || G.getLastVisited(target) + visitTimeout >= G.round
                 || cannotBuildSrpAtLocation(target)) {
-            if (G.rc.onTheMap(target))
-                G.rc.setIndicatorDot(target, 255, 100, 0);
+            // if (G.rc.onTheMap(target))
+            //     G.rc.setIndicatorDot(target, 255, 100, 0);
             if (++srpCheckIndex >= srpCheckLocations.length) {
                 mode = EXPLORE;
                 // don't waste turns
@@ -529,14 +530,14 @@ public class Soldier {
             resourceLocation = G.me;
             // only place one marker
             G.rc.mark(resourceLocation, true);
-            G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
-            G.indicatorString.append("MK_SRP ");
+            // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            // G.indicatorString.append("MK_SRP ");
             mode = BUILD_RESOURCE;
         }
     }
 
     public static void attackCheckMode() throws Exception {
-        G.indicatorString.append("CHK_ATK ");
+        // G.indicatorString.append("CHK_ATK ");
         // friendly/no tower
         if (G.rc.canSenseLocation(towerLocation)
                 && (!G.rc.canSenseRobotAtLocation(towerLocation)
@@ -559,7 +560,7 @@ public class Soldier {
     }
 
     public static void explore() throws Exception {
-        G.indicatorString.append("EXPLORE ");
+        // G.indicatorString.append("EXPLORE ");
         // here instead of checkMode since checkMode may skip this if tower/SRP checked
         // find towers from POI to attack/build out of vision
         exploreLocation = null;
@@ -593,7 +594,7 @@ public class Soldier {
             Motion.exploreRandomly(moveWithPaintMicro);
         } else {
             Motion.bugnavTowards(exploreLocation, moveWithPaintMicro);
-            G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
+            // G.rc.setIndicatorLine(G.me, exploreLocation, 255, 255, 0);
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             if (!G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])
@@ -623,7 +624,7 @@ public class Soldier {
                 }
             }
         }
-        G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        // G.rc.setIndicatorDot(G.me, 0, 255, 0);
     }
 
     public static void messingUpCheckMode() throws Exception {
@@ -687,17 +688,17 @@ public class Soldier {
             MapLocation loc = Motion.exploreRandomlyAggressiveLoc();
             Motion.bugnavTowards(loc);
         }
-        for (int i = 8; --i >= 0;) {
-            MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
-            if (G.rc.onTheMap(nxt)) {
-                G.rc.setIndicatorLine(G.me, nxt, 0, 0, 0);
-            }
-        }
+        // for (int i = 8; --i >= 0;) {
+        //     MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
+        //     if (G.rc.onTheMap(nxt)) {
+        //         G.rc.setIndicatorLine(G.me, nxt, 0, 0, 0);
+        //     }
+        // }
     }
 
     public static void buildTower() throws Exception {
-        G.indicatorString.append("BUILD_TW ");
-        G.indicatorString.append("TYPE=" + buildTowerType + " ");
+        // G.indicatorString.append("BUILD_TW ");
+        // G.indicatorString.append("TYPE=" + buildTowerType + " ");
         // move first, then paint, helps avoid passive paint drain
         if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
             G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
@@ -705,7 +706,7 @@ public class Soldier {
             mode = EXPLORE;
             Motion.exploreRandomly();
             // dot to signal building complete
-            G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
+            // G.rc.setIndicatorDot(ruinLocation, 255, 200, 0);
             return;
         }
         // try to stick close to the tower instead of relying on nugbav
@@ -717,11 +718,11 @@ public class Soldier {
         if (!G.me.isAdjacentTo(ruinLocation) || !Motion.move(G.me.directionTo(next))) {
             Motion.bugnavTowards(next);
         }
-        G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
+        // G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
         if (G.rc.isActionReady() && G.rc.getPaint() >= 5) {
             // paint second
-            MapLocation paintLocation = null;
+            // MapLocation paintLocation = null;
             boolean[][] pattern = Robot.towerPatterns[buildTowerType];
             if (G.me.isWithinDistanceSquared(ruinLocation, 8)
                     && G.rc.senseMapInfo(G.me).getPaint() == PaintType.EMPTY) {
@@ -750,27 +751,27 @@ public class Soldier {
                         if (!exists.isEnemy()
                                 && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
                             G.rc.attack(loc, paint);
-                            paintLocation = loc;
+                            // paintLocation = loc;
                             break;
                         }
                     }
                 }
             }
-            if (paintLocation != null)
-                G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+            // if (paintLocation != null)
+            //     G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
             if (G.rc.canCompleteTowerPattern(Robot.towers[buildTowerType], ruinLocation)) {
                 G.rc.completeTowerPattern(Robot.towers[buildTowerType], ruinLocation);
                 POI.addTower(-1, ruinLocation, G.team, Robot.towers[buildTowerType]);
                 mode = EXPLORE;
             }
         }
-        G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        // G.rc.setIndicatorDot(G.me, 0, 0, 255);
     }
 
     public static void buildResource() throws Exception {
-        G.indicatorString.append("BUILD_RP ");
+        // G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapLocation paintLocation = null;
+        // MapLocation paintLocation = null;
         boolean paint;
         PaintType exists;
         MapLocation loc;
@@ -789,7 +790,7 @@ public class Soldier {
                 // can't paint enemy paint
                 if (G.rc.canAttack(loc) && !exists.isEnemy()) {
                     G.rc.attack(loc, paint);
-                    paintLocation = loc;
+                    // paintLocation = loc;
                     break;
                 }
             }
@@ -829,32 +830,32 @@ public class Soldier {
             }
             Motion.exploreRandomly();
             // dot to signal building complete
-            G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
+            // G.rc.setIndicatorDot(resourceLocation, 255, 200, 0);
         } else {
             // just sit in the middle of the SRP
             Motion.bugnavTowards(resourceLocation);
-            G.rc.setIndicatorLine(G.me, resourceLocation, 255, 100, 0);
+            // G.rc.setIndicatorLine(G.me, resourceLocation, 255, 100, 0);
         }
-        if (paintLocation != null)
-            G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
-        G.rc.setIndicatorDot(G.me, 0, 200, 255);
+        // if (paintLocation != null)
+        //     G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
+        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void expandResource() throws Exception {
-        G.indicatorString.append("EXPAND_RP ");
+        // G.indicatorString.append("EXPAND_RP ");
         lastSrpExpansion = G.round;
         Motion.bugnavTowards(srpCheckLocations[srpCheckIndex]);
         // show the queue and current target
-        for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
-            if (G.rc.onTheMap(srpCheckLocations[i]))
-                G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
-        }
-        G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
-        G.rc.setIndicatorDot(G.me, 0, 200, 255);
+        // for (int i = srpCheckLocations.length; --i >= srpCheckIndex;) {
+        //     if (G.rc.onTheMap(srpCheckLocations[i]))
+        //         G.rc.setIndicatorDot(srpCheckLocations[i], 200, 100, 150);
+        // }
+        // G.rc.setIndicatorLine(G.me, srpCheckLocations[srpCheckIndex], 255, 0, 150);
+        // G.rc.setIndicatorDot(G.me, 0, 200, 255);
     }
 
     public static void attack() throws Exception {
-        G.indicatorString.append("ATTACK ");
+        // G.indicatorString.append("ATTACK ");
         // attack micro moment
         if (towerLocation.isWithinDistanceSquared(G.me, towerType.actionRadiusSquared)) {
             if (G.rc.canAttack(towerLocation))
@@ -870,7 +871,7 @@ public class Soldier {
                         towerType.actionRadiusSquared + 1);
             }
         }
-        G.rc.setIndicatorDot(G.me, 255, 0, 0);
+        // G.rc.setIndicatorDot(G.me, 255, 0, 0);
     }
 
     /**
@@ -1086,7 +1087,7 @@ public class Soldier {
      * Marker below = rc.disintigrate
      */
     public static int predictTowerType(MapLocation loc) throws Exception {
-        G.indicatorString.append("(M=" + POI.moneyTowers + ", P=" + POI.paintTowers + ") ");
+        // G.indicatorString.append("(M=" + POI.moneyTowers + ", P=" + POI.paintTowers + ") ");
         // check for marker
         if (G.me.isWithinDistanceSquared(loc.add(Direction.SOUTH), 20)
                 && G.rc.senseMapInfo(loc.translate(0, -1)).getMark() == PaintType.ALLY_PRIMARY)

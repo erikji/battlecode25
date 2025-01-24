@@ -8,10 +8,10 @@ for i in range(1,25):
     print("""\t\tloc = G.me.translate("""+str(works[i][0])+""", """+str(works[i][1])+""");
         if (G.rc.onTheMap(loc) && G.rc.canSenseRobotAtLocation(loc)) {
             RobotInfo r = G.rc.senseRobotAtLocation(loc);
-            if (r.team == G.team && G.rc.getPaint() > 40 && r.type != UnitType.MOPPER) {
-                transferScores["""+str(i)+"""] += Math.min(G.rc.getPaint() - 40, r.type.paintCapacity - r.paintAmount) * 5;
+            if (r.team == G.team && G.rc.getPaint() > 70 && r.type != UnitType.MOPPER) {
+                transferScores["""+str(i)+"""] += Math.min(G.rc.getPaint() - 50, r.type.paintCapacity - r.paintAmount) * 3;
                 if (r.paintAmount == 0) {
-                    transferScores["""+str(i)+"""] += 200;
+                    transferScores["""+str(i)+"""] += 101;
                 }
             }
         }""")

@@ -90,8 +90,8 @@ public class Robot {
         }
         Motion.tryTransferPaint();
         Motion.lastPaint = G.rc.getPaint();
-        G.indicatorString.append("SYM="
-                + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
-        POI.drawIndicators();
+        // G.indicatorString.append("SYM="
+        //         + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
+        // POI.drawIndicators();
     }
 }

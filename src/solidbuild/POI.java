@@ -247,13 +247,13 @@ public class POI {
     public static boolean firstUpdate = true;
 
     public static void updateRound() throws Exception {
-        int a = Clock.getBytecodeNum();
+        // int a = Clock.getBytecodeNum();
         totalMessages = 0;
         readMessages();
-        if (ENABLE_INDICATORS)
-            G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
+        // if (ENABLE_INDICATORS)
+        //     G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
-        a = Clock.getBytecodeNum();
+        // a = Clock.getBytecodeNum();
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
                 RobotInfo info = G.rc.senseRobotAtLocation(G.nearbyRuins[i]);
@@ -266,11 +266,11 @@ public class POI {
                 addTower(-1, G.nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
-        if (ENABLE_INDICATORS)
-            G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
-        a = Clock.getBytecodeNum();
+        // if (ENABLE_INDICATORS)
+        //     G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
+        // a = Clock.getBytecodeNum();
 
-        drawIndicators(); // uses 5000 bytecode somehow
+        // drawIndicators(); // uses 5000 bytecode somehow
 
         // update symmetry array
         if (G.rc.getType().isRobotType()) {
@@ -348,8 +348,8 @@ public class POI {
                 }
             }
         }
-        if (ENABLE_INDICATORS)
-            G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        // if (ENABLE_INDICATORS)
+        //     G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
         // a = Clock.getBytecodeNum();
         // int opponentPaintSeen = 0;
         // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
@@ -373,12 +373,12 @@ public class POI {
                 removeValidSymmetry(-1, 2);
             }
         }
-        if (ENABLE_INDICATORS)
-            G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
-        a = Clock.getBytecodeNum();
+        // if (ENABLE_INDICATORS)
+        //     G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
+        // a = Clock.getBytecodeNum();
         sendMessages();
-        if (ENABLE_INDICATORS)
-            G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
+        // if (ENABLE_INDICATORS)
+        //     G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
@@ -592,12 +592,12 @@ public class POI {
             lastBroadcastRounds[towerGrid[G.me.y / 5][G.me.x / 5]] = G.round + 2000;
             relayMessage = intifyTower(G.rc.getTeam(), G.rc.getType()) | intifyLocation(G.me) | (1 << 15);
             relayMessages++;
-            if (ENABLE_INDICATORS) {
-                G.indicatorString.append("SENT-MESSAGE=" + G.me);
-                for (Direction d : G.DIRECTIONS) {
-                    G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
-                }
-            }
+            // if (ENABLE_INDICATORS) {
+            //     G.indicatorString.append("SENT-MESSAGE=" + G.me);
+            //     for (Direction d : G.DIRECTIONS) {
+            //         G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+            //     }
+            // }
         }
         int minBytecode = 10000;
         switch (G.rc.getType()) {
@@ -643,12 +643,12 @@ public class POI {
                     lastBroadcastRounds[towerGrid[loc.y / 5][loc.x / 5]] = G.round + 2000;
                     relayMessage = appendToMessage(relayMessage, n);
                     relayMessages++;
-                    if (ENABLE_INDICATORS) {
-                        G.indicatorString.append("SENT-MESSAGE=" + parseLocation(n));
-                        for (Direction d : G.DIRECTIONS) {
-                            G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
-                        }
-                    }
+                    // if (ENABLE_INDICATORS) {
+                    //     G.indicatorString.append("SENT-MESSAGE=" + parseLocation(n));
+                    //     for (Direction d : G.DIRECTIONS) {
+                    //         G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+                    //     }
+                    // }
                     if (relayMessages == 2) {
                         G.rc.broadcastMessage(relayMessage);
                         totalMessages++;
