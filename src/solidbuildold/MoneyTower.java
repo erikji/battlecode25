@@ -1,4 +1,4 @@
-package solidbuildtest;
+package solidbuildold;
 
 public class MoneyTower {
     public static void init()throws Exception{}

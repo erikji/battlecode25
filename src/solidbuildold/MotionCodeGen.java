@@ -1,4 +1,4 @@
-package solidbuildtest;
+package solidbuildold;
 
 public class MotionCodeGen {
     public static void bfs20() {

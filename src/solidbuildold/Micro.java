@@ -1,4 +1,4 @@
-package solidbuildtest;
+package solidbuildold;
 
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;

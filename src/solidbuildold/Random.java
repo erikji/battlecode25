@@ -1,6 +1,6 @@
-package solidbuildtest;
+package solidbuildold;
 
-public class Random2 {
+public class Random {
     public static int state;
     public static int rand() throws Exception {
         //xorshift32
