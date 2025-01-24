@@ -142,10 +142,7 @@ public class Soldier {
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
         // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
         if (G.rc.getPaint() < 150 && G.maxChips < 6000 && G.allyRobots.length < 9) {
-            Motion.setRetreatLoc();
-            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
-                mode = RETREAT;
-            }
+            mode = RETREAT;
         } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
@@ -167,7 +164,7 @@ public class Soldier {
                 buildTime = 0;
                 srpTargetTime = 0;
                 Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1) {
+                if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
                     mode = EXPLORE;
                     exploreCheckMode();
                 }
@@ -773,17 +770,15 @@ public class Soldier {
             // location guaranteed to be on the map by canBuildSrpHere
             // guaranteed within vision radius if can attack there
             loc = resourceLocation.translate(dx - 2, dy - 2);
-            if (G.rc.canAttack(loc)) {
-                paint = Robot.resourcePattern[dx][dy];
-                exists = G.rc.senseMapInfo(loc).getPaint();
-                if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                    isPatternComplete = false;
-                    // can't paint enemy paint
-                    if (!exists.isEnemy()) {
-                        G.rc.attack(loc, paint);
-                        paintLocation = loc;
-                        break;
-                    }
+            paint = Robot.resourcePattern[dx][dy];
+            exists = G.rc.senseMapInfo(loc).getPaint();
+            if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                isPatternComplete = false;
+                // can't paint enemy paint
+                if (G.rc.canAttack(loc) && !exists.isEnemy()) {
+                    G.rc.attack(loc, paint);
+                    paintLocation = loc;
+                    break;
                 }
             }
         }
@@ -1092,9 +1087,9 @@ public class Soldier {
         int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
-        // if (POI.paintTowers == 0 && POI.moneyTowers >= 3) {
-        //     towerType = 2;
-        // }
+        if (POI.paintTowers == 0 && POI.moneyTowers >= 3) {
+            towerType = 2;
+        }
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
             // boolean enemyPaint = false;
             // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
