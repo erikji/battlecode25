@@ -140,7 +140,8 @@ public class Soldier {
         // somewhat spaghetti fix for soldiers
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-        // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+        // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 &&
+        // G.allyRobots.length < 9) {
         if (G.rc.getPaint() < 150 && G.maxChips < 6000 && G.allyRobots.length < 9) {
             Motion.setRetreatLoc();
             if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
@@ -343,25 +344,26 @@ public class Soldier {
         int incorrectPaint = 0;
         boolean[][] pattern = Robot.towerPatterns[buildTowerType];
         PaintType curr;
-        for (int dx = -1; dx++ < 4;) {
-            for (int dy = -1; dy++ < 4;) {
-                if (dx == 2 && dy == 2)
-                    continue;
-                // make sure not out of vision radius
-                loc = ruinLocation.translate(dx - 2, dy - 2);
-                if (G.rc.canSenseLocation(loc)) {
-                    curr = G.rc.senseMapInfo(loc).getPaint();
-                    if (curr != (pattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY))
-                        incorrectPaint++;
-                    // stop building if there's lots of enemy paint
-                    if (curr.isEnemy()) {
-                        enemyPaint++;
-                        if (enemyPaint >= SOL_MAX_TOWER_ENEMY_PAINT_HARD) {
-                            G.indicatorString.append("BLOCK-H ");
-                            // immediately give up if there's way too much paint
-                            mode = EXPLORE;
-                            return;
-                        }
+        int offset = Random.rand() % 25;
+        for (int i = 25; --i >= 0;) {
+            int dx = (i + offset) % 5;
+            int dy = ((i + offset) % 25) / 5;
+            if (dx == 2 && dy == 2)
+                continue;
+            // make sure not out of vision radius
+            loc = ruinLocation.translate(dx - 2, dy - 2);
+            if (G.rc.canSenseLocation(loc)) {
+                curr = G.rc.senseMapInfo(loc).getPaint();
+                if (curr != (pattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY))
+                    incorrectPaint++;
+                // stop building if there's lots of enemy paint
+                if (curr.isEnemy()) {
+                    enemyPaint++;
+                    if (enemyPaint >= SOL_MAX_TOWER_ENEMY_PAINT_HARD) {
+                        G.indicatorString.append("BLOCK-H ");
+                        // immediately give up if there's way too much paint
+                        mode = EXPLORE;
+                        return;
                     }
                 }
             }
@@ -1093,7 +1095,7 @@ public class Soldier {
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
         // if (POI.paintTowers == 0 && POI.moneyTowers >= 3) {
-        //     towerType = 2;
+        // towerType = 2;
         // }
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
             // boolean enemyPaint = false;
