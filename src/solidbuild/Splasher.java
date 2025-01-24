@@ -34,17 +34,20 @@ public class Splasher {
         // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 &&
         // G.allyRobots.length < 9) {
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
-			mode = RETREAT;
+            Motion.setRetreatLoc();
+            if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+                mode = RETREAT;
+            }
         } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
-        if (mode == RETREAT) {
-            Motion.setRetreatLoc();
-			if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
-                mode = EXPLORE;
-            }
-        }
+        // if (mode == RETREAT) {
+        //     Motion.setRetreatLoc();
+		// 	if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
+        //         mode = EXPLORE;
+        //     }
+        // }
         // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES

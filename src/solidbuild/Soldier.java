@@ -142,7 +142,10 @@ public class Soldier {
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
         // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
         if (G.rc.getPaint() < 150 && G.maxChips < 6000 && G.allyRobots.length < 9) {
-            mode = RETREAT;
+            Motion.setRetreatLoc();
+            if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+                mode = RETREAT;
+            }
         } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
@@ -163,11 +166,11 @@ public class Soldier {
                 buildBlockedTime = 0;
                 buildTime = 0;
                 srpTargetTime = 0;
-                Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
-                    mode = EXPLORE;
-                    exploreCheckMode();
-                }
+                // Motion.setRetreatLoc();
+                // if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
+                //     mode = EXPLORE;
+                //     exploreCheckMode();
+                // }
             }
         }
         int b = Clock.getBytecodeNum();
