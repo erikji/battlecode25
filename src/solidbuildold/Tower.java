@@ -1,11 +1,11 @@
-package cautiousattack;
+package solidbuildold;
 
 import battlecode.common.*;
 import java.util.*;
 
 public class Tower {
     // initial weights for bots
-    public static final double TOW_SPAWN_SOLDIER_WEIGHT = 2;
+    public static final double TOW_SPAWN_SOLDIER_WEIGHT = 1.5;
     public static final double TOW_SPAWN_SPLASHER_WEIGHT = 0.8;
     public static final double TOW_SPAWN_MOPPER_WEIGHT = 1.2;
     // reduce the weight of soldiers if max towers reached
@@ -43,6 +43,11 @@ public class Tower {
         Arrays.sort(spawnLocs,
                 (MapLocation a, MapLocation b) -> a.distanceSquaredTo(G.mapCenter) - b.distanceSquaredTo(G.mapCenter));
         POI.addTower(-1, G.me, G.team, G.rc.getType());
+        switch (G.rc.getType().getBaseType()) {
+            case LEVEL_ONE_DEFENSE_TOWER -> DefenseTower.init();
+            case LEVEL_ONE_MONEY_TOWER -> MoneyTower.init();
+            case LEVEL_ONE_PAINT_TOWER -> PaintTower.init();
+        }
     }
 
     public static void spawnBot(UnitType t) throws Exception {
@@ -101,9 +106,11 @@ public class Tower {
         // }
         // }
         // }
-        if (G.rc.getNumberTowers() == 25) {
-            soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
-        }
+        // if (G.rc.getNumberTowers() == 25) {
+        //     soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
+        // }
+        soldierWeight -= ((double) G.rc.getNumberTowers()) * 0.05;
+        splasherWeight += ((double) POI.paintTowers) * 0.1;
         double sum = soldierWeight + splasherWeight + mopperWeight;
         soldierWeight /= sum;
         splasherWeight /= sum;
@@ -136,12 +143,12 @@ public class Tower {
         //     trying = UnitType.SOLDIER;
         // }
 
-        if (spawnedRobots<3){
+        if ((G.round < 50 || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) && spawnedRobots<3){
             trying=UnitType.SOLDIER;
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
-        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900) {
+        if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.rc.getRoundNum() < 100 || G.rc.getRoundNum() % 3 == 0)) {
             switch (trying) {
                 case UnitType.MOPPER:
                     for (MapLocation loc : spawnLocs) {
@@ -282,7 +289,7 @@ public class Tower {
         //     G.rc.disintegrate();
         //     return;
         // }
-        if (G.rc.getNumberTowers() == 25 && G.rc.getChips() > 20000 && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+        if (G.rc.getChips() > (G.rc.getID()<10?20000:G.rc.getID()*2) && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
             attack();
             // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
             G.rc.disintegrate();

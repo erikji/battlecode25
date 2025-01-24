@@ -289,7 +289,7 @@ public class Tower {
         //     G.rc.disintegrate();
         //     return;
         // }
-        if (G.rc.getChips() > (G.rc.getID()<10?20000:G.rc.getID()*2) && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+        if (G.rc.getChips() > (G.rc.getID()<10000?20000:G.rc.getID()*2) && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
             attack();
             // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
             G.rc.disintegrate();

@@ -29,7 +29,7 @@ public class Soldier {
     public static final int SOL_MAX_TOWER_ENEMY_PAINT_HARD = 8; // tested: 12 against 16 (52/94)
     public static final int SOL_TOWER_HELP_DIST = 5;
     public static final int SOL_MAX_TOWER_BLOCKED_TIME = 5;
-    // max soldiers that will build a tower
+    // max soldiers that will build a tower at a time
     public static final int SOL_MAX_TOWER_BUILDING_SOLDIERS = 2;
     // max tower build time
     public static final int SOL_MAX_TOWER_TIME = 80;
@@ -64,6 +64,9 @@ public class Soldier {
     public static MapLocation towerLocation = null; // ATTACK mode
     public static MapLocation resourceLocation = null; // BUILD_RESOURCE mode
 
+    public static StringBuilder messingUpRuins = new StringBuilder();
+    public static MapLocation messingUpLoc = null; // MESSING_UP mode
+
     public static boolean reducedRetreating = false;
     public static boolean avoidRetreating = false;
 
@@ -80,12 +83,7 @@ public class Soldier {
     public static int buildTime = 0;
     public static int srpTargetTime = 0;
 
-    public static StringBuilder messingUpRuins = new StringBuilder();
-    public static MapLocation messingUpLoc = null;
-
-    // commonly used stuff
-    // map nearby map infos into 2d array in (y, x) form
-    // used for tower building, SRP detection, expansion, building
+    // used for SRPs
     public static MapInfo[][] mapInfos = new MapInfo[9][9];
     public static int lastUpdatedMapInfosRound = -1;
 
@@ -94,7 +92,7 @@ public class Soldier {
 
     /**
      * Always:
-     * If low on paint (reduceRetreating halves paint), retreat
+     * NEVER RETREAT!!!!!!!!!!!!!!!!!
      * Default to explore mode
      * Most motion will attempt to paint under self to reduce passive paint drain
      * 
@@ -111,6 +109,7 @@ public class Soldier {
      * - avoidRetreating true if is lowest ID, don't abandon the tower
      * Place stuff
      * If tower pattern obstructed by enemy paint long enougn, return to explore
+     * If too many soldiers building the tower (next to it), return to explore
      * Complete tower, return to explore
      * 
      * Build SRP:
@@ -129,12 +128,9 @@ public class Soldier {
      * - Enter SRP build mode
      * 
      * Attack:
+     * If actually allied/no tower, return to explore
+     * If the tower pattern is not blocked by allied paint, return to explore
      * Attack tower until ded lmao
-     * Attempt to repair SRPs if not in range to attack tower
-     * 
-     * Messing Up (Trolling):
-     * REEEEE PLACE PAINT OVER EVERY RUIN IN SIGHT
-     * - Use symmetry to guess ruins near enemy and paint spam those
      * 
      * Retreat:
      * Use Robot retreat
@@ -144,7 +140,8 @@ public class Soldier {
         // somewhat spaghetti fix for soldiers
         if (G.round == G.roundSpawned)
             lastSrpExpansion = G.roundSpawned - SOL_SRP_EXPAND_TIMEOUT + SOL_SPAWN_SRP_MIN_ROUNDS;
-        if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+        // if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
+        if (G.rc.getPaint() < 150 && G.maxChips < 6000 && G.allyRobots.length < 9) {
             Motion.setRetreatLoc();
             if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
@@ -195,6 +192,7 @@ public class Soldier {
                 G.rc.setIndicatorDot(G.me, 255, 0, 255);
             }
         }
+        // remove markers for money towers so we can make paint towers late-game
         for (int i = G.nearbyRuins.length; --i >= 0;) {
             MapLocation loc = G.nearbyRuins[i].add(Direction.WEST);
             if (G.rc.canSenseLocation(loc)) {
@@ -223,6 +221,7 @@ public class Soldier {
             if (G.rc.canSenseRobotAtLocation(loc)) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(loc);
                 if (bot.team == G.opponentTeam) {
+                    // dont attack if instadie
                     int turnsToNext = ((G.cooldown(G.rc.getPaint(), GameConstants.MOVEMENT_COOLDOWN)
                             + Motion.movementCooldown) / 10);
                     if (bot.health > 50 && G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength)
@@ -281,6 +280,9 @@ public class Soldier {
                     lastUpdatedMapInfosRound = G.round;
                 }
                 for (int i = 8; --i >= 0;) {
+                    if (Clock.getBytecodesLeft() < 7600) {
+                        break;
+                    }
                     MapLocation loc = G.me.add(G.ALL_DIRECTIONS[i]);
                     if (G.getLastVisited(loc) + srpVisitTimeout < G.round && canBuildSrpAtLocation(loc)) {
                         srpCheckLocations = new MapLocation[] { loc };
@@ -313,15 +315,14 @@ public class Soldier {
             return;
         }
         // if too many soldiers trying to build, we can leave
-        Direction[] cardinals = Direction.cardinalDirections();
         MapLocation loc;
-        int robotsTryingToBuild = 0;
+        int otherSoldiers = 0;
         if (G.me.isWithinDistanceSquared(ruinLocation, 1)) {
-            for (int i = 4; --i >= 0;) {
-                loc = ruinLocation.add(cardinals[i]);
+            for (int i = 8; --i >= 0;) {
+                loc = ruinLocation.add(G.DIRECTIONS[i]);
                 if (G.rc.canSenseRobotAtLocation(loc) && G.rc.senseRobotAtLocation(loc).type == UnitType.SOLDIER) {
-                    robotsTryingToBuild++;
-                    if (robotsTryingToBuild > SOL_MAX_TOWER_BUILDING_SOLDIERS) {
+                    otherSoldiers++;
+                    if (otherSoldiers > SOL_MAX_TOWER_BUILDING_SOLDIERS) {
                         mode = EXPLORE;
                         return;
                     }
@@ -347,8 +348,9 @@ public class Soldier {
                 if (dx == 2 && dy == 2)
                     continue;
                 // make sure not out of vision radius
-                if (G.rc.canSenseLocation(ruinLocation.translate(dx - 2, dy - 2))) {
-                    curr = G.rc.senseMapInfo(ruinLocation.translate(dx - 2, dy - 2)).getPaint();
+                loc = ruinLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canSenseLocation(loc)) {
+                    curr = G.rc.senseMapInfo(loc).getPaint();
                     if (curr != (pattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY))
                         incorrectPaint++;
                     // stop building if there's lots of enemy paint
@@ -395,6 +397,7 @@ public class Soldier {
             // if soldiers at tower have enough paint to complete pattern, DO NOT RETREAT
             RobotInfo r;
             int totalPaint = 0;
+            Direction[] cardinals = Direction.cardinalDirections();
             for (int i = 4; --i >= 0;) {
                 loc = ruinLocation.add(cardinals[i]);
                 if (!G.me.equals(loc) && G.rc.canSenseRobotAtLocation(loc)) {
@@ -439,11 +442,13 @@ public class Soldier {
         int enemyPaint = 0;
         int incorrectPaint = 0;
         PaintType curr;
+        MapLocation loc;
         for (int dx = -1; dx++ < 4;) {
             for (int dy = -1; dy++ < 4;) {
                 // make sure not out of vision radius
-                if (G.rc.canSenseLocation(resourceLocation.translate(dx - 2, dy - 2))) {
-                    curr = G.rc.senseMapInfo(resourceLocation.translate(dx - 2, dy - 2)).getPaint();
+                loc = resourceLocation.translate(dx - 2, dy - 2);
+                if (G.rc.canSenseLocation(loc)) {
+                    curr = G.rc.senseMapInfo(loc).getPaint();
                     if (curr != (Robot.resourcePattern[dx][dy] ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY))
                         incorrectPaint++;
                     // stop building if there's lots of enemy paint
@@ -478,13 +483,12 @@ public class Soldier {
 
     public static void expandResourceCheckMode() throws Exception {
         G.indicatorString.append("CHK_ERP ");
+        MapLocation target = srpCheckLocations[srpCheckIndex];
         // if been trying to reach target for a long time stop (inaccessible/occupied)
         if (srpTargetTime > SOL_MAX_SRP_TARGET_TIME) {
             mode = EXPLORE;
             return;
         }
-        srpTargetTime++;
-        MapLocation target = srpCheckLocations[srpCheckIndex];
         // keep disqualifying locations in a loop
         // done ASAP, don't waste time going to SRPs that can be disqualified
         if (lastUpdatedMapInfosRound != G.round) {
@@ -524,9 +528,10 @@ public class Soldier {
 
     public static void attackCheckMode() throws Exception {
         G.indicatorString.append("CHK_ATK ");
-        // nothing for now
-        if (G.rc.canSenseLocation(towerLocation) && (!G.rc.canSenseRobotAtLocation(towerLocation)
-                || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
+        // friendly/no tower
+        if (G.rc.canSenseLocation(towerLocation)
+                && (!G.rc.canSenseRobotAtLocation(towerLocation)
+                        || G.rc.senseRobotAtLocation(towerLocation).team == G.team)) {
             mode = EXPLORE;
             return;
         }
@@ -628,7 +633,6 @@ public class Soldier {
     }
 
     public static void messingUp() throws Exception {
-        // explore aggressively (symmetry explore) and cover ruins with paint
         if (messingUpLoc != null) {
             boolean allyPaintOnRuin = false;
             MapLocation neutralPaintLoc = null;
@@ -707,11 +711,6 @@ public class Soldier {
         G.rc.setIndicatorLine(G.me, ruinLocation, 255, 200, 0);
         // remap map infos because move buh
         if (G.rc.isActionReady() && G.rc.getPaint() >= 5) {
-            // int miDx = 4 - G.me.x, miDy = 4 - G.me.y;
-            // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            // MapLocation loc = G.nearbyMapInfos[i].getMapLocation().translate(miDx, miDy);
-            // mapInfos[loc.y][loc.x] = G.nearbyMapInfos[i];
-            // }
             // paint second
             MapLocation paintLocation = null;
             boolean[][] pattern = Robot.towerPatterns[buildTowerType];
@@ -723,8 +722,6 @@ public class Soldier {
                     G.rc.attack(G.me, paint);
             } else {
                 // paint pattern otherwise
-                // int ox = ruinLocation.x - startX + 2;
-                // int oy = ruinLocation.y - startY + 2;
                 boolean paint;
                 PaintType exists;
                 MapLocation loc;
@@ -749,26 +746,6 @@ public class Soldier {
                         }
                     }
                 }
-                // for (int dx = -1; dx++ < 4;) {
-                // for (int dy = -1; dy++ < 4;) {
-                // if (dx == 2 && dy == 2)
-                // continue;
-                // // location guaranteed to be on the map, unless ruinLocation isn't a ruin
-                // // guaranteed within vision radius if can attack there
-                // loc = ruinLocation.translate(dx - 2, dy - 2);
-                // if (G.rc.canAttack(loc)) {
-                // paint = pattern[dx][dy];
-                // exists = mapInfos[oy + dy][ox + dx].getPaint();
-                // // can't paint enemy paint
-                // if (!exists.isEnemy()
-                // && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                // G.rc.attack(loc, paint);
-                // paintLocation = loc;
-                // break;
-                // }
-                // }
-                // }
-                // }
             }
             if (paintLocation != null)
                 G.rc.setIndicatorLine(G.me, paintLocation, 200, 100, 0);
@@ -1115,13 +1092,16 @@ public class Soldier {
         int towerType = G.rc.getChips() < 10000 && G.rc.getNumberTowers() < 24
                 && (G.rc.getNumberTowers() < Math.sqrt(G.mapArea) / 6
                         || POI.paintTowers * SOL_MONEY_PAINT_TOWER_RATIO > POI.moneyTowers) ? 1 : 2;
+        // if (POI.paintTowers == 0 && POI.moneyTowers >= 3) {
+        //     towerType = 2;
+        // }
         if (G.mapCenter.distanceSquaredTo(loc) < 36) {
             // boolean enemyPaint = false;
             // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
-            //     if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
-            //         enemyPaint = true;
-            //         break;
-            //     }
+            // if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
+            // enemyPaint = true;
+            // break;
+            // }
             // }
             // if (enemyPaint || G.opponentRobotsString.length() > 0)
             towerType = 0;

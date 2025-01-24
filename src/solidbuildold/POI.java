@@ -1,4 +1,4 @@
-package cautiousattack;
+package solidbuildold;
 
 import battlecode.common.*;
 
@@ -599,8 +599,13 @@ public class POI {
                 }
             }
         }
+        int minBytecode = 10000;
+        switch (G.rc.getType()) {
+            case MOPPER:
+                minBytecode = 11000;
+        }
         for (Message m : messages) {
-            if (Clock.getBytecodesLeft() < 10000)
+            if (Clock.getBytecodesLeft() < minBytecode)
                 break;
             read16BitMessage(m.getSenderID(), m.getBytes() & 0b1111111111111111);
             if ((m.getBytes() >> 16) != 0) {

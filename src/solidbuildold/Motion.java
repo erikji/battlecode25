@@ -1,4 +1,4 @@
-package cautiousattack;
+package solidbuildold;
 
 import battlecode.common.*;
 
@@ -548,38 +548,82 @@ public class Motion {
                 }
             }
         }
+        // if (retreatTower == -1) {
+        //     int best = -1;
+        //     while (best == -1) {
+        //         int bestWeight = Integer.MIN_VALUE;
+        //         // boolean hasCritical = false;
+        //         for (int i = POI.numberOfTowers; --i >= 0;) {
+        //             // if (POI.critical[i]) {
+        //             //     hasCritical = true;
+        //             // }
+        //             if (POI.towerTeams[i] != G.team)
+        //                 continue;
+        //             // this needs to change
+        //             boolean paint = POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER;
+        //             // if (!paint) {
+        //             // // This is dumb but borks code for some reason
+        //             // continue;
+        //             // }
+        //             int weight = 0;
+        //             if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
+        //                 weight -= 1000;
+        //             }
+        //             int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
+        //             weight -= distance;
+        //             if (paint) {
+        //                 weight += 100;
+        //             }
+        //             else if (G.rc.canSenseRobotAtLocation(POI.towerLocs[i]) && G.rc.senseRobotAtLocation(POI.towerLocs[i]).paintAmount > 0) {
+        //                 weight += 100;
+        //             }
+        //             // if (!POI.critical[i]) {
+        //             //     weight += 200;
+        //             // }
+
+        //             if (best == -1 || weight > bestWeight) {
+        //                 best = i;
+        //                 bestWeight = weight;
+        //             }
+        //         }
+        //         if (best == -1) {
+        //             if (triedRetreatTowers.length() == 0) {
+        //                 // completely out of towers, how is this possible lol
+        //                 retreatTower = -2;
+        //                 break;
+        //             }
+        //             triedRetreatTowers = new StringBuilder();
+        //             continue;
+        //         }
+        //         // if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
+        //         //     retreatTower = -2;
+        //         //     break;
+        //         // }
+        //         if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER && !G.rc.canSenseRobotAtLocation(POI.towerLocs[best])) {
+        //             retreatTower = -2;
+        //             break;
+        //         }
+        //         retreatTower = best;
+        //         triedRetreatTowers.append((char) best);
+        //         break;
+        //     }
+        // }
         if (retreatTower == -1) {
             int best = -1;
             while (best == -1) {
                 int bestWeight = Integer.MIN_VALUE;
                 // boolean hasCritical = false;
-                for (int i = POI.numberOfTowers; --i >= 0;) {
-                    // if (POI.critical[i]) {
-                    //     hasCritical = true;
-                    // }
-                    if (POI.towerTeams[i] != G.team)
-                        continue;
-                    // this needs to change
-                    boolean paint = POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER;
-                    // if (!paint) {
-                    // // This is dumb but borks code for some reason
-                    // continue;
-                    // }
+                for (int i = G.nearbyRuins.length; --i >= 0;) {
+                    MapLocation loc = G.nearbyRuins[i];
+                    if (!G.rc.canSenseRobotAtLocation(loc)) continue;
+                    if (G.rc.senseRobotAtLocation(loc).team != G.team) continue;
                     int weight = 0;
                     if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
                         weight -= 1000;
                     }
-                    int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
+                    int distance = Motion.getChebyshevDistance(G.me, loc);
                     weight -= distance;
-                    if (paint) {
-                        weight += 100;
-                    }
-                    else if (G.rc.canSenseRobotAtLocation(POI.towerLocs[i]) && G.rc.senseRobotAtLocation(POI.towerLocs[i]).paintAmount > 0) {
-                        weight += 100;
-                    }
-                    // if (!POI.critical[i]) {
-                    //     weight += 200;
-                    // }
+                    weight += G.rc.senseRobotAtLocation(loc).paintAmount;
 
                     if (best == -1 || weight > bestWeight) {
                         best = i;
@@ -595,15 +639,9 @@ public class Motion {
                     triedRetreatTowers = new StringBuilder();
                     continue;
                 }
-                // if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
-                //     retreatTower = -2;
-                //     break;
-                // }
-                if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER && !G.rc.canSenseRobotAtLocation(POI.towerLocs[best])) {
-                    retreatTower = -2;
-                    break;
-                }
-                retreatTower = best;
+                MapLocation loc = G.nearbyRuins[best];
+                retreatTower = POI.towerGrid[loc.y / 5][loc.x / 5];
+                // retreatTower = best;
                 triedRetreatTowers.append((char) best);
                 break;
             }

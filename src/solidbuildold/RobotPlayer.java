@@ -1,4 +1,4 @@
-package cautiousattack;
+package solidbuildold;
 
 import battlecode.common.*;
 

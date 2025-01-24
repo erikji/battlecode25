@@ -48,7 +48,7 @@ public class Robot {
     
     public static void run() throws Exception {
         Motion.paintLost += Math.max(Motion.lastPaint - G.rc.getPaint(), 0);
-        if (G.rc.getPaint() == 0 && G.rc.getChips() < 5000) {
+        if (G.rc.getPaint() == 0 && G.rc.getChips() > 5000) {
             for (int i = G.allyRobots.length; --i >= 0;) {
                 if (G.allyRobots[i].location.distanceSquaredTo(G.me) <= 8 && G.allyRobots[i].getType().isRobotType()) {
                     G.rc.disintegrate();
