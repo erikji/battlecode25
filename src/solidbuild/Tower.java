@@ -149,7 +149,7 @@ public class Tower {
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
-        if ((G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.round < 100 || lastSpawn + 1 < G.round) || G.round < 10) && G.allyRobots.length < 4) {
+        if ((G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.round < 100 || (lastSpawn + 1 < G.round && G.allyRobots.length < 4)) || G.round < 10)) {
             switch (trying) {
                 case UnitType.MOPPER:
                     for (MapLocation loc : spawnLocs) {
