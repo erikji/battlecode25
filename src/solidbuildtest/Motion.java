@@ -1,4 +1,4 @@
-package solidbuild;
+package solidbuildtest;
 
 import battlecode.common.*;
 
