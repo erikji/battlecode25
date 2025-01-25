@@ -156,7 +156,7 @@ public class Soldier {
             Motion.retreatTower = -1;
         }
         // map mapinfos infos
-        int a = Clock.getBytecodeNum();
+        // int a = Clock.getBytecodeNum();
         reducedRetreating = false;
         avoidRetreating = false;
         switch (mode) {
@@ -178,7 +178,7 @@ public class Soldier {
                 // }
             }
         }
-        int b = Clock.getBytecodeNum();
+        // int b = Clock.getBytecodeNum();
         // G.indicatorString.append((b - a) + " ");
         switch (mode) {
             case EXPLORE -> explore();
