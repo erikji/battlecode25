@@ -1616,7 +1616,7 @@ public class Motion {
             microMove(m.micro(d, dest));
         }
         bfs();
-        // G.indicatorString.append("BFS-BT: " + (Clock.getBytecodesLeft() - a) + "-");
+        G.indicatorString.append("BFS-BT: " + (Clock.getBytecodesLeft() - a) + "-");
     }
 
     public static void updateBfsTarget(MapLocation dest) throws Exception {

@@ -613,7 +613,7 @@ public class Soldier {
     public static void buildResource() throws Exception {
         G.indicatorString.append("BUILD_RP ");
         // MUCH IS IDENTICAL TO TOWER BUILD CODE
-        MapLocation paintLocation = null;
+        // MapLocation paintLocation = null;
         int ox = resourceLocation.x - G.me.x + 2;
         int oy = resourceLocation.y - G.me.y + 2;
         boolean paint;
@@ -635,7 +635,7 @@ public class Soldier {
                     // can't paint enemy paint
                     if (!exists.isEnemy()) {
                         G.rc.attack(loc, paint);
-                        paintLocation = loc;
+                        // paintLocation = loc;
                         break;
                     }
                 }

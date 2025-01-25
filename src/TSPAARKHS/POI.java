@@ -637,7 +637,7 @@ public class POI {
             }
         } else {
             addTower(id, parseLocation(n), parseTowerTeam(n), parseTowerType(n));
-            if (ENABLE_INDICATORS && G.rc.getType().isTowerType() && (n >> 15) == 1) {
+            if (G.rc.getType().isTowerType() && (n >> 15) == 1 && ENABLE_INDICATORS) {
                 G.indicatorString.append("REC-MESSAGE=" + parseLocation(n));
             }
             if (G.rc.getType().isTowerType() && totalMessages < 20 && (n >> 15) == 1) {
