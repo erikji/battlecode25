@@ -736,10 +736,33 @@ public class Soldier {
                     G.rc.attack(G.me, paint);
             } else {
                 // paint pattern otherwise
-                boolean paint;
                 PaintType exists;
-                MapLocation loc;
+                MapLocation bestLoc = null;
+                boolean bestPaint = false;
                 int offset = Random.rand() % 25;
+                MapLocation opponentTower; //direction to opponent towers
+                int x;
+                int y;
+                x=y=0;
+                int cnt = 0;
+                for (int i = POI.numberOfTowers; --i >= 0;) {
+                    if (POI.towerTeams[i] == G.team) {
+                        for (int j = 3; --j >= 0;) {
+                            if (POI.symmetry[j]) {
+                                cnt++;
+                                MapLocation loc2 = POI.getOppositeMapLocation(POI.towerLocs[i], j);
+                                x += loc2.x;
+                                y += loc2.y;
+                            }
+                        }
+                    } else if (POI.towerTeams[i] == G.opponentTeam) {
+                        x += POI.towerLocs[i].x;
+                        y += POI.towerLocs[i].y;
+                    }
+                }
+                x /= cnt;
+                y /= cnt;
+                opponentTower = new MapLocation(x, y);
                 for (int i = 25; --i >= 0;) {
                     int dx = (i + offset) % 5;
                     int dy = ((i + offset) % 25) / 5;
@@ -747,18 +770,22 @@ public class Soldier {
                         continue;
                     // location guaranteed to be on the map, unless ruinLocation isn't a ruin
                     // guaranteed within vision radius if can attack there
-                    loc = ruinLocation.translate(dx - 2, dy - 2);
+                    MapLocation loc = ruinLocation.translate(dx - 2, dy - 2);
                     if (G.rc.canAttack(loc)) {
-                        paint = pattern[dx][dy];
+                        boolean paint = pattern[dx][dy];
                         exists = G.rc.senseMapInfo(loc).getPaint();
                         // can't paint enemy paint
                         if (!exists.isEnemy()
                                 && (paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                            G.rc.attack(loc, paint);
-                            // paintLocation = loc;
-                            break;
+                            if (bestLoc == null || loc.distanceSquaredTo(opponentTower) < bestLoc.distanceSquaredTo(opponentTower)) {
+                                bestLoc = loc;
+                                bestPaint = paint;
+                            }
                         }
                     }
+                }
+                if (bestLoc != null) {
+                    G.rc.attack(bestLoc, bestPaint);
                 }
             }
             // if (paintLocation != null)
@@ -793,24 +820,22 @@ public class Soldier {
                 // paintLocation = loc;
             }
         }
-        if (!attacked) {
-            int offset = Random.rand() % 25;
-            for (int i = 25; --i >= 0;) {
-                int dx = (i + offset) % 5;
-                int dy = ((i + offset) % 25) / 5;
-                // location guaranteed to be on the map by canBuildSrpHere
-                // guaranteed within vision radius if can attack there
-                loc = resourceLocation.translate(dx - 2, dy - 2);
-                paint = Robot.resourcePattern[dx][dy];
-                exists = G.rc.senseMapInfo(loc).getPaint();
-                if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
-                    isPatternComplete = false;
-                    // can't paint enemy paint
-                    if (G.rc.canAttack(loc) && !exists.isEnemy()) {
-                        G.rc.attack(loc, paint);
-                        // paintLocation = loc;
-                        break;
-                    }
+        int offset = Random.rand() % 25;
+        for (int i = 25; --i >= 0;) {
+            int dx = (i + offset) % 5;
+            int dy = ((i + offset) % 25) / 5;
+            // location guaranteed to be on the map by canBuildSrpHere
+            // guaranteed within vision radius if can attack there
+            loc = resourceLocation.translate(dx - 2, dy - 2);
+            paint = Robot.resourcePattern[dx][dy];
+            exists = G.rc.senseMapInfo(loc).getPaint();
+            if ((paint ? PaintType.ALLY_SECONDARY : PaintType.ALLY_PRIMARY) != exists) {
+                isPatternComplete = false;
+                // can't paint enemy paint
+                if (G.rc.canAttack(loc) && !exists.isEnemy()) {
+                    G.rc.attack(loc, paint);
+                    // paintLocation = loc;
+                    break;
                 }
             }
         }
