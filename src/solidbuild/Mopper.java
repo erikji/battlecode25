@@ -803,8 +803,8 @@ public class Mopper {
                 }
             }
             // try attack then move then attack again
-            if (alltype[best] == 1) {
-                if (allmax[best] > 0) {
+            if (allmax[best] > 0) {
+                if (alltype[best] == 1) {
                     if (allmax[best] == cmax) {
                         if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
                             G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
@@ -816,9 +816,7 @@ public class Mopper {
                             G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
                         }
                     }
-                }
-            } else if (alltype[best] == 0) {
-                if (allmax[best] > 0) {
+                } else if (alltype[best] == 0) {
                     MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
                     if (G.rc.canAttack(attackLoc)) {
                         G.rc.attack(attackLoc);
@@ -827,9 +825,7 @@ public class Mopper {
                     if (G.rc.canAttack(attackLoc)) {
                         G.rc.attack(attackLoc);
                     }
-                }
-            } else {
-                if (allmax[best] > 0) {
+                } else {
                     MapLocation transferLoc = G.me.translate(allx[best], ally[best]);
                     RobotInfo r = G.rc.senseRobotAtLocation(transferLoc);
                     if (G.rc.canTransferPaint(transferLoc,
