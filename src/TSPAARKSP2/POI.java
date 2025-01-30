@@ -150,7 +150,7 @@ public class POI {
                             break;
                         default:
                             // throw new Exception("what are you building??? defense tower???");
-                            G.rc.resign();
+                            // G.rc.resign();
                             break;
                     }
                 }
