@@ -1,4 +1,4 @@
-package solidbuild;
+package SPAARK;
 
 public class MotionCodeGen {
     public static void bfs20() {

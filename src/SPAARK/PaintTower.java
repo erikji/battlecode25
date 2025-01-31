@@ -1,4 +1,4 @@
-package solidbuild;
+package SPAARK;
 
 public class PaintTower {
 

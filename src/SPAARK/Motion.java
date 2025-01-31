@@ -1,4 +1,4 @@
-package solidbuildold;
+package SPAARK;
 
 import battlecode.common.*;
 
@@ -328,8 +328,8 @@ public class Motion {
                 // }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        // if (ENABLE_EXPLORE_INDICATORS)
+        //     G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
@@ -405,8 +405,8 @@ public class Motion {
                 }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        // if (ENABLE_EXPLORE_INDICATORS)
+        //     G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
@@ -616,14 +616,18 @@ public class Motion {
                 for (int i = G.nearbyRuins.length; --i >= 0;) {
                     MapLocation loc = G.nearbyRuins[i];
                     if (!G.rc.canSenseRobotAtLocation(loc)) continue;
-                    if (G.rc.senseRobotAtLocation(loc).team != G.team) continue;
+                    RobotInfo bot = G.rc.senseRobotAtLocation(loc);
+                    if (bot.team != G.team) continue;
+                    if (bot.type.getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER && bot.paintAmount == 0) {
+                        continue;
+                    }
                     int weight = 0;
                     if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
                         weight -= 1000;
                     }
                     int distance = Motion.getChebyshevDistance(G.me, loc);
                     weight -= distance;
-                    weight += G.rc.senseRobotAtLocation(loc).paintAmount;
+                    weight += bot.paintAmount;
 
                     if (best == -1 || weight > bestWeight) {
                         best = i;
@@ -672,11 +676,16 @@ public class Motion {
 
     public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
-            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
+            // G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
             int dist = G.me.distanceSquaredTo(retreatLoc);
             if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
                     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
+                    if (r.getType().getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER) {
+                        if (r.paintAmount != 0) {
+                            return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
+                        }
+                    }
                     int amount = paintNeededToStopRetreating - G.rc.getPaint();
                     boolean lowest = true;
                     for (int i = 8; --i >= 0;) {
@@ -689,10 +698,6 @@ public class Motion {
                     }
                     if (lowest && r.paintAmount >= amount) {
                         return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
-                    } else if (r.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
-                        if (r.paintAmount != 0) {
-                            return bug2Helper(G.me, retreatLoc, TOWARDS, 0, 0);
-                        }
                     }
                 }
             }
@@ -702,7 +707,7 @@ public class Motion {
                         updateRetreatWaitingLoc();
                     }
                     if (retreatWaitingLoc != null) {
-                        G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
+                        // G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
                         // bugnavTowards(retreatWaitingLoc);
                         return bug2Helper(G.me, retreatWaitingLoc, TOWARDS, 0, 0);
                     }
@@ -1320,7 +1325,7 @@ public class Motion {
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
-                    G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
+                    // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
                     for (int j = step - 1; j >= 0; j--) {
                         if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
                             recalculationNeeded = Math.min(j, recalculationNeeded);
@@ -1342,7 +1347,7 @@ public class Motion {
                 bfsCurr[i] = bfsDist[step * (height + 2) + i];
             }
             step += 1;
-            G.indicatorString.append("BFS-RECALC ");
+            // G.indicatorString.append("BFS-RECALC ");
         }
         recalculationNeeded = MAX_PATH_LENGTH;
 
@@ -1584,7 +1589,7 @@ public class Motion {
         }
         if (optimalDirection == Direction.CENTER) {
             optimalDirection = bug2Helper(G.me, dest, TOWARDS, 0, 0);
-            G.indicatorString.append("BFS-BUG ");
+            // G.indicatorString.append("BFS-BUG ");
 
             if (G.rc.canMove(optimalDirection)) {
                 return optimalDirection;

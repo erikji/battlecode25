@@ -1,4 +1,4 @@
-package solidbuildold;
+package SPAARK;
 
 import battlecode.common.*;
 
@@ -21,7 +21,7 @@ public class Mopper {
     // extra weight to stealing paint from enemy in retreat mode
     public static final int MOP_RETREAT_STEAL_WEIGHT = 30; // OPTNET_PARAM
     // extra weight to mopping paint next to a tower
-    public static final int MOP_TOWER_WEIGHT = 50; // OPTNET_PARAM
+    public static final int MOP_TOWER_WEIGHT = 150; // OPTNET_PARAM
 
     public static int[] moveScores = new int[9];
     public static int[] attackScores = new int[25]; // mopping
@@ -48,17 +48,20 @@ public class Mopper {
      * Help soldiers mop enemy paint around ruins
      */
     public static void run() throws Exception {
-        G.indicatorString.append("START=" + Clock.getBytecodeNum());
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
             Motion.setRetreatLoc();
-            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+            if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
+            }
+            else if (mode == RETREAT) {
+                mode = EXPLORE;
+                Motion.retreatTower = -1;
             }
         } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
-        int a = Clock.getBytecodeNum();
+        // int a = Clock.getBytecodeNum();
         switch (mode) {
             case EXPLORE:
                 exploreCheckMode();
@@ -67,20 +70,20 @@ public class Mopper {
                 buildCheckMode();
                 break;
             case RETREAT:
-                Motion.setRetreatLoc();
-                if (Motion.retreatTower == -1) {
-                    mode = EXPLORE;
-                    exploreCheckMode();
-                }
+                // Motion.setRetreatLoc();
+                // if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
+                //     mode = EXPLORE;
+                //     exploreCheckMode();
+                // }
                 break;
         }
-        int b = Clock.getBytecodeNum();
-        G.indicatorString.append((b - a) + " ");
+        // int b = Clock.getBytecodeNum();
+        // G.indicatorString.append((b - a) + " ");
         // grab directions for micro
         swingScores[0] = swingScores[1] = swingScores[2] = swingScores[3] = swingScores[4] = swingScores[5] = swingScores[6] = swingScores[7] = swingScores[8] = swingScores[9] = swingScores[10] = swingScores[11] = swingScores[12] = swingScores[13] = swingScores[14] = swingScores[15] = swingScores[16] = swingScores[17] = swingScores[18] = swingScores[19] = swingScores[20] = swingScores[21] = swingScores[22] = swingScores[23] = swingScores[24] = swingScores[25] = swingScores[26] = swingScores[27] = swingScores[28] = swingScores[29] = swingScores[30] = swingScores[31] = swingScores[32] = swingScores[33] = swingScores[34] = swingScores[35] = attackScores[0] = attackScores[1] = attackScores[2] = attackScores[3] = attackScores[4] = attackScores[5] = attackScores[6] = attackScores[7] = attackScores[8] = attackScores[9] = attackScores[10] = attackScores[11] = attackScores[12] = attackScores[13] = attackScores[14] = attackScores[15] = attackScores[16] = attackScores[17] = attackScores[18] = attackScores[19] = attackScores[20] = attackScores[21] = attackScores[22] = attackScores[23] = attackScores[24] = moveScores[0] = moveScores[1] = moveScores[2] = moveScores[3] = moveScores[4] = moveScores[5] = moveScores[6] = moveScores[7] = moveScores[8] = transferScores[0] = transferScores[1] = transferScores[2] = transferScores[3] = transferScores[4] = transferScores[5] = transferScores[6] = transferScores[7] = transferScores[8] = transferScores[9] = transferScores[10] = transferScores[11] = transferScores[12] = transferScores[13] = transferScores[14] = transferScores[15] = transferScores[16] = transferScores[17] = transferScores[18] = transferScores[19] = transferScores[20] = transferScores[21] = transferScores[22] = transferScores[23] = transferScores[24] = 0;
         switch (mode) {
             case EXPLORE -> {
-                G.indicatorString.append("EXPLORE ");
+                // G.indicatorString.append("EXPLORE ");
                 if (G.rc.isMovementReady()) {
                     exploreMoveScores();
                 }
@@ -91,7 +94,7 @@ public class Mopper {
                 }
             }
             case BUILD -> {
-                G.indicatorString.append("BUILD ");
+                // G.indicatorString.append("BUILD ");
                 if (G.rc.isMovementReady()) {
                     buildMoveScores();
                 }
@@ -102,7 +105,7 @@ public class Mopper {
                 }
             }
             case RETREAT -> {
-                G.indicatorString.append("RETREAT ");
+                // G.indicatorString.append("RETREAT ");
                 if (G.rc.isMovementReady()) {
                     retreatMoveScores();
                 }
@@ -800,8 +803,8 @@ public class Mopper {
                 }
             }
             // try attack then move then attack again
-            if (alltype[best] == 1) {
-                if (allmax[best] > 0) {
+            if (allmax[best] > 0) {
+                if (alltype[best] == 1) {
                     if (allmax[best] == cmax) {
                         if (G.rc.canMopSwing(G.DIRECTIONS[allx[best]])) {
                             G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
@@ -813,9 +816,7 @@ public class Mopper {
                             G.rc.mopSwing(G.DIRECTIONS[allx[best]]);
                         }
                     }
-                }
-            } else if (alltype[best] == 0) {
-                if (allmax[best] > 0) {
+                } else if (alltype[best] == 0) {
                     MapLocation attackLoc = G.me.translate(allx[best], ally[best]);
                     if (G.rc.canAttack(attackLoc)) {
                         G.rc.attack(attackLoc);
@@ -824,9 +825,7 @@ public class Mopper {
                     if (G.rc.canAttack(attackLoc)) {
                         G.rc.attack(attackLoc);
                     }
-                }
-            } else {
-                if (allmax[best] > 0) {
+                } else {
                     MapLocation transferLoc = G.me.translate(allx[best], ally[best]);
                     RobotInfo r = G.rc.senseRobotAtLocation(transferLoc);
                     if (G.rc.canTransferPaint(transferLoc,
@@ -856,16 +855,16 @@ public class Mopper {
             }
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
-        switch (mode) {
-            case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
-            case BUILD -> G.rc.setIndicatorDot(G.me, 0, 0, 255);
-            case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
-        }
-        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
+        // switch (mode) {
+        //     case EXPLORE -> G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        //     case BUILD -> G.rc.setIndicatorDot(G.me, 0, 0, 255);
+        //     case RETREAT -> G.rc.setIndicatorDot(G.me, 255, 0, 255);
+        // }
+        // G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreCheckMode() throws Exception {
-        G.indicatorString.append("CHK_E ");
+        // G.indicatorString.append("CHK_E ");
         // make sure not stuck between exploring and building
         if (G.rc.getNumberTowers() < 25) {
             for (int i = G.nearbyRuins.length; --i >= 0;) {
@@ -883,7 +882,7 @@ public class Mopper {
     }
 
     public static void buildCheckMode() throws Exception {
-        G.indicatorString.append("CHK_B ");
+        // G.indicatorString.append("CHK_B ");
         G.setLastVisited(target, G.round);
         if (!G.rc.canSenseLocation(target) || G.rc.canSenseRobotAtLocation(target) || G.rc.getNumberTowers() == 25) {
             mode = EXPLORE;
@@ -904,14 +903,14 @@ public class Mopper {
         MapLocation bestBot = null;
         MapLocation bestEmpty = null;
         MapLocation microDir = G.me;
-        int lowestSoldierID = 1000000;
-        RobotInfo lowestSoldier = null;
-        for (int i = G.allyRobots.length; --i >= 0;) {
-            if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
-                lowestSoldier = G.allyRobots[i];
-            }
-        }
-        if (lowestSoldier == null) {
+        // int lowestSoldierID = 1000000;
+        // RobotInfo lowestSoldier = null;
+        // for (int i = G.allyRobots.length; --i >= 0;) {
+        //     if (G.allyRobots[i].type == UnitType.SOLDIER && G.allyRobots[i].paintAmount > 20 && G.allyRobots[i].ID < lowestSoldierID) {
+        //         lowestSoldier = G.allyRobots[i];
+        //     }
+        // }
+        // if (lowestSoldier == null) {
             for (int i = G.nearbyMapInfos.length; --i >= 0;) {
                 MapInfo info = G.nearbyMapInfos[i];
                 MapLocation loc = info.getMapLocation();
@@ -932,22 +931,22 @@ public class Mopper {
             }
             Direction dir = Direction.CENTER;
             if (bestEmpty == null && bestBot == null) {
-                G.indicatorString.append("RAND ");
+                // G.indicatorString.append("RAND ");
                 dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
             } else {
                 if (bestBot != null)
                     bestEmpty = bestBot;
                 dir = Motion.bug2Helper(G.me, bestEmpty, Motion.AROUND, 1, 2);
-                G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
+                // G.rc.setIndicatorLine(G.me, bestEmpty, 0, 0, 255);
             }
             moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
-            if (G.rc.onTheMap(microDir))
-                G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
-        } else {
-            // ignore lowestSoldier
-            Direction dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
-            moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
-        }
+        //     if (G.rc.onTheMap(microDir))
+        //         G.rc.setIndicatorLine(G.me, microDir, 0, 200, 255);
+        // } else {
+        //     // ignore lowestSoldier
+        //     Direction dir = Motion.bug2Helper(G.me, Motion.exploreRandomlyLoc(), Motion.TOWARDS, 0, 0);
+        //     moveScores = Motion.defaultMicro.micro(dir, G.invalidLoc);
+        // }
     }
 
     public static void exploreTransferScores() throws Exception {

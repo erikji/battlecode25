@@ -1,4 +1,4 @@
-package solidbuild;
+package SPAARK;
 
 import battlecode.common.*;
 

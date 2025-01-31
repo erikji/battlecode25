@@ -1,4 +1,4 @@
-package solidbuildold;
+package SPAARK;
 
 import battlecode.common.*;
 
@@ -35,29 +35,33 @@ public class Splasher {
         // G.allyRobots.length < 9) {
         if (G.rc.getPaint() < Motion.getRetreatPaint() && G.maxChips < 6000 && G.allyRobots.length < 9) {
             Motion.setRetreatLoc();
-            if (G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
+            if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
+            }
+            else if (mode == RETREAT) {
+                mode = EXPLORE;
+                Motion.retreatTower = -1;
             }
         } else if (mode == RETREAT) {
             mode = EXPLORE;
             Motion.retreatTower = -1;
         }
-        if (mode == RETREAT) {
-            Motion.setRetreatLoc();
-            if (Motion.retreatTower == -1) {
-                mode = EXPLORE;
-            }
-        }
+        // if (mode == RETREAT) {
+        //     Motion.setRetreatLoc();
+		// 	if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
+        //         mode = EXPLORE;
+        //     }
+        // }
         // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES
         // }
-        int b = Clock.getBytecodeNum();
+        // int b = Clock.getBytecodeNum();
         // G.indicatorString.append((b - a) + " ");
         attackScores[0] = attackScores[1] = attackScores[2] = attackScores[3] = attackScores[4] = attackScores[5] = attackScores[6] = attackScores[7] = attackScores[8] = attackScores[9] = attackScores[10] = attackScores[11] = attackScores[12] = attackScores[13] = attackScores[14] = attackScores[15] = attackScores[16] = attackScores[17] = attackScores[18] = attackScores[19] = attackScores[20] = attackScores[21] = attackScores[22] = attackScores[23] = attackScores[24] = attackScores[25] = attackScores[26] = attackScores[27] = attackScores[28] = attackScores[29] = attackScores[30] = attackScores[31] = attackScores[32] = attackScores[33] = attackScores[34] = attackScores[35] = attackScores[36] = moveScores[0] = moveScores[1] = moveScores[2] = moveScores[3] = moveScores[4] = moveScores[5] = moveScores[6] = moveScores[7] = moveScores[8] = 0;
         switch (mode) {
             case EXPLORE -> {
-                G.indicatorString.append("EXPLORE ");
+                // G.indicatorString.append("EXPLORE ");
                 if (G.rc.isMovementReady()) {
                     exploreMoveScores();
                 }
@@ -69,7 +73,7 @@ public class Splasher {
                 }
             }
             case RETREAT -> {
-                G.indicatorString.append("RETREAT ");
+                // G.indicatorString.append("RETREAT ");
                 if (G.rc.isMovementReady()) {
                     retreatMoveScores();
                 }
@@ -378,15 +382,15 @@ public class Splasher {
             }
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
-        switch (mode) {
-            case EXPLORE -> {
-                G.rc.setIndicatorDot(G.me, 0, 255, 0);
-            }
-            case RETREAT -> {
-                G.rc.setIndicatorDot(G.me, 255, 0, 255);
-            }
-        }
-        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
+        // switch (mode) {
+        //     case EXPLORE -> {
+        //         G.rc.setIndicatorDot(G.me, 0, 255, 0);
+        //     }
+        //     case RETREAT -> {
+        //         G.rc.setIndicatorDot(G.me, 255, 0, 255);
+        //     }
+        // }
+        // G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreAttackScores1() throws Exception {
@@ -399,19 +403,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
                         } else {
                             attackScores[12] += 100;
                             attackScores[11] += 100;
@@ -473,19 +477,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
                         } else {
                             attackScores[4] += 100;
                             attackScores[16] += 100;
@@ -547,19 +551,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
                         } else {
                             attackScores[19] += 100;
                             attackScores[3] += 100;
@@ -621,19 +625,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
                         } else {
                             attackScores[20] += 100;
                             attackScores[27] += 100;
@@ -695,19 +699,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
                         } else {
                             attackScores[28] += 100;
                             attackScores[18] += 100;
@@ -769,19 +773,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
                         } else {
                             attackScores[7] += 100;
                             attackScores[6] += 100;
@@ -843,19 +847,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
                         } else {
                             attackScores[8] += 100;
                             attackScores[32] += 100;
@@ -917,19 +921,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
                         } else {
                             attackScores[35] += 100;
                             attackScores[8] += 100;
@@ -991,19 +995,19 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
                         } else {
                             attackScores[36] += 100;
                             attackScores[34] += 100;
@@ -1065,18 +1069,18 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
                         } else {
                             attackScores[0] += 100;
                             attackScores[22] += 100;
@@ -1136,18 +1140,18 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
                         } else {
                             attackScores[23] += 100;
                             attackScores[0] += 100;
@@ -1207,18 +1211,18 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
                         } else {
                             attackScores[24] += 100;
                             attackScores[22] += 100;
@@ -1278,18 +1282,18 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[0] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[0] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
                         } else {
                             attackScores[24] += 100;
                             attackScores[0] += 100;
@@ -1349,16 +1353,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
                         } else {
                             attackScores[2] += 100;
                             attackScores[14] += 100;
@@ -1409,16 +1413,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
                         } else {
                             attackScores[3] += 100;
                             attackScores[13] += 100;
@@ -1473,16 +1477,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
                         } else {
                             attackScores[17] += 100;
                             attackScores[1] += 100;
@@ -1533,16 +1537,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
                         } else {
                             attackScores[18] += 100;
                             attackScores[1] += 100;
@@ -1597,16 +1601,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
                         } else {
                             attackScores[4] += 100;
                             attackScores[15] += 100;
@@ -1661,16 +1665,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
                         } else {
                             attackScores[16] += 100;
                             attackScores[4] += 100;
@@ -1725,16 +1729,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
                         } else {
                             attackScores[20] += 100;
                             attackScores[2] += 100;
@@ -1789,16 +1793,16 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
                         } else {
                             attackScores[3] += 100;
                             attackScores[19] += 100;
@@ -1853,14 +1857,14 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
                         } else {
                             attackScores[10] += 100;
                             attackScores[9] += 100;
@@ -1905,14 +1909,14 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
                         } else {
                             attackScores[11] += 100;
                             attackScores[9] += 100;
@@ -1961,14 +1965,14 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
                         } else {
                             attackScores[12] += 100;
                             attackScores[10] += 100;
@@ -2017,14 +2021,14 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
                         } else {
                             attackScores[11] += 100;
                             attackScores[12] += 100;
@@ -2073,13 +2077,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[1] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
+                            attackScores[1] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
                         } else {
                             attackScores[1] += 100;
                             attackScores[29] += 100;
@@ -2122,13 +2126,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[2] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
+                            attackScores[2] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
                         } else {
                             attackScores[2] += 100;
                             attackScores[33] += 100;
@@ -2171,13 +2175,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[3] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
+                            attackScores[3] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
                         } else {
                             attackScores[3] += 100;
                             attackScores[16] += 100;
@@ -2224,13 +2228,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[4] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
+                            attackScores[4] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
                         } else {
                             attackScores[4] += 100;
                             attackScores[19] += 100;
@@ -2277,13 +2281,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
                         } else {
                             attackScores[5] += 100;
                             attackScores[30] += 100;
@@ -2325,13 +2329,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
                         } else {
                             attackScores[6] += 100;
                             attackScores[29] += 100;
@@ -2373,13 +2377,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[5] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[5] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
                         } else {
                             attackScores[33] += 100;
                             attackScores[5] += 100;
@@ -2421,13 +2425,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[6] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[6] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
                         } else {
                             attackScores[34] += 100;
                             attackScores[6] += 100;
@@ -2473,13 +2477,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
                         } else {
                             attackScores[7] += 100;
                             attackScores[31] += 100;
@@ -2521,13 +2525,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
                         } else {
                             attackScores[32] += 100;
                             attackScores[8] += 100;
@@ -2573,13 +2577,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[7] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[7] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
                         } else {
                             attackScores[36] += 100;
                             attackScores[7] += 100;
@@ -2625,13 +2629,13 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[8] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
+                            attackScores[8] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
                         } else {
                             attackScores[8] += 100;
                             attackScores[35] += 100;
@@ -2677,11 +2681,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
                         } else {
                             attackScores[15] += 100;
                             attackScores[25] += 100;
@@ -2717,11 +2721,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
                         } else {
                             attackScores[16] += 100;
                             attackScores[25] += 100;
@@ -2757,11 +2761,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
                         } else {
                             attackScores[26] += 100;
                             attackScores[13] += 100;
@@ -2797,11 +2801,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
                         } else {
                             attackScores[27] += 100;
                             attackScores[14] += 100;
@@ -2837,11 +2841,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
                         } else {
                             attackScores[19] += 100;
                             attackScores[26] += 100;
@@ -2877,11 +2881,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
                         } else {
                             attackScores[27] += 100;
                             attackScores[20] += 100;
@@ -2921,11 +2925,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
                         } else {
                             attackScores[28] += 100;
                             attackScores[17] += 100;
@@ -2961,11 +2965,11 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
                         } else {
                             attackScores[18] += 100;
                             attackScores[28] += 100;
@@ -3005,10 +3009,10 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[9] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
+                            attackScores[9] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
                         } else {
                             attackScores[9] += 100;
                             attackScores[29] += 100;
@@ -3042,10 +3046,10 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[10] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
+                            attackScores[10] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
                         } else {
                             attackScores[10] += 100;
                             attackScores[33] += 100;
@@ -3079,10 +3083,10 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[11] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
+                            attackScores[11] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
                         } else {
                             attackScores[11] += 100;
                             attackScores[32] += 100;
@@ -3120,10 +3124,10 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[12] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
+                            attackScores[12] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
                         } else {
                             attackScores[12] += 100;
                             attackScores[35] += 100;
@@ -3161,9 +3165,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[13] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
+                            attackScores[13] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
                         } else {
                             attackScores[13] += 100;
                             attackScores[29] += 100;
@@ -3194,9 +3198,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[14] += G.paintPerChips() * 100;
-                            attackScores[25] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
+                            attackScores[14] += G.paintPerChips() * 200;
+                            attackScores[25] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
                         } else {
                             attackScores[14] += 100;
                             attackScores[25] += 100;
@@ -3227,9 +3231,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[15] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
+                            attackScores[15] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
                         } else {
                             attackScores[15] += 100;
                             attackScores[26] += 100;
@@ -3260,9 +3264,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[16] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
+                            attackScores[16] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
                         } else {
                             attackScores[16] += 100;
                             attackScores[32] += 100;
@@ -3293,9 +3297,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[17] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[26] += G.paintPerChips() * 100;
+                            attackScores[17] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[26] += G.paintPerChips() * 200;
                         } else {
                             attackScores[17] += 100;
                             attackScores[33] += 100;
@@ -3326,9 +3330,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[18] += G.paintPerChips() * 100;
-                            attackScores[27] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
+                            attackScores[18] += G.paintPerChips() * 200;
+                            attackScores[27] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
                         } else {
                             attackScores[18] += 100;
                             attackScores[27] += 100;
@@ -3363,9 +3367,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[19] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
+                            attackScores[19] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
                         } else {
                             attackScores[19] += 100;
                             attackScores[28] += 100;
@@ -3396,9 +3400,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[20] += G.paintPerChips() * 100;
-                            attackScores[28] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
+                            attackScores[20] += G.paintPerChips() * 200;
+                            attackScores[28] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
                         } else {
                             attackScores[20] += 100;
                             attackScores[28] += 100;
@@ -3433,9 +3437,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[31] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
-                            attackScores[21] += G.paintPerChips() * 100;
+                            attackScores[31] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
+                            attackScores[21] += G.paintPerChips() * 200;
                         } else {
                             attackScores[31] += 100;
                             attackScores[29] += 100;
@@ -3465,9 +3469,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[32] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
-                            attackScores[22] += G.paintPerChips() * 100;
+                            attackScores[32] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
+                            attackScores[22] += G.paintPerChips() * 200;
                         } else {
                             attackScores[32] += 100;
                             attackScores[30] += 100;
@@ -3497,9 +3501,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[35] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
-                            attackScores[23] += G.paintPerChips() * 100;
+                            attackScores[35] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
+                            attackScores[23] += G.paintPerChips() * 200;
                         } else {
                             attackScores[35] += 100;
                             attackScores[33] += 100;
@@ -3529,9 +3533,9 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[34] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
-                            attackScores[24] += G.paintPerChips() * 100;
+                            attackScores[34] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
+                            attackScores[24] += G.paintPerChips() * 200;
                         } else {
                             attackScores[34] += 100;
                             attackScores[36] += 100;
@@ -3565,8 +3569,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[29] += G.paintPerChips() * 100;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[29] += G.paintPerChips() * 200;
                         } else {
                             attackScores[21] += 100;
                             attackScores[29] += 100;
@@ -3594,8 +3598,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[30] += G.paintPerChips() * 100;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[30] += G.paintPerChips() * 200;
                         } else {
                             attackScores[22] += 100;
                             attackScores[30] += 100;
@@ -3623,8 +3627,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[21] += G.paintPerChips() * 100;
-                            attackScores[31] += G.paintPerChips() * 100;
+                            attackScores[21] += G.paintPerChips() * 200;
+                            attackScores[31] += G.paintPerChips() * 200;
                         } else {
                             attackScores[21] += 100;
                             attackScores[31] += 100;
@@ -3652,8 +3656,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[22] += G.paintPerChips() * 100;
-                            attackScores[32] += G.paintPerChips() * 100;
+                            attackScores[22] += G.paintPerChips() * 200;
+                            attackScores[32] += G.paintPerChips() * 200;
                         } else {
                             attackScores[22] += 100;
                             attackScores[32] += 100;
@@ -3681,8 +3685,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[33] += G.paintPerChips() * 100;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[33] += G.paintPerChips() * 200;
                         } else {
                             attackScores[23] += 100;
                             attackScores[33] += 100;
@@ -3710,8 +3714,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[34] += G.paintPerChips() * 100;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[34] += G.paintPerChips() * 200;
                         } else {
                             attackScores[24] += 100;
                             attackScores[34] += 100;
@@ -3743,8 +3747,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[23] += G.paintPerChips() * 100;
-                            attackScores[35] += G.paintPerChips() * 100;
+                            attackScores[23] += G.paintPerChips() * 200;
+                            attackScores[35] += G.paintPerChips() * 200;
                         } else {
                             attackScores[23] += 100;
                             attackScores[35] += 100;
@@ -3772,8 +3776,8 @@ public class Splasher {
                     if (info.hasRuin()) {
                         if (G.rc.canSenseRobotAtLocation(loc)
                                 && G.rc.senseRobotAtLocation(loc).team == G.opponentTeam) {
-                            attackScores[24] += G.paintPerChips() * 100;
-                            attackScores[36] += G.paintPerChips() * 100;
+                            attackScores[24] += G.paintPerChips() * 200;
+                            attackScores[36] += G.paintPerChips() * 200;
                         } else {
                             attackScores[24] += 100;
                             attackScores[36] += 100;

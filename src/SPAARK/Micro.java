@@ -1,4 +1,4 @@
-package solidbuildold;
+package SPAARK;
 
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
