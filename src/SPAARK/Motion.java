@@ -331,6 +331,9 @@ public class Motion {
                 // }
                 // }
             }
+            if (exploreLoc == null){
+                exploreLoc = new MapLocation(Random.rand() % G.mapWidth, Random.rand() % G.mapHeight);
+            }
         }
         return exploreLoc;
     }
@@ -406,6 +409,9 @@ public class Motion {
                         break;
                     }
                 }
+            }
+            if (exploreLoc == null){
+                exploreLoc = new MapLocation(Random.rand() % G.mapWidth, Random.rand() % G.mapHeight);
             }
         }
         return exploreLoc;

@@ -146,6 +146,8 @@ public class Tower {
 
         if ((G.round < 50 || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) && spawnedRobots < 3) {
             trying = UnitType.SOLDIER;
+            if(spawnedRobots==2&&G.mapArea<=900)
+                trying = UnitType.MOPPER;
         }
 
         // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900
