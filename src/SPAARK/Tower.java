@@ -108,7 +108,7 @@ public class Tower {
         // }
         // }
         // if (G.rc.getNumberTowers() == 25) {
-        //     soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
+        // soldierWeight -= TOW_MAXED_REDUCE_SOLDIER_WEIGHT;
         // }
         soldierWeight -= ((double) G.rc.getNumberTowers()) * 0.05;
         splasherWeight += ((double) POI.paintTowers) * 0.3;
@@ -118,8 +118,10 @@ public class Tower {
         mopperWeight /= sum;
 
         // G.indicatorString = new StringBuilder();
-        // G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " " + doubleSpawnedSplashers + " "
-        //         + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + " ");
+        // G.indicatorString.append(doubleSpawnedSoldiers + " " + spawnedSoldiers + " "
+        // + doubleSpawnedSplashers + " "
+        // + spawnedSplashers + " " + doubleSpawnedMoppers + " " + spawnedMoppers + "
+        // ");
 
         double soldier = doubleSpawnedSoldiers + soldierWeight - spawnedSoldiers;
         double splasher = doubleSpawnedSplashers + splasherWeight - spawnedSplashers;
@@ -127,29 +129,29 @@ public class Tower {
 
         if (soldier >= splasher && soldier >= mopper) {
             trying = UnitType.SOLDIER;
-        }
-        else if (mopper >= splasher) {
+        } else if (mopper >= splasher) {
             trying = UnitType.MOPPER;
-        }
-        else {
+        } else {
             trying = UnitType.SPLASHER;
         }
 
         // IMPORTANT: this prioritizes mopper > splasher > soldier at the start
         // if (mopper >= splasher && mopper >= soldier) {
-        //     trying = UnitType.MOPPER;
+        // trying = UnitType.MOPPER;
         // } else if (splasher >= soldier) {
-        //     trying = UnitType.SPLASHER;
+        // trying = UnitType.SPLASHER;
         // } else {
-        //     trying = UnitType.SOLDIER;
+        // trying = UnitType.SOLDIER;
         // }
 
-        if ((G.round < 50 || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) && spawnedRobots<3){
-            trying=UnitType.SOLDIER;
+        if ((G.round < 50 || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) && spawnedRobots < 3) {
+            trying = UnitType.SOLDIER;
         }
 
-        // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 || G.rc.getPaint() == 1000) {
-        if ((G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900 && (G.round < 100 || (lastSpawn + 1 < G.round && G.allyRobots.length < 4)) || G.round < 10)) {
+        // if (G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900
+        // || G.rc.getPaint() == 1000) {
+        if ((G.rc.getNumberTowers() == 25 || G.rc.getMoney() - trying.moneyCost >= 900
+                && (G.round < 100 || (lastSpawn + 1 < G.round && G.allyRobots.length < 4)) || G.round < 10)) {
             switch (trying) {
                 case UnitType.MOPPER:
                     for (MapLocation loc : spawnLocs) {
@@ -239,61 +241,70 @@ public class Tower {
         }
         // TODO: make required chips based on tower level
         // i really hope all money towers dont go boom
-        // destroy: if (G.rc.getNumberTowers() == 25 && ((G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_PAINT_TOWER && G.rc.getChips() > 25000) || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER && G.rc.getChips() > 100000)) {
-        // // destroy: if (((G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_PAINT_TOWER && G.rc.getChips() > 25000) || G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER && G.rc.getChips() > 50000)) {
-        //     int best = -1;
-        //     int bestDistance = 0;
-        //     for (int i = POI.numberOfTowers; --i >= 0;) {
-        //         if (POI.towerTeams[i] != G.opponentTeam) {
-        //             continue;
-        //         }
-        //         int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
-        //         if (best == -1 || distance < bestDistance) {
-        //             best = i;
-        //             bestDistance = distance;
-        //         }
-        //     }
-        //     MapLocation closestOpponentTower = new MapLocation(-1, -1);
-        //     if (best == -1) {
-        //         if (POI.symmetry[0]) {
-        //             closestOpponentTower = new MapLocation(G.mapWidth - 1 - G.me.x, G.me.y);
-        //         }
-        //         if (POI.symmetry[1]) {
-        //             closestOpponentTower = new MapLocation(G.me.x, G.mapHeight - 1 - G.me.y);
-        //         }
-        //         if (POI.symmetry[2]) {
-        //             closestOpponentTower = new MapLocation(G.mapWidth - 1 - G.me.x, G.mapHeight - 1 - G.me.y);
-        //         }
-        //         break destroy;
-        //     }
-        //     else {
-        //         closestOpponentTower = POI.towerLocs[best];
-        //     }
-        //     boolean foundFurther = false;
-        //     for (int i = POI.numberOfTowers; --i >= 0;) {
-        //         if (POI.towerTeams[i] != G.team) {
-        //             continue;
-        //         }
-        //         int distance = Motion.getChebyshevDistance(closestOpponentTower, POI.towerLocs[i]);
-        //         if (distance > bestDistance) {
-        //             foundFurther = true;
-        //             break;
-        //         }
-        //         if (Clock.getBytecodesLeft() < 2500) {
-        //             break;
-        //         }
-        //     }
-        //     if (foundFurther) {
-        //         break destroy;
-        //     }
-        //     // better to attack before disintegration
-        //     attack();
-        //     System.out.println("Tower " + G.rc.getID() + " disintegrated!!!!");
-        //     G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
-        //     G.rc.disintegrate();
-        //     return;
+        // destroy: if (G.rc.getNumberTowers() == 25 && ((G.rc.getType().getBaseType()
+        // == UnitType.LEVEL_ONE_PAINT_TOWER && G.rc.getChips() > 25000) ||
+        // G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER &&
+        // G.rc.getChips() > 100000)) {
+        // // destroy: if (((G.rc.getType().getBaseType() ==
+        // UnitType.LEVEL_ONE_PAINT_TOWER && G.rc.getChips() > 25000) ||
+        // G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER &&
+        // G.rc.getChips() > 50000)) {
+        // int best = -1;
+        // int bestDistance = 0;
+        // for (int i = POI.numberOfTowers; --i >= 0;) {
+        // if (POI.towerTeams[i] != G.opponentTeam) {
+        // continue;
         // }
-        if (G.rc.getChips() > (G.rc.getID()<10000?20000:G.rc.getID()*2) && G.lastChips < G.rc.getChips() && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+        // int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
+        // if (best == -1 || distance < bestDistance) {
+        // best = i;
+        // bestDistance = distance;
+        // }
+        // }
+        // MapLocation closestOpponentTower = new MapLocation(-1, -1);
+        // if (best == -1) {
+        // if (POI.symmetry[0]) {
+        // closestOpponentTower = new MapLocation(G.mapWidth - 1 - G.me.x, G.me.y);
+        // }
+        // if (POI.symmetry[1]) {
+        // closestOpponentTower = new MapLocation(G.me.x, G.mapHeight - 1 - G.me.y);
+        // }
+        // if (POI.symmetry[2]) {
+        // closestOpponentTower = new MapLocation(G.mapWidth - 1 - G.me.x, G.mapHeight -
+        // 1 - G.me.y);
+        // }
+        // break destroy;
+        // }
+        // else {
+        // closestOpponentTower = POI.towerLocs[best];
+        // }
+        // boolean foundFurther = false;
+        // for (int i = POI.numberOfTowers; --i >= 0;) {
+        // if (POI.towerTeams[i] != G.team) {
+        // continue;
+        // }
+        // int distance = Motion.getChebyshevDistance(closestOpponentTower,
+        // POI.towerLocs[i]);
+        // if (distance > bestDistance) {
+        // foundFurther = true;
+        // break;
+        // }
+        // if (Clock.getBytecodesLeft() < 2500) {
+        // break;
+        // }
+        // }
+        // if (foundFurther) {
+        // break destroy;
+        // }
+        // // better to attack before disintegration
+        // attack();
+        // System.out.println("Tower " + G.rc.getID() + " disintegrated!!!!");
+        // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
+        // G.rc.disintegrate();
+        // return;
+        // }
+        if (G.rc.getChips() > (G.rc.getID() < 10000 ? 20000 : G.rc.getID() * 2) && G.lastChips < G.rc.getChips()
+                && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
             attack();
             // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
             G.rc.disintegrate();

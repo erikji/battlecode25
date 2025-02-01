@@ -18,43 +18,43 @@ public class POI {
     public static MapLocation[] towerLocs = new MapLocation[144];
     public static Team[] towerTeams = new Team[144];
     public static UnitType[] towerTypes = new UnitType[144];
-    public static int[][] towerGrid = new int[][]{
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
-        {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        },
+    public static int[][] towerGrid = new int[][] {
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
+            {
+                    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            },
     };
     // public static int[] towers = new int[] {
     // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -174,9 +174,9 @@ public class POI {
                 towerTypes[i] = type;
                 robotsThatKnowInformation[i] = new StringBuilder(":" + source);
                 // if (source == -1) {
-                //     critical[i] = true;
+                // critical[i] = true;
                 // } else {
-                //     critical[i] = false;
+                // critical[i] = false;
                 // }
             } else {
                 robotsThatKnowInformation[i].append(":" + source);
@@ -247,11 +247,11 @@ public class POI {
     public static boolean firstUpdate = true;
 
     public static void updateRound() throws Exception {
-        // int a = Clock.getBytecodeNum();
+        int a = Clock.getBytecodeNum();
         totalMessages = 0;
         readMessages();
-        // if (ENABLE_INDICATORS)
-        //     G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+        G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         // a = Clock.getBytecodeNum();
         for (int i = G.nearbyRuins.length; --i >= 0;) {
@@ -266,9 +266,9 @@ public class POI {
                 addTower(-1, G.nearbyRuins[i], Team.NEUTRAL, UnitType.LEVEL_ONE_DEFENSE_TOWER);
             }
         }
-        // if (ENABLE_INDICATORS)
-        //     G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
-        // a = Clock.getBytecodeNum();
+        if (ENABLE_INDICATORS)
+        G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
+        a = Clock.getBytecodeNum();
 
         // drawIndicators(); // uses 5000 bytecode somehow
 
@@ -280,53 +280,53 @@ public class POI {
             }
             switch (Math.min(G.me.y, 4)) {
                 case 4:
-                    explored[G.me.y-4] |= 0b11111L << G.me.x - 2;
+                    explored[G.me.y - 4] |= 0b11111L << G.me.x - 2;
                 case 3:
-                    explored[G.me.y-3] |= 0b1111111L << G.me.x - 3;
+                    explored[G.me.y - 3] |= 0b1111111L << G.me.x - 3;
                 case 2:
-                    explored[G.me.y-2] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y - 2] |= 0b111111111L << G.me.x - 4;
                 case 1:
-                    explored[G.me.y-1] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y - 1] |= 0b111111111L << G.me.x - 4;
                 default:
                     explored[G.me.y] |= 0b111111111L << G.me.x - 4;
-                    explored[G.me.y+1] |= 0b111111111L << G.me.x - 4;
-                    explored[G.me.y+2] |= 0b111111111L << G.me.x - 4;
-                    explored[G.me.y+3] |= 0b1111111L << G.me.x - 3;
-                    explored[G.me.y+4] |= 0b11111L << G.me.x - 2;
+                    explored[G.me.y + 1] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y + 2] |= 0b111111111L << G.me.x - 4;
+                    explored[G.me.y + 3] |= 0b1111111L << G.me.x - 3;
+                    explored[G.me.y + 4] |= 0b11111L << G.me.x - 2;
             }
             switch (G.me.x) {
                 case 3:
                     explored[G.me.y] |= 0b111L << G.me.x - 3;
-                    explored[(G.me.y+63)%64] |= 0b111L << G.me.x - 3;
-                    explored[G.me.y+1] |= 0b111L << G.me.x - 3;
-                    explored[(G.me.y+62)%64] |= 0b111L << G.me.x - 3;
-                    explored[G.me.y+2] |= 0b111L << G.me.x - 3;
-                    explored[(G.me.y+61)%64] |= 0b111L << G.me.x - 3;
-                    explored[G.me.y+3] |= 0b111L << G.me.x - 3;
-                    explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
-                    explored[G.me.y+4] |= 3L << G.me.x - 2;
+                    explored[(G.me.y + 63) % 64] |= 0b111L << G.me.x - 3;
+                    explored[G.me.y + 1] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y + 62) % 64] |= 0b111L << G.me.x - 3;
+                    explored[G.me.y + 2] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y + 61) % 64] |= 0b111L << G.me.x - 3;
+                    explored[G.me.y + 3] |= 0b111L << G.me.x - 3;
+                    explored[(G.me.y + 60) % 64] |= 3L << G.me.x - 2;
+                    explored[G.me.y + 4] |= 3L << G.me.x - 2;
                     break;
                 case 2:
                     explored[G.me.y] |= 3L << G.me.x - 2;
-                    explored[(G.me.y+63)%64] |= 3L << G.me.x - 2;
-                    explored[G.me.y+1] |= 3L << G.me.x - 2;
-                    explored[(G.me.y+62)%64] |= 3L << G.me.x - 2;
-                    explored[G.me.y+2] |= 3L << G.me.x - 2;
-                    explored[(G.me.y+61)%64] |= 3L << G.me.x - 2;
-                    explored[G.me.y+3] |= 3L << G.me.x - 2;
-                    explored[(G.me.y+60)%64] |= 3L << G.me.x - 2;
-                    explored[G.me.y+4] |= 3L << G.me.x - 2;
+                    explored[(G.me.y + 63) % 64] |= 3L << G.me.x - 2;
+                    explored[G.me.y + 1] |= 3L << G.me.x - 2;
+                    explored[(G.me.y + 62) % 64] |= 3L << G.me.x - 2;
+                    explored[G.me.y + 2] |= 3L << G.me.x - 2;
+                    explored[(G.me.y + 61) % 64] |= 3L << G.me.x - 2;
+                    explored[G.me.y + 3] |= 3L << G.me.x - 2;
+                    explored[(G.me.y + 60) % 64] |= 3L << G.me.x - 2;
+                    explored[G.me.y + 4] |= 3L << G.me.x - 2;
                     break;
                 case 1:
                     explored[G.me.y] |= 1L << G.me.x - 1;
-                    explored[(G.me.y+63)%64] |= 1L << G.me.x - 1;
-                    explored[G.me.y+1] |= 1L << G.me.x - 1;
-                    explored[(G.me.y+62)%64] |= 1L << G.me.x - 1;
-                    explored[G.me.y+2] |= 1L << G.me.x - 1;
-                    explored[(G.me.y+61)%64] |= 1L << G.me.x - 1;
-                    explored[G.me.y+3] |= 1L << G.me.x - 1;
-                    explored[(G.me.y+60)%64] |= 1L << G.me.x - 1;
-                    explored[G.me.y+4] |= 1L << G.me.x - 1;
+                    explored[(G.me.y + 63) % 64] |= 1L << G.me.x - 1;
+                    explored[G.me.y + 1] |= 1L << G.me.x - 1;
+                    explored[(G.me.y + 62) % 64] |= 1L << G.me.x - 1;
+                    explored[G.me.y + 2] |= 1L << G.me.x - 1;
+                    explored[(G.me.y + 61) % 64] |= 1L << G.me.x - 1;
+                    explored[G.me.y + 3] |= 1L << G.me.x - 1;
+                    explored[(G.me.y + 60) % 64] |= 1L << G.me.x - 1;
+                    explored[G.me.y + 4] |= 1L << G.me.x - 1;
                     break;
                 default:
                     break;
@@ -348,9 +348,9 @@ public class POI {
                 }
             }
         }
-        // if (ENABLE_INDICATORS)
-        //     G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
-        // a = Clock.getBytecodeNum();
+        if (ENABLE_INDICATORS)
+        G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+        a = Clock.getBytecodeNum();
         // int opponentPaintSeen = 0;
         // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
         // if (G.nearbyMapInfos[i].getPaint().isEnemy()) {
@@ -373,12 +373,12 @@ public class POI {
                 removeValidSymmetry(-1, 2);
             }
         }
-        // if (ENABLE_INDICATORS)
-        //     G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
-        // a = Clock.getBytecodeNum();
+        if (ENABLE_INDICATORS)
+        G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
+        a = Clock.getBytecodeNum();
         sendMessages();
-        // if (ENABLE_INDICATORS)
-        //     G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
+        if (ENABLE_INDICATORS)
+        G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {
@@ -436,6 +436,7 @@ public class POI {
     // each message contains 2 towers/symmetries
     // because its 32 bit integer so it gets split into 2 16 bit integers
     public static int totalMessages = 0;
+
     public static void sendMessages() throws Exception {
         if (G.rc.getType().isTowerType()) {
             // we just send all info that the robots dont have
@@ -522,16 +523,16 @@ public class POI {
                         if (messages < 2) {
                             String id = ":" + r.getID();
                             // for (int i = numberOfTowers; --i >= 0;) {
-                            //     if (critical[i] && !towerLocs[i].equals(r.getLocation())) {
-                            //         message = appendToMessage(message,
-                            //                 intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
-                            //         messages++;
-                            //         critical[i] = false;
-                            //         robotsThatKnowInformation[i].append(id);
-                            //         if (messages == 2) {
-                            //             break;
-                            //         }
-                            //     }
+                            // if (critical[i] && !towerLocs[i].equals(r.getLocation())) {
+                            // message = appendToMessage(message,
+                            // intifyTower(towerTeams[i], towerTypes[i]) | intifyLocation(towerLocs[i]));
+                            // messages++;
+                            // critical[i] = false;
+                            // robotsThatKnowInformation[i].append(id);
+                            // if (messages == 2) {
+                            // break;
+                            // }
+                            // }
                             // }
                             // for (int i = 144; --i >= 0;) {
                             // if (towers[i] == -1) {
@@ -583,21 +584,23 @@ public class POI {
 
     public static int relayMessage = -1;
     public static int relayMessages = 0;
+
     public static void readMessages() throws Exception {
         // what hapepns if message is sent in same round?? oof oof oof
         Message[] messages = G.rc.readMessages(G.round - 1);
         relayMessage = -1;
         relayMessages = 0;
-        if (G.rc.getType().isTowerType() && G.round + 2000 >= lastBroadcastRounds[towerGrid[G.me.y / 5][G.me.x / 5]] + BROADCAST_FREQUENCY) {
+        if (G.rc.getType().isTowerType()
+                && G.round + 2000 >= lastBroadcastRounds[towerGrid[G.me.y / 5][G.me.x / 5]] + BROADCAST_FREQUENCY) {
             lastBroadcastRounds[towerGrid[G.me.y / 5][G.me.x / 5]] = G.round + 2000;
             relayMessage = intifyTower(G.rc.getTeam(), G.rc.getType()) | intifyLocation(G.me) | (1 << 15);
             relayMessages++;
-            // if (ENABLE_INDICATORS) {
-            //     G.indicatorString.append("SENT-MESSAGE=" + G.me);
-            //     for (Direction d : G.DIRECTIONS) {
-            //         G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
-            //     }
-            // }
+            if (ENABLE_INDICATORS) {
+                G.indicatorString.append("SENT-MESSAGE=" + G.me);
+                for (Direction d : G.DIRECTIONS) {
+                    G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
+                }
+            }
         }
         int minBytecode = 10000;
         switch (G.rc.getType()) {
@@ -634,21 +637,19 @@ public class POI {
             }
         } else {
             addTower(id, parseLocation(n), parseTowerTeam(n), parseTowerType(n));
-            // if (G.rc.getType().isTowerType() && (n >> 15) == 1) {
-            //     G.indicatorString.append("REC-MESSAGE=" + parseLocation(n));
-            // }
+            if (G.rc.getType().isTowerType() && (n >> 15) == 1) {
+                G.indicatorString.append("REC-MESSAGE=" + parseLocation(n));
+            }
             if (G.rc.getType().isTowerType() && totalMessages < 20 && (n >> 15) == 1) {
                 MapLocation loc = parseLocation(n);
                 if (G.round + 2000 >= lastBroadcastRounds[towerGrid[loc.y / 5][loc.x / 5]] + BROADCAST_FREQUENCY) {
                     lastBroadcastRounds[towerGrid[loc.y / 5][loc.x / 5]] = G.round + 2000;
                     relayMessage = appendToMessage(relayMessage, n);
                     relayMessages++;
-                    // if (ENABLE_INDICATORS) {
-                    //     G.indicatorString.append("SENT-MESSAGE=" + parseLocation(n));
-                    //     for (Direction d : G.DIRECTIONS) {
-                    //         G.rc.setIndicatorDot(G.me.add(d), 255, 255, 0);
-                    //     }
-                    // }
+                    if (ENABLE_INDICATORS) {
+                        G.indicatorString.append("SENT-MESSAGE=" + parseLocation(n));
+                        G.rc.setIndicatorLine(G.me, loc, 255, 255, 0);
+                    }
                     if (relayMessages == 2) {
                         G.rc.broadcastMessage(relayMessage);
                         totalMessages++;

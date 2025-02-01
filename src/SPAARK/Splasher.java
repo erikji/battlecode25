@@ -37,8 +37,7 @@ public class Splasher {
             Motion.setRetreatLoc();
             if (Motion.retreatTower != -1 && G.me.distanceSquaredTo(Motion.retreatLoc) < 9) {
                 mode = RETREAT;
-            }
-            else if (mode == RETREAT) {
+            } else if (mode == RETREAT) {
                 mode = EXPLORE;
                 Motion.retreatTower = -1;
             }
@@ -47,21 +46,22 @@ public class Splasher {
             Motion.retreatTower = -1;
         }
         // if (mode == RETREAT) {
-        //     Motion.setRetreatLoc();
-		// 	if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >= 9) {
-        //         mode = EXPLORE;
-        //     }
+        // Motion.setRetreatLoc();
+        // if (Motion.retreatTower == -1 || G.me.distanceSquaredTo(Motion.retreatLoc) >=
+        // 9) {
+        // mode = EXPLORE;
+        // }
         // }
         // int a = Clock.getBytecodeNum();
         // switch (mode) {
         // ADD CASES HERE FOR SWITCHING MODES
         // }
-        // int b = Clock.getBytecodeNum();
+        int b = Clock.getBytecodeNum();
         // G.indicatorString.append((b - a) + " ");
         attackScores[0] = attackScores[1] = attackScores[2] = attackScores[3] = attackScores[4] = attackScores[5] = attackScores[6] = attackScores[7] = attackScores[8] = attackScores[9] = attackScores[10] = attackScores[11] = attackScores[12] = attackScores[13] = attackScores[14] = attackScores[15] = attackScores[16] = attackScores[17] = attackScores[18] = attackScores[19] = attackScores[20] = attackScores[21] = attackScores[22] = attackScores[23] = attackScores[24] = attackScores[25] = attackScores[26] = attackScores[27] = attackScores[28] = attackScores[29] = attackScores[30] = attackScores[31] = attackScores[32] = attackScores[33] = attackScores[34] = attackScores[35] = attackScores[36] = moveScores[0] = moveScores[1] = moveScores[2] = moveScores[3] = moveScores[4] = moveScores[5] = moveScores[6] = moveScores[7] = moveScores[8] = 0;
         switch (mode) {
             case EXPLORE -> {
-                // G.indicatorString.append("EXPLORE ");
+                G.indicatorString.append("EXPLORE ");
                 if (G.rc.isMovementReady()) {
                     exploreMoveScores();
                 }
@@ -73,7 +73,7 @@ public class Splasher {
                 }
             }
             case RETREAT -> {
-                // G.indicatorString.append("RETREAT ");
+                G.indicatorString.append("RETREAT ");
                 if (G.rc.isMovementReady()) {
                     retreatMoveScores();
                 }
@@ -382,15 +382,15 @@ public class Splasher {
             }
             Motion.move(G.ALL_DIRECTIONS[best]);
         }
-        // switch (mode) {
-        //     case EXPLORE -> {
-        //         G.rc.setIndicatorDot(G.me, 0, 255, 0);
-        //     }
-        //     case RETREAT -> {
-        //         G.rc.setIndicatorDot(G.me, 255, 0, 255);
-        //     }
-        // }
-        // G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
+        switch (mode) {
+            case EXPLORE -> {
+                G.rc.setIndicatorDot(G.me, 0, 255, 0);
+            }
+            case RETREAT -> {
+                G.rc.setIndicatorDot(G.me, 255, 0, 255);
+            }
+        }
+        G.indicatorString.append((Clock.getBytecodeNum() - b) + " ");
     }
 
     public static void exploreAttackScores1() throws Exception {

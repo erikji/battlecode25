@@ -25,7 +25,7 @@ public class RobotPlayer {
     }
 
     public static void updateMove() throws Exception {
-        //every time we move
+        // every time we move
         updateInfo();
         Motion.lastVisitedLocations.append(G.me.toString());
         switch (Motion.lastVisitedLocations.length() % 8) {
@@ -66,37 +66,40 @@ public class RobotPlayer {
                 default -> Tower.init();
             }
             // init bytecode count
-            // G.indicatorString.append("INIT " + Clock.getBytecodeNum() + " ");
+            G.indicatorString.append("INIT " + Clock.getBytecodeNum() + " ");
             while (true) {
-                // int r = G.rc.getRoundNum();
+                int r = G.rc.getRoundNum();
                 try {
                     updateRound();
                     switch (G.rc.getType()) {
                         case MOPPER, SOLDIER, SPLASHER -> Robot.run();
                         default -> Tower.run();
                     }
-                    // G.rc.setIndicatorString(G.indicatorString.toString());
-                    // G.indicatorString = new StringBuilder();
+                    G.rc.setIndicatorString(G.indicatorString.toString());
+                    G.indicatorString = new StringBuilder();
                 } catch (GameActionException e) {
                     System.out.println("Unexpected GameActionException");
-                    // G.indicatorString.append(" GAErr!");
-                    // G.rc.setIndicatorString(G.indicatorString.toString());
-                    // G.indicatorString = new StringBuilder();
+                    G.indicatorString.append(" GAErr!");
+                    G.rc.setIndicatorString(G.indicatorString.toString());
+                    G.indicatorString = new StringBuilder();
                     e.printStackTrace();
                 } catch (Exception e) {
                     System.out.println("Unexpected Exception");
-                    // G.indicatorString.append(" Err!");
-                    // G.rc.setIndicatorString(G.indicatorString.toString());
-                    // G.indicatorString = new StringBuilder();
+                    G.indicatorString.append(" Err!");
+                    G.rc.setIndicatorString(G.indicatorString.toString());
+                    G.indicatorString = new StringBuilder();
                     e.printStackTrace();
                 }
-                // if (G.rc.getRoundNum() != r) {
-                //     System.err.println("Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
-                //     G.indicatorString.append("BYTE=" + r + " ");
-                // }
+                if (G.rc.getRoundNum() != r) {
+                    System.err.println(
+                            "Bytecode overflow! (Round " + r + ", " + G.rc.getType() + ", " + G.rc.getLocation() + ")");
+                    G.indicatorString.append("BYTE=" + r + " ");
+                }
                 // for (int i = 0; i <= 50; i++) {
-                //     int a=Random.rand()%G.mapHeight,b=Random.rand()%G.mapWidth,c=Random.rand()%G.mapHeight,d=Random.rand()%G.mapWidth;
-                //     G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c), Random.rand()%256, Random.rand()%256, Random.rand()%256);
+                // int
+                // a=Random.rand()%G.mapHeight,b=Random.rand()%G.mapWidth,c=Random.rand()%G.mapHeight,d=Random.rand()%G.mapWidth;
+                // G.rc.setIndicatorLine(new MapLocation(b, a), new MapLocation(d, c),
+                // Random.rand()%256, Random.rand()%256, Random.rand()%256);
                 // }
                 G.lastChips = G.rc.getChips();
                 Clock.yield();

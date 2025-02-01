@@ -191,37 +191,37 @@ public class Motion {
     public static void exploreCorners(Micro m) throws Exception {
         MapLocation best = null;
         int bestDist = 1000000;
-        int dist = G.me.distanceSquaredTo(new MapLocation(0,0));
+        int dist = G.me.distanceSquaredTo(new MapLocation(0, 0));
         String s = "";
-        s+=dist;
-        s+= " ";
+        s += dist;
+        s += " ";
         if (dist > 25 && dist < bestDist && (((POI.explored[0] >> 0) & 1) == 0)) {
             bestDist = dist;
-            best = new MapLocation(0,0);
+            best = new MapLocation(0, 0);
         }
-        dist = G.me.distanceSquaredTo(new MapLocation(0,G.mapHeight-1));
-        s+=dist;
-        s+= " ";
-        if (dist > 25 && dist < bestDist && (((POI.explored[G.mapHeight-1] >> 0) & 1) == 0)) {
+        dist = G.me.distanceSquaredTo(new MapLocation(0, G.mapHeight - 1));
+        s += dist;
+        s += " ";
+        if (dist > 25 && dist < bestDist && (((POI.explored[G.mapHeight - 1] >> 0) & 1) == 0)) {
             bestDist = dist;
-            best = new MapLocation(0,G.mapHeight-1);
+            best = new MapLocation(0, G.mapHeight - 1);
         }
-        dist = G.me.distanceSquaredTo(new MapLocation(G.mapWidth-1,0));
-        s+=dist;
-        s+= " ";
-        if (dist > 25 && dist < bestDist && (((POI.explored[0] >> G.mapWidth-1) & 1) == 0)) {
+        dist = G.me.distanceSquaredTo(new MapLocation(G.mapWidth - 1, 0));
+        s += dist;
+        s += " ";
+        if (dist > 25 && dist < bestDist && (((POI.explored[0] >> G.mapWidth - 1) & 1) == 0)) {
             bestDist = dist;
-            best = new MapLocation(G.mapWidth-1,0);
+            best = new MapLocation(G.mapWidth - 1, 0);
         }
-        dist = G.me.distanceSquaredTo(new MapLocation(G.mapWidth-1,G.mapHeight-1));
-        s+=dist;
-        s+= " ";
+        dist = G.me.distanceSquaredTo(new MapLocation(G.mapWidth - 1, G.mapHeight - 1));
+        s += dist;
+        s += " ";
         System.out.println(s);
-        if (dist > 25 && dist < bestDist && ((((POI.explored[G.mapHeight-1] >> G.mapWidth-1)) & 1) == 0)) {
+        if (dist > 25 && dist < bestDist && ((((POI.explored[G.mapHeight - 1] >> G.mapWidth - 1)) & 1) == 0)) {
             bestDist = dist;
-            best = new MapLocation(G.mapWidth-1,G.mapHeight-1);
+            best = new MapLocation(G.mapWidth - 1, G.mapHeight - 1);
         }
-        if(best!=null) {
+        if (best != null) {
             exploreLoc = best;
         }
         exploreRandomly(m);
@@ -240,14 +240,11 @@ public class Motion {
             if (exploreLoc != null) {
                 if (G.rc.canSenseLocation(exploreLoc)) {
                     exploreLoc = null;
-                }
-                else if (exploreTime == 0) {
+                } else if (exploreTime == 0) {
                     exploreLoc = null;
-                }
-                else if (Random.rand() % 35 == 0) {
+                } else if (Random.rand() % 35 == 0) {
                     exploreLoc = null;
-                }
-                else if (exploreTowerCheck) {
+                } else if (exploreTowerCheck) {
                     for (int i = POI.numberOfTowers; --i >= 0;) {
                         if (POI.towerTeams[i] != G.team) {
                             continue;
@@ -260,12 +257,14 @@ public class Motion {
                 }
             }
             int numValidSymmetries = (POI.symmetry[0] ? 1 : 0) + (POI.symmetry[1] ? 1 : 0) + (POI.symmetry[2] ? 1 : 0);
-            if (exploreLoc == null && !avoidSymmetryExplore && numValidSymmetries == 1 && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
+            if (exploreLoc == null && !avoidSymmetryExplore && numValidSymmetries == 1
+                    && Random.rand() >= SYMMETRY_EXPLORE_PERCENT) {
                 int rand = Random.rand() % POI.numberOfTowers;
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
                     // if (POI.towerTeams[i] == G.opponentTeam
-                    //         && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                    // && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) &
+                    // 1) == 0) {
                     if (POI.towerTeams[i] == G.opponentTeam) {
                         exploreLoc = POI.towerLocs[i];
                         break;
@@ -277,10 +276,10 @@ public class Motion {
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
                                 // if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
-                                    exploreLoc = loc;
-                                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
-                                    exploreTowerCheck = true;
-                                    break search;
+                                exploreLoc = loc;
+                                exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                exploreTowerCheck = true;
+                                break search;
                                 // }
                             }
                         }
@@ -318,23 +317,26 @@ public class Motion {
                     }
                 }
                 // if (exploreLoc != null && G.allyRobots.length > 5) {
-                //     MapLocation otherBots = G.me;
-                //     for (int i = G.allyRobots.length; --i >= 0;) {
-                //         otherBots = otherBots.translate(G.allyRobots[i].location.x, G.allyRobots[i].location.y);
-                //     }
-                //     if (((double) (otherBots.x * exploreLoc.x + otherBots.y * exploreLoc.y)) / ((double) otherBots.distanceSquaredTo(new MapLocation(0, 0)) * G.me.distanceSquaredTo(new MapLocation(0, 0))) > 0) {
-                //         exploreLoc = null;
-                //     }
+                // MapLocation otherBots = G.me;
+                // for (int i = G.allyRobots.length; --i >= 0;) {
+                // otherBots = otherBots.translate(G.allyRobots[i].location.x,
+                // G.allyRobots[i].location.y);
+                // }
+                // if (((double) (otherBots.x * exploreLoc.x + otherBots.y * exploreLoc.y)) /
+                // ((double) otherBots.distanceSquaredTo(new MapLocation(0, 0)) *
+                // G.me.distanceSquaredTo(new MapLocation(0, 0))) > 0) {
+                // exploreLoc = null;
+                // }
                 // }
             }
         }
-        // if (ENABLE_EXPLORE_INDICATORS)
-        //     G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        if (ENABLE_EXPLORE_INDICATORS)
+            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
     public static MapLocation exploreRandomlyAggressiveLoc() throws Exception {
-        //only use symmetryexplore
+        // only use symmetryexplore
         if (G.rc.isMovementReady()) {
             --exploreTime;
             if (exploreLoc != null) {
@@ -353,7 +355,8 @@ public class Motion {
                 search: for (int j = POI.numberOfTowers; --j >= 0;) {
                     int i = (j + rand) % POI.numberOfTowers;
                     // if (POI.towerTeams[i] == G.opponentTeam
-                    //         && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) & 1) == 0) {
+                    // && ((POI.explored[POI.towerLocs[i].y] >> POI.explored[POI.towerLocs[i].x]) &
+                    // 1) == 0) {
                     if (POI.towerTeams[i] == G.opponentTeam) {
                         exploreLoc = POI.towerLocs[i];
                         break;
@@ -365,9 +368,9 @@ public class Motion {
                             if (POI.symmetry[i2]) {
                                 MapLocation loc = POI.getOppositeMapLocation(POI.towerLocs[i], i2);
                                 // if (((POI.explored[loc.y] >> POI.explored[loc.x]) & 1) == 0) {
-                                    exploreLoc = loc;
-                                    exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
-                                    break search;
+                                exploreLoc = loc;
+                                exploreTime = getChebyshevDistance(G.me, exploreLoc) + 20;
+                                break search;
                                 // }
                             }
                         }
@@ -405,8 +408,8 @@ public class Motion {
                 }
             }
         }
-        // if (ENABLE_EXPLORE_INDICATORS)
-        //     G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
+        if (ENABLE_EXPLORE_INDICATORS)
+            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
@@ -445,8 +448,9 @@ public class Motion {
         if (G.allyRobots.length > 10) {
             return 0;
         }
-        //if paint is less than getRetreatPaint, the robot may retreat
-        int paint = Math.max(paintLost + RETREAT_PAINT_OFFSET, (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
+        // if paint is less than getRetreatPaint, the robot may retreat
+        int paint = Math.max(paintLost + RETREAT_PAINT_OFFSET,
+                (int) ((double) G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO));
         switch (G.rc.getType()) {
             case SOLDIER:
                 return paint;
@@ -506,8 +510,7 @@ public class Motion {
                 PaintType paint = G.rc.senseMapInfo(waitingLoc).getPaint();
                 if (paint.isEnemy()) {
                     weight -= 200;
-                }
-                else if (!paint.isAlly()) {
+                } else if (!paint.isAlly()) {
                     weight -= 200;
                 }
             }
@@ -549,64 +552,67 @@ public class Motion {
             }
         }
         // if (retreatTower == -1) {
-        //     int best = -1;
-        //     while (best == -1) {
-        //         int bestWeight = Integer.MIN_VALUE;
-        //         // boolean hasCritical = false;
-        //         for (int i = POI.numberOfTowers; --i >= 0;) {
-        //             // if (POI.critical[i]) {
-        //             //     hasCritical = true;
-        //             // }
-        //             if (POI.towerTeams[i] != G.team)
-        //                 continue;
-        //             // this needs to change
-        //             boolean paint = POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER;
-        //             // if (!paint) {
-        //             // // This is dumb but borks code for some reason
-        //             // continue;
-        //             // }
-        //             int weight = 0;
-        //             if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
-        //                 weight -= 1000;
-        //             }
-        //             int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
-        //             weight -= distance;
-        //             if (paint) {
-        //                 weight += 100;
-        //             }
-        //             else if (G.rc.canSenseRobotAtLocation(POI.towerLocs[i]) && G.rc.senseRobotAtLocation(POI.towerLocs[i]).paintAmount > 0) {
-        //                 weight += 100;
-        //             }
-        //             // if (!POI.critical[i]) {
-        //             //     weight += 200;
-        //             // }
+        // int best = -1;
+        // while (best == -1) {
+        // int bestWeight = Integer.MIN_VALUE;
+        // // boolean hasCritical = false;
+        // for (int i = POI.numberOfTowers; --i >= 0;) {
+        // // if (POI.critical[i]) {
+        // // hasCritical = true;
+        // // }
+        // if (POI.towerTeams[i] != G.team)
+        // continue;
+        // // this needs to change
+        // boolean paint = POI.towerTypes[i] == UnitType.LEVEL_ONE_PAINT_TOWER;
+        // // if (!paint) {
+        // // // This is dumb but borks code for some reason
+        // // continue;
+        // // }
+        // int weight = 0;
+        // if (triedRetreatTowers.indexOf("" + (char) i) != -1) {
+        // weight -= 1000;
+        // }
+        // int distance = Motion.getChebyshevDistance(G.me, POI.towerLocs[i]);
+        // weight -= distance;
+        // if (paint) {
+        // weight += 100;
+        // }
+        // else if (G.rc.canSenseRobotAtLocation(POI.towerLocs[i]) &&
+        // G.rc.senseRobotAtLocation(POI.towerLocs[i]).paintAmount > 0) {
+        // weight += 100;
+        // }
+        // // if (!POI.critical[i]) {
+        // // weight += 200;
+        // // }
 
-        //             if (best == -1 || weight > bestWeight) {
-        //                 best = i;
-        //                 bestWeight = weight;
-        //             }
-        //         }
-        //         if (best == -1) {
-        //             if (triedRetreatTowers.length() == 0) {
-        //                 // completely out of towers, how is this possible lol
-        //                 retreatTower = -2;
-        //                 break;
-        //             }
-        //             triedRetreatTowers = new StringBuilder();
-        //             continue;
-        //         }
-        //         // if (!hasCritical && POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER) {
-        //         //     retreatTower = -2;
-        //         //     break;
-        //         // }
-        //         if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER && !G.rc.canSenseRobotAtLocation(POI.towerLocs[best])) {
-        //             retreatTower = -2;
-        //             break;
-        //         }
-        //         retreatTower = best;
-        //         triedRetreatTowers.append((char) best);
-        //         break;
-        //     }
+        // if (best == -1 || weight > bestWeight) {
+        // best = i;
+        // bestWeight = weight;
+        // }
+        // }
+        // if (best == -1) {
+        // if (triedRetreatTowers.length() == 0) {
+        // // completely out of towers, how is this possible lol
+        // retreatTower = -2;
+        // break;
+        // }
+        // triedRetreatTowers = new StringBuilder();
+        // continue;
+        // }
+        // // if (!hasCritical && POI.towerTypes[best] !=
+        // UnitType.LEVEL_ONE_PAINT_TOWER) {
+        // // retreatTower = -2;
+        // // break;
+        // // }
+        // if (POI.towerTypes[best] != UnitType.LEVEL_ONE_PAINT_TOWER &&
+        // !G.rc.canSenseRobotAtLocation(POI.towerLocs[best])) {
+        // retreatTower = -2;
+        // break;
+        // }
+        // retreatTower = best;
+        // triedRetreatTowers.append((char) best);
+        // break;
+        // }
         // }
         if (retreatTower == -1) {
             int best = -1;
@@ -615,9 +621,11 @@ public class Motion {
                 // boolean hasCritical = false;
                 for (int i = G.nearbyRuins.length; --i >= 0;) {
                     MapLocation loc = G.nearbyRuins[i];
-                    if (!G.rc.canSenseRobotAtLocation(loc)) continue;
+                    if (!G.rc.canSenseRobotAtLocation(loc))
+                        continue;
                     RobotInfo bot = G.rc.senseRobotAtLocation(loc);
-                    if (bot.team != G.team) continue;
+                    if (bot.team != G.team)
+                        continue;
                     if (bot.type.getBaseType() != UnitType.LEVEL_ONE_PAINT_TOWER && bot.paintAmount == 0) {
                         continue;
                     }
@@ -676,7 +684,7 @@ public class Motion {
 
     public static Direction retreatDir(MapLocation retreatLoc) throws Exception {
         if (G.rc.isMovementReady()) {
-            // G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
+            G.rc.setIndicatorLine(G.me, retreatLoc, 200, 0, 200);
             int dist = G.me.distanceSquaredTo(retreatLoc);
             if (dist <= 8 && G.rc.isActionReady()) {
                 if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
@@ -690,8 +698,11 @@ public class Motion {
                     boolean lowest = true;
                     for (int i = 8; --i >= 0;) {
                         MapLocation waitingLoc = retreatWaitingLocs[i].translate(retreatLoc.x, retreatLoc.y);
-                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
-                        // if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc) && G.rc.senseRobotAtLocation(waitingLoc).ID < G.rc.getID()) {
+                        if (G.rc.canSenseLocation(waitingLoc) && G.rc.canSenseRobotAtLocation(waitingLoc)
+                                && G.rc.senseRobotAtLocation(waitingLoc).paintAmount < G.rc.getPaint()) {
+                            // if (G.rc.canSenseLocation(waitingLoc) &&
+                            // G.rc.canSenseRobotAtLocation(waitingLoc) &&
+                            // G.rc.senseRobotAtLocation(waitingLoc).ID < G.rc.getID()) {
                             lowest = false;
                             break;
                         }
@@ -707,7 +718,7 @@ public class Motion {
                         updateRetreatWaitingLoc();
                     }
                     if (retreatWaitingLoc != null) {
-                        // G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
+                        G.rc.setIndicatorLine(G.me, retreatWaitingLoc, 200, 0, 100);
                         // bugnavTowards(retreatWaitingLoc);
                         return bug2Helper(G.me, retreatWaitingLoc, TOWARDS, 0, 0);
                     }
@@ -742,12 +753,12 @@ public class Motion {
             }
         }
         // if (G.rc.canSenseRobotAtLocation(retreatLoc)) {
-        //     RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
-        //     int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
-        //             r.paintAmount);
-        //     if (G.rc.canTransferPaint(retreatLoc, amt)) {
-        //         G.rc.transferPaint(retreatLoc, amt);
-        //     }
+        // RobotInfo r = G.rc.senseRobotAtLocation(retreatLoc);
+        // int amt = -Math.min(G.rc.getType().paintCapacity - G.rc.getPaint(),
+        // r.paintAmount);
+        // if (G.rc.canTransferPaint(retreatLoc, amt)) {
+        // G.rc.transferPaint(retreatLoc, amt);
+        // }
         // }
     }
 
@@ -1325,7 +1336,7 @@ public class Motion {
                 int subloc = m.getMapLocation().x;
                 if (((bfsMap[loc] >> subloc) & 1) == 0) {
                     bfsMap[loc] |= (long1 << subloc);
-                    // G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
+                    G.rc.setIndicatorDot(m.getMapLocation(), 255, 255, 255);
                     for (int j = step - 1; j >= 0; j--) {
                         if (((bfsDist[j * (height + 2) + loc] >> subloc) & 1) != 1) {
                             recalculationNeeded = Math.min(j, recalculationNeeded);
@@ -1663,9 +1674,10 @@ public class Motion {
                 nxt = G.me.add(G.ALL_DIRECTIONS[i]);
                 int index = Motion.lastVisitedLocations.lastIndexOf(nxt.toString());
                 if (index != -1) {
-                    //penalizes sitting still
+                    // penalizes sitting still
                     int numTurnsVisitedAgo = (Motion.lastVisitedLocations.length() - index) / 8;
-                    if (numTurnsVisitedAgo < 5) scores[i]--;
+                    if (numTurnsVisitedAgo < 5)
+                        scores[i]--;
                 }
                 p = G.rc.senseMapInfo(nxt).getPaint();
                 if (p.isEnemy()) {
@@ -1698,17 +1710,19 @@ public class Motion {
             if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[r])) {
                 RobotInfo bot = G.rc.senseRobotAtLocation(G.nearbyRuins[r]);
                 if (bot.team == G.opponentTeam) {
-                    int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
+                    int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext
+                            * (bot.type.attackStrength + bot.type.aoeAttackStrength) / G.rc.getType().health);
                     int toSubtract2 = toSubtract;
-                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength) toSubtract += 1000;
-                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2) toSubtract2 += 2000;
+                    if (G.rc.getHealth() <= bot.type.attackStrength + bot.type.aoeAttackStrength)
+                        toSubtract += 1000;
+                    if (G.rc.getHealth() <= (bot.type.attackStrength + bot.type.aoeAttackStrength) * 2)
+                        toSubtract2 += 2000;
                     for (int i = 9; --i >= 0;) {
                         if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
                             if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
                                     2)) {
                                 scores[i] -= toSubtract2;
-                            }
-                            else if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
+                            } else if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.nearbyRuins[r],
                                     bot.type.actionRadiusSquared)) {
                                 scores[i] -= toSubtract;
                             }

@@ -22,22 +22,24 @@ public class Robot {
         };
         Motion.paintNeededToStopRetreating = (int) (G.rc.getType().paintCapacity * RETREAT_PAINT_RATIO);
         // if (G.rc.getRoundNum() < 3 && G.rc.getType() == UnitType.SOLDIER) {
-        //     boolean foundPaintTower = false;
-        //     boolean foundMoneyTower = false;
-        //     for (int i = G.nearbyRuins.length; --i >= 0;) {
-        //         if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
-        //             RobotInfo tower = G.rc.senseRobotAtLocation(G.nearbyRuins[i]);
-        //             if (tower.team == G.team && tower.type.getBaseType() == UnitType.LEVEL_ONE_PAINT_TOWER) {
-        //                 foundPaintTower = true;
-        //             }
-        //             if (tower.team == G.team && tower.type.getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
-        //                 foundMoneyTower = true;
-        //             }
-        //         }
-        //     }
-        //     if (foundPaintTower&&!foundMoneyTower) {
-        //         Soldier.mode = Soldier.MESSING_UP;
-        //     }
+        // boolean foundPaintTower = false;
+        // boolean foundMoneyTower = false;
+        // for (int i = G.nearbyRuins.length; --i >= 0;) {
+        // if (G.rc.canSenseRobotAtLocation(G.nearbyRuins[i])) {
+        // RobotInfo tower = G.rc.senseRobotAtLocation(G.nearbyRuins[i]);
+        // if (tower.team == G.team && tower.type.getBaseType() ==
+        // UnitType.LEVEL_ONE_PAINT_TOWER) {
+        // foundPaintTower = true;
+        // }
+        // if (tower.team == G.team && tower.type.getBaseType() ==
+        // UnitType.LEVEL_ONE_MONEY_TOWER) {
+        // foundMoneyTower = true;
+        // }
+        // }
+        // }
+        // if (foundPaintTower&&!foundMoneyTower) {
+        // Soldier.mode = Soldier.MESSING_UP;
+        // }
         // }
         switch (G.rc.getType()) {
             case SOLDIER -> Soldier.init();
@@ -45,7 +47,7 @@ public class Robot {
             case MOPPER -> Mopper.init();
         }
     }
-    
+
     public static void run() throws Exception {
         Motion.paintLost += Math.max(Motion.lastPaint - G.rc.getPaint(), 0);
         if (G.rc.getPaint() == 0 && G.rc.getChips() > 5000) {
@@ -90,8 +92,8 @@ public class Robot {
         }
         Motion.tryTransferPaint();
         Motion.lastPaint = G.rc.getPaint();
-        // G.indicatorString.append("SYM="
-        //         + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
-        // POI.drawIndicators();
+        G.indicatorString.append("SYM="
+                + (POI.symmetry[0] ? "1" : "0") + (POI.symmetry[1] ? "1" : "0") + (POI.symmetry[2] ? "1 " : "0 "));
+        POI.drawIndicators();
     }
 }
