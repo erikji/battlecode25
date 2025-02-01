@@ -126,6 +126,7 @@ public class G {
     public static RobotInfo[] opponentRobots;
     public static int maxChips = -1;
     public static int lastChips = -1;
+    public static int lastNumberTowers = 2;
     // doesn't include towers
     public static StringBuilder allyRobotsString;
     public static StringBuilder opponentRobotsString;

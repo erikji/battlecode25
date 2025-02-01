@@ -58,11 +58,17 @@ public class Robot {
             }
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
-            for (int j = 0; j < 3; j++) {
-                if (G.rc.canCompleteTowerPattern(Robot.towers[j], G.nearbyRuins[i])) {
-                    G.rc.completeTowerPattern(Robot.towers[j], G.nearbyRuins[i]);
-                    POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[j]);
-                }
+            if (G.rc.canCompleteTowerPattern(Robot.towers[0], G.nearbyRuins[i]) && G.rc.senseMapInfo(G.nearbyRuins[i].add(Direction.SOUTH)).getMark() != PaintType.EMPTY) {
+                G.rc.completeTowerPattern(Robot.towers[0], G.nearbyRuins[i]);
+                POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[0]);
+            }
+            if (G.rc.canCompleteTowerPattern(Robot.towers[1], G.nearbyRuins[i]) && G.rc.senseMapInfo(G.nearbyRuins[i].add(Direction.WEST)).getMark() != PaintType.EMPTY) {
+                G.rc.completeTowerPattern(Robot.towers[1], G.nearbyRuins[i]);
+                POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[1]);
+            }
+            if (G.rc.canCompleteTowerPattern(Robot.towers[2], G.nearbyRuins[i]) && G.rc.senseMapInfo(G.nearbyRuins[i].add(Direction.EAST)).getMark() != PaintType.EMPTY) {
+                G.rc.completeTowerPattern(Robot.towers[2], G.nearbyRuins[i]);
+                POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[2]);
             }
         }
         for (int i = 9; --i >= 0;) {
@@ -78,11 +84,17 @@ public class Robot {
             default -> throw new Exception("Challenge Complete! How Did We Get Here?");
         }
         for (int i = G.nearbyRuins.length; --i >= 0;) {
-            for (int j = 0; j < 3; j++) {
-                if (G.rc.canCompleteTowerPattern(Robot.towers[j], G.nearbyRuins[i])) {
-                    G.rc.completeTowerPattern(Robot.towers[j], G.nearbyRuins[i]);
-                    POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[j]);
-                }
+            if (G.rc.canCompleteTowerPattern(Robot.towers[0], G.nearbyRuins[i]) && G.rc.senseMapInfo(G.nearbyRuins[i].add(Direction.SOUTH)).getMark() != PaintType.EMPTY) {
+                G.rc.completeTowerPattern(Robot.towers[0], G.nearbyRuins[i]);
+                POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[0]);
+            }
+            if (G.rc.canCompleteTowerPattern(Robot.towers[1], G.nearbyRuins[i]) && G.rc.senseMapInfo(G.nearbyRuins[i].add(Direction.WEST)).getMark() != PaintType.EMPTY) {
+                G.rc.completeTowerPattern(Robot.towers[1], G.nearbyRuins[i]);
+                POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[1]);
+            }
+            if (G.rc.canCompleteTowerPattern(Robot.towers[2], G.nearbyRuins[i]) && G.rc.senseMapInfo(G.nearbyRuins[i].add(Direction.EAST)).getMark() != PaintType.EMPTY) {
+                G.rc.completeTowerPattern(Robot.towers[2], G.nearbyRuins[i]);
+                POI.addTower(-1, G.nearbyRuins[i], G.team, Robot.towers[2]);
             }
         }
         for (int i = 9; --i >= 0;) {

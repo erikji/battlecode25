@@ -102,6 +102,7 @@ public class RobotPlayer {
                 // Random.rand()%256, Random.rand()%256, Random.rand()%256);
                 // }
                 G.lastChips = G.rc.getChips();
+                G.lastNumberTowers = G.rc.getNumberTowers();
                 Clock.yield();
             }
         } catch (GameActionException e) {

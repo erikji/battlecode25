@@ -303,15 +303,17 @@ public class Tower {
         // G.rc.disintegrate();
         // return;
         // }
-        if (G.rc.getChips() > (G.rc.getID() < 10000 ? 20000 : G.rc.getID() * 2) && G.lastChips < G.rc.getChips()
-                && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
-            attack();
-            // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
-            G.rc.disintegrate();
-            return;
-        }
-        while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 1000) {
-            G.rc.upgradeTower(G.me);
+        if (G.rc.getChips() > (G.rc.getID() < 10000 ? 20000 : G.rc.getID() * 3 - 10000) && G.lastChips < G.rc.getChips() && G.rc.getNumberTowers() >= G.lastNumberTowers && G.rc.getType().getBaseType() == UnitType.LEVEL_ONE_MONEY_TOWER) {
+            if (G.rc.getRoundNum() % 5 == 0) {
+                attack();
+                // G.rc.setTimelineMarker("disintegrated", 255, 0, 0);
+                G.rc.disintegrate();
+                return;
+            }
+        } else {
+            while (G.rc.canUpgradeTower(G.me) && G.rc.getMoney() - (level == 0 ? 2500 : 5000) >= 1000) {
+                G.rc.upgradeTower(G.me);
+            }
         }
         // attack after upgrading
         attack();
