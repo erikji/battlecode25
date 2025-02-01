@@ -3,7 +3,7 @@ package SPAARK;
 import battlecode.common.*;
 
 public class Motion {
-    public static final boolean ENABLE_EXPLORE_INDICATORS = false;
+    public static final boolean ENABLE_EXPLORE_INDICATORS = true;
 
     public static int movementCooldown = 0;
     public static int lastMove = -1;
@@ -185,6 +185,8 @@ public class Motion {
         exploreLoc = exploreRandomlyLoc();
         if (G.rc.isMovementReady()) {
             bugnavTowards(exploreLoc, m);
+            if (ENABLE_EXPLORE_INDICATORS)
+                G.rc.setIndicatorLine(G.me, exploreLoc, 0, 255, 0);
         }
     }
 
@@ -330,8 +332,6 @@ public class Motion {
                 // }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 
@@ -408,8 +408,6 @@ public class Motion {
                 }
             }
         }
-        if (ENABLE_EXPLORE_INDICATORS)
-            G.rc.setIndicatorLine(G.me, exploreLoc, 255, 255, 255);
         return exploreLoc;
     }
 

@@ -251,7 +251,7 @@ public class POI {
         totalMessages = 0;
         readMessages();
         if (ENABLE_INDICATORS)
-        G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
+            G.indicatorString.append("READ=" + (Clock.getBytecodeNum() - a) + " ");
 
         // a = Clock.getBytecodeNum();
         for (int i = G.nearbyRuins.length; --i >= 0;) {
@@ -267,7 +267,7 @@ public class POI {
             }
         }
         if (ENABLE_INDICATORS)
-        G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
+            G.indicatorString.append("TOWER=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
 
         // drawIndicators(); // uses 5000 bytecode somehow
@@ -349,7 +349,7 @@ public class POI {
             }
         }
         if (ENABLE_INDICATORS)
-        G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
+            G.indicatorString.append("INFO-BT " + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
         // int opponentPaintSeen = 0;
         // for (int i = G.nearbyMapInfos.length; --i >= 0;) {
@@ -374,11 +374,11 @@ public class POI {
             }
         }
         if (ENABLE_INDICATORS)
-        G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
+            G.indicatorString.append("SYM=" + (Clock.getBytecodeNum() - a) + " ");
         a = Clock.getBytecodeNum();
         sendMessages();
         if (ENABLE_INDICATORS)
-        G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
+            G.indicatorString.append("SEND=" + (Clock.getBytecodeNum() - a) + " ");
     };
 
     public static boolean symmetryValid(int sym) throws Exception {

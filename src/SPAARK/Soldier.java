@@ -690,6 +690,7 @@ public class Soldier {
         if (G.rc.isMovementReady()) {
             MapLocation loc = Motion.exploreRandomlyAggressiveLoc();
             Motion.bugnavTowards(loc);
+            G.rc.setIndicatorLine(G.me, loc, 0, 0, 0);
         }
         for (int i = 8; --i >= 0;) {
             MapLocation nxt = G.me.add(G.DIRECTIONS[i]);
