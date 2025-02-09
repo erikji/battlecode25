@@ -153,6 +153,9 @@ public class G {
         return lastVisited[loc.y / 2][loc.x / 2] - 2000;
     }
 
+    public static MapLocation lastDefenseTower = null;
+    public static int lastDefenseTowerRound = -1000;
+
     // random micro stuff
     public static final double PAINT_PER_CHIP = 0.25;
     public static final double PAINT_PER_COOLDOWN = 0.1;
