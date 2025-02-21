@@ -18,6 +18,9 @@ public class RobotPlayer {
         for (int i = G.opponentRobots.length; --i >= 0;) {
             if (G.opponentRobots[i].type.isRobotType()) {
                 G.opponentRobotsString.append(G.opponentRobots[i].location.toString());
+            } else if (G.opponentRobots[i].type.getBaseType() == UnitType.LEVEL_ONE_DEFENSE_TOWER) {
+                G.lastDefenseTower = G.opponentRobots[i].location;
+                G.lastDefenseTowerRound = G.rc.getRoundNum();
             }
         }
         G.nearbyMapInfos = G.rc.senseNearbyMapInfos();

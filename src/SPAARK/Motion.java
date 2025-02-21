@@ -1735,6 +1735,26 @@ public class Motion {
                 }
             }
         }
+        if (G.lastDefenseTowerRound + 15 <= G.rc.getRoundNum() && G.lastDefenseTower != null) {
+            int toSubtract = (int) (G.paintPerChips() * G.rc.getType().moneyCost * turnsToNext
+                    * (UnitType.LEVEL_ONE_DEFENSE_TOWER.attackStrength + UnitType.LEVEL_ONE_DEFENSE_TOWER.aoeAttackStrength) / G.rc.getType().health);
+            int toSubtract2 = toSubtract;
+            if (G.rc.getHealth() <= UnitType.LEVEL_ONE_DEFENSE_TOWER.attackStrength + UnitType.LEVEL_ONE_DEFENSE_TOWER.aoeAttackStrength)
+                toSubtract += 1000;
+            if (G.rc.getHealth() <= (UnitType.LEVEL_ONE_DEFENSE_TOWER.attackStrength + UnitType.LEVEL_ONE_DEFENSE_TOWER.aoeAttackStrength) * 2)
+                toSubtract2 += 2000;
+            for (int i = 9; --i >= 0;) {
+                if (G.rc.canMove(G.ALL_DIRECTIONS[i]) || i == 8) {
+                    if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.lastDefenseTower,
+                            2)) {
+                        scores[i] -= toSubtract2;
+                    } else if (G.me.add(G.ALL_DIRECTIONS[i]).isWithinDistanceSquared(G.lastDefenseTower,
+                            UnitType.LEVEL_ONE_DEFENSE_TOWER.actionRadiusSquared)) {
+                        scores[i] -= toSubtract;
+                    }
+                }
+            }
+        }
         return scores;
     };
 

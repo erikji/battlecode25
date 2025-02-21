@@ -759,6 +759,7 @@ public class Soldier {
                             }
                         }
                     } else if (POI.towerTeams[i] == G.opponentTeam) {
+                        cnt++;
                         x += POI.towerLocs[i].x;
                         y += POI.towerLocs[i].y;
                     }
